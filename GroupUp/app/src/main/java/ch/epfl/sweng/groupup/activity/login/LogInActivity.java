@@ -20,7 +20,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.object.account.UserAccount;
+import ch.epfl.sweng.groupup.object.account.Account;
 
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
@@ -35,10 +35,8 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     private TextView firstNameTextView;
     private TextView lastNameTextView;
     private TextView emailTextView;
-    private TextView accountTypeTextView;
 
     private GoogleApiClient googleApiClient;
-    private UserAccount userAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,9 +94,8 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             GoogleSignInAccount googleSignInAccount = googleSignInResult.getSignInAccount();
 
             assert googleSignInAccount != null;
-            userAccount = new UserAccount(googleSignInAccount.getDisplayName(),
-                                          googleSignInAccount.getFamilyName(),
-                                          googleSignInAccount.getEmail());
+            Account.shared.withFirstName(googleSignInAccount.getGivenName()).withLastName
+                    (googleSignInAccount.getFamilyName()).withEmail(googleSignInAccount.getEmail());
 
             updateUI(CONNECTED);
         } else {
@@ -120,30 +117,28 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
     private void initializeFields() {
         signInButton = (SignInButton) findViewById(R.id.sign_in_button_google);
+
         signOutButton = (Button) findViewById(R.id.button_sign_out);
 
         userStatsLinearLayout = (LinearLayout) findViewById(R.id.linear_layout_log_in_user_stats);
         firstNameTextView = (TextView) findViewById(R.id.text_view_first_name_text);
         lastNameTextView = (TextView) findViewById(R.id.text_view_last_name_text);
         emailTextView = (TextView) findViewById(R.id.text_view_email_text);
-        accountTypeTextView = (TextView) findViewById(R.id.text_view_account_type_text);
 
         userStatsLinearLayout.setVisibility(View.GONE);
     }
 
     private void updateFields(boolean connected) {
         if (connected) {
-            firstNameTextView.setText(userAccount.getFirstName());
-            lastNameTextView.setText(userAccount.getLastName());
-            emailTextView.setText(userAccount.getEmail());
-            accountTypeTextView.setText(userAccount.getAccountType().toString());
+            firstNameTextView.setText(Account.shared.getFirstName());
+            lastNameTextView.setText(Account.shared.getLastName());
+            emailTextView.setText(Account.shared.getEmail());
         } else {
             firstNameTextView.setText(R.string.text_view_first_name_text);
             lastNameTextView.setText(R.string.text_view_last_name_text);
             emailTextView.setText(R.string.text_view_email_text);
-            accountTypeTextView.setText(R.string.text_view_account_type_text);
 
-            userAccount = null;
+            Account.shared.clear();
         }
     }
 
