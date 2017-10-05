@@ -2,7 +2,42 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/mainActivity"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@android:color/black"
+                android:onClick="onClick()"
                 tools:context="ch.epfl.sweng.groupup.activity.main.MainActivity">
+
+    <TextView
+        android:id="@+id/appName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="GroupUp !"
+        android:textSize="50sp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:layout_centerVertical="true"
+        android:paddingBottom="170sp"
+        />
+
+    <TextView
+        android:id="@+id/poweredBy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:text="Powered by Flying Monkey Team"
+        android:layout_below="@id/appName"
+        android:gravity="center"
+        android:textSize="20sp"/>
+
+    <ImageView
+        android:id="@+id/flyingMonkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30sp"
+        android:layout_below="@id/poweredBy"
+        android:alpha="0.7"
+        app:srcCompat="@drawable/flyingmonkey" />
+
 </RelativeLayout>
