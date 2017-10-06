@@ -67,4 +67,19 @@ public class Event {
             throw new IllegalArgumentException("Status transitions must be consistant with time");
         }
     }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Event event = (Event) o;
+
+        if (!eventName.equals(event.eventName)) {return false;}
+        if (!startTime.equals(event.startTime)) {return false;}
+        if (!endTime.equals(event.endTime)) {return false;}
+        if (!eventMembers.equals(event.eventMembers)) {return false;}
+        return eventStatus == event.eventStatus;
+
+    }
+
 }
