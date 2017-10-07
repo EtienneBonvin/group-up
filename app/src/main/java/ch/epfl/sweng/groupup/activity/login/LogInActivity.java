@@ -53,9 +53,9 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         final int id = v.getId();
 
         if (id == R.id.sign_in_button_google) {
-            signIn();
+            //signIn();
         } else if (id == R.id.button_sign_out) {
-            signOut();
+            //signOut();
         }
     }
 
