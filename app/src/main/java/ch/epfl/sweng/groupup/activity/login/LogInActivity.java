@@ -41,11 +41,11 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*setContentView(R.layout.activity_log_in);
+        setContentView(R.layout.activity_log_in);
 
         initializeFields();
         setOnClickListener();
-        setUpClient();*/
+        setUpClient();
     }
 
     @Override
