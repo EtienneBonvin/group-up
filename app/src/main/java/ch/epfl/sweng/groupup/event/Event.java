@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.activity.event;
+package ch.epfl.sweng.groupup.event;
 
 
 import java.util.Date;
