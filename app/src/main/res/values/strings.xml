@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">GroupUp</string>
     <string name="welcome_view_powered_by">Powered by Flying Monkeys Team</string>
+    <string name="flying_monkey_logo_description">Flying Monkeys logo</string>
     <string name="button_sign_out_text">Sign Out</string>
     <string name="text_view_first_name_info">First Name:</string>
     <string name="text_view_first_name_text">NO_FIRST_NAME</string>
