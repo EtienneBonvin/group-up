@@ -1,0 +1,34 @@
+[
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/layout-v21/notification_action.xml",
+        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/layout-v21/notification_action.xml"
+    },
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/layout-v21/notification_template_icon_group.xml",
+        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/layout-v21/notification_template_icon_group.xml"
+    },
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/layout-v21/notification_action.xml",
+        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/layout-v21/notification_action.xml"
+    },
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/layout-v21/notification_template_custom_big.xml",
+        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/layout-v21/notification_template_custom_big.xml"
+    },
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/layout-v21/notification_template_icon_group.xml",
+        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/layout-v21/notification_template_icon_group.xml"
+    },
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/layout-v21/notification_template_custom_big.xml",
+        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/layout-v21/notification_template_custom_big.xml"
+    },
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/layout-v21/notification_action_tombstone.xml",
+        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/layout-v21/notification_action_tombstone.xml"
+    },
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/layout-v21/notification_action_tombstone.xml",
+        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/layout-v21/notification_action_tombstone.xml"
+    }
+]
