@@ -9,7 +9,7 @@ import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.event.EventStatus;
 
-public final class Account {
+public final class Account extends User {
 
     private static final String NO_FIRST_NAME = "NO_FIRST_NAME";
     private static final String NO_LAST_NAME = "NO_LAST_NAME";
@@ -18,18 +18,13 @@ public final class Account {
     public static Account shared = new Account(NO_FIRST_NAME, NO_LAST_NAME, NO_EMAIL,
             Optional.<Event>empty(), new ArrayList<Event>(), new ArrayList<Event>());
 
-    private final String firstName;
-    private final String lastName;
-    private final String email;
     private final Optional<Event> currentEvent;
     private final List<Event> pastEvents;
     private final List<Event> futureEvents;
 
     private Account(String firstName, String lastName, String email,
                     Optional<Event> currentEvent, List<Event> past, List<Event> future) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
+        super(firstName, lastName, email);
         this.currentEvent = currentEvent;
         this.pastEvents = past;
         this.futureEvents = future;

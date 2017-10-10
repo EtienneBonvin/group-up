@@ -8,8 +8,16 @@
         "source": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/src/main/res/mipmap-hdpi/ic_launcher_round.png"
     },
     {
+        "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/mipmap-hdpi/ic_launcher_round.png",
+        "source": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/src/main/res/mipmap-hdpi/ic_launcher_round.png"
+    },
+    {
         "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/mipmap-hdpi/ic_launcher.png",
         "source": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/src/main/res/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/mipmap-hdpi/ic_launcher.png",
+        "source": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/src/main/res/mipmap-hdpi/ic_launcher.png"
     },
     {
         "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/mipmap-hdpi/ic_launcher_round.png",

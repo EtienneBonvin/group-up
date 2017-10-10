@@ -4,6 +4,10 @@
         "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/drawable-v23/abc_control_background_material.xml"
     },
     {
+        "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/drawable-v23/abc_control_background_material.xml",
+        "source": "/Users/xavierpantet/.android/build-cache/882e7c88604618e031a14df999a8fc942be1a42a/output/res/drawable-v23/abc_control_background_material.xml"
+    },
+    {
         "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/drawable-v23/abc_control_background_material.xml",
         "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/drawable-v23/abc_control_background_material.xml"
     }
