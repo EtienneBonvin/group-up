@@ -40,7 +40,7 @@ public class AccountTestSuite {
     @Test
     public void withEmailOK(){
         shared.withEmail("test@testedtest.com");
-        assertEquals(shared.getEmail(),"test@testedtest.com");
+        assertEquals(shared.getEmail().get(),"test@testedtest.com");
     }
 
     @Test(expected=IllegalArgumentException.class)
