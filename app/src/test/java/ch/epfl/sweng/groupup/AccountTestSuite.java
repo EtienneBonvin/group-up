@@ -4,7 +4,10 @@ import org.junit.Test;
 
 import java.util.Date;
 
+import static ch.epfl.sweng.groupup.lib.Optional.from;
 import static org.junit.Assert.*;
+
+import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.event.EventStatus;
 
@@ -41,12 +44,12 @@ public class AccountTestSuite {
 
     @Test
     public void withCurrentEventOK(){
-        shared.withCurrentEvent(new Event("Test", new Date(), new Date(), null, EventStatus.CURRENT));
-        assertEquals(shared.getCurrentEvent().getEventStatus(),EventStatus.CURRENT);
+        shared.withCurrentEvent(Optional.from(new Event("Test", new Date(), new Date(), null, EventStatus.CURRENT)));
+        assertEquals(shared.getCurrentEvent().get().getEventStatus(),EventStatus.CURRENT);
     }
     @Test(expected = IllegalArgumentException.class)
     public void withCurrentEventNotOKWithPastEvent(){
-        shared.withCurrentEvent(new Event("Test", new Date(), new Date(), null, EventStatus.PAST));
+        shared.withCurrentEvent(Optional.from(new Event("Test", new Date(), new Date(), null, EventStatus.PAST)));
     }
 
     @Test

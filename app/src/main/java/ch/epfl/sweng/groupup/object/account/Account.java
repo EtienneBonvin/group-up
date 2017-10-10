@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.event.EventStatus;
 
@@ -15,17 +16,17 @@ public final class Account {
     private static final String NO_EMAIL = "default@defaul.default";
 
     public static Account shared = new Account(NO_FIRST_NAME, NO_LAST_NAME, NO_EMAIL,
-            null, new ArrayList<Event>(), new ArrayList<Event>());
+            Optional.<Event>empty(), new ArrayList<Event>(), new ArrayList<Event>());
 
     private final String firstName;
     private final String lastName;
     private final String email;
-    private final Event currentEvent;
+    private final Optional<Event> currentEvent;
     private final List<Event> pastEvents;
     private final List<Event> futureEvents;
 
     private Account(String firstName, String lastName, String email,
-                    Event currentEvent, List<Event> past, List<Event> future) {
+                    Optional<Event> currentEvent, List<Event> past, List<Event> future) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -62,7 +63,7 @@ public final class Account {
      * Getter for the current event of the account
      * @return Event current
      */
-    public Event getCurrentEvent() {
+    public Optional<Event> getCurrentEvent() {
         return currentEvent;
     }
 
@@ -125,12 +126,18 @@ public final class Account {
      * @return the modified shared account, so that it is easier to call in chain
      */
 
-    public Account withCurrentEvent(Event current) {
-        if (current.getEventStatus().equals(EventStatus.CURRENT)) {
+    public Account withCurrentEvent(Optional<Event> current) {
+        if (current.isEmpty()){
             shared = new Account(shared.getFirstName(), shared.getLastName(), shared.getEmail(),
                     current, shared.getPastEvents(), shared.getFutureEvents());
-            return shared;
-        } else throw new IllegalArgumentException("Event is not "+ EventStatus.CURRENT.toString());
+        }
+        else {
+            if (current.get().getEventStatus().equals(EventStatus.CURRENT)) {
+                shared = new Account(shared.getFirstName(), shared.getLastName(), shared.getEmail(),
+                        current, shared.getPastEvents(), shared.getFutureEvents());
+            } else throw new IllegalArgumentException("Event is not "+ EventStatus.CURRENT.toString());
+        }
+        return shared;
     }
 
     /**
@@ -215,7 +222,7 @@ public final class Account {
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", currentEvent=" + currentEvent +
+                ", currentEvent=" + currentEvent.get().toString() +
                 ", pastEvents=" + pastEvents +
                 ", futureEvents=" + futureEvents +
                 '}';
@@ -230,7 +237,7 @@ public final class Account {
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", currentEvent=" + currentEvent +
+                ", currentEvent=" + currentEvent.get().toString() +
                 '}';
     }
 
