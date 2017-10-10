@@ -11,4 +11,12 @@
     <string name="text_view_email_text">NO_EMAIL</string>
     <string name="text_view_account_type_info">Account Type:</string>
     <string name="text_view_account_type_text">NO_ACCOUNT_TYPE</string>
+    <string name="text_view_event_name">Event name : </string>
+    <string name="text_view_event_name_hint">Enter name</string>
+    <string name="text_view_start_time">Start time : </string>
+    <string name="text_view_end_time">End time : </string>
+    <string name="text_view_members">Members : </string>
+    <string name="text_view_invite_new_members">Invite new members</string>
+    <string name="text_view_invite_new_members_hint">Email of new member</string>
+    <string name="button_event_creation">ADD EVENT</string>
 </resources>
