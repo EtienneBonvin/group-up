@@ -11,46 +11,57 @@ import ch.epfl.sweng.groupup.object.event.EventStatus;
 
 public final class Account extends User {
 
-    private static final String NO_FIRST_NAME = "NO_FIRST_NAME";
-    private static final String NO_LAST_NAME = "NO_LAST_NAME";
-    private static final String NO_EMAIL = "default@defaul.default";
-
-    public static Account shared = new Account(NO_FIRST_NAME, NO_LAST_NAME, NO_EMAIL,
-            Optional.<Event>empty(), new ArrayList<Event>(), new ArrayList<Event>());
+    public static Account shared = new Account(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(), Optional.<Event>empty(), new ArrayList<Event>(), new ArrayList<Event>());;
 
     private final Optional<Event> currentEvent;
     private final List<Event> pastEvents;
     private final List<Event> futureEvents;
 
-    private Account(String firstName, String lastName, String email,
+    private Account(String displayName, String givenName, String familyName, String email,
                     Optional<Event> currentEvent, List<Event> past, List<Event> future) {
-        super(firstName, lastName, email);
+        super(displayName, givenName, familyName, email);
+        this.currentEvent = currentEvent;
+        this.pastEvents = past;
+        this.futureEvents = future;
+    }
+
+    private Account(Optional<String> displayName, Optional<String> givenName, Optional<String> familyName, Optional<String> email,
+                    Optional<Event> currentEvent, List<Event> past, List<Event> future) {
+        super(displayName, givenName, familyName, email);
         this.currentEvent = currentEvent;
         this.pastEvents = past;
         this.futureEvents = future;
     }
 
     /**
-     * Getter for the first name of the account
-     * @return String first name
+     * Getter for the display name of the account
+     * @return String dispaly name
      */
-    public String getFirstName() {
-        return firstName;
+    public Optional<String> getDisplayName() {
+        return displayName;
     }
 
     /**
-     * Getter for the last name of the account
-     * @return String last name
+     * Getter for the given name of the account
+     * @return String given name
      */
-    public String getLastName() {
-        return lastName;
+    public Optional<String> getGivenName() {
+        return givenName;
+    }
+
+    /**
+     * Getter for the family name of the account
+     * @return String family name
+     */
+    public Optional<String> getFamilyName() {
+        return familyName;
     }
 
     /**
      * Getter for the email of the account
      * @return String email
      */
-    public String getEmail() {
+    public Optional<String> getEmail() {
         return email;
     }
 
@@ -79,24 +90,35 @@ public final class Account extends User {
     }
 
     /**
-     * Change the first name of the shared account
-     * @param firstName
+     * Change the display name of the shared account
+     * @param displayName
      * @return the modified shared account, so that it is easier to call in chain
      */
-    public Account withFirstName(String firstName) {
-        shared = new Account(firstName, shared.getLastName(), shared.getEmail(),
-                shared.currentEvent, shared.pastEvents, shared.futureEvents);
+    public Account withDisplayName(String displayName) {
+        shared = new Account(Optional.from(displayName), givenName, familyName, email,
+                currentEvent, pastEvents, futureEvents);
+        return shared;
+    }
+
+    /**
+     * Change the first name of the shared account
+     * @param givenName
+     * @return the modified shared account, so that it is easier to call in chain
+     */
+    public Account withGivenName(String givenName) {
+        shared = new Account(displayName, Optional.from(givenName), familyName, email,
+                currentEvent, pastEvents, futureEvents);
         return shared;
     }
 
     /**
      * Change the last name of the shared account
-     * @param lastName
+     * @param familyName
      * @return the modified shared account, so that it is easier to call in chain
      */
-    public Account withLastName(String lastName) {
-        shared = new Account(shared.getFirstName(), lastName, shared.getEmail(),
-                shared.currentEvent, shared.pastEvents, shared.futureEvents);
+    public Account withFamilyName(String familyName) {
+        shared = new Account(displayName, givenName, Optional.from(familyName), email,
+                currentEvent, pastEvents, futureEvents);
         return shared;
     }
 
@@ -106,13 +128,12 @@ public final class Account extends User {
      * @return the modified shared account, so that it is easier to call in chain
      */
     public Account withEmail(String email) {
-        if (emailCheck(email)){
-            shared = new Account(shared.getFirstName(), shared.getLastName(), email,
-                shared.currentEvent, shared.pastEvents, shared.futureEvents);
+        if (emailCheck(email)) {
+            shared = new Account(displayName, givenName, familyName, Optional.from(email),
+                    currentEvent, pastEvents, futureEvents);
             return shared;
         }
         else throw new IllegalArgumentException("The email is not properly formed");
-
     }
 
     /**
@@ -123,13 +144,13 @@ public final class Account extends User {
 
     public Account withCurrentEvent(Optional<Event> current) {
         if (current.isEmpty()){
-            shared = new Account(shared.getFirstName(), shared.getLastName(), shared.getEmail(),
-                    current, shared.getPastEvents(), shared.getFutureEvents());
+            shared = new Account(displayName, givenName, familyName, email,
+                    current, pastEvents, futureEvents);
         }
         else {
             if (current.get().getEventStatus().equals(EventStatus.CURRENT)) {
-                shared = new Account(shared.getFirstName(), shared.getLastName(), shared.getEmail(),
-                        current, shared.getPastEvents(), shared.getFutureEvents());
+                shared = new Account(displayName, givenName, familyName, email,
+                        current, pastEvents, futureEvents);
             } else throw new IllegalArgumentException("Event is not "+ EventStatus.CURRENT.toString());
         }
         return shared;
@@ -141,8 +162,8 @@ public final class Account extends User {
      * @return the modified shared account, so that it is easier to call in chain
      */
     public Account withPastEvents(List<Event> past) {
-        shared = new Account(shared.getFirstName(), shared.getLastName(), shared.getEmail(),
-                shared.getCurrentEvent(), past, shared.getFutureEvents());
+        shared = new Account(displayName, givenName, familyName, email,
+                currentEvent, past, futureEvents);
         return shared;
     }
 
@@ -152,8 +173,8 @@ public final class Account extends User {
      * @return the modified shared account, so that it is easier to call in chain
      */
     public Account withFutureEvents(List<Event> future) {
-        shared = new Account(shared.getFirstName(), shared.getLastName(), shared.getEmail(),
-                shared.getCurrentEvent(), shared.getPastEvents(), future);
+        shared = new Account(displayName, givenName, familyName, email,
+                currentEvent, pastEvents, future);
         return shared;
     }
     /**
@@ -163,10 +184,9 @@ public final class Account extends User {
      */
     public Account addPastEvent(Event past) {
         if (past.getEventStatus().equals(EventStatus.PAST)) {
-            List<Event> newPast = new ArrayList<>(shared.getPastEvents());
+            List<Event> newPast = new ArrayList<>(pastEvents);
             newPast.add(past);
-            shared.withPastEvents(newPast);
-            return shared;
+            return withPastEvents(newPast);
         } else throw new IllegalArgumentException("Event is not "+ EventStatus.PAST.toString());
     }
 
@@ -177,10 +197,9 @@ public final class Account extends User {
      */
     public Account addFutureEvent(Event future) {
         if (future.getEventStatus().equals(EventStatus.FUTURE)) {
-            List<Event>newFuture = new ArrayList<>(shared.getFutureEvents());
+            List<Event>newFuture = new ArrayList<>(futureEvents);
             newFuture.add(future);
-            shared.withFutureEvents(newFuture);
-            return shared;
+            return withFutureEvents(newFuture);
         } else throw new IllegalArgumentException("Event is not "+ EventStatus.FUTURE.toString());
     }
     /**
@@ -188,8 +207,7 @@ public final class Account extends User {
      * @return a cleared shared account
      */
     public Account clear() {
-        shared = new Account(NO_FIRST_NAME, NO_LAST_NAME, NO_EMAIL, null,
-                new ArrayList<Event>(), new ArrayList<Event>());
+        shared = new Account(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(), Optional.<Event>empty(), new ArrayList<Event>(), new ArrayList<Event>());
         return shared;
     }
 
@@ -200,8 +218,9 @@ public final class Account extends User {
 
         Account account = (Account) o;
 
-        if (!firstName.equals(account.firstName)) return false;
-        if (!lastName.equals(account.lastName)) return false;
+        if (!displayName.equals(account.displayName)) return false;
+        if (!givenName.equals(account.givenName)) return false;
+        if (!familyName.equals(account.familyName)) return false;
         if (!email.equals(account.email)) return false;
         if (currentEvent != null ? !currentEvent.equals(account.currentEvent)
                 : account.currentEvent != null) {
@@ -214,8 +233,9 @@ public final class Account extends User {
     @Override
     public String toString() {
         return "Account{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                "displayName='" + displayName + '\'' +
+                "givenName='" + givenName + '\'' +
+                ", familyName='" + familyName + '\'' +
                 ", email='" + email + '\'' +
                 ", currentEvent=" + currentEvent.get().toString() +
                 ", pastEvents=" + pastEvents +
@@ -229,8 +249,8 @@ public final class Account extends User {
      */
     public String toStringShort() {
         return "Account{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                "givenName='" + givenName + '\'' +
+                ", familyName='" + familyName + '\'' +
                 ", email='" + email + '\'' +
                 ", currentEvent=" + currentEvent.get().toString() +
                 '}';

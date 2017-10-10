@@ -19,8 +19,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import java.util.ArrayList;
+
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.account.Account;
+import ch.epfl.sweng.groupup.object.event.Event;
 
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
@@ -94,8 +98,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             GoogleSignInAccount googleSignInAccount = googleSignInResult.getSignInAccount();
 
             assert googleSignInAccount != null;
-            Account.shared.withFirstName(googleSignInAccount.getGivenName()).withLastName
-                    (googleSignInAccount.getFamilyName()).withEmail(googleSignInAccount.getEmail());
+            Account.shared.withDisplayName(googleSignInAccount.getDisplayName()).withGivenName(googleSignInAccount.getGivenName()).withFamilyName(googleSignInAccount.getFamilyName()).withEmail(googleSignInAccount.getEmail());
 
             updateUI(CONNECTED);
         } else {
@@ -130,9 +133,9 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
     private void updateFields(boolean connected) {
         if (connected) {
-            firstNameTextView.setText(Account.shared.getFirstName());
-            lastNameTextView.setText(Account.shared.getLastName());
-            emailTextView.setText(Account.shared.getEmail());
+            firstNameTextView.setText(Account.shared.getGivenName().getOrElse(""));
+            lastNameTextView.setText(Account.shared.getFamilyName().getOrElse(""));
+            emailTextView.setText(Account.shared.getEmail().getOrElse(""));
         } else {
             firstNameTextView.setText(R.string.text_view_first_name_text);
             lastNameTextView.setText(R.string.text_view_last_name_text);
