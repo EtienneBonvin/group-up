@@ -101,8 +101,10 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             GoogleSignInAccount googleSignInAccount = googleSignInResult.getSignInAccount();
 
             assert googleSignInAccount != null;
-            Account.shared.withFirstName(googleSignInAccount.getGivenName()).withLastName
-                    (googleSignInAccount.getFamilyName()).withEmail(googleSignInAccount.getEmail());
+            Account.shared.withDisplayName(googleSignInAccount.getDisplayName()).
+                    withGivenName(googleSignInAccount.getGivenName()).
+                    withFamilyName(googleSignInAccount.getFamilyName()).
+                    withEmail(googleSignInAccount.getEmail());
             updateUI(CONNECTED);
         } else {
             updateUI(!CONNECTED);
