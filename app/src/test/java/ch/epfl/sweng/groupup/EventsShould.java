@@ -8,20 +8,19 @@ import java.util.List;
 
 import org.joda.time.LocalDateTime;
 
+import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.event.EventStatus;
-import ch.epfl.sweng.groupup.object.account.Account;
 
-import static ch.epfl.sweng.groupup.object.account.Account.shared;
 import static junit.framework.Assert.*;
 
 public class EventsShould {
     private Event event;
     private int eventID = 1234;
-
+    private Member member = new Member("Even monkeys can fly", "Tester", "Test","test@test.test");
     @Before
     public void init() {
-        List<Account> eventMembers = new ArrayList<>();
+        List<Member> eventMembers = new ArrayList<>();
         event = new Event("Name", new LocalDateTime(), new LocalDateTime(), eventMembers, eventID);
     }
 
@@ -44,8 +43,8 @@ public class EventsShould {
 
     @Test
     public void haveMembers() {
-        List<Account> eventMembers = new ArrayList<>();
-        eventMembers.add(shared);
+        List<Member> eventMembers = new ArrayList<>();
+        eventMembers.add(member);
         assertEquals(event.withEventMembers(eventMembers).getEventMembers(), eventMembers);
     }
 
@@ -53,7 +52,7 @@ public class EventsShould {
     public void haveStatusCurrent() {
         LocalDateTime startDate = LocalDateTime.now().minusHours(1);
         LocalDateTime endDate = LocalDateTime.now().plusHours(1);
-        List<Account> eventMembers = new ArrayList<>();
+        List<Member> eventMembers = new ArrayList<>();
         event = new Event("Name", startDate, endDate, eventMembers, eventID);
         assertEquals(event.getEventStatus(), EventStatus.CURRENT);
     }
@@ -62,7 +61,7 @@ public class EventsShould {
     public void haveStatusFuture() {
         LocalDateTime startDate = LocalDateTime.now().plusDays(1);
         LocalDateTime endDate = LocalDateTime.now().plusDays(2);
-        List<Account> eventMembers = new ArrayList<>();
+        List<Member> eventMembers = new ArrayList<>();
         event = new Event("Name", startDate, endDate, eventMembers, eventID);
         assertEquals(event.getEventStatus(), EventStatus.FUTURE);
     }
@@ -71,7 +70,7 @@ public class EventsShould {
     public void haveStatusPast() {
         LocalDateTime startDate = LocalDateTime.now().minusHours(1);
         LocalDateTime endDate = LocalDateTime.now().minusMinutes(2);
-        List<Account> eventMembers = new ArrayList<>();
+        List<Member> eventMembers = new ArrayList<>();
         event = new Event("Name", startDate, endDate, eventMembers, eventID);
         assertEquals(event.getEventStatus(), EventStatus.PAST);
     }
@@ -88,12 +87,12 @@ public class EventsShould {
         // Event must be future
         LocalDateTime startDate = LocalDateTime.now().plusDays(1);
         LocalDateTime endDate = LocalDateTime.now().plusDays(2);
-        List<Account> eventMembers = new ArrayList<>();
+        List<Member> eventMembers = new ArrayList<>();
         event = new Event("Name", startDate, endDate, eventMembers, eventID);
-        eventMembers.add(shared);
+        eventMembers.add(member);
 
-        List<Account> updatedMember = new ArrayList<>();
-        updatedMember = event.addMember(shared).getEventMembers();
+        List<Member> updatedMember;
+        updatedMember = event.addMember(member).getEventMembers();
 
         assertEquals(updatedMember, eventMembers);
     }
@@ -102,13 +101,12 @@ public class EventsShould {
     public void notDoubleAddMembers() {
         LocalDateTime startDate = LocalDateTime.now().plusDays(1);
         LocalDateTime endDate = LocalDateTime.now().plusDays(2);
-        List<Account> eventMembers = new ArrayList<>();
+        List<Member> eventMembers = new ArrayList<>();
         event = new Event("Name", startDate, endDate, eventMembers, eventID);
-        eventMembers.add(shared);
+        eventMembers.add(member);
 
-        List<Account> updatedMember = new ArrayList<>();
-        updatedMember = event.addMember(shared).getEventMembers();
-        updatedMember = event.addMember(shared).getEventMembers();
+        List<Member> updatedMember;
+        updatedMember = event.addMember(member).addMember(member).getEventMembers();
 
         assertEquals(updatedMember, eventMembers);
     }
@@ -117,9 +115,9 @@ public class EventsShould {
     public void preventAddingMembersToCurrentEvents() {
         LocalDateTime startDate = LocalDateTime.now().minusHours(1);
         LocalDateTime endDate = LocalDateTime.now().plusDays(2);
-        List<Account> eventMembers = new ArrayList<>();
+        List<Member> eventMembers = new ArrayList<>();
         event = new Event("Name", startDate, endDate, eventMembers, eventID);
-        event.addMember(shared);
+        event.addMember(member);
 
     }
 
@@ -127,9 +125,9 @@ public class EventsShould {
     public void preventAddingMembersToPastEvents() {
         LocalDateTime startDate = LocalDateTime.now().minusHours(1);
         LocalDateTime endDate = LocalDateTime.now().minusMinutes(2);
-        List<Account> eventMembers = new ArrayList<>();
+        List<Member> eventMembers = new ArrayList<>();
         event = new Event("Name", startDate, endDate, eventMembers, eventID);
-        event.addMember(shared);
+        event.addMember(member);
     }
 
 }

@@ -6,17 +6,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import ch.epfl.sweng.groupup.object.account.Account;
+import ch.epfl.sweng.groupup.object.account.Member;
 
 public final class Event {
 
     private final String eventName;
     private final LocalDateTime startTime;
     private final LocalDateTime endTime;
-    private final List<Account> eventMembers;
+    private final List<Member> eventMembers;
     private final int eventID;
 
-    public Event(String eventName, LocalDateTime startTime, LocalDateTime endTime, List<Account> eventMembers, int eventID) {
+    public Event(String eventName, LocalDateTime startTime, LocalDateTime endTime, List<Member> eventMembers, int eventID) {
         this.eventName = eventName;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -53,8 +53,8 @@ public final class Event {
      * Getter for the list of members
      * @return List<Account> event member
      */
-    public List<Account> getEventMembers() {
-        return Collections.unmodifiableList(new ArrayList<Account>(eventMembers));
+    public List<Member> getEventMembers() {
+        return Collections.unmodifiableList(new ArrayList<>(eventMembers));
     }
 
     /**
@@ -97,7 +97,7 @@ public final class Event {
      * @param eventMembers
      * @return the modified event
      */
-    public Event withEventMembers(List<Account> eventMembers){
+    public Event withEventMembers(List<Member> eventMembers){
         return new Event(eventName, startTime, endTime, eventMembers, eventID);
     }
 
@@ -114,17 +114,17 @@ public final class Event {
     }
 
     /**
-     * Adds an account to the list of event members
-     * @param account to add
+     * Adds an member to the list of event members
+     * @param member to add
      * @return the modified event
      */
-    public Event addMember(Account account){
+    public Event addMember(Member member){
         if (this.getEventStatus().equals(EventStatus.FUTURE)){
-            if (this.getEventMembers().contains(account)){
+            if (this.getEventMembers().contains(member)){
                 return this;
             } else {
-                List<Account>eventMembers = new ArrayList<>(this.getEventMembers());
-                eventMembers.add(account);
+                List<Member>eventMembers = new ArrayList<>(this.getEventMembers());
+                eventMembers.add(member);
                 return this.withEventMembers(eventMembers);
             }
         } else throw new IllegalArgumentException("Event is not "+ EventStatus.FUTURE.toString());

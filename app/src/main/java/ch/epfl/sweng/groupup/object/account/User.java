@@ -12,14 +12,14 @@ abstract class User {
     protected final Optional<String> familyName;
     protected final Optional<String> email;
 
-    public User(String displayName, String firstName, String familyName, String email){
+    protected User(String displayName, String firstName, String familyName, String email){
         this.displayName = Optional.from(displayName);
         this.givenName = Optional.from(firstName);
         this.familyName = Optional.from(familyName);
         this.email = Optional.from(email);
     }
 
-    public User(Optional<String> displayName, Optional<String> firstName, Optional<String> familyName, Optional<String> email){
+    protected User(Optional<String> displayName, Optional<String> firstName, Optional<String> familyName, Optional<String> email){
         this.displayName = displayName;
         this.givenName = firstName;
         this.familyName = familyName;

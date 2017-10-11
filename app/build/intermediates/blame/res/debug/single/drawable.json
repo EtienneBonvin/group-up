@@ -12,12 +12,12 @@
         "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/drawable/abc_seekbar_tick_mark_material.xml"
     },
     {
-        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_icon_dark_focused.xml",
-        "source": "/home/alix/.android/build-cache/0629ad66d335c90779891750dd03070c5ec429f0/output/res/drawable/common_google_signin_btn_icon_dark_focused.xml"
-    },
-    {
         "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/drawable/notification_bg_low.xml",
         "source": "/Users/xavierpantet/.android/build-cache/882e7c88604618e031a14df999a8fc942be1a42a/output/res/drawable/notification_bg_low.xml"
+    },
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_icon_dark_focused.xml",
+        "source": "/home/alix/.android/build-cache/0629ad66d335c90779891750dd03070c5ec429f0/output/res/drawable/common_google_signin_btn_icon_dark_focused.xml"
     },
     {
         "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/drawable/abc_seekbar_tick_mark_material.xml",
@@ -44,12 +44,12 @@
         "source": "/Users/xavierpantet/.android/build-cache/e3a4306988f24d4c52336b47a41eae9bbf04903f/output/res/drawable/common_google_signin_btn_icon_dark_focused.xml"
     },
     {
-        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/drawable/abc_list_selector_holo_light.xml",
-        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/drawable/abc_list_selector_holo_light.xml"
-    },
-    {
         "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/drawable/abc_btn_radio_material.xml",
         "source": "/Users/xavierpantet/.android/build-cache/882e7c88604618e031a14df999a8fc942be1a42a/output/res/drawable/abc_btn_radio_material.xml"
+    },
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/drawable/abc_list_selector_holo_light.xml",
+        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/drawable/abc_list_selector_holo_light.xml"
     },
     {
         "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/drawable/common_google_signin_btn_text_dark_normal.xml",

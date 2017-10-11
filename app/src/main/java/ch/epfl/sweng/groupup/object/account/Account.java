@@ -11,21 +11,16 @@ import ch.epfl.sweng.groupup.object.event.EventStatus;
 
 public final class Account extends User {
 
-    public static Account shared = new Account(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(), Optional.<Event>empty(), new ArrayList<Event>(), new ArrayList<Event>());;
+    public static Account shared = new Account(Optional.<String>empty(), Optional.<String>empty(),
+            Optional.<String>empty(), Optional.<String>empty(), Optional.<Event>empty(),
+            new ArrayList<Event>(), new ArrayList<Event>());;
 
     private final Optional<Event> currentEvent;
     private final List<Event> pastEvents;
     private final List<Event> futureEvents;
 
-    private Account(String displayName, String givenName, String familyName, String email,
-                    Optional<Event> currentEvent, List<Event> past, List<Event> future) {
-        super(displayName, givenName, familyName, email);
-        this.currentEvent = currentEvent;
-        this.pastEvents = past;
-        this.futureEvents = future;
-    }
-
-    private Account(Optional<String> displayName, Optional<String> givenName, Optional<String> familyName, Optional<String> email,
+    private Account(Optional<String> displayName, Optional<String> givenName,
+                    Optional<String> familyName, Optional<String> email,
                     Optional<Event> currentEvent, List<Event> past, List<Event> future) {
         super(displayName, givenName, familyName, email);
         this.currentEvent = currentEvent;

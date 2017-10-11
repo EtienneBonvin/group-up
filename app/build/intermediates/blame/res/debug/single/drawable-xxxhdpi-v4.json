@@ -20,12 +20,12 @@
         "source": "/Users/xavierpantet/.android/build-cache/882e7c88604618e031a14df999a8fc942be1a42a/output/res/drawable-xxxhdpi-v4/abc_ic_menu_share_mtrl_alpha.png"
     },
     {
-        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_star_half_black_36dp.png",
-        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/drawable-xxxhdpi-v4/abc_ic_star_half_black_36dp.png"
-    },
-    {
         "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_menu_cut_mtrl_alpha.png",
         "source": "/Users/xavierpantet/.android/build-cache/882e7c88604618e031a14df999a8fc942be1a42a/output/res/drawable-xxxhdpi-v4/abc_ic_menu_cut_mtrl_alpha.png"
+    },
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_star_half_black_36dp.png",
+        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/drawable-xxxhdpi-v4/abc_ic_star_half_black_36dp.png"
     },
     {
         "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_btn_switch_to_on_mtrl_00012.9.png",
