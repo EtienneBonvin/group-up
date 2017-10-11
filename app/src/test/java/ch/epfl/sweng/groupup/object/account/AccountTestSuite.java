@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup;
+package ch.epfl.sweng.groupup.object.account;
 
 import org.joda.time.LocalDateTime;
 import org.junit.Test;
@@ -23,21 +23,27 @@ import static ch.epfl.sweng.groupup.object.account.Account.shared;
 public class AccountTestSuite {
 
     @Test
+    public void withDisplayNameOK(){
+        shared.withDisplayName("Tester");
+        assertEquals(shared.getDisplayName().get(),"Tester");
+    }
+
+    @Test
     public void withFirstNameOK(){
-        shared.withFirstName("Tester");
-        assertEquals(shared.getFirstName(),"Tester");
+        shared.withGivenName("Tester");
+        assertEquals(shared.getGivenName().get(),"Tester");
     }
 
     @Test
     public void withLastNameOK(){
-        shared.withLastName("Test");
-        assertEquals(shared.getLastName(),"Test");
+        shared.withFamilyName("Test");
+        assertEquals(shared.getFamilyName().get(),"Test");
     }
 
     @Test
     public void withEmailOK(){
         shared.withEmail("test@testedtest.com");
-        assertEquals(shared.getEmail(),"test@testedtest.com");
+        assertEquals(shared.getEmail().get(),"test@testedtest.com");
     }
 
     @Test(expected=IllegalArgumentException.class)

@@ -4,6 +4,10 @@
         "source": "/home/alix/.android/build-cache/86d3b128da672a9167e426810ba66b7b78e022cf/output/res/drawable-watch-v20/common_google_signin_btn_text_dark_normal.xml"
     },
     {
+        "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/drawable-watch-v20/common_google_signin_btn_text_light_normal.xml",
+        "source": "/Users/xavierpantet/.android/build-cache/1a3cc15af525fe366719ab39674230a765467e6c/output/res/drawable-watch-v20/common_google_signin_btn_text_light_normal.xml"
+    },
+    {
         "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/drawable-watch-v20/common_google_signin_btn_text_disabled.xml",
         "source": "/home/alix/.android/build-cache/86d3b128da672a9167e426810ba66b7b78e022cf/output/res/drawable-watch-v20/common_google_signin_btn_text_disabled.xml"
     },
@@ -12,12 +16,20 @@
         "source": "/home/alix/.android/build-cache/86d3b128da672a9167e426810ba66b7b78e022cf/output/res/drawable-watch-v20/common_google_signin_btn_text_light_normal.xml"
     },
     {
+        "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/drawable-watch-v20/common_google_signin_btn_text_disabled.xml",
+        "source": "/Users/xavierpantet/.android/build-cache/1a3cc15af525fe366719ab39674230a765467e6c/output/res/drawable-watch-v20/common_google_signin_btn_text_disabled.xml"
+    },
+    {
         "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/drawable-watch-v20/common_google_signin_btn_text_dark_normal.xml",
         "source": "/home/alix/.android/build-cache/86d3b128da672a9167e426810ba66b7b78e022cf/output/res/drawable-watch-v20/common_google_signin_btn_text_dark_normal.xml"
     },
     {
         "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/drawable-watch-v20/common_google_signin_btn_text_light_normal.xml",
         "source": "/home/alix/.android/build-cache/86d3b128da672a9167e426810ba66b7b78e022cf/output/res/drawable-watch-v20/common_google_signin_btn_text_light_normal.xml"
+    },
+    {
+        "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/drawable-watch-v20/common_google_signin_btn_text_dark_normal.xml",
+        "source": "/Users/xavierpantet/.android/build-cache/1a3cc15af525fe366719ab39674230a765467e6c/output/res/drawable-watch-v20/common_google_signin_btn_text_dark_normal.xml"
     },
     {
         "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/drawable-watch-v20/common_google_signin_btn_text_disabled.xml",

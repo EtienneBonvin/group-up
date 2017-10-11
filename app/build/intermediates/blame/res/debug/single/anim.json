@@ -4,40 +4,84 @@
         "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_shrink_fade_out_from_bottom.xml"
     },
     {
-        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/anim/abc_fade_out.xml",
-        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_fade_out.xml"
+        "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_slide_in_bottom.xml",
+        "source": "/Users/xavierpantet/.android/build-cache/882e7c88604618e031a14df999a8fc942be1a42a/output/res/anim/abc_slide_in_bottom.xml"
     },
     {
         "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_slide_out_top.xml",
         "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_slide_out_top.xml"
     },
     {
-        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/anim/abc_shrink_fade_out_from_bottom.xml",
-        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_shrink_fade_out_from_bottom.xml"
+        "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_popup_enter.xml",
+        "source": "/Users/xavierpantet/.android/build-cache/882e7c88604618e031a14df999a8fc942be1a42a/output/res/anim/abc_popup_enter.xml"
     },
     {
         "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/anim/abc_popup_enter.xml",
         "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_popup_enter.xml"
     },
     {
-        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_slide_out_bottom.xml",
-        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_slide_out_bottom.xml"
-    },
-    {
         "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/anim/abc_fade_in.xml",
         "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_fade_in.xml"
     },
     {
-        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_slide_in_top.xml",
-        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_slide_in_top.xml"
+        "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_grow_fade_in_from_bottom.xml",
+        "source": "/Users/xavierpantet/.android/build-cache/882e7c88604618e031a14df999a8fc942be1a42a/output/res/anim/abc_grow_fade_in_from_bottom.xml"
+    },
+    {
+        "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_slide_out_top.xml",
+        "source": "/Users/xavierpantet/.android/build-cache/882e7c88604618e031a14df999a8fc942be1a42a/output/res/anim/abc_slide_out_top.xml"
+    },
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_popup_enter.xml",
+        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_popup_enter.xml"
     },
     {
         "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_fade_in.xml",
         "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_fade_in.xml"
     },
     {
-        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_popup_enter.xml",
-        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_popup_enter.xml"
+        "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_fade_out.xml",
+        "source": "/Users/xavierpantet/.android/build-cache/882e7c88604618e031a14df999a8fc942be1a42a/output/res/anim/abc_fade_out.xml"
+    },
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/anim/abc_slide_out_bottom.xml",
+        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_slide_out_bottom.xml"
+    },
+    {
+        "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_fade_in.xml",
+        "source": "/Users/xavierpantet/.android/build-cache/882e7c88604618e031a14df999a8fc942be1a42a/output/res/anim/abc_fade_in.xml"
+    },
+    {
+        "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_shrink_fade_out_from_bottom.xml",
+        "source": "/Users/xavierpantet/.android/build-cache/882e7c88604618e031a14df999a8fc942be1a42a/output/res/anim/abc_shrink_fade_out_from_bottom.xml"
+    },
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/anim/abc_slide_in_bottom.xml",
+        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_slide_in_bottom.xml"
+    },
+    {
+        "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_slide_out_bottom.xml",
+        "source": "/Users/xavierpantet/.android/build-cache/882e7c88604618e031a14df999a8fc942be1a42a/output/res/anim/abc_slide_out_bottom.xml"
+    },
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/anim/abc_fade_out.xml",
+        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_fade_out.xml"
+    },
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/anim/abc_shrink_fade_out_from_bottom.xml",
+        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_shrink_fade_out_from_bottom.xml"
+    },
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_slide_out_bottom.xml",
+        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_slide_out_bottom.xml"
+    },
+    {
+        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_slide_in_top.xml",
+        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_slide_in_top.xml"
+    },
+    {
+        "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_popup_exit.xml",
+        "source": "/Users/xavierpantet/.android/build-cache/882e7c88604618e031a14df999a8fc942be1a42a/output/res/anim/abc_popup_exit.xml"
     },
     {
         "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/anim/abc_slide_in_top.xml",
@@ -52,8 +96,8 @@
         "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_grow_fade_in_from_bottom.xml"
     },
     {
-        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/anim/abc_slide_out_bottom.xml",
-        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_slide_out_bottom.xml"
+        "merged": "/Users/xavierpantet/Documents/workspace/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_slide_in_top.xml",
+        "source": "/Users/xavierpantet/.android/build-cache/882e7c88604618e031a14df999a8fc942be1a42a/output/res/anim/abc_slide_in_top.xml"
     },
     {
         "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_slide_in_bottom.xml",
@@ -70,10 +114,6 @@
     {
         "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/anim/abc_grow_fade_in_from_bottom.xml",
         "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_grow_fade_in_from_bottom.xml"
-    },
-    {
-        "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/GroupUp/app/build/intermediates/res/merged/debug/anim/abc_slide_in_bottom.xml",
-        "source": "/home/alix/.android/build-cache/1195f90f7ccec3c5ed580d84609ce4d4c252e0da/output/res/anim/abc_slide_in_bottom.xml"
     },
     {
         "merged": "/home/alix/Documents/Cours/Sweng/team-monkeys/app/build/intermediates/res/merged/debug/anim/abc_fade_out.xml",
