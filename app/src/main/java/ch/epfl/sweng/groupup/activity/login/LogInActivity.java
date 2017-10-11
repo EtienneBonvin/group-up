@@ -19,12 +19,15 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+
 import java.util.ArrayList;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
+import ch.epfl.sweng.groupup.R;
+
 
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
@@ -98,8 +101,8 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             GoogleSignInAccount googleSignInAccount = googleSignInResult.getSignInAccount();
 
             assert googleSignInAccount != null;
-            Account.shared.withDisplayName(googleSignInAccount.getDisplayName()).withGivenName(googleSignInAccount.getGivenName()).withFamilyName(googleSignInAccount.getFamilyName()).withEmail(googleSignInAccount.getEmail());
-
+            Account.shared.withFirstName(googleSignInAccount.getGivenName()).withLastName
+                    (googleSignInAccount.getFamilyName()).withEmail(googleSignInAccount.getEmail());
             updateUI(CONNECTED);
         } else {
             updateUI(!CONNECTED);
