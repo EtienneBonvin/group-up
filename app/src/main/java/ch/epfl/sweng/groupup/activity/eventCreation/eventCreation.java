@@ -2,6 +2,7 @@ package ch.epfl.sweng.groupup.activity.eventCreation;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.icu.util.GregorianCalendar;
 import android.support.v7.app.ActionBar;
@@ -138,7 +139,7 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
 
         LinearLayout newMember = new LinearLayout(this);
         newMember.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.FILL_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
 
         EditText memberMail = (EditText) findViewById(R.id.edit_text_add_member);
@@ -150,18 +151,20 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 0.9f));
         textView.setText(memberMail.getText());
+        textView.setTextColor(Color.WHITE);
         memberMail.setText("");
 
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 0,
-                LinearLayout.LayoutParams.FILL_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 0.1f);
         params.setMargins(2, 2, 2, 2);
         ImageView minus = new ImageView(this);
         minus.setImageResource(R.drawable.minussign);
         minus.setLayoutParams(params);
         minus.setId(numberOfMembers);
+        minus.setBackgroundColor(Color.BLACK);
 
         newMember.addView(textView);
         newMember.addView(minus);
