@@ -130,6 +130,7 @@
             android:background="@color/white"/>
 
         <ImageView
+            android:contentDescription="plus sign"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.1"
