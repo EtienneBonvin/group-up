@@ -1,16 +1,25 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">GroupUp</string>
+
     <string name="welcome_view_powered_by">Powered by Flying Monkeys Team</string>
     <string name="flying_monkey_logo_description">Flying Monkeys logo</string>
+
+    <string name="web_client_id" tools:ignore="TypographyDashes">418104898937-1n61g2sra1bfnd1eupddavfabqqbahi1.apps.googleusercontent.com</string>
+    <string name="title_connection_failed">Connection Failed</string>
+    <string name="text_firebase_login_failed">Firebase Login Failed</string>
+    <string name="text_no_status_message">NO_STATUS_MESSAGE</string>
+    <string name="text_button_connection_failed">OK</string>
     <string name="button_sign_out_text">Sign Out</string>
-    <string name="text_view_first_name_info">First Name:</string>
-    <string name="text_view_first_name_text">NO_FIRST_NAME</string>
-    <string name="text_view_last_name_info">Last Name:</string>
-    <string name="text_view_last_name_text">NO_LAST_NAME</string>
+
+    <string name="text_view_display_name_info">Display Name:</string>
+    <string name="text_view_display_name_text">NO_DISPLAY_NAME</string>
+    <string name="text_view_family_name_info">Family Name:</string>
+    <string name="text_view_family_name_text">NO_FAMILY_NAME</string>
+    <string name="text_view_given_name_info">Given Name:</string>
+    <string name="text_view_given_name_text">NO_GIVEN_NAME</string>
     <string name="text_view_email_info">Email:</string>
     <string name="text_view_email_text">NO_EMAIL</string>
-    <string name="text_view_account_type_info">Account Type:</string>
-    <string name="text_view_account_type_text">NO_ACCOUNT_TYPE</string>
+
     <string name="text_view_event_name">Event name : </string>
     <string name="text_view_event_name_hint">Enter name</string>
     <string name="text_view_start_time">Start time : </string>
