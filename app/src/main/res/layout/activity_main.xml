@@ -5,6 +5,8 @@
                 android:id="@+id/mainActivity"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@android:color/black"
+                tools:context="ch.epfl.sweng.groupup.activity.main.MainActivity">
                 android:background="@android:color/black">
 
     <TextView

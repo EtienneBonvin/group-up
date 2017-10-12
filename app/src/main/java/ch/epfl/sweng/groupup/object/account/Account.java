@@ -1,52 +1,264 @@
 package ch.epfl.sweng.groupup.object.account;
 
-public class Account {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-    private static final String NO_FIRST_NAME = "NO_FIRST_NAME";
-    private static final String NO_LAST_NAME = "NO_LAST_NAME";
-    private static final String NO_EMAIL = "NO_EMAIL";
+import ch.epfl.sweng.groupup.lib.Optional;
+import ch.epfl.sweng.groupup.object.event.Event;
+import ch.epfl.sweng.groupup.object.event.EventStatus;
 
-    public static Account shared = new Account(NO_FIRST_NAME, NO_LAST_NAME, NO_EMAIL);
+public final class Account extends User {
 
-    private final String firstName;
-    private final String lastName;
-    private final String email;
+    public static Account shared = new Account(Optional.<String>empty(), Optional.<String>empty(),
+            Optional.<String>empty(), Optional.<String>empty(), Optional.<Event>empty(),
+            new ArrayList<Event>(), new ArrayList<Event>());;
 
-    private Account(String firstName, String lastName, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
+    private final Optional<Event> currentEvent;
+    private final List<Event> pastEvents;
+    private final List<Event> futureEvents;
+
+    private Account(Optional<String> displayName, Optional<String> givenName,
+                    Optional<String> familyName, Optional<String> email,
+                    Optional<Event> currentEvent, List<Event> past, List<Event> future) {
+        super(displayName, givenName, familyName, email);
+        this.currentEvent = currentEvent;
+        this.pastEvents = past;
+        this.futureEvents = future;
     }
 
-    public String getFirstName() {
-        return firstName;
+    /**
+     * Getter for the display name of the account
+     * @return String dispaly name
+     */
+    public Optional<String> getDisplayName() {
+        return displayName;
     }
 
-    public String getLastName() {
-        return lastName;
+    /**
+     * Getter for the given name of the account
+     * @return String given name
+     */
+    public Optional<String> getGivenName() {
+        return givenName;
     }
 
-    public String getEmail() {
+    /**
+     * Getter for the family name of the account
+     * @return String family name
+     */
+    public Optional<String> getFamilyName() {
+        return familyName;
+    }
+
+    /**
+     * Getter for the email of the account
+     * @return String email
+     */
+    public Optional<String> getEmail() {
         return email;
     }
 
-    public Account withFirstName(String firstName) {
-        shared = new Account(firstName, shared.getLastName(), shared.getEmail());
+    /**
+     * Getter for the current event of the account
+     * @return Event current
+     */
+    public Optional<Event> getCurrentEvent() {
+        return currentEvent;
+    }
+
+    /**
+     * Getter for the list of past events
+     * @return List<Event> last events
+     */
+    public List<Event> getPastEvents() {
+        return pastEvents;
+    }
+
+    /**
+     * Getter for the list of future events
+     * @return List<Event> future events
+     */
+    public List<Event> getFutureEvents() {
+        return futureEvents;
+    }
+
+    /**
+     * Change the display name of the shared account
+     * @param displayName
+     * @return the modified shared account, so that it is easier to call in chain
+     */
+    public Account withDisplayName(String displayName) {
+        shared = new Account(Optional.from(displayName), givenName, familyName, email,
+                currentEvent, pastEvents, futureEvents);
         return shared;
     }
 
-    public Account withLastName(String lastName) {
-        shared = new Account(shared.getFirstName(), lastName, shared.getEmail());
+    /**
+     * Change the first name of the shared account
+     * @param givenName
+     * @return the modified shared account, so that it is easier to call in chain
+     */
+    public Account withGivenName(String givenName) {
+        shared = new Account(displayName, Optional.from(givenName), familyName, email,
+                currentEvent, pastEvents, futureEvents);
         return shared;
     }
 
+    /**
+     * Change the last name of the shared account
+     * @param familyName
+     * @return the modified shared account, so that it is easier to call in chain
+     */
+    public Account withFamilyName(String familyName) {
+        shared = new Account(displayName, givenName, Optional.from(familyName), email,
+                currentEvent, pastEvents, futureEvents);
+        return shared;
+    }
+
+    /**
+     * Change the email of the shared account
+     * @param email
+     * @return the modified shared account, so that it is easier to call in chain
+     */
     public Account withEmail(String email) {
-        shared = new Account(shared.getFirstName(), shared.getLastName(), email);
+        if (emailCheck(email)) {
+            shared = new Account(displayName, givenName, familyName, Optional.from(email),
+                    currentEvent, pastEvents, futureEvents);
+            return shared;
+        }
+        else throw new IllegalArgumentException("The email is not properly formed");
+    }
+
+    /**
+     * Change the current event of the shared account
+     * @param current event
+     * @return the modified shared account, so that it is easier to call in chain
+     */
+
+    public Account withCurrentEvent(Optional<Event> current) {
+        if (current.isEmpty()){
+            shared = new Account(displayName, givenName, familyName, email,
+                    current, pastEvents, futureEvents);
+        }
+        else {
+            if (current.get().getEventStatus().equals(EventStatus.CURRENT)) {
+                shared = new Account(displayName, givenName, familyName, email,
+                        current, pastEvents, futureEvents);
+            } else throw new IllegalArgumentException("Event is not "+ EventStatus.CURRENT.toString());
+        }
         return shared;
     }
 
-    public Account clear() {
-        shared = new Account(NO_FIRST_NAME, NO_LAST_NAME, NO_EMAIL);
+    /**
+     * Change the past event list of the shared account
+     * @param past event list
+     * @return the modified shared account, so that it is easier to call in chain
+     */
+    public Account withPastEvents(List<Event> past) {
+        shared = new Account(displayName, givenName, familyName, email,
+                currentEvent, past, futureEvents);
         return shared;
     }
-}
+
+    /**
+     * Change the future event list of the shared account
+     * @param future event list
+     * @return the modified shared account, so that it is easier to call in chain
+     */
+    public Account withFutureEvents(List<Event> future) {
+        shared = new Account(displayName, givenName, familyName, email,
+                currentEvent, pastEvents, future);
+        return shared;
+    }
+    /**
+     * Add a past event list of the shared account
+     * @param past event to add
+     * @return the modified shared account, so that it is easier to call in chain
+     */
+    public Account addPastEvent(Event past) {
+        if (past.getEventStatus().equals(EventStatus.PAST)) {
+            List<Event> newPast = new ArrayList<>(pastEvents);
+            newPast.add(past);
+            return withPastEvents(newPast);
+        } else throw new IllegalArgumentException("Event is not "+ EventStatus.PAST.toString());
+    }
+
+    /**
+     * Add a future event list of the shared account
+     * @param future event to add
+     * @return the modified shared account, so that it is easier to call in chain
+     */
+    public Account addFutureEvent(Event future) {
+        if (future.getEventStatus().equals(EventStatus.FUTURE)) {
+            List<Event>newFuture = new ArrayList<>(futureEvents);
+            newFuture.add(future);
+            return withFutureEvents(newFuture);
+        } else throw new IllegalArgumentException("Event is not "+ EventStatus.FUTURE.toString());
+    }
+    /**
+     * Clear the shared account
+     * @return a cleared shared account
+     */
+    public Account clear() {
+        shared = new Account(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(), Optional.<Event>empty(), new ArrayList<Event>(), new ArrayList<Event>());
+        return shared;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Account account = (Account) o;
+
+        if (!displayName.equals(account.displayName)) return false;
+        if (!givenName.equals(account.givenName)) return false;
+        if (!familyName.equals(account.familyName)) return false;
+        if (!email.equals(account.email)) return false;
+        if (currentEvent != null ? !currentEvent.equals(account.currentEvent)
+                : account.currentEvent != null) {
+            return false;
+        }
+        if (!pastEvents.equals(account.pastEvents)) return false;
+        return futureEvents.equals(account.futureEvents);
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "displayName='" + displayName + '\'' +
+                "givenName='" + givenName + '\'' +
+                ", familyName='" + familyName + '\'' +
+                ", email='" + email + '\'' +
+                ", currentEvent=" + currentEvent.get().toString() +
+                ", pastEvents=" + pastEvents +
+                ", futureEvents=" + futureEvents +
+                '}';
+    }
+
+    /**
+     * Print a shorter version of the account with just the names the email and the current event
+     * @return string containing basic informations about an account
+     */
+    public String toStringShort() {
+        return "Account{" +
+                "givenName='" + givenName + '\'' +
+                ", familyName='" + familyName + '\'' +
+                ", email='" + email + '\'' +
+                ", currentEvent=" + currentEvent.get().toString() +
+                '}';
+    }
+
+    /**
+     * Check that the passed email is an "acceptable" form (not the icann official definition)
+     * @param email
+     * @return true of email ok else false
+     */
+    private boolean emailCheck(String email){
+        Pattern p = Pattern.compile("\\b[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,13}\\b",Pattern.CASE_INSENSITIVE);
+        Matcher m=p.matcher(email);
+        return m.matches();
+        }
+    }
