@@ -1,33 +1,83 @@
 {
   "project_info": {
-    "project_number": "389584290339",
-    "project_id": "groupup-181919"
+    "project_number": "418104898937",
+    "firebase_url": "https://groupup-182012.firebaseio.com",
+    "project_id": "groupup-182012",
+    "storage_bucket": "groupup-182012.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:389584290339:android:99a60023afe6b5f3",
+        "mobilesdk_app_id": "1:418104898937:android:99a60023afe6b5f3",
         "android_client_info": {
           "package_name": "ch.epfl.sweng.groupup"
         }
       },
       "oauth_client": [
         {
-          "client_id": "389584290339-9tc5pi169mumkh5am9a4cfue9s33e1oe.apps.googleusercontent.com",
+          "client_id": "418104898937-nvo5cpm944f4354rh76s591g7kdq7fk4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.sweng.groupup",
+            "certificate_hash": "040a84950e1a5424ad90bce8e86b78b4280fc352"
+          }
+        },
+        {
+          "client_id": "418104898937-f9rkserqge4ljof9tm5incr9ln4aj7gn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.sweng.groupup",
+            "certificate_hash": "8f4c8c05cbe48127e15e848c7cb158967267f1ac"
+          }
+        },
+        {
+          "client_id": "418104898937-cnni0b4l06lhn579o91m0dlhnodvbcqp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.sweng.groupup",
+            "certificate_hash": "b65c3703e34ebc8ab8cf54ccb63ff3c559d08cc4"
+          }
+        },
+        {
+          "client_id": "418104898937-4ds6ogiekaj6sgr4nk9fn1tt9f9s2u93.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.sweng.groupup",
+            "certificate_hash": "20ec5226c4d31983c2c3deb4115cb094a1ba7a9f"
+          }
+        },
+        {
+          "client_id": "418104898937-1r4phlabpdeugieotmpqe3o18tp9s5kd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.sweng.groupup",
+            "certificate_hash": "9b58c04bc9f747844b7cb97e73aa2493a0123996"
+          }
+        },
+        {
+          "client_id": "418104898937-ib9gke2elmp6vfic42v03t0vt0hg5h6o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.sweng.groupup",
+            "certificate_hash": "ebdf26d688e4935230abf6063a15ec74fa9e91ed"
+          }
+        },
+        {
+          "client_id": "418104898937-1n61g2sra1bfnd1eupddavfabqqbahi1.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "418104898937-uhd3qrudc9i23pkq47s7t4vg5esb1nd9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "ch.epfl.sweng.groupup",
             "certificate_hash": "7b04655899de10a8e9d62c01de7d5e757d1893d0"
           }
-        },
-        {
-          "client_id": "389584290339-03d3cc1uudip0o78f3jvmm09p5niggb8.apps.googleusercontent.com",
-          "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCHaCJl0exB45vN5ryWaJ6oK3mB4Ge9R3Y"
+          "current_key": "AIzaSyBu21TD3h7Lq2taXATy8ZES0PzzOGKdGZM"
         }
       ],
       "services": {
@@ -39,7 +89,7 @@
           "other_platform_oauth_client": []
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

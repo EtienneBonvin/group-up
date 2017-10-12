@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.login.LogInActivity;
+import ch.epfl.sweng.groupup.activity.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void switchToLoginContentView() {
-        Intent intent = new Intent(this, LogInActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         startActivity(intent);
     }

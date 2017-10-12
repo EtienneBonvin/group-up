@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Inspired by: https://www.tutorialspoint.com/android/android_loading_spinner.htm  -->
+
+<rotate xmlns:android="http://schemas.android.com/apk/res/android"
+        android:fromDegrees="0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toDegrees="360">
+
+    <shape
+        android:innerRadiusRatio="3.0"
+        android:shape="ring"
+        android:thicknessRatio="1.5">
+
+        <gradient
+            android:angle="0"
+            android:centerColor="#0052d6"
+            android:endColor="#00b6d6"
+            android:startColor="#00d688"
+            android:type="sweep"
+            android:useLevel="false"/>
+    </shape>
+
+</rotate>

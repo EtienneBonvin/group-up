@@ -5,45 +5,42 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-
-
-import java.util.ArrayList;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.lib.Optional;
+import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
 import ch.epfl.sweng.groupup.object.account.Account;
-import ch.epfl.sweng.groupup.object.event.Event;
-import ch.epfl.sweng.groupup.R;
 
+import static ch.epfl.sweng.groupup.activity.login.Login.CONNECTING;
+import static ch.epfl.sweng.groupup.activity.login.Login.FIREBASE_AUTH;
+import static ch.epfl.sweng.groupup.activity.login.Login.REQUEST_CODE;
+import static ch.epfl.sweng.groupup.activity.login.Login.firebaseAuthWithGoogle;
+import static ch.epfl.sweng.groupup.activity.login.Login.firebaseCurrentUser;
+import static ch.epfl.sweng.groupup.activity.login.Login.googleApiClient;
+import static ch.epfl.sweng.groupup.activity.login.Login.googleCurrentUser;
+import static ch.epfl.sweng.groupup.activity.login.Login.setUpApiClient;
+import static ch.epfl.sweng.groupup.activity.login.Login.showAlert;
 
-public class LogInActivity extends AppCompatActivity implements View.OnClickListener,
+/**
+ * Activity to handle the sign up / login process of the user. It either asks the user to sign up /
+ * login or logs the user automatically in depending of the last state of the app.
+ */
+
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final int REQUEST_CODE = 666;
-    private static final boolean CONNECTED = true;
-
+    // Fields to represent the different objects on the GUI of the activity.
     private SignInButton signInButton;
-    private Button signOutButton;
-
-    private LinearLayout userStatsLinearLayout;
-    private TextView firstNameTextView;
-    private TextView lastNameTextView;
-    private TextView emailTextView;
-
-    private GoogleApiClient googleApiClient;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +49,21 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
         initializeFields();
         setOnClickListener();
-        setUpClient();
+        setUpApiClient(
+                getString(R.string.web_client_id), /* web_client_id  */
+                this, /* context  */
+                this, /* fragment activity  */
+                this /* on connection failed listener  */
+        );
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (FIREBASE_AUTH.getCurrentUser() != null) {
+            signIn();
+        }
     }
 
     @Override
@@ -61,8 +72,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
         if (id == R.id.sign_in_button_google) {
             signIn();
-        } else if (id == R.id.button_sign_out) {
-            signOut();
         }
     }
 
@@ -77,88 +86,130 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         if (requestCode == REQUEST_CODE) {
             GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi
                     .getSignInResultFromIntent(data);
-            handleResult(googleSignInResult);
+            handleSignInResult(googleSignInResult);
         }
     }
 
-    public void signIn() {
+    /**
+     * Method to start the whole sign in process.
+     */
+    private void signIn() {
+        toggleLoading(CONNECTING);
+
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
         startActivityForResult(signInIntent, REQUEST_CODE);
     }
 
-    public void signOut() {
-        Auth.GoogleSignInApi.signOut(googleApiClient)
-                .setResultCallback(new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(@NonNull Status status) {
-                        updateUI(!CONNECTED);
-                    }
-                });
-    }
+    /**
+     * Method to handle the sign in result. It checks of the process was successful or not and
+     * proceeds relatively to this result.
+     *
+     * @param googleSignInResult - representing the result of the sign in process
+     */
+    private void handleSignInResult(GoogleSignInResult googleSignInResult) {
+        if (googleSignInResult == null) {
+            throw new NullPointerException("googleSignInResult cannot be null");
+        }
 
-    public void handleResult(GoogleSignInResult googleSignInResult) {
         if (googleSignInResult.isSuccess()) {
-            GoogleSignInAccount googleSignInAccount = googleSignInResult.getSignInAccount();
+            googleCurrentUser = googleSignInResult.getSignInAccount();
 
-            assert googleSignInAccount != null;
-            Account.shared.withDisplayName(googleSignInAccount.getDisplayName()).
-                    withGivenName(googleSignInAccount.getGivenName()).
-                    withFamilyName(googleSignInAccount.getFamilyName()).
-                    withEmail(googleSignInAccount.getEmail());
-            updateUI(CONNECTED);
+            firebaseAuthWithGoogle(this /* activity  */, getOnCompleteListener());
         } else {
-            updateUI(!CONNECTED);
+            logInFailed(googleSignInResult.getStatus().getStatusMessage() + " " + googleSignInResult
+                    .getStatus().getStatusCode());
         }
     }
 
-    public void updateUI(boolean connected) {
-        if (connected) {
-            signInButton.setVisibility(View.GONE);
-            updateFields(CONNECTED);
-            userStatsLinearLayout.setVisibility(View.VISIBLE);
+    /**
+     * Callback to handle what happens once the authentication with Firebase is complete. It may
+     * succeed or fail.
+     *
+     * @return OnCompleteListener<AuthResult> - on complete listener for the Firebase
+     * authentication process
+     */
+    private OnCompleteListener<AuthResult> getOnCompleteListener() {
+        return new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                onFirebaseAuthComplete(task.isSuccessful());
+            }
+        };
+    }
+
+    /**
+     * This method is called once the authentication with Firebase is complete. It then
+     * proceeds depending on the success of the process.
+     *
+     * @param success - representing the success of the process
+     */
+    private void onFirebaseAuthComplete(boolean success) {
+        if (success) {
+            firebaseCurrentUser = FIREBASE_AUTH.getCurrentUser();
+
+            // TODO: bla
+            Account.shared
+                    .withEmail(googleCurrentUser.getEmail())
+                    .withDisplayName(firebaseCurrentUser.getDisplayName())
+                    .withFamilyName(googleCurrentUser.getFamilyName())
+                    .withGivenName(googleCurrentUser.getGivenName());
+            //.withUID(firebaseCurrentUser.getUid())
+            //.withPoneNumber(firebaseCurrentUser.getPhoneNumber());
+
+            Intent intent = new Intent(this, EventListActivity.class);
+            startActivity(intent);
         } else {
-            userStatsLinearLayout.setVisibility(View.GONE);
-            updateFields(!CONNECTED);
-            signInButton.setVisibility(View.VISIBLE);
+            logInFailed(getString(R.string.text_firebase_login_failed));
         }
     }
 
+    /**
+     * Method that gets called if the log in process failed. It updates the GUI and informs the
+     * user accordingly.
+     *
+     * @param statusMessage - message to display to the user
+     */
+    private void logInFailed(String statusMessage) {
+        if (statusMessage == null || statusMessage.length() == 0) {
+            statusMessage = getString(R.string.text_no_status_message);
+        }
+
+        showAlert(this /* context  */,
+                  getString(R.string.title_connection_failed),
+                  statusMessage,
+                  getString(R.string.text_button_connection_failed));
+        toggleLoading(!CONNECTING);
+    }
+
+    /**
+     * Method used to initialize all the fields of the activity.
+     */
     private void initializeFields() {
         signInButton = (SignInButton) findViewById(R.id.sign_in_button_google);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar_sign_in_login);
 
-        signOutButton = (Button) findViewById(R.id.button_sign_out);
-
-        userStatsLinearLayout = (LinearLayout) findViewById(R.id.linear_layout_log_in_user_stats);
-        firstNameTextView = (TextView) findViewById(R.id.text_view_first_name_text);
-        lastNameTextView = (TextView) findViewById(R.id.text_view_last_name_text);
-        emailTextView = (TextView) findViewById(R.id.text_view_email_text);
-
-        userStatsLinearLayout.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
     }
 
-    private void updateFields(boolean connected) {
-        if (connected) {
-            firstNameTextView.setText(Account.shared.getGivenName().getOrElse(""));
-            lastNameTextView.setText(Account.shared.getFamilyName().getOrElse(""));
-            emailTextView.setText(Account.shared.getEmail().getOrElse(""));
-        } else {
-            firstNameTextView.setText(R.string.text_view_first_name_text);
-            lastNameTextView.setText(R.string.text_view_last_name_text);
-            emailTextView.setText(R.string.text_view_email_text);
-
-            Account.shared.clear();
-        }
-    }
-
+    /**
+     * Method used to set up all on click listener for this activity.
+     */
     private void setOnClickListener() {
-        signInButton.setOnClickListener(this);
-        signOutButton.setOnClickListener(this);
+        signInButton.setOnClickListener(this /* on click listener  */);
     }
 
-    private void setUpClient() {
-        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder
-                (GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().requestProfile().build();
-        googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this).addApi
-                (Auth.GOOGLE_SIGN_IN_API, googleSignInOptions).build();
+    /**
+     * This method toggle the GUI parts of the activity depending on the state of the connection.
+     *
+     * @param connecting - represents if the user is connecting
+     */
+    private void toggleLoading(boolean connecting) {
+        if (connecting) {
+            signInButton.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+            signInButton.setVisibility(View.VISIBLE);
+        }
     }
 }
