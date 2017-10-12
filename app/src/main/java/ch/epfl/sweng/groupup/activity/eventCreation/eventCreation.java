@@ -25,6 +25,7 @@ import android.widget.Toast;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import ch.epfl.sweng.groupup.R;
@@ -234,9 +235,9 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
      * @return a DD/MM/YY string
      */
     private String date_format(int day, int month, int year){
-        return String.format("%02d", day)+"/"+
-                String.format("%02d", month+1)+"/"+
-                String.format("%02d", (year%100));
+        return String.format(Locale.getDefault(), "%02d", day)+"/"+
+                String.format(Locale.getDefault(), "%02d", month+1)+"/"+
+                String.format(Locale.getDefault(), "%02d", (year%100));
     }
 
     /**
@@ -246,6 +247,6 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
      * @return a HH:MM string
      */
     private String time_format(int hour, int minutes){
-        return String.format("%02d", hour)+":"+String.format("%02d", minutes);
+        return String.format(Locale.getDefault(), "%02d", hour)+":"+String.format(Locale.getDefault(), "%02d", minutes);
     }
 }
