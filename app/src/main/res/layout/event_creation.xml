@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color">
+
+    <!-- User input for the event name -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ui_event_name">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4"
+            android:text="@string/text_view_event_name"
+            android:textSize="20sp"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"/>
+        <EditText
+            android:id="@+id/ui_edit_event_name"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.6"
+            android:textSize="20sp"
+            android:inputType="textCapSentences|textAutoCorrect"
+            android:hint="@string/text_view_event_name_hint"
+            android:background="@color/white"/>
+
+    </LinearLayout>
+
+    <!-- User input for the starting date and time of the event -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ui_start_time"
+        android:layout_below="@id/ui_event_name">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4"
+            android:text="@string/text_view_start_time"
+            android:textSize="20sp"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"/>
+        <Button
+            android:id="@+id/button_start_date"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:text=""/>
+
+        <Button
+            android:id="@+id/button_start_time"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:text=""/>
+
+    </LinearLayout>
+
+    <!-- User input for the ending date and time of the event -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ui_end_time"
+        android:layout_below="@id/ui_start_time">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4"
+            android:text="@string/text_view_end_time"
+            android:textSize="20sp"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"/>
+
+        <Button
+            android:id="@+id/button_end_date"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:text=""/>
+
+        <Button
+            android:id="@+id/button_end_time"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:text=""/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/members"
+        android:text="@string/text_view_members"
+        android:layout_below="@id/ui_end_time"
+        android:textSize="20sp"
+        android:paddingTop="20sp"
+        android:textColor="@color/white"/>
+
+    <!-- Add Event button -->
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/button_event_creation"/>
+
+    <!-- User input for the email address of the invited users -->
+    <LinearLayout
+        android:id="@+id/layout_add_member"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/save_button"
+        android:textColor="@color/white">
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.9"
+            android:textSize="20sp"
+            android:id="@+id/edit_text_add_member"
+            android:hint="@string/text_view_invite_new_members_hint"
+            android:inputType="textWebEmailAddress"
+            android:background="@color/white"/>
+
+        <ImageView
+            android:contentDescription="plus sign"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:id="@+id/image_view_add_member"
+            android:src="@drawable/plussign"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_view_add_members"
+        android:layout_above="@id/layout_add_member"
+        android:text="@string/text_view_invite_new_members"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:paddingTop="20sp"
+        android:textColor="@color/white"/>
+
+    <!-- Scroll view showing all the already added members
+        with the possibility to delete them -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/members"
+        android:layout_above="@id/text_view_add_members"
+        android:id="@+id/scrollView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/members_list"
+            android:orientation="vertical"
+            android:textColor="@color/white">
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
