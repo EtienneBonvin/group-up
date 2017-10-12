@@ -14,7 +14,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="start"
-        android:text="@string/text_view_first_name_info"
+        android:text="@string/text_view_display_name_info"
         android:textAlignment="textStart"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -24,7 +24,7 @@
         android:id="@+id/text_view_first_name_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/text_view_first_name_text"
+        android:text="@string/text_view_display_name_text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_first_name_info"/>
@@ -34,7 +34,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="start"
-        android:text="@string/text_view_last_name_info"
+        android:text="@string/text_view_family_name_info"
         android:textAlignment="textStart"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -44,10 +44,30 @@
         android:id="@+id/text_view_last_name_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/text_view_last_name_text"
+        android:text="@string/text_view_family_name_text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_last_name_info"/>
+
+    <TextView
+        android:id="@+id/text_view_given_name_info"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:text="@string/text_view_given_name_info"
+        android:textAlignment="textStart"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_last_name_text"/>
+
+    <TextView
+        android:id="@+id/text_view_given_name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_view_given_name_text"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_given_name_info"/>
 
     <TextView
         android:id="@+id/text_view_email_info"
@@ -58,7 +78,7 @@
         android:textAlignment="textStart"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_last_name_text"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_given_name_text"/>
 
     <TextView
         android:id="@+id/text_view_email_text"
@@ -79,6 +99,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_email_text"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_given_name_text"
+        app:layout_constraintVertical_bias="0.498"/>
 
 </android.support.constraint.ConstraintLayout>

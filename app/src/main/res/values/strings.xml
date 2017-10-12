@@ -11,10 +11,12 @@
     <string name="text_button_connection_failed">OK</string>
     <string name="button_sign_out_text">Sign Out</string>
 
-    <string name="text_view_first_name_info">First Name:</string>
-    <string name="text_view_first_name_text">NO_FIRST_NAME</string>
-    <string name="text_view_last_name_info">Last Name:</string>
-    <string name="text_view_last_name_text">NO_LAST_NAME</string>
+    <string name="text_view_display_name_info">Display Name:</string>
+    <string name="text_view_display_name_text">NO_DISPLAY_NAME</string>
+    <string name="text_view_family_name_info">Family Name:</string>
+    <string name="text_view_family_name_text">NO_FAMILY_NAME</string>
+    <string name="text_view_given_name_info">Given Name:</string>
+    <string name="text_view_given_name_text">NO_GIVEN_NAME</string>
     <string name="text_view_email_info">Email:</string>
     <string name="text_view_email_text">NO_EMAIL</string>
 </resources>

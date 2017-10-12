@@ -32,8 +32,9 @@ public class EventListActivity extends AppCompatActivity implements View.OnClick
         GoogleApiClient.OnConnectionFailedListener {
 
     // Fields to represent the different objects on the GUI of the activity.
-    private TextView firstNameTextView;
-    private TextView lastNameTextView;
+    private TextView displayNameTextView;
+    private TextView familyNameTextView;
+    private TextView givenNameTextView;
     private TextView emailTextView;
 
     @Override
@@ -64,8 +65,9 @@ public class EventListActivity extends AppCompatActivity implements View.OnClick
      * Method used to initialize all the fields of the activity.
      */
     private void initializeFields() {
-        firstNameTextView = (TextView) findViewById(R.id.text_view_first_name_text);
-        lastNameTextView = (TextView) findViewById(R.id.text_view_last_name_text);
+        displayNameTextView = (TextView) findViewById(R.id.text_view_first_name_text);
+        familyNameTextView = (TextView) findViewById(R.id.text_view_last_name_text);
+        givenNameTextView = (TextView) findViewById(R.id.text_view_given_name_text);
         emailTextView = (TextView) findViewById(R.id.text_view_email_text);
     }
 
@@ -76,15 +78,18 @@ public class EventListActivity extends AppCompatActivity implements View.OnClick
      */
     private void updateUI(boolean connected) {
         if (connected) {
-            firstNameTextView.setText(Account.shared.getDisplayName()
-                                              .getOrElse(getString(R.string.text_view_first_name_text)));
-            lastNameTextView.setText(Account.shared.getFamilyName()
-                                             .getOrElse(getString(R.string.text_view_last_name_text)));
+            displayNameTextView.setText(Account.shared.getDisplayName()
+                                                .getOrElse(getString(R.string.text_view_display_name_text)));
+            familyNameTextView.setText(Account.shared.getFamilyName()
+                                               .getOrElse(getString(R.string.text_view_family_name_text)));
+            givenNameTextView.setText(Account.shared.getGivenName()
+                                              .getOrElse(getString(R.string.text_view_given_name_text)));
             emailTextView.setText(Account.shared.getEmail()
                                           .getOrElse(getString(R.string.text_view_email_text)));
         } else {
-            firstNameTextView.setText(R.string.text_view_first_name_text);
-            lastNameTextView.setText(R.string.text_view_last_name_text);
+            displayNameTextView.setText(R.string.text_view_display_name_text);
+            familyNameTextView.setText(R.string.text_view_family_name_text);
+            givenNameTextView.setText(R.string.text_view_given_name_text);
             emailTextView.setText(R.string.text_view_email_text);
         }
     }
