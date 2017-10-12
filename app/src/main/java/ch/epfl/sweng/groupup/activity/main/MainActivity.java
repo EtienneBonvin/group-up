@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                switchToLoginContentView(); // Make it depend on states "LOGGED_IN" and "LOGGED_OUT".
+                switchToLoginContentView();
             }
         }, 3000); // 3000ms delay
     }

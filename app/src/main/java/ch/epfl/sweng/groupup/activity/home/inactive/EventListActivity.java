@@ -76,7 +76,6 @@ public class EventListActivity extends AppCompatActivity implements View.OnClick
      */
     private void updateUI(boolean connected) {
         if (connected) {
-            // TODO: bla
             firstNameTextView.setText(Account.shared.getDisplayName()
                                               .getOrElse(getString(R.string.text_view_first_name_text)));
             lastNameTextView.setText(Account.shared.getFamilyName()
