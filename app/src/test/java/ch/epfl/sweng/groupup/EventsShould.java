@@ -112,7 +112,7 @@ public class EventsShould {
         assertEquals(updatedMember, eventMembers);
     }
 
-    //Test that print an event to the console so that we can visually see if an event is correctly
+   /* //Test that print an event to the console so that we can visually see if an event is correctly
    //printed
    @Test
     public void testToString(){
@@ -123,7 +123,7 @@ public class EventsShould {
         members.add(test1);
         Event e =new Event("Name", LocalDateTime.now(),LocalDateTime.now().plusDays(1),members,1);
         System.out.println(e.toString());
-    }
+    }*/
 
     @Test(expected = IllegalArgumentException.class)
     public void preventAddingMembersToCurrentEvents() {
