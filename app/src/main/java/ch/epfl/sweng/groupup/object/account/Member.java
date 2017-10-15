@@ -46,7 +46,7 @@ public final class Member extends User {
      * @param newEmail the new email of the member
      * @return a new member with the given email
      */
-    public Member withEmail(String newEmail){
+    public Member withEmail(String newEmail) {
         return new Member(displayName, givenName, familyName, Optional.from(newEmail));
     }
 }

@@ -57,4 +57,14 @@ abstract class User {
     public Optional<String> getEmail(){
         return email;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "displayName=" + displayName +
+                ",  givenName=" + givenName +
+                ", familyName=" + familyName +
+                ", email=" + email +
+                '}';
+    }
 }

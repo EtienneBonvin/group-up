@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 import org.joda.time.LocalDateTime;
 
@@ -111,6 +112,19 @@ public class EventsShould {
         assertEquals(updatedMember, eventMembers);
     }
 
+    //Test that print an event to the console so that we can visually see if an event is correctly
+   //printed
+   @Test
+    public void testToString(){
+        Member test = new Member("Test", "Tested", "Tester", "test@test.test");
+        Member test1 = new Member("Test1", "Tested1", "Tester1", "test1@test.test");
+        List<Member> members= new ArrayList<>();
+        members.add(test);
+        members.add(test1);
+        Event e =new Event("Name", LocalDateTime.now(),LocalDateTime.now().plusDays(1),members,1);
+        System.out.println(e.toString());
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void preventAddingMembersToCurrentEvents() {
         LocalDateTime startDate = LocalDateTime.now().minusHours(1);
@@ -129,5 +143,6 @@ public class EventsShould {
         event = new Event("Name", startDate, endDate, eventMembers, eventID);
         event.addMember(member);
     }
+
 
 }
