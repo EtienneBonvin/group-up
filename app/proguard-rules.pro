@@ -26,3 +26,4 @@
 
 -keepattributes Signature
 -keepattributes *Annotation*
+-keepclassmembers class ch.epfl.sweng.groupup.object.** {*;}
