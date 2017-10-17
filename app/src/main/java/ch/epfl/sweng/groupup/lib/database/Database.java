@@ -29,15 +29,20 @@ public final class Database {
     private static final String NODE_EVENT_MEMBERS_STATUS_ACCEPTED = "accepted";
     private static final String NODE_EVENT_MEMBERS_STATUS_REFUSED = "refused";
 
-    private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private static final DatabaseReference databaseRef = database.getReference();
+    private static FirebaseDatabase database;
+    private static DatabaseReference databaseRef;
 
     private Database() {
         // Not instantiable.
     }
 
     public static void setUpDatabase() {
-        database.setPersistenceEnabled(true);
+        if (database == null) {
+            database = FirebaseDatabase.getInstance();
+            database.setPersistenceEnabled(true);
+        }
+
+        databaseRef = database.getReference();
 
         databaseRef.child(NODE_USERS_LIST).addValueEventListener(getUsersListener());
         databaseRef.child(NODE_EVENTS_LIST).addValueEventListener(getEventsListener());
