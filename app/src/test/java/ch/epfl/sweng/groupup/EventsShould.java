@@ -21,7 +21,7 @@ public class EventsShould {
     @Before
     public void init() {
         List<Member> eventMembers = new ArrayList<>();
-        event = new Event("Name", new LocalDateTime(), new LocalDateTime(), eventMembers);
+        event = new Event("Name", new LocalDateTime(), new LocalDateTime(), "My amazing description", eventMembers);
     }
 
     @Test
@@ -42,6 +42,11 @@ public class EventsShould {
     }
 
     @Test
+    public void haveDescription() {
+        assertEquals(event.getDescription(), "My amazing description");
+    }
+
+    @Test
     public void haveMembers() {
         List<Member> eventMembers = new ArrayList<>();
         eventMembers.add(member);
@@ -53,7 +58,7 @@ public class EventsShould {
         LocalDateTime startDate = LocalDateTime.now().minusHours(1);
         LocalDateTime endDate = LocalDateTime.now().plusHours(1);
         List<Member> eventMembers = new ArrayList<>();
-        event = new Event("Name", startDate, endDate, eventMembers);
+        event = new Event("Name", startDate, endDate, "Description", eventMembers);
         assertEquals(event.getEventStatus(), EventStatus.CURRENT);
     }
 
@@ -62,7 +67,7 @@ public class EventsShould {
         LocalDateTime startDate = LocalDateTime.now().plusDays(1);
         LocalDateTime endDate = LocalDateTime.now().plusDays(2);
         List<Member> eventMembers = new ArrayList<>();
-        event = new Event("Name", startDate, endDate, eventMembers);
+        event = new Event("Name", startDate, endDate, "Description", eventMembers);
         assertEquals(event.getEventStatus(), EventStatus.FUTURE);
     }
 
@@ -71,7 +76,7 @@ public class EventsShould {
         LocalDateTime startDate = LocalDateTime.now().minusHours(1);
         LocalDateTime endDate = LocalDateTime.now().minusMinutes(2);
         List<Member> eventMembers = new ArrayList<>();
-        event = new Event("Name", startDate, endDate, eventMembers);
+        event = new Event("Name", startDate, endDate, "Description", eventMembers);
         assertEquals(event.getEventStatus(), EventStatus.PAST);
     }
 
@@ -88,7 +93,7 @@ public class EventsShould {
         LocalDateTime startDate = LocalDateTime.now().plusDays(1);
         LocalDateTime endDate = LocalDateTime.now().plusDays(2);
         List<Member> eventMembers = new ArrayList<>();
-        event = new Event("Name", startDate, endDate, eventMembers);
+        event = new Event("Name", startDate, endDate, "Description", eventMembers);
         eventMembers.add(member);
 
         List<Member> updatedMember;
@@ -102,7 +107,7 @@ public class EventsShould {
         LocalDateTime startDate = LocalDateTime.now().plusDays(1);
         LocalDateTime endDate = LocalDateTime.now().plusDays(2);
         List<Member> eventMembers = new ArrayList<>();
-        event = new Event("Name", startDate, endDate, eventMembers);
+        event = new Event("Name", startDate, endDate, "Description", eventMembers);
         eventMembers.add(member);
 
         List<Member> updatedMember;
@@ -116,7 +121,7 @@ public class EventsShould {
         LocalDateTime startDate = LocalDateTime.now().minusHours(1);
         LocalDateTime endDate = LocalDateTime.now().plusDays(2);
         List<Member> eventMembers = new ArrayList<>();
-        event = new Event("Name", startDate, endDate, eventMembers);
+        event = new Event("Name", startDate, endDate, "Description", eventMembers);
         event.addMember(member);
 
     }
@@ -126,7 +131,7 @@ public class EventsShould {
         LocalDateTime startDate = LocalDateTime.now().minusHours(1);
         LocalDateTime endDate = LocalDateTime.now().minusMinutes(2);
         List<Member> eventMembers = new ArrayList<>();
-        event = new Event("Name", startDate, endDate, eventMembers);
+        event = new Event("Name", startDate, endDate, "Description", eventMembers);
         event.addMember(member);
     }
 

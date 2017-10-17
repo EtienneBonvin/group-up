@@ -14,22 +14,24 @@ public final class Event {
     private final String eventName;
     private final LocalDateTime startTime;
     private final LocalDateTime endTime;
+    private final String description;
     private final List<Member> eventMembers;
 
-    public Event(String eventName, LocalDateTime startTime, LocalDateTime endTime, List<Member> eventMembers) {
+    public Event(String eventName, LocalDateTime startTime, LocalDateTime endTime, String description, List<Member> eventMembers) {
         this.UUID = java.util.UUID.randomUUID().toString();
         this.eventName = eventName;
         this.startTime = startTime;
         this.endTime = endTime;
-
+        this.description = description;
         this.eventMembers = Collections.unmodifiableList(new ArrayList<>(eventMembers));
     }
 
-    private Event(String uuid, String eventName, LocalDateTime startTime, LocalDateTime endTime, List<Member> eventMembers) {
+    private Event(String uuid, String eventName, LocalDateTime startTime, LocalDateTime endTime, String description, List<Member> eventMembers) {
         this.UUID = uuid;
         this.eventName = eventName;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.description = description;
         this.eventMembers = Collections.unmodifiableList(new ArrayList<>(eventMembers));
     }
 
@@ -74,12 +76,18 @@ public final class Event {
     }
 
     /**
+     * Getter for the event description
+     * @return String description of event
+     */
+    public String getDescription() { return description; }
+
+    /**
      * Change the name of an event
      * @param eventName
      * @return the modified event
      */
     public Event withEventName(String eventName){
-        return new Event(UUID, eventName, startTime, endTime, eventMembers);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers);
     }
 
     /**
@@ -88,7 +96,7 @@ public final class Event {
      * @return the modified event
      */
     public Event withStartTime(LocalDateTime startTime){
-        return new Event(UUID, eventName, startTime, endTime, eventMembers);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers);
     }
 
     /**
@@ -97,7 +105,16 @@ public final class Event {
      * @return the modified event
      */
     public Event withEndTime(LocalDateTime endTime){
-        return new Event(UUID, eventName, startTime, endTime, eventMembers);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers);
+    }
+
+    /**
+     * Change the description of an event
+     * @param description
+     * @return the modified event
+     */
+    public Event withDescription(String description) {
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers);
     }
 
     /**
@@ -106,7 +123,7 @@ public final class Event {
      * @return the modified event
      */
     public Event withEventMembers(List<Member> eventMembers){
-        return new Event(UUID, eventName, startTime, endTime, eventMembers);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers);
     }
 
     /**
