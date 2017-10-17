@@ -20,15 +20,15 @@ import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
 import ch.epfl.sweng.groupup.object.account.Account;
 
-import static ch.epfl.sweng.groupup.activity.login.Login.CONNECTING;
-import static ch.epfl.sweng.groupup.activity.login.Login.FIREBASE_AUTH;
-import static ch.epfl.sweng.groupup.activity.login.Login.REQUEST_CODE;
-import static ch.epfl.sweng.groupup.activity.login.Login.firebaseAuthWithGoogle;
-import static ch.epfl.sweng.groupup.activity.login.Login.firebaseCurrentUser;
-import static ch.epfl.sweng.groupup.activity.login.Login.googleApiClient;
-import static ch.epfl.sweng.groupup.activity.login.Login.googleCurrentUser;
-import static ch.epfl.sweng.groupup.activity.login.Login.setUpApiClient;
-import static ch.epfl.sweng.groupup.activity.login.Login.showAlert;
+import static ch.epfl.sweng.groupup.lib.Login.CONNECTING;
+import static ch.epfl.sweng.groupup.lib.Login.FIREBASE_AUTH;
+import static ch.epfl.sweng.groupup.lib.Login.REQUEST_CODE;
+import static ch.epfl.sweng.groupup.lib.Login.firebaseAuthWithGoogle;
+import static ch.epfl.sweng.groupup.lib.Login.firebaseCurrentUser;
+import static ch.epfl.sweng.groupup.lib.Login.googleApiClient;
+import static ch.epfl.sweng.groupup.lib.Login.googleCurrentUser;
+import static ch.epfl.sweng.groupup.lib.Login.setUpApiClient;
+import static ch.epfl.sweng.groupup.lib.Login.showAlert;
 
 /**
  * Activity to handle the sign up / login process of the user. It either asks the user to sign up /

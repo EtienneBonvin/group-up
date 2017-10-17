@@ -18,10 +18,10 @@ import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
 import ch.epfl.sweng.groupup.object.account.Account;
 
-import static ch.epfl.sweng.groupup.activity.login.Login.CONNECTED;
-import static ch.epfl.sweng.groupup.activity.login.Login.FIREBASE_AUTH;
-import static ch.epfl.sweng.groupup.activity.login.Login.googleApiClient;
-import static ch.epfl.sweng.groupup.activity.login.Login.setUpApiClient;
+import static ch.epfl.sweng.groupup.lib.Login.CONNECTED;
+import static ch.epfl.sweng.groupup.lib.Login.FIREBASE_AUTH;
+import static ch.epfl.sweng.groupup.lib.Login.googleApiClient;
+import static ch.epfl.sweng.groupup.lib.Login.setUpApiClient;
 
 /**
  * For now this activity will just display information about the logged in user and gives the
