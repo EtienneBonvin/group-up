@@ -6,7 +6,7 @@ import ch.epfl.sweng.groupup.lib.Optional;
  * The user abstract class is extended by the Account and Member classes
  * to give them access to common first name, last name and email.
  */
-abstract class User {
+public abstract class User {
     protected final Optional<String> displayName;
     protected final Optional<String> givenName;
     protected final Optional<String> familyName;
