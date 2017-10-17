@@ -11,7 +11,7 @@ import ch.epfl.sweng.groupup.object.event.EventStatus;
 
 public final class Account extends User {
 
-    public static Account shared = new Account(Optional.<String>empty(), Optional.<String>empty(),
+    public static Account shared = new Account(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
             Optional.<String>empty(), Optional.<String>empty(), Optional.<Event>empty(),
             new ArrayList<Event>(), new ArrayList<Event>());;
 
@@ -19,45 +19,13 @@ public final class Account extends User {
     private final List<Event> pastEvents;
     private final List<Event> futureEvents;
 
-    private Account(Optional<String> displayName, Optional<String> givenName,
+    private Account(Optional<String> UUID, Optional<String> displayName, Optional<String> givenName,
                     Optional<String> familyName, Optional<String> email,
                     Optional<Event> currentEvent, List<Event> past, List<Event> future) {
-        super(displayName, givenName, familyName, email);
+        super(displayName, givenName, familyName, email, UUID);
         this.currentEvent = currentEvent;
         this.pastEvents = past;
         this.futureEvents = future;
-    }
-
-    /**
-     * Getter for the display name of the account
-     * @return String dispaly name
-     */
-    public Optional<String> getDisplayName() {
-        return displayName;
-    }
-
-    /**
-     * Getter for the given name of the account
-     * @return String given name
-     */
-    public Optional<String> getGivenName() {
-        return givenName;
-    }
-
-    /**
-     * Getter for the family name of the account
-     * @return String family name
-     */
-    public Optional<String> getFamilyName() {
-        return familyName;
-    }
-
-    /**
-     * Getter for the email of the account
-     * @return String email
-     */
-    public Optional<String> getEmail() {
-        return email;
     }
 
     /**
@@ -85,12 +53,22 @@ public final class Account extends User {
     }
 
     /**
+     * Change the UUID of the shared account
+     * @param UUID the new UUID
+     * @return the modified shared account, so that it is easier to call in chain
+     */
+    public Account withUUID(String UUID) {
+        shared = new Account(Optional.from(UUID), displayName, givenName, familyName, email, currentEvent, pastEvents, futureEvents);
+        return shared;
+    }
+
+    /**
      * Change the display name of the shared account
      * @param displayName
      * @return the modified shared account, so that it is easier to call in chain
      */
     public Account withDisplayName(String displayName) {
-        shared = new Account(Optional.from(displayName), givenName, familyName, email,
+        shared = new Account(UUID, Optional.from(displayName), givenName, familyName, email,
                 currentEvent, pastEvents, futureEvents);
         return shared;
     }
@@ -101,7 +79,7 @@ public final class Account extends User {
      * @return the modified shared account, so that it is easier to call in chain
      */
     public Account withGivenName(String givenName) {
-        shared = new Account(displayName, Optional.from(givenName), familyName, email,
+        shared = new Account(UUID, displayName, Optional.from(givenName), familyName, email,
                 currentEvent, pastEvents, futureEvents);
         return shared;
     }
@@ -112,7 +90,7 @@ public final class Account extends User {
      * @return the modified shared account, so that it is easier to call in chain
      */
     public Account withFamilyName(String familyName) {
-        shared = new Account(displayName, givenName, Optional.from(familyName), email,
+        shared = new Account(UUID, displayName, givenName, Optional.from(familyName), email,
                 currentEvent, pastEvents, futureEvents);
         return shared;
     }
@@ -124,7 +102,7 @@ public final class Account extends User {
      */
     public Account withEmail(String email) {
         if (emailCheck(email)) {
-            shared = new Account(displayName, givenName, familyName, Optional.from(email),
+            shared = new Account(UUID, displayName, givenName, familyName, Optional.from(email),
                     currentEvent, pastEvents, futureEvents);
             return shared;
         }
@@ -139,12 +117,12 @@ public final class Account extends User {
 
     public Account withCurrentEvent(Optional<Event> current) {
         if (current.isEmpty()){
-            shared = new Account(displayName, givenName, familyName, email,
+            shared = new Account(UUID, displayName, givenName, familyName, email,
                     current, pastEvents, futureEvents);
         }
         else {
             if (current.get().getEventStatus().equals(EventStatus.CURRENT)) {
-                shared = new Account(displayName, givenName, familyName, email,
+                shared = new Account(UUID, displayName, givenName, familyName, email,
                         current, pastEvents, futureEvents);
             } else throw new IllegalArgumentException("Event is not "+ EventStatus.CURRENT.toString());
         }
@@ -157,7 +135,7 @@ public final class Account extends User {
      * @return the modified shared account, so that it is easier to call in chain
      */
     public Account withPastEvents(List<Event> past) {
-        shared = new Account(displayName, givenName, familyName, email,
+        shared = new Account(UUID, displayName, givenName, familyName, email,
                 currentEvent, past, futureEvents);
         return shared;
     }
@@ -168,7 +146,7 @@ public final class Account extends User {
      * @return the modified shared account, so that it is easier to call in chain
      */
     public Account withFutureEvents(List<Event> future) {
-        shared = new Account(displayName, givenName, familyName, email,
+        shared = new Account(UUID, displayName, givenName, familyName, email,
                 currentEvent, pastEvents, future);
         return shared;
     }
@@ -202,7 +180,7 @@ public final class Account extends User {
      * @return a cleared shared account
      */
     public Account clear() {
-        shared = new Account(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(), Optional.<Event>empty(), new ArrayList<Event>(), new ArrayList<Event>());
+        shared = new Account(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(), Optional.<Event>empty(), new ArrayList<Event>(), new ArrayList<Event>());
         return shared;
     }
 
@@ -213,6 +191,7 @@ public final class Account extends User {
 
         Account account = (Account) o;
 
+        if (!UUID.equals(account.UUID)) return false;
         if (!displayName.equals(account.displayName)) return false;
         if (!givenName.equals(account.givenName)) return false;
         if (!familyName.equals(account.familyName)) return false;
@@ -228,6 +207,7 @@ public final class Account extends User {
     @Override
     public String toString() {
         return "Account{" +
+                "UUID='" + UUID + '\'' +
                 "displayName='" + displayName + '\'' +
                 "givenName='" + givenName + '\'' +
                 ", familyName='" + familyName + '\'' +

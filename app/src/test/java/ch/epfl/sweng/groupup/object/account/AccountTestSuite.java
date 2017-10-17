@@ -22,7 +22,13 @@ import static ch.epfl.sweng.groupup.object.account.Account.shared;
 
 public class AccountTestSuite {
 
-    private Member member = new Member("Even monkeys can fly", "Tester", "Test","test@test.test");
+    private Member member = new Member("UUID", "Even monkeys can fly", "Tester", "Test","test@test.test");
+    @Test
+    public void withUUIDOK() {
+        shared.withUUID("UUID2");
+        assertEquals(shared.getUUID().get(), "UUID2");
+    }
+
     @Test
     public void withDisplayNameOK(){
         shared.withDisplayName("Tester");

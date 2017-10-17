@@ -7,12 +7,13 @@ import static org.junit.Assert.*;
 public class MembersShould {
     @Test
     public void beCreated(){
-        Member m = new Member("XavierP", "Xavier", "Pantet", "xavier@pantet.ch");
+        Member m = new Member("UUID", "XavierP", "Xavier", "Pantet", "xavier@pantet.ch");
     }
 
     @Test
     public void allowAccessToItsAttributes(){
-        Member m = new Member("XavierP", "Xavier", "Pantet", "xavier@pantet.ch");
+        Member m = new Member("UUID", "XavierP", "Xavier", "Pantet", "xavier@pantet.ch");
+        assertEquals(m.getUUID().get(), "UUID");
         assertEquals(m.getDisplayName().get(), "XavierP");
         assertEquals(m.getGivenName().get(), "Xavier");
         assertEquals(m.getFamilyName().get(), "Pantet");
@@ -21,8 +22,9 @@ public class MembersShould {
 
     @Test
     public void allowToBeModified(){
-        Member m = new Member("XavierP", "Xavier", "Pantet", "xavier@pantet.ch");
-        m = m.withDisplayName("CedricM").withFirstName("Cedric").withLastName("Maire").withEmail("cedric@maire.de");
+        Member m = new Member("UUID", "XavierP", "Xavier", "Pantet", "xavier@pantet.ch");
+        m = m.withUUID("UUID2").withDisplayName("CedricM").withFirstName("Cedric").withLastName("Maire").withEmail("cedric@maire.de");
+        assertEquals(m.getUUID().get(), "UUID2");
         assertEquals(m.getDisplayName().get(), "CedricM");
         assertEquals(m.getGivenName().get(), "Cedric");
         assertEquals(m.getFamilyName().get(), "Maire");
@@ -31,11 +33,13 @@ public class MembersShould {
 
     @Test
     public void beImmutable(){
+        String UUID = "UUID";
         String displayName = "XavierP";
         String firstName = "Xavier";
         String lastName = "Pantet";
         String email = "xavier@pantet.ch";
-        Member m0 = new Member(displayName, firstName, lastName, email);
+        Member m0 = new Member(UUID, displayName, firstName, lastName, email);
+        assertFalse(m0.withUUID("UUID2") == m0);
         assertFalse(m0.withDisplayName("CedricM") == m0);
         assertFalse(m0.withFirstName("Cedric") == m0);
         assertFalse(m0.withLastName("Maire") == m0);
