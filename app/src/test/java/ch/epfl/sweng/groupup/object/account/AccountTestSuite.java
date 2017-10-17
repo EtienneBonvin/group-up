@@ -55,49 +55,49 @@ public class AccountTestSuite {
     @Test
     public void withCurrentEventOK(){
         shared.withCurrentEvent(Optional.from(new Event("Test", new LocalDateTime().minusDays(1),
-                new LocalDateTime().plusDays(1), new ArrayList<Member>(), 0)));
+                new LocalDateTime().plusDays(1), new ArrayList<Member>())));
         assertEquals(shared.getCurrentEvent().get().getEventStatus(),EventStatus.CURRENT);
     }
     @Test(expected = IllegalArgumentException.class)
     public void withCurrentEventNotOKWithPastEvent(){
         shared.withCurrentEvent(Optional.from(new Event("Test", new LocalDateTime().minusDays(2),
-                new LocalDateTime().minusDays(1), new ArrayList<Member>(), 0)));
+                new LocalDateTime().minusDays(1), new ArrayList<Member>())));
     }
 
     @Test
     public void addPastEventOK(){
         shared.addPastEvent(new Event("Test", new LocalDateTime().minusDays(2),
-                new LocalDateTime().minusDays(1), new ArrayList<Member>(), 0));
+                new LocalDateTime().minusDays(1), new ArrayList<Member>()));
         assertEquals(shared.getPastEvents().get(0).getEventStatus(),EventStatus.PAST);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addPastEventNotOKWithCurrentEvent() {
         shared.addPastEvent(new Event("Test", new LocalDateTime().minusDays(2),
-                new LocalDateTime().plusDays(1), new ArrayList<Member>(), 0));
+                new LocalDateTime().plusDays(1), new ArrayList<Member>()));
     }
     @Test
     public void addFutureEventOK(){
         shared.addFutureEvent(new Event("Test", new LocalDateTime().plusDays(1),
-                new LocalDateTime().plusDays(2), new ArrayList<Member>(), 0));
+                new LocalDateTime().plusDays(2), new ArrayList<Member>()));
         assertEquals(shared.getFutureEvents().get(0).getEventStatus(),EventStatus.FUTURE);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addFutureEventNotOKWithCurrentEvent() {
         shared.addFutureEvent(new Event("Test", new LocalDateTime().minusDays(2),
-                new LocalDateTime().plusDays(1), new ArrayList<Member>(), 0));
+                new LocalDateTime().plusDays(1), new ArrayList<Member>()));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addFutureEventNotOKWithPastEvent() {
         shared.addFutureEvent(new Event("Test", new LocalDateTime().minusDays(2),
-                new LocalDateTime().minusDays(1), new ArrayList<Member>(), 0));
+                new LocalDateTime().minusDays(1), new ArrayList<Member>()));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addPastEventNotOKWithFutureEvent() {
         shared.addPastEvent(new Event("Test", new LocalDateTime().plusDays(1),
-                new LocalDateTime().plusDays(2), new ArrayList<Member>(), 0));
+                new LocalDateTime().plusDays(2), new ArrayList<Member>()));
     }
 }

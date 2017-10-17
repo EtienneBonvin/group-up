@@ -10,19 +10,27 @@ import ch.epfl.sweng.groupup.object.account.Member;
 
 public final class Event {
 
+    private final String UUID;
     private final String eventName;
     private final LocalDateTime startTime;
     private final LocalDateTime endTime;
     private final List<Member> eventMembers;
-    private final int eventID;
 
-    public Event(String eventName, LocalDateTime startTime, LocalDateTime endTime, List<Member> eventMembers, int eventID) {
+    public Event(String eventName, LocalDateTime startTime, LocalDateTime endTime, List<Member> eventMembers) {
+        this.UUID = java.util.UUID.randomUUID().toString();
         this.eventName = eventName;
         this.startTime = startTime;
         this.endTime = endTime;
 
         this.eventMembers = Collections.unmodifiableList(new ArrayList<>(eventMembers));
-        this.eventID = eventID;
+    }
+
+    private Event(String uuid, String eventName, LocalDateTime startTime, LocalDateTime endTime, List<Member> eventMembers) {
+        this.UUID = uuid;
+        this.eventName = eventName;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.eventMembers = Collections.unmodifiableList(new ArrayList<>(eventMembers));
     }
 
     /**
@@ -59,10 +67,10 @@ public final class Event {
 
     /**
      * Getter for the event ID
-     * @return int unique ID of event
+     * @return String unique ID of event
      */
-    public int getEventID() {
-        return eventID;
+    public String getUUID() {
+        return UUID;
     }
 
     /**
@@ -71,7 +79,7 @@ public final class Event {
      * @return the modified event
      */
     public Event withEventName(String eventName){
-        return new Event(eventName, startTime, endTime, eventMembers, eventID);
+        return new Event(UUID, eventName, startTime, endTime, eventMembers);
     }
 
     /**
@@ -80,7 +88,7 @@ public final class Event {
      * @return the modified event
      */
     public Event withStartTime(LocalDateTime startTime){
-        return new Event(eventName, startTime, endTime, eventMembers, eventID);
+        return new Event(UUID, eventName, startTime, endTime, eventMembers);
     }
 
     /**
@@ -89,7 +97,7 @@ public final class Event {
      * @return the modified event
      */
     public Event withEndTime(LocalDateTime endTime){
-        return new Event(eventName, startTime, endTime, eventMembers, eventID);
+        return new Event(UUID, eventName, startTime, endTime, eventMembers);
     }
 
     /**
@@ -98,7 +106,7 @@ public final class Event {
      * @return the modified event
      */
     public Event withEventMembers(List<Member> eventMembers){
-        return new Event(eventName, startTime, endTime, eventMembers, eventID);
+        return new Event(UUID, eventName, startTime, endTime, eventMembers);
     }
 
     /**
@@ -141,7 +149,7 @@ public final class Event {
         if (!this.getEventStatus().equals(event.getEventStatus())) return false;
         if (!startTime.equals(event.startTime)) return false;
         if (!endTime.equals(event.endTime)) return false;
-        if (!(eventID==event.eventID)) return false;
+        if (!(UUID==event.UUID)) return false;
         return eventMembers.equals(event.eventMembers);
     }
 
@@ -153,7 +161,7 @@ public final class Event {
                 ", startDate='" + startTime + '\'' +
                 ", endDate=" + endTime + '\'' +
                 ", evenStatus=" + getEventStatus() + '\'' +
-                ", eventID= " + eventID +
+                ", eventID= " + UUID +
                 '}';
     }
 
@@ -165,7 +173,7 @@ public final class Event {
         return "Event{" +
                 "eventName='" + eventName + '\'' +
                 ", eventStatus='" + getEventStatus() +
-                ", eventID= " + eventID +
+                ", eventID= " + UUID +
                 '}';
     }
 }
