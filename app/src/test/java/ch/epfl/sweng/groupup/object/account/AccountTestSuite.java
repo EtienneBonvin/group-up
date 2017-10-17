@@ -106,4 +106,22 @@ public class AccountTestSuite {
         shared.addPastEvent(new Event("Test", new LocalDateTime().plusDays(1),
                 new LocalDateTime().plusDays(2), new ArrayList<Member>()));
     }
+
+    @Test
+    public void addEventsCorrectly(){
+        // Test for past event
+        shared.addPastEvent(new Event("Test", new LocalDateTime().minusDays(2),
+                new LocalDateTime().minusDays(1), new ArrayList<Member>()));
+        assertEquals(shared.getPastEvents().get(1).getEventStatus(),EventStatus.PAST);
+
+        // Test for future event
+        shared.addFutureEvent(new Event("Test", new LocalDateTime().plusDays(1),
+                new LocalDateTime().plusDays(2), new ArrayList<Member>()));
+        assertEquals(shared.getFutureEvents().get(1).getEventStatus(),EventStatus.FUTURE);
+
+        // Test for current event
+        shared.withCurrentEvent(Optional.from(new Event("Test", new LocalDateTime().minusDays(1),
+                new LocalDateTime().plusDays(1), new ArrayList<Member>())));
+        assertEquals(shared.getCurrentEvent().get().getEventStatus(),EventStatus.CURRENT);
+    }
 }

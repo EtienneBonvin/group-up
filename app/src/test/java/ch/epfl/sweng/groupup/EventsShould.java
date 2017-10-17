@@ -77,6 +77,7 @@ public class EventsShould {
 
     @Test
     public void haveID() {
+        System.out.print(event.getUUID());
         assertNotNull(event.getUUID());
     }
 

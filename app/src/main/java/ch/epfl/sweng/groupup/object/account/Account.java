@@ -150,6 +150,23 @@ public final class Account extends User {
                 currentEvent, pastEvents, future);
         return shared;
     }
+
+    /**
+     * Add an event to the right event list depending on its EventStatus property
+     * @param event the event to add
+     * @return the modified shared account, so that it is easier to call in chain
+     */
+    public Account addEvent(Event event) {
+        switch (event.getEventStatus()){
+            case FUTURE:
+                return addFutureEvent(event);
+            case PAST:
+                return addPastEvent(event);
+            default:
+                return withCurrentEvent(Optional.<Event>from(event));
+        }
+    }
+
     /**
      * Add a past event list of the shared account
      * @param past event to add
