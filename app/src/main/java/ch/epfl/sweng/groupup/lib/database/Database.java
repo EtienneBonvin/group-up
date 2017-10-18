@@ -11,6 +11,7 @@ import com.google.firebase.database.ValueEventListener;
 import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -19,7 +20,7 @@ import ch.epfl.sweng.groupup.object.event.Event;
 
 public final class Database {
 
-    // TODO: invite state
+    // TODO: invite state, event ID renew each time we add the event.
 
     private static final String EMPTY_FIELD = "EMPTY_FIELD";
 
@@ -90,6 +91,29 @@ public final class Database {
     }
 
     private static void storeEvent(Event event) {
+        DatabaseEvent eventToStore = new DatabaseEvent(event.getEventName(),
+                                                       event.getDescription(),
+                                                       event.getStartTime().toString(),
+                                                       event.getEndTime().toString(),
+                                                       event.getUUID(),
+                                                       new HashMap<String, DatabaseUser>());
+        storeEvent(eventToStore);
+
+        DatabaseReference membersRef = databaseRef.child(NODE_EVENTS_LIST).child(event.getUUID())
+                .child(NODE_EVENT_MEMBERS);
+        for (Member memberToStore : event.getEventMembers()) {
+            DatabaseUser
+                    databaseUser =
+                    new DatabaseUser(memberToStore.getGivenName().getOrElse(EMPTY_FIELD),
+                                     memberToStore.getFamilyName().getOrElse(EMPTY_FIELD),
+                                     memberToStore.getDisplayName().getOrElse(EMPTY_FIELD),
+                                     memberToStore.getEmail().getOrElse(EMPTY_FIELD),
+                                     memberToStore.getUUID().getOrElse(EMPTY_FIELD));
+
+            storeMemberOfEvent(membersRef, databaseUser);
+        }
+
+        /*
         List<DatabaseUser> members = new ArrayList<>();
 
         for (Member member : event.getEventMembers()) {
@@ -122,6 +146,7 @@ public final class Database {
                                                        members);
 
         storeEvent(eventToStore);
+        */
     }
 
     private static void storeEvent(DatabaseEvent databaseEvent) {
@@ -171,7 +196,7 @@ public final class Database {
 
                     if (event != null) {
                         List<String> uuids = new ArrayList<>();
-                        for (DatabaseUser user : event.members) {
+                        for (DatabaseUser user : event.members.values()) {
                             uuids.add(user.uuid);
                         }
 
@@ -181,7 +206,7 @@ public final class Database {
 
                             List<Member> members = new ArrayList<>();
 
-                            for (DatabaseUser user : event.members) {
+                            for (DatabaseUser user : event.members.values()) {
                                 Member memberToAdd = new Member(user.uuid,
                                                                 user.display_name,
                                                                 user.given_name,
