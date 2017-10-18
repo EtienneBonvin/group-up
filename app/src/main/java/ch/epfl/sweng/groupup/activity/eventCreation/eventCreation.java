@@ -28,6 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
@@ -295,14 +296,14 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
          * This method does not guarantee that the email are all well written and valid, it just prevents
          * basic user error (this bit of code can be updated depending our needs).
           */
-        for(String mail : distinctEmails){
+        /*for(String mail : distinctEmails){
             if(!emailCheck(mail)) {
                 Toast.makeText(this.getBaseContext(), "One or more email address does not have the " +
                                 "good format.",
                         Toast.LENGTH_SHORT).show();
                 return;
             }
-        }
+        }*/
 
         List<Member> members = new ArrayList<>();
         Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(),
@@ -319,22 +320,9 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
         /*
          * Decomment this piece of code when the Activity showing the group list is implemented
          * Modify the 'GroupList.class' to the needed class.
-        Intent intent = new Intent(this, GroupList.class);
-        startActivity(intent);
-        */
-
-
-        /*
-         * The following code is only for test purposes, has to be removed as soon as the connection with
-         * the entered informations has been done with the rest of the code.
          */
-        TextView event_description = new TextView(this);
-        event_description.setText("New event created ! \n"+event.toString());
-        event_description.setTextColor(Color.RED);
-        ((LinearLayout) findViewById(R.id.members_list))
-                .removeAllViews();
-        ((LinearLayout) findViewById(R.id.members_list))
-                .addView(event_description);
+        Intent intent = new Intent(this, EventListingActivity.class);
+        startActivity(intent);
     }
 
     /**

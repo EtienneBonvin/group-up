@@ -31,6 +31,9 @@
     <string name="event_creation_hint_invite_new_members">Email of new member</string>
     <string name="event_creation_button_add_event">ADD EVENT</string>
 
+    <!-- Event Listing UI -->
+    <string name="create_new_event">Create Event</string>
+
     <!-- Toolbar -->
     <string name="toolbar_description_group_list_icon">Icon to click to access group list</string>
     <string name="toolbar_description_settings_icon">Icon to click to access settings</string>

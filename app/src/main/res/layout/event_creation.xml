@@ -30,6 +30,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.6"
             android:textSize="20sp"
+            android:textColor="@color/black"
             android:inputType="textCapSentences|textAutoCorrect"
             android:hint="@string/event_creation_hint_event_name"
             android:background="@color/white"/>
@@ -133,6 +134,7 @@
             android:id="@+id/edit_text_add_member"
             android:hint="@string/event_creation_hint_invite_new_members"
             android:inputType="textWebEmailAddress"
+            android:textColor="@color/black"
             android:background="@color/white"/>
 
         <ImageView
