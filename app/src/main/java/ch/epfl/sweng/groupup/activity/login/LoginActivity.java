@@ -16,10 +16,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
+import org.joda.time.LocalDateTime;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
+import ch.epfl.sweng.groupup.object.account.Member;
+import ch.epfl.sweng.groupup.object.event.Event;
 
 import static ch.epfl.sweng.groupup.lib.Login.CONNECTING;
 import static ch.epfl.sweng.groupup.lib.Login.FIREBASE_AUTH;
@@ -156,21 +163,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     .withUUID(firebaseCurrentUser.getUid());
             //.withPoneNumber(firebaseCurrentUser.getPhoneNumber());
 
-            Database.storeUser(Account.shared);
-
-            /* // TODO: remove
+            // TODO: remove
             List<Member> memberList = new ArrayList<>();
             memberList.add(new Member("010101", "disp", "givde", "famd", "emdawail"));
             memberList.add(new Member("010aa101", "disawdp", "gdawive", "fam", "emawail"));
-            memberList.add(new Member("0102101", "ddwisp", "givde", "fdam", "emwail"));
+            memberList.add(new Member("KCRyX",
+                                      "ddwisp",
+                                      "givde",
+                                      "fdam",
+                                      "emwail"));
             memberList.add(new Member("010adw101", "ddawisp", "givae", "dfadm", "eawmail"));
 
-            Event event = new Event("SAT", LocalDateTime.now(), LocalDateTime.now(),
+            Event event = new Event("SAT", LocalDateTime.now(), LocalDateTime.now().plusDays(1),
                                     "SAAAAAAAAT", memberList);
             Account.shared.addEvent(event);
+            // TODO: remove
 
-            Database.storeEvent(event);
-            */
+            Database.storeAccount(Account.shared);
+            Database.setUpEventListener();
 
             Intent intent = new Intent(this, EventListActivity.class);
             startActivity(intent);
