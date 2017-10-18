@@ -1,6 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">GroupUp</string>
 
+    <!-- Toolbar -->
+    <string name="toolbar_description_group_list_icon">Icon to click to access group list</string>
+    <string name="toolbar_description_settings_icon">Icon to click to access settings</string>
+
     <!-- Welcome page -->
     <string name="welcome_view_powered_by">Powered by Flying Monkeys Team</string>
     <string name="flying_monkey_logo_description">Flying Monkeys logo</string>
@@ -34,7 +38,6 @@
     <!-- Event Listing UI -->
     <string name="create_new_event">Create Event</string>
 
-    <!-- Toolbar -->
-    <string name="toolbar_description_group_list_icon">Icon to click to access group list</string>
-    <string name="toolbar_description_settings_icon">Icon to click to access settings</string>
+    <!-- Settings -->
+    <string name="settings_tv_top">Settings page</string>
 </resources>
