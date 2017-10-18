@@ -44,8 +44,8 @@ public final class Database {
 
         databaseRef = database.getReference();
 
-        databaseRef.child(NODE_USERS_LIST).addValueEventListener(getUsersListener());
-        databaseRef.child(NODE_EVENTS_LIST).addValueEventListener(getEventsListener());
+        // databaseRef.child(NODE_USERS_LIST).addValueEventListener(getUsersListener());
+        // databaseRef.child(NODE_EVENTS_LIST).addValueEventListener(getEventsListener());
     }
 
     public static void storeUser(User user) {
@@ -66,10 +66,17 @@ public final class Database {
     }
 
     public static void storeEvent(Event event) {
-        List<String> members = new ArrayList<>();
+        List<DatabaseUser> members = new ArrayList<>();
 
         for (Member member : event.getEventMembers()) {
-            members.add(member.getUUID().getOrElse(EMPTY_FIELD));
+            DatabaseUser databaseUser =
+                    new DatabaseUser(member.getGivenName().getOrElse(EMPTY_FIELD),
+                                     member.getFamilyName().getOrElse(EMPTY_FIELD),
+                                     member.getDisplayName().getOrElse(EMPTY_FIELD),
+                                     member.getEmail().getOrElse(EMPTY_FIELD),
+                                     member.getUUID().getOrElse(EMPTY_FIELD));
+
+            members.add(databaseUser);
         }
 
         DatabaseEvent eventToStore = new DatabaseEvent(event.getEventName(),
@@ -93,7 +100,6 @@ public final class Database {
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // TODO: Change info in account or member class
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     DatabaseUser user = userSnapshot.getValue(DatabaseUser.class);
 
@@ -126,19 +132,31 @@ public final class Database {
                 for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
                     DatabaseEvent event = eventSnapshot.getValue(DatabaseEvent.class);
 
-                    if (event != null &&
-                        event.members.contains(Account.shared.getUUID().getOrElse(EMPTY_FIELD))) {
+                    if (event != null) {
+                        List<String> uuids = new ArrayList<>();
+                        for (DatabaseUser user : event.members) {
+                            uuids.add(user.uuid);
+                        }
 
-                        // TODO: list of members, we only have the UUID of the members
-                        Event tempEvent =
-                                new Event(event.name,
-                                          LocalDateTime.parse(event.datetime_start),
-                                          LocalDateTime.parse(event.datetime_end),
-                                          event.description, new ArrayList<Member>());
+                        if (uuids.contains(Account.shared.getUUID().getOrElse(EMPTY_FIELD))) {
+                            List<Member> members = new ArrayList<>();
 
-                        // TODO: duplicates ? (remove the old if already contained, do this in
-                        // TODO: Account class)
-                        Account.shared.addEvent(tempEvent);
+                            for (DatabaseUser user : event.members) {
+                                Member memberToAdd = new Member(user.uuid,
+                                                                user.display_name,
+                                                                user.given_name,
+                                                                user.family_name,
+                                                                user.email);
+                                members.add(memberToAdd);
+                            }
+
+                            Event tempEvent =
+                                    new Event(event.name,
+                                              LocalDateTime.parse(event.datetime_start),
+                                              LocalDateTime.parse(event.datetime_end),
+                                              event.description, members);
+                            Account.shared.addEvent(tempEvent);
+                        }
                     }
                 }
             }

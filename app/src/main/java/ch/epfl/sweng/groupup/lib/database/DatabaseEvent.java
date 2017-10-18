@@ -9,13 +9,13 @@ public final class DatabaseEvent {
     public String datetime_start;
     public String datetime_end;
     public String uuid;
-    public List<String> members;
+    public List<DatabaseUser> members;
 
     public DatabaseEvent() {
     }
 
     public DatabaseEvent(String name, String description, String datetime_start, String
-            datetime_end, String uuid, List<String> members) {
+            datetime_end, String uuid, List<DatabaseUser> members) {
         this.name = name;
         this.description = description;
         this.datetime_start = datetime_start;

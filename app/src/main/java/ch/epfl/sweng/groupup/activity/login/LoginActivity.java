@@ -18,6 +18,7 @@ import com.google.firebase.auth.AuthResult;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
+import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 
 import static ch.epfl.sweng.groupup.lib.Login.CONNECTING;
@@ -147,14 +148,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (success) {
             firebaseCurrentUser = FIREBASE_AUTH.getCurrentUser();
 
-            // TODO: bla
             Account.shared
                     .withEmail(googleCurrentUser.getEmail())
                     .withDisplayName(firebaseCurrentUser.getDisplayName())
                     .withFamilyName(googleCurrentUser.getFamilyName())
-                    .withGivenName(googleCurrentUser.getGivenName());
-            //.withUID(firebaseCurrentUser.getUid())
+                    .withGivenName(googleCurrentUser.getGivenName())
+                    .withUUID(firebaseCurrentUser.getUid());
             //.withPoneNumber(firebaseCurrentUser.getPhoneNumber());
+
+            Database.storeUser(Account.shared);
+
+            /* // TODO: remove
+            List<Member> memberList = new ArrayList<>();
+            memberList.add(new Member("010101", "disp", "givde", "famd", "emdawail"));
+            memberList.add(new Member("010aa101", "disawdp", "gdawive", "fam", "emawail"));
+            memberList.add(new Member("0102101", "ddwisp", "givde", "fdam", "emwail"));
+            memberList.add(new Member("010adw101", "ddawisp", "givae", "dfadm", "eawmail"));
+
+            Event event = new Event("SAT", LocalDateTime.now(), LocalDateTime.now(),
+                                    "SAAAAAAAAT", memberList);
+            Account.shared.addEvent(event);
+
+            Database.storeEvent(event);
+            */
 
             Intent intent = new Intent(this, EventListActivity.class);
             startActivity(intent);
