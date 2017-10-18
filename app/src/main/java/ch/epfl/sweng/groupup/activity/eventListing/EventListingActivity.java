@@ -1,0 +1,55 @@
+package ch.epfl.sweng.groupup.activity.eventListing;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+
+import ch.epfl.sweng.groupup.R;
+
+public class EventListingActivity extends AppCompatActivity {
+
+    private String[] futureEvents = {"Future Event 1", "Future Event 2", "Future Event 3"};
+    private String[] pastEvents = {"Past Event 1", "Past Event 2", "Past Event 3"};
+    private LinearLayout linearLayout;
+    private int heightInSp;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_event_listing);
+
+        initializeVariables();
+        initializeEvents(futureEvents);
+        initializeCreateEvent();
+        initializeEvents(pastEvents);
+    }
+
+    private void initializeVariables() {
+        linearLayout = (LinearLayout)findViewById(R.id.linear_layout_event_list);
+        heightInSp = Math.round(100 * getResources().getDisplayMetrics().scaledDensity);
+        // Fixed height, best would be to create a dynamical height so it works for all screens
+    }
+
+    private void initializeEvents(String[] events) {
+        for(int i=0; i<events.length; i++){
+            Button eventButton = new Button(this);
+            eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
+                    heightInSp));
+            eventButton.setText(events[i]);
+            //eventButton.setId(View.generateViewId()); // Assign the ID of the event
+            linearLayout.addView(eventButton);
+        }
+    }
+
+    private void initializeCreateEvent() {
+        Button creatEventButton = new Button(this);
+        creatEventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
+                heightInSp));
+        creatEventButton.setText(R.string.create_new_event);
+        //creatEventButton.setId(View.generateViewId()); // Assign the ID of the event
+        linearLayout.addView(creatEventButton);
+    }
+}
