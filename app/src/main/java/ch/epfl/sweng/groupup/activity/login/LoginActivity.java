@@ -23,6 +23,7 @@ import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
+import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
@@ -165,29 +166,46 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             // TODO: remove
             List<Member> memberList = new ArrayList<>();
-            memberList.add(new Member("KCRyXlzqCWgBLFGh5M3PIgNOin22",
-                                      "disp",
-                                      "givde",
-                                      "famd",
-                                      "emdawail"));
-            memberList.add(new Member("oicEIZxVtEZAI3eORNWPQmNttHC2",
-                                      "disawdp",
-                                      "gdawive",
-                                      "fam",
-                                      "emawail"));
-            memberList.add(new Member("KCRyXIgNOin22",
-                                      "ddwisp",
-                                      "givde",
-                                      "fdam",
-                                      "emwail"));
-            memberList.add(new Member("010adw101", "ddawisp", "givae", "dfadm", "eawmail"));
+            memberList.add(new Member(Optional.from("84bgEpReO3MRfHSqERAT5BTxKPz1"),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty()));
+            memberList.add(new Member(Optional.from("JRslNXOZBVep41gyODvEvJfuzHe2"),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty()));
+            memberList.add(new Member(Optional.from("oicEIZxVtEZAI3eORNWPQmNttHC2"),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty()));
+            memberList.add(new Member(Optional.from("qp8GAApu1eURGTA0v2pIsCJyoHA3"),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty()));
+            memberList.add(new Member(Optional.from("rGXu4ouVByS8GuE3oiq5FVJ6IiT2"),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty()));
+            memberList.add(new Member(Optional.from("KCRyXlzqCWgBLFGh5M3PIgNOin22"),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty(),
+                                      Optional.<String>empty()));
 
-            Event event = new Event("SAT", LocalDateTime.now(), LocalDateTime.now().plusDays(1),
-                                    "SAAAAAAAAT", memberList);
+            Event event = new Event("SAT",
+                                    LocalDateTime.now(),
+                                    LocalDateTime.now().plusDays(1),
+                                    "SAAAAAAAAT",
+                                    memberList);
             Account.shared.addEvent(event);
             // TODO: remove
 
-            Database.storeAccount(Account.shared);
+            Database.updateDatabase();
             Database.setUpEventListener();
 
             Intent intent = new Intent(this, EventListActivity.class);
