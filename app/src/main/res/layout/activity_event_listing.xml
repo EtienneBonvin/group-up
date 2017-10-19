@@ -6,9 +6,9 @@
     android:layout_height="match_parent"
     tools:context="ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity">
 
-    <include
+    <!-- <include
         layout="@layout/toolbar"
-        android:id="@+id/toolbar" />
+        android:id="@+id/toolbar" /> -->
 
     <ScrollView
         android:layout_width="fill_parent"
