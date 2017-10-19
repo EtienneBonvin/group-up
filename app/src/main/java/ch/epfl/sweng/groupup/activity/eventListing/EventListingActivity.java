@@ -7,16 +7,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import java.util.List;
+
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventCreation.eventCreation;
+import ch.epfl.sweng.groupup.object.account.Account;
+import ch.epfl.sweng.groupup.object.event.Event;
 
 public class EventListingActivity extends AppCompatActivity {
 
-    private String[] futureEvents = {"Future Event 1", "Future Event 2", "Future Event 3"};
-    private String[] pastEvents = {"Past Event 1", "Past Event 2", "Past Event 3"};
+    private String[] futureEventsEx = {"Future Event 1", "Future Event 2", "Future Event 3"};
+    private String[] pastEventsEx = {"Past Event 1", "Past Event 2", "Past Event 3"};
     private LinearLayout linearLayout;
     private int heightInSp;
 
+    private List<Event> futureEvents;
+    private List<Event> pastEvents;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,15 +30,21 @@ public class EventListingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_listing);
 
         initializeVariables();
-        initializeEvents(futureEvents);
+        /*initializeEvents(futureEventsEx);
         initializeCreateEvent();
-        initializeEvents(pastEvents);
+        initializeEvents(pastEventsEx);*/
+        initializeEvents(getEventNames(futureEvents));
+        initializeCreateEvent();
+        initializeEvents(getEventNames(pastEvents));
     }
 
     private void initializeVariables() {
         linearLayout = (LinearLayout)findViewById(R.id.linear_layout_event_list);
         heightInSp = Math.round(100 * getResources().getDisplayMetrics().scaledDensity);
         // Fixed height, best would be to create a dynamical height so it works for all screens
+
+        futureEvents = Account.shared.getFutureEvents();
+        pastEvents = Account.shared.getPastEvents();
     }
 
     private void initializeEvents(String[] events) {
@@ -60,5 +72,13 @@ public class EventListingActivity extends AppCompatActivity {
         });
         //creatEventButton.setId(View.generateViewId()); // Assign the ID of the event
         linearLayout.addView(creatEventButton);
+    }
+
+    private String[] getEventNames(List<Event> events) {
+        String[] eventNames = new String[events.size()];
+        for (int i=0; i < events.size(); i++) {
+            eventNames[i] = events.get(i).getEventName();
+        }
+        return eventNames;
     }
 }
