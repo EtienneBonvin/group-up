@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 
 public final class Event {
@@ -154,6 +155,20 @@ public final class Event {
                 return this.withEventMembers(eventMembers);
             }
         } else throw new IllegalArgumentException("Event is not "+ EventStatus.FUTURE.toString());
+    }
+
+    /**
+     * Removes the current user from the member list of the event
+     * @return the modified event
+     */
+    public Event withoutCurrentUser(){
+        List<Member> newMemberList = new ArrayList<>();
+        for(Member m: eventMembers){
+            if(!m.equals(Account.shared.toMember())){
+                newMemberList.add(m);
+            }
+        }
+        return withEventMembers(newMemberList);
     }
 
     @Override

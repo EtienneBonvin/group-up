@@ -202,26 +202,6 @@ public final class Account extends User {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Account account = (Account) o;
-
-        if (!UUID.equals(account.UUID)) return false;
-        if (!displayName.equals(account.displayName)) return false;
-        if (!givenName.equals(account.givenName)) return false;
-        if (!familyName.equals(account.familyName)) return false;
-        if (!email.equals(account.email)) return false;
-        if (currentEvent != null ? !currentEvent.equals(account.currentEvent)
-                : account.currentEvent != null) {
-            return false;
-        }
-        if (!pastEvents.equals(account.pastEvents)) return false;
-        return futureEvents.equals(account.futureEvents);
-    }
-
-    @Override
     public String toString() {
         return "Account{" +
                 "UUID='" + UUID + '\'' +
@@ -257,5 +237,13 @@ public final class Account extends User {
         Pattern p = Pattern.compile("\\b[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,13}\\b",Pattern.CASE_INSENSITIVE);
         Matcher m=p.matcher(email);
         return m.matches();
-        }
     }
+
+    /**
+     * Converts an Account to a Member (essentially for comparison purpose)
+     * @return a members representing the account
+     */
+    public Member toMember(){
+        return new Member(UUID, displayName, givenName, familyName, email);
+    }
+}

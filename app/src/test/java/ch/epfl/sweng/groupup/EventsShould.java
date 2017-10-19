@@ -4,10 +4,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.joda.time.LocalDateTime;
 
+import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.event.EventStatus;
@@ -133,6 +135,16 @@ public class EventsShould {
         List<Member> eventMembers = new ArrayList<>();
         event = new Event("Name", startDate, endDate, "Description", eventMembers);
         event.addMember(member);
+    }
+
+    @Test
+    public void allowToRemoveCurrentUserFromMemberList(){
+        Account.shared.withUUID("UUID").withGivenName("Xavier").withFamilyName("Pantet").withDisplayName(null).withEmail("xavier.pantet@pindex.ch");
+        List<Member> eventMembers = new ArrayList<Member>(Arrays.asList(new Member("UUID", null, "Xavier", "Pantet", "xavier.pantet@pindex.ch"), new Member("UUID2", null, "Cedric", "Maire", "cedmaire@gmail.com")));
+        Event e = new Event("Name", null, null, null, eventMembers);
+        Event withoutMe = e.withoutCurrentUser();
+        assertEquals(withoutMe.getEventMembers().size(), 1);
+        assertEquals(withoutMe.getEventMembers().get(0), new Member("UUID2", null, "Cedric", "Maire", "cedmaire@gmail.com"));
     }
 
 }

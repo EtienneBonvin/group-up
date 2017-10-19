@@ -84,7 +84,6 @@ public abstract class User {
         if (o == null || getClass() != o.getClass()) return false;
 
         User user = (User) o;
-
         if (!UUID.equals(user.UUID)) return false;
         if (!displayName.equals(user.displayName)) return false;
         if (!givenName.equals(user.givenName)) return false;
