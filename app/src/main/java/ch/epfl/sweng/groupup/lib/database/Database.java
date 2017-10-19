@@ -20,17 +20,12 @@ import ch.epfl.sweng.groupup.object.event.Event;
 
 public final class Database {
 
-    // TODO: invite state, event ID renew each time we add the event, initialize fields of objects
-
     static final String EMPTY_FIELD = "EMPTY_FIELD";
 
     private static final String NODE_USERS_LIST = "users";
 
     private static final String NODE_EVENTS_LIST = "events";
     private static final String NODE_EVENT_MEMBERS = "members";
-    private static final String NODE_EVENT_MEMBERS_STATUS_PENDING = "pending";
-    private static final String NODE_EVENT_MEMBERS_STATUS_ACCEPTED = "accepted";
-    private static final String NODE_EVENT_MEMBERS_STATUS_REFUSED = "refused";
 
     private static FirebaseDatabase database;
     private static DatabaseReference databaseRef;

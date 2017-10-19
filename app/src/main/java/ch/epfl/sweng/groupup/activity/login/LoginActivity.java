@@ -165,8 +165,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             // TODO: remove
             List<Member> memberList = new ArrayList<>();
-            memberList.add(new Member("010101", "disp", "givde", "famd", "emdawail"));
-            memberList.add(new Member("KCRyXlzqCWgBLFGh5M3PIgNOin22", "disawdp", "gdawive", "fam", "emawail"));
+            memberList.add(new Member("KCRyXlzqCWgBLFGh5M3PIgNOin22",
+                                      "disp",
+                                      "givde",
+                                      "famd",
+                                      "emdawail"));
+            memberList.add(new Member("oicEIZxVtEZAI3eORNWPQmNttHC2",
+                                      "disawdp",
+                                      "gdawive",
+                                      "fam",
+                                      "emawail"));
             memberList.add(new Member("KCRyXIgNOin22",
                                       "ddwisp",
                                       "givde",
