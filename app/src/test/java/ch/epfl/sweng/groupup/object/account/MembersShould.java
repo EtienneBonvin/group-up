@@ -45,4 +45,23 @@ public class MembersShould {
         assertFalse(m0.withLastName("Maire") == m0);
         assertFalse(m0.withEmail("cedric@maire.de") == m0);
     }
+
+    @Test
+    public void beEquatable(){
+        Member m1 = new Member("UUID", "XavierP", "Xavier", "Pantet", "xavier@pantet.ch");
+        Member m2 = new Member("UUID2", "XavierP", "Xavier", "Pantet", "xavier@pantet.ch");
+        Member m3 = new Member("UUID", "Xavier", "Xavier", "Pantet", "xavier@pantet.ch");
+        Member m4 = new Member("UUID", "XavierP", "Xavie", "Pantet", "xavier@pantet.ch");
+        Member m5 = new Member("UUID", "XavierP", "Xavier", "Pante", "xavier@pantet.ch");
+        Member m6 = new Member("UUID", "XavierP", "Xavier", "Pantet", "xavier@pantet.com");
+        String m7 = "Hello";
+
+        assertTrue(m1.equals(m1));
+        assertFalse(m1.equals(m2));
+        assertFalse(m1.equals(m3));
+        assertFalse(m1.equals(m4));
+        assertFalse(m1.equals(m5));
+        assertFalse(m1.equals(m6));
+        assertFalse(m1.equals(m7));
+    }
 }
