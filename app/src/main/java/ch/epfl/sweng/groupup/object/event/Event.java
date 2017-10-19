@@ -26,7 +26,8 @@ public final class Event {
         this.eventMembers = Collections.unmodifiableList(new ArrayList<>(eventMembers));
     }
 
-    private Event(String uuid, String eventName, LocalDateTime startTime, LocalDateTime endTime, String description, List<Member> eventMembers) {
+    public Event(String uuid, String eventName, LocalDateTime startTime, LocalDateTime endTime, String
+            description, List<Member> eventMembers) {
         this.UUID = uuid;
         this.eventName = eventName;
         this.startTime = startTime;

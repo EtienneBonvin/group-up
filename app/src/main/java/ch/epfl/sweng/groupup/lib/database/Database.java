@@ -6,10 +6,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.joda.time.LocalDateTime;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
@@ -188,22 +191,9 @@ public final class Database {
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot eventSnapschot : dataSnapshot.getChildren()) {
-                    Query myEvent = eventSnapschot.child(NODE_EVENT_MEMBERS).getRef()
-                            .equalTo(Account.shared.getUUID().getOrElse(EMPTY_FIELD));
-
-                    Log.e("###", myEvent.toString());
-                }
-
-
-
-
-
-
-
-
-                /*
                 for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+                    boolean needToUpdate = false;
+
                     DatabaseEvent event = eventSnapshot.getValue(DatabaseEvent.class);
 
                     if (event != null && !event.uuid.equals(Database.EMPTY_FIELD)) {
@@ -224,15 +214,40 @@ public final class Database {
                                                                 user.given_name,
                                                                 user.family_name,
                                                                 user.email);
+
+                                if (user.uuid.equals(Account.shared.getUUID().getOrElse
+                                        (EMPTY_FIELD))) {
+                                    Member mySelf = new Member(Account.shared.getUUID()
+                                                                       .getOrElse(EMPTY_FIELD),
+                                                               Account.shared.getDisplayName()
+                                                                       .getOrElse(EMPTY_FIELD),
+                                                               Account.shared.getGivenName()
+                                                                       .getOrElse(EMPTY_FIELD),
+                                                               Account.shared.getFamilyName()
+                                                                       .getOrElse(EMPTY_FIELD),
+                                                               Account.shared.getEmail()
+                                                                       .getOrElse(EMPTY_FIELD));
+
+                                    if (!memberToAdd.equals(mySelf)) {
+                                        memberToAdd = mySelf;
+                                        needToUpdate = true;
+                                    }
+                                }
+
                                 members.add(memberToAdd);
                             }
 
                             Event tempEvent =
-                                    new Event(event.name,
+                                    new Event(event.uuid,
+                                              event.name,
                                               LocalDateTime.parse(event.datetime_start),
                                               LocalDateTime.parse(event.datetime_end),
                                               event.description, members);
                             Account.shared.addEvent(tempEvent);
+
+                            if (needToUpdate) {
+                                Database.storeAccount(Account.shared);
+                            }
 
                             for (Event event1 : Account.shared.getPastEvents()) {
                                 Log.e("###", event1.toString());
@@ -243,7 +258,7 @@ public final class Database {
                             Log.e("###", Account.shared.getCurrentEvent().toString());
                         }
                     }
-                }*/
+                }
             }
 
             @Override
