@@ -66,4 +66,30 @@ public abstract class User {
      * @return user's UUID
      */
     public Optional<String> getUUID() {return UUID; }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "UUID='" + UUID + '\'' +
+                "displayName='" + displayName + '\'' +
+                "givenName='" + givenName + '\'' +
+                ", familyName='" + familyName + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (!UUID.equals(user.UUID)) return false;
+        if (!displayName.equals(user.displayName)) return false;
+        if (!givenName.equals(user.givenName)) return false;
+        if (!familyName.equals(user.familyName)) return false;
+        if (!email.equals(user.email)) return false;
+        return true;
+    }
 }
