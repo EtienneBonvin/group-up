@@ -146,7 +146,7 @@ public final class Database {
                                               LocalDateTime.parse(event.datetime_start),
                                               LocalDateTime.parse(event.datetime_end),
                                               event.description, members);
-                            Account.shared.addEvent(tempEvent);
+                            Account.shared.addOrUpdateEvent(tempEvent);
 
                             if (needToUpdateMyself) {
                                 Database.updateDatabase();

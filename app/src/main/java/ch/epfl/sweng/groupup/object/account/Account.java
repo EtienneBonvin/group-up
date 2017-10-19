@@ -1,6 +1,7 @@
 package ch.epfl.sweng.groupup.object.account;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -156,39 +157,65 @@ public final class Account extends User {
      * @param event the event to add
      * @return the modified shared account, so that it is easier to call in chain
      */
-    public Account addEvent(Event event) {
+    public Account addOrUpdateEvent(Event event) {
         switch (event.getEventStatus()){
             case FUTURE:
-                return addFutureEvent(event);
+                return addOrUpdateFutureEvent(event);
             case PAST:
-                return addPastEvent(event);
+                return addOrUpdatePastEvent(event);
             default:
                 return withCurrentEvent(Optional.<Event>from(event));
         }
     }
 
     /**
-     * Add a past event list of the shared account
+     * Add a past event list of the shared account or updates it if it already exists
      * @param past event to add
      * @return the modified shared account, so that it is easier to call in chain
      */
-    public Account addPastEvent(Event past) {
+    public Account addOrUpdatePastEvent(Event past) {
         if (past.getEventStatus().equals(EventStatus.PAST)) {
             List<Event> newPast = new ArrayList<>(pastEvents);
-            newPast.add(past);
+            Iterator<Event> eventIterator = pastEvents.iterator();
+            int i = 0;
+            boolean found = false;
+            while(eventIterator.hasNext() && !found){
+                Event e = eventIterator.next();
+                if(e.getUUID().equals(past.getUUID())){
+                    newPast.set(i, past);
+                    found = true;
+                }
+                ++i;
+            }
+            if(!found){
+                newPast.add(past);;
+            }
             return withPastEvents(newPast);
         } else throw new IllegalArgumentException("Event is not "+ EventStatus.PAST.toString());
     }
 
     /**
-     * Add a future event list of the shared account
+     * Add a future event list of the shared account or updates it if is already exists
      * @param future event to add
      * @return the modified shared account, so that it is easier to call in chain
      */
-    public Account addFutureEvent(Event future) {
+    public Account addOrUpdateFutureEvent(Event future) {
         if (future.getEventStatus().equals(EventStatus.FUTURE)) {
-            List<Event>newFuture = new ArrayList<>(futureEvents);
-            newFuture.add(future);
+            List<Event> newFuture = new ArrayList<>(futureEvents);
+            Iterator<Event> eventIterator = futureEvents.iterator();
+            int i = 0;
+            boolean found = false;
+            while(eventIterator.hasNext() && !found){
+                Event e = eventIterator.next();
+                if(e.getUUID().equals(future.getUUID())){
+                    newFuture.set(i, future);
+                    found = true;
+                }
+                ++i;
+            }
+            if(!found){
+                newFuture.add(future);
+            }
             return withFutureEvents(newFuture);
         } else throw new IllegalArgumentException("Event is not "+ EventStatus.FUTURE.toString());
     }
