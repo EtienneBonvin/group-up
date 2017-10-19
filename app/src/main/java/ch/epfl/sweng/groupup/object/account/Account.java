@@ -1,6 +1,8 @@
 package ch.epfl.sweng.groupup.object.account;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -194,6 +196,12 @@ public final class Account extends User {
         if (future.getEventStatus().equals(EventStatus.FUTURE)) {
             List<Event>newFuture = new ArrayList<>(futureEvents);
             newFuture.add(future);
+            Collections.sort(newFuture, new Comparator<Event>() {
+                @Override
+                public int compare(Event o1, Event o2) {
+                    return o2.getStartTime().compareTo(o1.getStartTime());
+                }
+            });
             return withFutureEvents(newFuture);
         } else throw new IllegalArgumentException("Event is not "+ EventStatus.FUTURE.toString());
     }
