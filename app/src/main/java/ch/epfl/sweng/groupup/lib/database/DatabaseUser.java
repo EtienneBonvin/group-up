@@ -1,6 +1,11 @@
 package ch.epfl.sweng.groupup.lib.database;
 
 public final class DatabaseUser {
+
+    /**
+     * Class to represent the user object that will be stored in the database.
+     */
+
     public String given_name = Database.EMPTY_FIELD;
     public String family_name = Database.EMPTY_FIELD;
     public String display_name = Database.EMPTY_FIELD;

@@ -3,6 +3,11 @@ package ch.epfl.sweng.groupup.lib.database;
 import java.util.HashMap;
 
 public final class DatabaseEvent {
+
+    /**
+     * Class to represent the event object that will be stored in the database.
+     */
+
     public String name = Database.EMPTY_FIELD;
     public String description = Database.EMPTY_FIELD;
     public String datetime_start = Database.EMPTY_FIELD;
