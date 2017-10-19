@@ -176,7 +176,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             Event event = new Event("SAT", LocalDateTime.now(), LocalDateTime.now().plusDays(1),
                                     "SAAAAAAAAT", memberList);
-            Account.shared.addEvent(event);
+            Account.shared.addOrUpdateEvent(event);
             // TODO: remove
 
             Database.storeAccount(Account.shared);
