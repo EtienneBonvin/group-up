@@ -23,6 +23,8 @@
         <activity android:name=".activity.home.inactive.EventListActivity">
         </activity>
         <activity android:name=".activity.eventCreation.eventCreation"/>
+        <activity android:name=".activity.eventListing.EventListingActivity">
+        </activity>
     </application>
 
 </manifest>

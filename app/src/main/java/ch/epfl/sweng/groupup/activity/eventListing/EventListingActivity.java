@@ -1,5 +1,6 @@
 package ch.epfl.sweng.groupup.activity.eventListing;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.eventCreation.eventCreation;
 
 public class EventListingActivity extends AppCompatActivity {
 
@@ -49,6 +51,13 @@ public class EventListingActivity extends AppCompatActivity {
         creatEventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
                 heightInSp));
         creatEventButton.setText(R.string.create_new_event);
+        creatEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(EventListingActivity.this, eventCreation.class);
+                startActivity(i);
+            }
+        });
         //creatEventButton.setId(View.generateViewId()); // Assign the ID of the event
         linearLayout.addView(creatEventButton);
     }
