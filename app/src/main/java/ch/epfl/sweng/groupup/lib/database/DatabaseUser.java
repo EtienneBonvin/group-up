@@ -1,11 +1,11 @@
 package ch.epfl.sweng.groupup.lib.database;
 
 public final class DatabaseUser {
-    public String given_name;
-    public String family_name;
-    public String display_name;
-    public String email;
-    public String uuid;
+    public String given_name = Database.EMPTY_FIELD;
+    public String family_name = Database.EMPTY_FIELD;
+    public String display_name = Database.EMPTY_FIELD;
+    public String email = Database.EMPTY_FIELD;
+    public String uuid = Database.EMPTY_FIELD;
 
     public DatabaseUser() {
     }

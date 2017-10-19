@@ -3,12 +3,12 @@ package ch.epfl.sweng.groupup.lib.database;
 import java.util.HashMap;
 
 public final class DatabaseEvent {
-    public String name = "";
-    public String description = "";
-    public String datetime_start = "";
-    public String datetime_end = "";
-    public String uuid = "";
-    public HashMap<String, DatabaseUser> members = new HashMap<String, DatabaseUser>();
+    public String name = Database.EMPTY_FIELD;
+    public String description = Database.EMPTY_FIELD;
+    public String datetime_start = Database.EMPTY_FIELD;
+    public String datetime_end = Database.EMPTY_FIELD;
+    public String uuid = Database.EMPTY_FIELD;
+    public HashMap<String, DatabaseUser> members = new HashMap<>();
 
     public DatabaseEvent() {
     }

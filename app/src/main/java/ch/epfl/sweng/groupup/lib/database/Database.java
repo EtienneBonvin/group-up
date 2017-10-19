@@ -6,13 +6,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.joda.time.LocalDateTime;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
@@ -20,9 +17,9 @@ import ch.epfl.sweng.groupup.object.event.Event;
 
 public final class Database {
 
-    // TODO: invite state, event ID renew each time we add the event.
+    // TODO: invite state, event ID renew each time we add the event, initialize fields of objects
 
-    private static final String EMPTY_FIELD = "EMPTY_FIELD";
+    static final String EMPTY_FIELD = "EMPTY_FIELD";
 
     private static final String NODE_USERS_LIST = "users";
 
@@ -191,10 +188,25 @@ public final class Database {
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot eventSnapschot : dataSnapshot.getChildren()) {
+                    Query myEvent = eventSnapschot.child(NODE_EVENT_MEMBERS).getRef()
+                            .equalTo(Account.shared.getUUID().getOrElse(EMPTY_FIELD));
+
+                    Log.e("###", myEvent.toString());
+                }
+
+
+
+
+
+
+
+
+                /*
                 for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
                     DatabaseEvent event = eventSnapshot.getValue(DatabaseEvent.class);
 
-                    if (event != null) {
+                    if (event != null && !event.uuid.equals(Database.EMPTY_FIELD)) {
                         List<String> uuids = new ArrayList<>();
                         for (DatabaseUser user : event.members.values()) {
                             uuids.add(user.uuid);
@@ -231,7 +243,7 @@ public final class Database {
                             Log.e("###", Account.shared.getCurrentEvent().toString());
                         }
                     }
-                }
+                }*/
             }
 
             @Override
