@@ -4,8 +4,9 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -34,17 +35,19 @@ import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 /**
  * EventCreation class
  * Offers the possibility to the user to create a new event.
  * Is linked to the layout event_creation.xml
  */
-public class eventCreation extends AppCompatActivity implements DatePickerDialog.OnDateSetListener,
+public class EventCreation extends AppCompatActivity implements ZXingScannerView.ResultHandler, DatePickerDialog.OnDateSetListener,
     TimePickerDialog.OnTimeSetListener{
 
     private final int INPUT_MAX_LENGTH = 50;
 
+    private Event finalEvent;
     private Button start_date, end_date, start_time, end_time;
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
@@ -53,6 +56,8 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
     private HashMap<View.OnClickListener, View> viewsWithOCL;
     private HashMap<View.OnClickListener, String> emailWithOCL;
     private LocalDateTime date_start, date_end;
+    private ZXingScannerView mScannerView;
+    private String qrString;
 
     /**
      * Initialization of all the variables of the class and of the OnClickListeners
@@ -62,25 +67,6 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_creation);
-
-
-        findViewById(R.id.icon_access_group_list)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), EventListingActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-        findViewById(R.id.icon_access_settings)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), Settings.class);
-                        startActivity(intent);
-                    }
-                });
 
         date_start = LocalDateTime.now();
         date_end = LocalDateTime.now();
@@ -110,11 +96,34 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
         end_time.setText(time_format(date_end.getHourOfDay(), date_end.getMinuteOfHour()));
 
         datePickerDialog = new DatePickerDialog(
-                this, eventCreation.this, date_start.getYear(), date_start.getMonthOfYear(),
+                this, EventCreation.this, date_start.getYear(), date_start.getMonthOfYear(),
                 date_start.getDayOfMonth());
 
         timePickerDialog = new TimePickerDialog(
-                this, eventCreation.this, date_start.getHourOfDay(), date_start.getMinuteOfHour(), true);
+                this, EventCreation.this, date_start.getHourOfDay(), date_start.getMinuteOfHour(), true);
+
+        initListeners();
+
+    }
+
+    private void initListeners(){
+        findViewById(R.id.icon_access_group_list)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), EventListingActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+        findViewById(R.id.icon_access_settings)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), Settings.class);
+                        startActivity(intent);
+                    }
+                });
 
         findViewById(R.id.button_start_date)
                 .setOnClickListener(new View.OnClickListener() {
@@ -155,7 +164,16 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        addNewMember();
+                        EditText memberMail = (EditText)findViewById(R.id.edit_text_add_member);
+                        addNewMember(memberMail.getText().toString());
+                        memberMail.setText("");
+                    }
+                });
+        findViewById(R.id.buttonScanQR)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        QrScanner(v);
                     }
                 });
 
@@ -168,12 +186,55 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
                 });
     }
 
-    /**
-     * Adds a line in the member list on the UI with the email address specified by the user
-     * with the possibility to remove it by linking the OnClickListener to the instance of
-     * LinearLayout created.
-     */
-    private void addNewMember() {
+    @Override
+    public void onBackPressed() {
+        if (mScannerView != null) {
+            mScannerView.stopCamera();
+            setContentView(R.layout.event_creation);
+        }
+    }
+
+    public void QrScanner(View view){
+        // TODO: 18.10.2017 Check if user granted camera access to app
+        mScannerView = new ZXingScannerView(this);
+        setContentView(mScannerView);
+        mScannerView.setResultHandler(this);
+        mScannerView.startCamera();
+    }
+
+    @Override
+    public void handleResult(com.google.zxing.Result rawResult) {
+        // Do something with the result here
+        qrString = rawResult.toString();
+
+        // Close camera and return to activity after successful scan
+        mScannerView.stopCamera();
+        setContentView(R.layout.event_creation);
+        initListeners();
+        addNewMember(rawResult.getText());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        // TODO
+
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        // TODO
+    }
+
+
+        /**
+         * Adds a line in the member list on the UI with the email address specified by the user
+         * with the possibility to remove it by linking the OnClickListener to the instance of
+         * LinearLayout created.
+         * @param memberMail
+         */
+    private void addNewMember(String memberMail) {
         numberOfMembers++;
 
         LinearLayout newMember = new LinearLayout(this);
@@ -181,7 +242,6 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        EditText memberMail = (EditText)findViewById(R.id.edit_text_add_member);
 
         TextView textView = new TextView(this);
         textView.setTextSize(20);
@@ -189,10 +249,8 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 0.9f));
-        textView.setText(memberMail.getText());
+        textView.setText(memberMail);
         textView.setTextColor(Color.WHITE);
-        memberMail.setText("");
-
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 0,
@@ -224,7 +282,7 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
 
         minus.setOnClickListener(ocl);
         viewsWithOCL.put(ocl, newMember);
-        emailWithOCL.put(ocl, memberMail.getText().toString());
+        emailWithOCL.put(ocl, memberMail);
     }
 
     /**
