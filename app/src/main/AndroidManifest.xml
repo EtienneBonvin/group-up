@@ -25,7 +25,11 @@
         </activity>
         <activity android:name=".activity.eventListing.EventListingActivity">
         </activity>
-        <activity android:name=".activity.eventCreation.eventCreation"/>
+        <activity android:name=".activity.eventCreation.eventCreation">
+        </activity>
+        <activity android:name=".activity.home.inactive.DisplayQRActivity">
+
+        </activity>
     </application>
 
 </manifest>
