@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
+import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
 import ch.epfl.sweng.groupup.activity.settings.Settings;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -121,6 +122,15 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getApplicationContext(), Settings.class);
+                        startActivity(intent);
+                    }
+                });
+
+        findViewById(R.id.icon_access_user_profile)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), EventListActivity.class);
                         startActivity(intent);
                     }
                 });

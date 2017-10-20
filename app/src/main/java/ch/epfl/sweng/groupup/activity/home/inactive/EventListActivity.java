@@ -25,6 +25,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.io.ByteArrayOutputStream;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.eventCreation.eventCreation;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
 import ch.epfl.sweng.groupup.activity.settings.Settings;
