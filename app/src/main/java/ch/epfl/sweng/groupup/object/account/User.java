@@ -60,23 +60,21 @@ public abstract class User {
     public Optional<String> getEmail(){
         return email;
     }
-
+  
+    @Override
+    public String toString() {
+        return "User{" +
+                "displayName=" + displayName +
+                ",  givenName=" + givenName +
+                ", familyName=" + familyName +
+                ", email=" + email +
+                '}';
+    }
     /**
      * Returns user's UUID
      * @return user's UUID
      */
     public Optional<String> getUUID() {return UUID; }
-
-    @Override
-    public String toString() {
-        return "Account{" +
-                "UUID='" + UUID + '\'' +
-                "displayName='" + displayName + '\'' +
-                "givenName='" + givenName + '\'' +
-                ", familyName='" + familyName + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
 
     @Override
     public boolean equals(Object o) {

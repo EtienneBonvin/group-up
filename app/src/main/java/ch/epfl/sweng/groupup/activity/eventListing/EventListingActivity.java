@@ -31,9 +31,6 @@ public class EventListingActivity extends AppCompatActivity {
     private LinearLayout linearLayout;
     private int heightInSp;
 
-    private List<Event> futureEvents;
-    private List<Event> pastEvents;
-
     /**
      * Initialization of the private variables of the class and
      * of the future events, create event and past events
@@ -45,9 +42,9 @@ public class EventListingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_listing);
 
         initializeVariables();
-        initializeEvents(futureEvents);
+        initializeEvents(Account.shared.getFutureEvents());
         initializeCreateEvent();
-        initializeEvents(pastEvents);
+        initializeEvents(Account.shared.getPastEvents());
 
         findViewById(R.id.icon_access_settings)
                 .setOnClickListener(new View.OnClickListener() {
@@ -75,9 +72,6 @@ public class EventListingActivity extends AppCompatActivity {
         linearLayout = (LinearLayout)findViewById(R.id.linear_layout_event_list);
         heightInSp = Math.round(100 * getResources().getDisplayMetrics().scaledDensity);
         // Fixed height, best would be to create a dynamical height so it works for all screens
-
-        futureEvents = Account.shared.getFutureEvents();
-        pastEvents = Account.shared.getPastEvents();
     }
 
     /**
