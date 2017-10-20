@@ -333,7 +333,7 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
             members.add(emptyMember.withEmail(email));
         }
 
-        Event event = new Event(eventName.getText().toString(), date_start, date_end, members);
+        Event event = new Event(eventName.getText().toString(), date_start, date_end, "", members);
 
         Account.shared.addOrUpdateEvent(event);
 
