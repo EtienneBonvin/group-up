@@ -25,6 +25,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.io.ByteArrayOutputStream;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
 import ch.epfl.sweng.groupup.object.account.Account;
 
@@ -39,7 +40,7 @@ import static ch.epfl.sweng.groupup.object.account.Account.shared;
  * user a way to sign out.
  */
 
-public class EventListActivity extends AppCompatActivity implements View.OnClickListener,
+public class EventListActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener {
 
     // Fields to represent the different objects on the GUI of the activity.
@@ -64,19 +65,30 @@ public class EventListActivity extends AppCompatActivity implements View.OnClick
                 this, /* fragment activity  */
                 this /* on connection failed listener  */
         );
+
+        findViewById(R.id.button_sign_out)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        signOut();
+                    }
+                });
+
+        findViewById(R.id.buttonDisplayQR)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        displayQR(v);
+                    }
+                });
     }
 
     @Override
-    public void onClick(View v) {
-        final int id = v.getId();
-
-        if (id == R.id.button_sign_out) {
-            signOut();
-        }
-        if (id == R.id.buttonDisplayQR) {
-            displayQR(v);
-        }
+    public void onBackPressed(){
+        Intent intent = new Intent(this, EventListingActivity.class);
+        startActivity(intent);
     }
+
 
     public void displayQR(View view){
         if (!shared.getEmail().isEmpty()){
