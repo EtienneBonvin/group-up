@@ -157,8 +157,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     .withUUID(firebaseCurrentUser.getUid());
             //.withPoneNumber(firebaseCurrentUser.getPhoneNumber(
           
-            Database.update();
-            Database.setUpEventListener();
+            //Database.update();
+            //Database.setUpEventListener();
        
             Intent intent = new Intent(this, EventListingActivity.class);
             startActivity(intent);

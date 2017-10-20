@@ -32,6 +32,7 @@ import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
 import ch.epfl.sweng.groupup.activity.settings.Settings;
 import ch.epfl.sweng.groupup.lib.Optional;
+import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
@@ -55,7 +56,7 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
     private boolean set_start_date, set_end_date, set_start_time, set_end_time;
     private int numberOfMembers;
     private HashMap<View.OnClickListener, View> viewsWithOCL;
-    private HashMap<View.OnClickListener, String> emailWithOCL;
+    private HashMap<View.OnClickListener, String> uIdsWithOCL;
     private LocalDateTime date_start, date_end;
     private ZXingScannerView mScannerView;
     private String qrString;
@@ -80,7 +81,7 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
         numberOfMembers = 0;
 
         viewsWithOCL = new HashMap<>();
-        emailWithOCL = new HashMap<>();
+        uIdsWithOCL = new HashMap<>();
 
         start_date = (Button)findViewById(R.id.button_start_date);
         start_date.setText(date_format(date_start.getDayOfMonth(), date_start.getMonthOfYear(),
@@ -174,9 +175,9 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        EditText memberMail = (EditText)findViewById(R.id.edit_text_add_member);
-                        addNewMember(memberMail.getText().toString());
-                        memberMail.setText("");
+                        EditText memberUId = (EditText)findViewById(R.id.edit_text_add_member);
+                        addNewMember(memberUId.getText().toString());
+                        memberUId.setText("");
                     }
                 });
         findViewById(R.id.buttonScanQR)
@@ -237,12 +238,10 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
 
 
         /**
-         * Adds a line in the member list on the UI with the email address specified by the user
-         * with the possibility to remove it by linking the OnClickListener to the instance of
-         * LinearLayout created.
-         * @param memberMail
+         * Adds a line in the member list on the UI with the user ID address specified by the user
+         * @param memberUId
          */
-    private void addNewMember(String memberMail) {
+    private void addNewMember(String memberUId) {
         numberOfMembers++;
 
         LinearLayout newMember = new LinearLayout(this);
@@ -257,7 +256,7 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 0.9f));
-        textView.setText(memberMail);
+        textView.setText(memberUId);
         textView.setTextColor(Color.WHITE);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -284,13 +283,13 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
                         .removeView(
                                 viewsWithOCL.get(this)
                         );
-                emailWithOCL.remove(this);
+                uIdsWithOCL.remove(this);
             }
         };
 
         minus.setOnClickListener(ocl);
         viewsWithOCL.put(ocl, newMember);
-        emailWithOCL.put(ocl, memberMail);
+        uIdsWithOCL.put(ocl, memberUId);
     }
 
     /**
@@ -373,40 +372,24 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
             return;
         }
 
-        Set<String> distinctEmails = new HashSet<>();
-        for(View.OnClickListener ocl : emailWithOCL.keySet()){
-            distinctEmails.add(emailWithOCL.get(ocl));
+        Set<String> distinctUIds = new HashSet<>();
+        for(View.OnClickListener ocl : uIdsWithOCL.keySet()){
+            distinctUIds.add(uIdsWithOCL.get(ocl));
         }
-
-        /*
-         * This method does not guarantee that the email are all well written and valid, it just prevents
-         * basic user error (this bit of code can be updated depending our needs).
-          */
-        /*for(String mail : distinctEmails){
-            if(!emailCheck(mail)) {
-                Toast.makeText(this.getBaseContext(), "One or more email address does not have the " +
-                                "good format.",
-                        Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }*/
 
         List<Member> members = new ArrayList<>();
         Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
                 Optional.<String>empty(), Optional.<String>empty());
 
-        for(String email : distinctEmails){
-            members.add(emptyMember.withEmail(email));
+        for(String id : distinctUIds){
+            members.add(emptyMember.withUUID(id));
         }
 
         Event event = new Event(eventName.getText().toString(), date_start, date_end, "", members);
 
         Account.shared.addOrUpdateEvent(event);
+        //Database.update();
 
-        /*
-         * Decomment this piece of code when the Activity showing the group list is implemented
-         * Modify the 'GroupList.class' to the needed class.
-         */
         Intent intent = new Intent(this, EventListingActivity.class);
         startActivity(intent);
     }
@@ -454,16 +437,5 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
     private String time_format(int hour, int minutes){
         return String.format(Locale.getDefault(), "%02d", hour)+":"+
                 String.format(Locale.getDefault(), "%02d", minutes);
-    }
-
-    /**
-     * Check that the passed email is an "acceptable" form (not the icann official definition)
-     * @param email
-     * @return true of email ok else false
-     */
-    private boolean emailCheck(String email){
-        Pattern p = Pattern.compile("\\b[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,13}\\b",Pattern.CASE_INSENSITIVE);
-        Matcher m=p.matcher(email);
-        return m.matches();
     }
 }
