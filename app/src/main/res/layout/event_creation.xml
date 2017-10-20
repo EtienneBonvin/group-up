@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/container">
 
     <include
         layout="@layout/toolbar"
@@ -124,10 +125,17 @@
         android:layout_above="@id/save_button"
         android:textColor="@color/white">
 
+        <ImageView
+            android:id="@+id/buttonScanQR"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:src="@drawable/qr_code_logo"/>
+
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.9"
+            android:layout_weight="0.8"
             android:textSize="20sp"
             android:id="@+id/edit_text_add_member"
             android:hint="@string/event_creation_hint_invite_new_members"
@@ -155,6 +163,7 @@
         android:gravity="center"
         android:paddingTop="20sp"
         android:textColor="@color/white"/>
+
 
     <!-- Scroll view showing all the already added members
         with the possibility to delete them -->
