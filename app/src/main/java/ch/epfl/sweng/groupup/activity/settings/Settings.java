@@ -7,6 +7,7 @@ import android.view.View;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
+import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
 
 public class Settings extends AppCompatActivity {
 
@@ -24,11 +25,11 @@ public class Settings extends AppCompatActivity {
                     }
                 });
 
-        findViewById(R.id.icon_access_settings)
+        findViewById(R.id.icon_access_user_profile)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), Settings.class);
+                        Intent intent = new Intent(getApplicationContext(), EventListActivity.class);
                         startActivity(intent);
                     }
                 });
