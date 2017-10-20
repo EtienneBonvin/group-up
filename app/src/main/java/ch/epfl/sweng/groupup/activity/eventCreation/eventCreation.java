@@ -374,6 +374,7 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
         }
 
         Set<String> distinctUIds = new HashSet<>();
+        distinctUIds.add(Account.shared.getUUID().get());
         for(View.OnClickListener ocl : uIdsWithOCL.keySet()){
             distinctUIds.add(uIdsWithOCL.get(ocl));
         }
