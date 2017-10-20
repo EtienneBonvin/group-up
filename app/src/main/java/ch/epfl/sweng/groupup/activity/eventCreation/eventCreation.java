@@ -388,7 +388,7 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
         Event event = new Event(eventName.getText().toString(), date_start, date_end, "", members);
 
         Account.shared.addOrUpdateEvent(event);
-        //Database.update();
+        Database.update();
 
         Intent intent = new Intent(this, EventListingActivity.class);
         startActivity(intent);
