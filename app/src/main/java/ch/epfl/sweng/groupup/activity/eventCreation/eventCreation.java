@@ -381,16 +381,16 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
         }*/
 
         List<Member> members = new ArrayList<>();
-        Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(),
+        Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
                 Optional.<String>empty(), Optional.<String>empty());
 
         for(String email : distinctEmails){
             members.add(emptyMember.withEmail(email));
         }
 
-        Event event = new Event(eventName.getText().toString(), date_start, date_end, members, 0);
+        Event event = new Event(eventName.getText().toString(), date_start, date_end, "", members);
 
-        Account.shared.addFutureEvent(event);
+        Account.shared.addOrUpdateEvent(event);
 
         /*
          * Decomment this piece of code when the Activity showing the group list is implemented
