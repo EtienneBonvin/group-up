@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -38,11 +37,11 @@ import ch.epfl.sweng.groupup.object.event.Event;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 /**
- * EventCreation class
+ * eventCreation class
  * Offers the possibility to the user to create a new event.
  * Is linked to the layout event_creation.xml
  */
-public class EventCreation extends AppCompatActivity implements ZXingScannerView.ResultHandler, DatePickerDialog.OnDateSetListener,
+public class eventCreation extends AppCompatActivity implements ZXingScannerView.ResultHandler, DatePickerDialog.OnDateSetListener,
     TimePickerDialog.OnTimeSetListener{
 
     private final int INPUT_MAX_LENGTH = 50;
@@ -96,11 +95,11 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
         end_time.setText(time_format(date_end.getHourOfDay(), date_end.getMinuteOfHour()));
 
         datePickerDialog = new DatePickerDialog(
-                this, EventCreation.this, date_start.getYear(), date_start.getMonthOfYear(),
+                this, eventCreation.this, date_start.getYear(), date_start.getMonthOfYear(),
                 date_start.getDayOfMonth());
 
         timePickerDialog = new TimePickerDialog(
-                this, EventCreation.this, date_start.getHourOfDay(), date_start.getMinuteOfHour(), true);
+                this, eventCreation.this, date_start.getHourOfDay(), date_start.getMinuteOfHour(), true);
 
         initListeners();
 
@@ -214,18 +213,16 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
         addNewMember(rawResult.getText());
     }
 
-    @Override
+    /*@Override
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
-        // TODO
 
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        // TODO
-    }
+    }*/
 
 
         /**
