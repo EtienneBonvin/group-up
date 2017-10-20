@@ -11,14 +11,16 @@
 
     <TextView
         android:id="@+id/text_view_first_name_info"
-        android:layout_width="fill_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="start"
         android:text="@string/text_view_display_name_info"
         android:textAlignment="textStart"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintLeft_creator="1" />
 
     <TextView
         android:id="@+id/text_view_first_name_text"
@@ -27,18 +29,22 @@
         android:text="@string/text_view_display_name_text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_first_name_info"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_first_name_info"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintLeft_creator="1" />
 
     <TextView
         android:id="@+id/text_view_last_name_info"
-        android:layout_width="fill_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="start"
         android:text="@string/text_view_family_name_info"
         android:textAlignment="textStart"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_first_name_text"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_first_name_text"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintLeft_creator="1" />
 
     <TextView
         android:id="@+id/text_view_last_name_text"
@@ -47,18 +53,22 @@
         android:text="@string/text_view_family_name_text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_last_name_info"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_last_name_info"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintLeft_creator="1" />
 
     <TextView
         android:id="@+id/text_view_given_name_info"
-        android:layout_width="fill_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="start"
         android:text="@string/text_view_given_name_info"
         android:textAlignment="textStart"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_last_name_text"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_last_name_text"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintLeft_creator="1" />
 
     <TextView
         android:id="@+id/text_view_given_name_text"
@@ -67,18 +77,22 @@
         android:text="@string/text_view_given_name_text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_given_name_info"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_given_name_info"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintLeft_creator="1" />
 
     <TextView
         android:id="@+id/text_view_email_info"
-        android:layout_width="fill_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="start"
         android:text="@string/text_view_email_info"
         android:textAlignment="textStart"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_given_name_text"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_given_name_text"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintLeft_creator="1" />
 
     <TextView
         android:id="@+id/text_view_email_text"
@@ -87,19 +101,36 @@
         android:text="@string/text_view_email_text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_email_info"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_view_email_info"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintLeft_creator="1" />
 
     <Button
         android:id="@+id/button_sign_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:onClick="onClick"
         android:text="@string/button_sign_out_text"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_given_name_text"
-        app:layout_constraintVertical_bias="0.498"/>
+        app:layout_constraintVertical_bias="0.542"
+        app:layout_constraintRight_toLeftOf="@+id/buttonDisplayQR"
+        app:layout_constraintLeft_toRightOf="@+id/buttonDisplayQR"
+        app:layout_constraintHorizontal_bias="0.502" />
+
+    <Button
+        android:id="@+id/buttonDisplayQR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Display QR Code"
+        android:layout_centerHorizontal="true"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintVertical_bias="0.772"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintLeft_creator="1" />
 
 </android.support.constraint.ConstraintLayout>
