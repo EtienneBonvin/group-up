@@ -19,17 +19,18 @@ import com.google.firebase.auth.AuthResult;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
+import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 
-import static ch.epfl.sweng.groupup.activity.login.Login.CONNECTING;
-import static ch.epfl.sweng.groupup.activity.login.Login.FIREBASE_AUTH;
-import static ch.epfl.sweng.groupup.activity.login.Login.REQUEST_CODE;
-import static ch.epfl.sweng.groupup.activity.login.Login.firebaseAuthWithGoogle;
-import static ch.epfl.sweng.groupup.activity.login.Login.firebaseCurrentUser;
-import static ch.epfl.sweng.groupup.activity.login.Login.googleApiClient;
-import static ch.epfl.sweng.groupup.activity.login.Login.googleCurrentUser;
-import static ch.epfl.sweng.groupup.activity.login.Login.setUpApiClient;
-import static ch.epfl.sweng.groupup.activity.login.Login.showAlert;
+import static ch.epfl.sweng.groupup.lib.Login.CONNECTING;
+import static ch.epfl.sweng.groupup.lib.Login.FIREBASE_AUTH;
+import static ch.epfl.sweng.groupup.lib.Login.REQUEST_CODE;
+import static ch.epfl.sweng.groupup.lib.Login.firebaseAuthWithGoogle;
+import static ch.epfl.sweng.groupup.lib.Login.firebaseCurrentUser;
+import static ch.epfl.sweng.groupup.lib.Login.googleApiClient;
+import static ch.epfl.sweng.groupup.lib.Login.googleCurrentUser;
+import static ch.epfl.sweng.groupup.lib.Login.setUpApiClient;
+import static ch.epfl.sweng.groupup.lib.Login.showAlert;
 
 /**
  * Activity to handle the sign up / login process of the user. It either asks the user to sign up /
@@ -148,15 +149,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (success) {
             firebaseCurrentUser = FIREBASE_AUTH.getCurrentUser();
 
-            // TODO: bla
             Account.shared
                     .withEmail(googleCurrentUser.getEmail())
                     .withDisplayName(firebaseCurrentUser.getDisplayName())
                     .withFamilyName(googleCurrentUser.getFamilyName())
-                    .withGivenName(googleCurrentUser.getGivenName());
-            //.withUID(firebaseCurrentUser.getUid())
-            //.withPoneNumber(firebaseCurrentUser.getPhoneNumber());
-
+                    .withGivenName(googleCurrentUser.getGivenName())
+                    .withUUID(firebaseCurrentUser.getUid());
+            //.withPoneNumber(firebaseCurrentUser.getPhoneNumber(
+          
+            Database.update();
+            Database.setUpEventListener();
+       
             Intent intent = new Intent(this, EventListingActivity.class);
             startActivity(intent);
         } else {

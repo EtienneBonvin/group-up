@@ -6,23 +6,35 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 
 public final class Event {
 
+    private final String UUID;
     private final String eventName;
     private final LocalDateTime startTime;
     private final LocalDateTime endTime;
+    private final String description;
     private final List<Member> eventMembers;
-    private final int eventID;
 
-    public Event(String eventName, LocalDateTime startTime, LocalDateTime endTime, List<Member> eventMembers, int eventID) {
+    public Event(String eventName, LocalDateTime startTime, LocalDateTime endTime, String description, List<Member> eventMembers) {
+        this.UUID = java.util.UUID.randomUUID().toString();
         this.eventName = eventName;
         this.startTime = startTime;
         this.endTime = endTime;
-
+        this.description = description;
         this.eventMembers = Collections.unmodifiableList(new ArrayList<>(eventMembers));
-        this.eventID = eventID;
+    }
+
+    public Event(String uuid, String eventName, LocalDateTime startTime, LocalDateTime endTime, String
+            description, List<Member> eventMembers) {
+        this.UUID = uuid;
+        this.eventName = eventName;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.description = description;
+        this.eventMembers = Collections.unmodifiableList(new ArrayList<>(eventMembers));
     }
 
     /**
@@ -59,11 +71,17 @@ public final class Event {
 
     /**
      * Getter for the event ID
-     * @return int unique ID of event
+     * @return String unique ID of event
      */
-    public int getEventID() {
-        return eventID;
+    public String getUUID() {
+        return UUID;
     }
+
+    /**
+     * Getter for the event description
+     * @return String description of event
+     */
+    public String getDescription() { return description; }
 
     /**
      * Change the name of an event
@@ -71,7 +89,7 @@ public final class Event {
      * @return the modified event
      */
     public Event withEventName(String eventName){
-        return new Event(eventName, startTime, endTime, eventMembers, eventID);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers);
     }
 
     /**
@@ -80,7 +98,7 @@ public final class Event {
      * @return the modified event
      */
     public Event withStartTime(LocalDateTime startTime){
-        return new Event(eventName, startTime, endTime, eventMembers, eventID);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers);
     }
 
     /**
@@ -89,7 +107,16 @@ public final class Event {
      * @return the modified event
      */
     public Event withEndTime(LocalDateTime endTime){
-        return new Event(eventName, startTime, endTime, eventMembers, eventID);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers);
+    }
+
+    /**
+     * Change the description of an event
+     * @param description
+     * @return the modified event
+     */
+    public Event withDescription(String description) {
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers);
     }
 
     /**
@@ -98,7 +125,7 @@ public final class Event {
      * @return the modified event
      */
     public Event withEventMembers(List<Member> eventMembers){
-        return new Event(eventName, startTime, endTime, eventMembers, eventID);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers);
     }
 
     /**
@@ -130,6 +157,20 @@ public final class Event {
         } else throw new IllegalArgumentException("Event is not "+ EventStatus.FUTURE.toString());
     }
 
+    /**
+     * Removes the current user from the member list of the event
+     * @return the modified event
+     */
+    public Event withoutCurrentUser(){
+        List<Member> newMemberList = new ArrayList<>();
+        for(Member m: eventMembers){
+            if(!m.equals(Account.shared.toMember())){
+                newMemberList.add(m);
+            }
+        }
+        return withEventMembers(newMemberList);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -141,7 +182,7 @@ public final class Event {
         if (!this.getEventStatus().equals(event.getEventStatus())) return false;
         if (!startTime.equals(event.startTime)) return false;
         if (!endTime.equals(event.endTime)) return false;
-        if (!(eventID==event.eventID)) return false;
+        if (!(UUID==event.UUID)) return false;
         return eventMembers.equals(event.eventMembers);
     }
 
@@ -153,7 +194,7 @@ public final class Event {
                 ", startDate='" + startTime + '\'' +
                 ", endDate=" + endTime + '\'' +
                 ", evenStatus=" + getEventStatus() + '\'' +
-                ", eventID= " + eventID +
+                ", eventID= " + UUID +
                 '}';
     }
 
@@ -165,7 +206,7 @@ public final class Event {
         return "Event{" +
                 "eventName='" + eventName + '\'' +
                 ", eventStatus='" + getEventStatus() +
-                ", eventID= " + eventID +
+                ", eventID= " + UUID +
                 '}';
     }
 }
