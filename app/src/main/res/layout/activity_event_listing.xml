@@ -10,7 +10,7 @@
         layout="@layout/toolbar"
         android:id="@+id/toolbar" />
 
-    <!-- ScrollView of all future events, the cretate event button, -->
+    <!-- ScrollView of all future events, the create event button, -->
     <!-- and all past events -->
     <ScrollView
         android:layout_width="match_parent"
