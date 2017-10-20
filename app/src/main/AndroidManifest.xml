@@ -26,8 +26,6 @@
         <activity android:name=".activity.eventListing.EventListingActivity">
         </activity>
         <activity android:name=".activity.eventCreation.eventCreation"/>
-        <activity android:name=".activity.eventListing.EventListingActivity">
-        </activity>
     </application>
 
 </manifest>
