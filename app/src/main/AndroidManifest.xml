@@ -3,6 +3,7 @@
           package="ch.epfl.sweng.groupup">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -22,7 +23,14 @@
         </activity>
         <activity android:name=".activity.home.inactive.EventListActivity">
         </activity>
-        <activity android:name=".activity.eventCreation.eventCreation"/>
+        <activity android:name=".activity.eventListing.EventListingActivity">
+        </activity>
+        <activity android:name=".activity.eventCreation.eventCreation">
+        </activity>
+        <activity android:name=".activity.home.inactive.DisplayQRActivity">
+
+        </activity>
+        <activity android:name=".activity.settings.Settings"></activity>
     </application>
 
 </manifest>

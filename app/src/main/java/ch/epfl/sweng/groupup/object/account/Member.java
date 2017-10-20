@@ -6,12 +6,21 @@ import ch.epfl.sweng.groupup.lib.Optional;
  */
 public final class Member extends User {
 
-    public Member(String displayName, String givenName, String familyName, String email){
-        super(displayName, givenName, familyName, email);
+    public Member(String UUID, String displayName, String givenName, String familyName, String email){
+        super(displayName, givenName, familyName, email, UUID);
     }
 
-    public Member(Optional<String> displayName, Optional<String> givenName, Optional<String> familyName, Optional<String> email){
-        super(displayName, givenName, familyName, email);
+    public Member(Optional<String> UUID, Optional<String> displayName, Optional<String> givenName, Optional<String> familyName, Optional<String> email){
+        super(displayName, givenName, familyName, email, UUID);
+    }
+
+    /**
+     * Returns a new member with the given UUID
+     * @param UUID the new UUID of the member
+     * @return a new member with the given UUID
+     */
+    public Member withUUID(String UUID) {
+        return new Member(Optional.<String>from(UUID), displayName, givenName, familyName, email);
     }
 
     /**
@@ -20,7 +29,7 @@ public final class Member extends User {
      * @return a new member with the given display name
      */
     public Member withDisplayName(String newDisplayName){
-        return new Member(Optional.from(newDisplayName), givenName, familyName, email);
+        return new Member(UUID, Optional.from(newDisplayName), givenName, familyName, email);
     }
 
     /**
@@ -29,7 +38,7 @@ public final class Member extends User {
      * @return a new member with the given first name
      */
     public Member withFirstName(String newFirstName){
-        return new Member(displayName, Optional.from(newFirstName), familyName, email);
+        return new Member(UUID, displayName, Optional.from(newFirstName), familyName, email);
     }
 
     /**
@@ -38,7 +47,7 @@ public final class Member extends User {
      * @return a new member with the given last name
      */
     public Member withLastName(String newLastName){
-        return new Member(displayName, givenName, Optional.from(newLastName), email);
+        return new Member(UUID, displayName, givenName, Optional.from(newLastName), email);
     }
 
     /**
@@ -47,6 +56,6 @@ public final class Member extends User {
      * @return a new member with the given email
      */
     public Member withEmail(String newEmail){
-        return new Member(displayName, givenName, familyName, Optional.from(newEmail));
+        return new Member(UUID, displayName, givenName, familyName, Optional.from(newEmail));
     }
 }

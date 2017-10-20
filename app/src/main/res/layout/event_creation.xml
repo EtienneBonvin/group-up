@@ -2,19 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color">
+    android:id="@+id/container">
+
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar" />
 
     <!-- User input for the event name -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/ui_event_name">
+        android:id="@+id/ui_event_name"
+        android:layout_below="@id/toolbar">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.4"
-            android:text="@string/text_view_event_name"
+            android:text="@string/event_creation_tv_event_name"
             android:textSize="20sp"
             android:gravity="center_vertical"
             android:textColor="@color/white"/>
@@ -24,8 +29,9 @@
             android:layout_height="match_parent"
             android:layout_weight="0.6"
             android:textSize="20sp"
+            android:textColor="@color/black"
             android:inputType="textCapSentences|textAutoCorrect"
-            android:hint="@string/text_view_event_name_hint"
+            android:hint="@string/event_creation_hint_event_name"
             android:background="@color/white"/>
 
     </LinearLayout>
@@ -41,7 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.4"
-            android:text="@string/text_view_start_time"
+            android:text="@string/event_creation_tv_start_time"
             android:textSize="20sp"
             android:gravity="center_vertical"
             android:textColor="@color/white"/>
@@ -72,7 +78,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.4"
-            android:text="@string/text_view_end_time"
+            android:text="@string/event_creation_tv_end_time"
             android:textSize="20sp"
             android:gravity="center_vertical"
             android:textColor="@color/white"/>
@@ -97,7 +103,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/members"
-        android:text="@string/text_view_members"
+        android:text="@string/event_creation_tv_members"
         android:layout_below="@id/ui_end_time"
         android:textSize="20sp"
         android:paddingTop="20sp"
@@ -109,7 +115,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="@string/button_event_creation"/>
+        android:text="@string/event_creation_button_add_event"/>
 
     <!-- User input for the email address of the invited users -->
     <LinearLayout
@@ -119,14 +125,22 @@
         android:layout_above="@id/save_button"
         android:textColor="@color/white">
 
+        <ImageView
+            android:id="@+id/buttonScanQR"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:src="@drawable/qr_code_logo"/>
+
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.9"
+            android:layout_weight="0.8"
             android:textSize="20sp"
             android:id="@+id/edit_text_add_member"
-            android:hint="@string/text_view_invite_new_members_hint"
-            android:inputType="textWebEmailAddress"
+            android:hint="@string/event_creation_hint_invite_new_members"
+            android:inputType="text"
+            android:textColor="@color/black"
             android:background="@color/white"/>
 
         <ImageView
@@ -144,11 +158,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/text_view_add_members"
         android:layout_above="@id/layout_add_member"
-        android:text="@string/text_view_invite_new_members"
+        android:text="@string/event_creation_tv_invite_new_members"
         android:textSize="20sp"
         android:gravity="center"
         android:paddingTop="20sp"
         android:textColor="@color/white"/>
+
 
     <!-- Scroll view showing all the already added members
         with the possibility to delete them -->
