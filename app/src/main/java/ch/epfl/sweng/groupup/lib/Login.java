@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.activity.login;
+package ch.epfl.sweng.groupup.lib;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -31,19 +31,19 @@ public final class Login {
      * that gets returned once the sign in intent activates its callback.
      */
     public static final boolean CONNECTED = true;
-    static final boolean CONNECTING = true;
-    static final int REQUEST_CODE = 666;
+    public static final boolean CONNECTING = true;
+    public static final int REQUEST_CODE = 666;
 
     // Object that contains the sign in options we what from the user.
     private static GoogleSignInOptions googleSignInOptions;
 
     // Objects for the standard Google sign in.
     public static GoogleApiClient googleApiClient;
-    static GoogleSignInAccount googleCurrentUser;
+    public static GoogleSignInAccount googleCurrentUser;
 
     // Objects for the Firebase sign in.
     public static final FirebaseAuth FIREBASE_AUTH = FirebaseAuth.getInstance();
-    static FirebaseUser firebaseCurrentUser;
+    public static FirebaseUser firebaseCurrentUser;
 
     private Login() {
         // Not instantiable.
@@ -105,8 +105,8 @@ public final class Login {
      * @param activity           - current activity
      * @param onCompleteListener - on complete listener that handles the result
      */
-    static void firebaseAuthWithGoogle(Activity activity,
-                                       OnCompleteListener<AuthResult> onCompleteListener) {
+    public static void firebaseAuthWithGoogle(Activity activity,
+                                              OnCompleteListener<AuthResult> onCompleteListener) {
         AuthCredential credential = GoogleAuthProvider
                 .getCredential(googleCurrentUser.getIdToken(), null);
         FIREBASE_AUTH.signInWithCredential(credential)
@@ -123,7 +123,7 @@ public final class Login {
      * @param message    - alert message
      * @param buttonText - button text
      */
-    static void showAlert(Context context, String title, String message, String
+    public static void showAlert(Context context, String title, String message, String
             buttonText) {
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
 

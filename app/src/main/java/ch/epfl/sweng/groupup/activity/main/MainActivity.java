@@ -6,7 +6,9 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
 import ch.epfl.sweng.groupup.R;
+
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
+import ch.epfl.sweng.groupup.lib.database.Database;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,6 +16,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Database.setUpDatabase();
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -26,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void switchToLoginContentView() {
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         startActivity(intent);
     }

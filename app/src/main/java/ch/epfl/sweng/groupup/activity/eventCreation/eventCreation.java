@@ -2,49 +2,64 @@ package ch.epfl.sweng.groupup.activity.eventCreation;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.icu.util.GregorianCalendar;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.util.Calendar;
-import java.util.Date;
+import org.joda.time.LocalDateTime;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
+import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
+import ch.epfl.sweng.groupup.activity.settings.Settings;
+import ch.epfl.sweng.groupup.lib.Optional;
+import ch.epfl.sweng.groupup.lib.database.Database;
+import ch.epfl.sweng.groupup.object.account.Account;
+import ch.epfl.sweng.groupup.object.account.Member;
+import ch.epfl.sweng.groupup.object.event.Event;
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
+
 
 /**
- * EventCreation class
+ * eventCreation class
  * Offers the possibility to the user to create a new event.
  * Is linked to the layout event_creation.xml
  */
-public class eventCreation extends AppCompatActivity implements DatePickerDialog.OnDateSetListener,
+public class eventCreation extends AppCompatActivity implements ZXingScannerView.ResultHandler, DatePickerDialog.OnDateSetListener,
     TimePickerDialog.OnTimeSetListener{
 
+    private final int INPUT_MAX_LENGTH = 50;
+
+    private Event finalEvent;
     private Button start_date, end_date, start_time, end_time;
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
-    private Calendar cal;
     private boolean set_start_date, set_end_date, set_start_time, set_end_time;
     private int numberOfMembers;
     private HashMap<View.OnClickListener, View> viewsWithOCL;
+    private HashMap<View.OnClickListener, String> uIdsWithOCL;
+    private LocalDateTime date_start, date_end;
+    private ZXingScannerView mScannerView;
+    private String qrString;
 
     /**
      * Initialization of all the variables of the class and of the OnClickListeners
@@ -55,7 +70,8 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_creation);
 
-        cal = Calendar.getInstance();
+        date_start = LocalDateTime.now();
+        date_end = LocalDateTime.now();
 
         set_start_date = false;
         set_end_date = false;
@@ -65,27 +81,60 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
         numberOfMembers = 0;
 
         viewsWithOCL = new HashMap<>();
+        uIdsWithOCL = new HashMap<>();
 
         start_date = (Button)findViewById(R.id.button_start_date);
-        start_date.setText(date_format(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH),
-                cal.get(Calendar.YEAR)));
+        start_date.setText(date_format(date_start.getDayOfMonth(), date_start.getMonthOfYear(),
+                date_start.getYear()));
 
         start_time = (Button)findViewById(R.id.button_start_time);
-        start_time.setText(time_format(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE)));
+        start_time.setText(time_format(date_start.getHourOfDay(), date_start.getMinuteOfHour()));
 
         end_date = (Button)findViewById(R.id.button_end_date);
-        end_date.setText(date_format(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH),
-                cal.get(Calendar.YEAR)));
+        end_date.setText(date_format(date_end.getDayOfMonth(), date_end.getMonthOfYear(),
+                date_end.getYear()));
 
         end_time = (Button)findViewById(R.id.button_end_time);
-        end_time.setText(time_format(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE)));
+        end_time.setText(time_format(date_end.getHourOfDay(), date_end.getMinuteOfHour()));
 
         datePickerDialog = new DatePickerDialog(
-                this, eventCreation.this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH));
+                this, eventCreation.this, date_start.getYear(), date_start.getMonthOfYear(),
+                date_start.getDayOfMonth());
 
         timePickerDialog = new TimePickerDialog(
-                this, eventCreation.this, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
+                this, eventCreation.this, date_start.getHourOfDay(), date_start.getMinuteOfHour(), true);
+
+        initListeners();
+
+    }
+
+    private void initListeners(){
+        findViewById(R.id.icon_access_group_list)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), EventListingActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+        findViewById(R.id.icon_access_settings)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), Settings.class);
+                        startActivity(intent);
+                    }
+                });
+
+        findViewById(R.id.icon_access_user_profile)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), EventListActivity.class);
+                        startActivity(intent);
+                    }
+                });
 
         findViewById(R.id.button_start_date)
                 .setOnClickListener(new View.OnClickListener() {
@@ -126,17 +175,73 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        addNewMember();
+                        EditText memberUId = (EditText)findViewById(R.id.edit_text_add_member);
+                        addNewMember(memberUId.getText().toString());
+                        memberUId.setText("");
+                    }
+                });
+        findViewById(R.id.buttonScanQR)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        QrScanner(v);
+                    }
+                });
+
+        findViewById(R.id.save_button)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        saveEvent();
                     }
                 });
     }
 
-    /**
-     * Adds a line in the member list on the UI with the email address specified by the user
-     * with the possibility to remove it by linking the OnClickListener to the instance of
-     * LinearLayout created.
-     */
-    private void addNewMember() {
+    @Override
+    public void onBackPressed() {
+        if (mScannerView != null) {
+            mScannerView.stopCamera();
+            setContentView(R.layout.event_creation);
+        }
+    }
+
+    public void QrScanner(View view){
+        // TODO: 18.10.2017 Check if user granted camera access to app
+        mScannerView = new ZXingScannerView(this);
+        setContentView(mScannerView);
+        mScannerView.setResultHandler(this);
+        mScannerView.startCamera();
+    }
+
+    @Override
+    public void handleResult(com.google.zxing.Result rawResult) {
+        // Do something with the result here
+        qrString = rawResult.toString();
+
+        // Close camera and return to activity after successful scan
+        mScannerView.stopCamera();
+        setContentView(R.layout.event_creation);
+        initListeners();
+        addNewMember(rawResult.getText());
+    }
+
+    /*@Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+
+    }*/
+
+    /*@Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }*/
+
+
+        /**
+         * Adds a line in the member list on the UI with the user ID address specified by the user
+         * @param memberUId
+         */
+    private void addNewMember(String memberUId) {
         numberOfMembers++;
 
         LinearLayout newMember = new LinearLayout(this);
@@ -144,7 +249,6 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        EditText memberMail = (EditText) findViewById(R.id.edit_text_add_member);
 
         TextView textView = new TextView(this);
         textView.setTextSize(20);
@@ -152,10 +256,8 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 0.9f));
-        textView.setText(memberMail.getText());
+        textView.setText(memberUId);
         textView.setTextColor(Color.WHITE);
-        memberMail.setText("");
-
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 0,
@@ -181,11 +283,13 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
                         .removeView(
                                 viewsWithOCL.get(this)
                         );
+                uIdsWithOCL.remove(this);
             }
         };
 
         minus.setOnClickListener(ocl);
         viewsWithOCL.put(ocl, newMember);
+        uIdsWithOCL.put(ocl, memberUId);
     }
 
     /**
@@ -200,9 +304,13 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         if(set_start_date) {
+            date_start = new LocalDateTime(year, month, dayOfMonth,
+                    date_start.getHourOfDay(), date_start.getMinuteOfHour());
             start_date.setText(date_format(dayOfMonth, month, year));
             set_start_date = false;
         }else if(set_end_date){
+            date_end = new LocalDateTime(year, month, dayOfMonth,
+                    date_end.getHourOfDay(), date_end.getMinuteOfHour());
             end_date.setText(date_format(dayOfMonth, month, year));
             set_end_date = false;
         }
@@ -219,12 +327,92 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         if(set_start_time) {
+            date_start = new LocalDateTime(date_start.getYear(), date_start.getMonthOfYear(),
+                    date_start.getDayOfMonth(), hourOfDay, minute);
             start_time.setText(time_format(hourOfDay, minute));
             set_start_time = false;
         }else if(set_end_time){
+            date_end = new LocalDateTime(date_end.getYear(), date_end.getMonthOfYear(),
+                    date_end.getDayOfMonth(), hourOfDay, minute);
             end_time.setText(time_format(hourOfDay, minute));
             set_end_time = false;
         }
+    }
+
+    /**
+     * Method called when the 'Save event' button is clicked.
+     * It registers the informations entered by the user, verify them and bring him to the
+     * group list Activity.
+     */
+    private void saveEvent(){
+        EditText eventName = ((EditText)findViewById(R.id.ui_edit_event_name));
+        if(eventName.getText().toString().length() == 0){
+            eventName.setError("Give a name to your event !");
+            return;
+        }else if(eventName.getText().toString().length() > INPUT_MAX_LENGTH){
+            eventName.setError("The name of the event is too long.");
+            return;
+        }
+        eventName.setError(null);
+
+        if(compare_date(LocalDateTime.now(), date_start) < 0){
+            Toast.makeText(this.getBaseContext(), "Are you planning to go back to the past ?",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(compare_date(date_start, date_end) < 0){
+            Toast.makeText(this.getBaseContext(), "Your event ends before it begins.",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(compare_date(date_start, date_end) == 0){
+            Toast.makeText(this.getBaseContext(), "Your event should last for at least 1 minute.",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Set<String> distinctUIds = new HashSet<>();
+        for(View.OnClickListener ocl : uIdsWithOCL.keySet()){
+            distinctUIds.add(uIdsWithOCL.get(ocl));
+        }
+
+        List<Member> members = new ArrayList<>();
+        Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
+                Optional.<String>empty(), Optional.<String>empty());
+
+        for(String id : distinctUIds){
+            members.add(emptyMember.withUUID(id));
+        }
+
+        Event event = new Event(eventName.getText().toString(), date_start, date_end, "", members);
+
+        Account.shared.addOrUpdateEvent(event);
+        Database.update();
+
+        Intent intent = new Intent(this, EventListingActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Private method to compare two LocalDateTime to the minute level.
+     * @param start
+     * @param end
+     * @return 1 if start is before end of at least 1 minute, 0 if start and end are the same
+     * to the minute level, -1 otherwise.
+     */
+    private int compare_date(LocalDateTime start, LocalDateTime end){
+        if(start.getYear() > end.getYear()) return -1;
+        if(start.getYear() < end.getYear()) return 1;
+        if(start.getMonthOfYear() > end.getMonthOfYear()) return -1;
+        if(start.getMonthOfYear() < end.getMonthOfYear()) return 1;
+        if(start.getDayOfMonth() > end.getDayOfMonth()) return -1;
+        if(start.getDayOfMonth() < end.getDayOfMonth()) return 1;
+        if(start.getHourOfDay() > end.getHourOfDay()) return -1;
+        if(start.getHourOfDay() < end.getHourOfDay()) return 1;
+        if(start.getMinuteOfHour() > end.getMinuteOfHour()) return -1;
+        if(start.getMinuteOfHour() < end.getMinuteOfHour()) return 1;
+        return 0;
     }
 
     /**
@@ -247,6 +435,7 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
      * @return a HH:MM string
      */
     private String time_format(int hour, int minutes){
-        return String.format(Locale.getDefault(), "%02d", hour)+":"+String.format(Locale.getDefault(), "%02d", minutes);
+        return String.format(Locale.getDefault(), "%02d", hour)+":"+
+                String.format(Locale.getDefault(), "%02d", minutes);
     }
 }
