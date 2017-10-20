@@ -30,6 +30,7 @@
         <activity android:name=".activity.home.inactive.DisplayQRActivity">
 
         </activity>
+        <activity android:name=".activity.settings.Settings"></activity>
     </application>
 
 </manifest>
