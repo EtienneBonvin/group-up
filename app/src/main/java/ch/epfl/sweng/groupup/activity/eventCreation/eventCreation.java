@@ -203,6 +203,7 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
             mScannerView.stopCamera();
             setContentView(R.layout.event_creation);
         }
+        initListeners();
     }
 
     public void QrScanner(View view){

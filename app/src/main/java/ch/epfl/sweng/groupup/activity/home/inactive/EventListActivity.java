@@ -111,8 +111,8 @@ public class EventListActivity extends AppCompatActivity implements
 
 
     public void displayQR(View view){
-        if (!shared.getEmail().isEmpty()){
-            String text = shared.getEmail().get();
+        if (!shared.getUUID().isEmpty()){
+            String text = shared.getUUID().get();
             QRCodeWriter writer = new QRCodeWriter();
             try {
                 BitMatrix bitMatrix = writer.encode(text, BarcodeFormat.QR_CODE, 512, 512);
