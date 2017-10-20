@@ -70,7 +70,6 @@ public abstract class User {
                 ", email=" + email +
                 '}';
     }
-}
     /**
      * Returns user's UUID
      * @return user's UUID
