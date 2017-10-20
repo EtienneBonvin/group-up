@@ -14,6 +14,7 @@ import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventCreation.eventCreation;
+import ch.epfl.sweng.groupup.activity.settings.Settings;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
 
@@ -46,6 +47,24 @@ public class EventListingActivity extends AppCompatActivity {
         initializeEvents(futureEvents);
         initializeCreateEvent();
         initializeEvents(pastEvents);
+
+        findViewById(R.id.icon_access_group_list)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), EventListingActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+        findViewById(R.id.icon_access_settings)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), Settings.class);
+                        startActivity(intent);
+                    }
+                });
     }
 
     /**

@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity">
 
-    <!-- <include
+    <include
         layout="@layout/toolbar"
-        android:id="@+id/toolbar" /> -->
+        android:id="@+id/toolbar" />
 
     <!-- ScrollView of all future events, the cretate event button, -->
     <!-- and all past events -->
     <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar">
 
         <!-- The LinearLayout of all the elements in the ScrollView -->
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -28,4 +29,4 @@
 
         </LinearLayout>
     </ScrollView>
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
