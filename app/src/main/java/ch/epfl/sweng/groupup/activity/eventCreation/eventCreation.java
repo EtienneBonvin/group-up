@@ -36,6 +36,7 @@ import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
+
 /**
  * eventCreation class
  * Offers the possibility to the user to create a new event.
