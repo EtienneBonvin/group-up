@@ -326,7 +326,7 @@ public class eventCreation extends AppCompatActivity implements DatePickerDialog
         }*/
 
         List<Member> members = new ArrayList<>();
-        Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(),
+        Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
                 Optional.<String>empty(), Optional.<String>empty());
 
         for(String email : distinctEmails){
