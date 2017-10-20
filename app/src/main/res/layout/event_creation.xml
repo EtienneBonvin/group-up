@@ -139,7 +139,7 @@
             android:textSize="20sp"
             android:id="@+id/edit_text_add_member"
             android:hint="@string/event_creation_hint_invite_new_members"
-            android:inputType="textPassword"
+            android:inputType="text"
             android:textColor="@color/black"
             android:background="@color/white"/>
 
