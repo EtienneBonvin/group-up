@@ -58,6 +58,7 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
     private ZXingScannerView mScannerView;
     private String qrString;
 
+    // Variables for state saving
     private String eventName;
     private List<String> membersIDs;
 
@@ -109,6 +110,9 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
 
     }
 
+    /**
+     * Initialize the OnClickListeners of the layout.
+     */
     private void initListeners(){
         findViewById(R.id.icon_access_group_list)
                 .setOnClickListener(new View.OnClickListener() {
@@ -198,6 +202,9 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
                 });
     }
 
+    /**
+     * Describe the behavior of the app when the back button is pressed while using the QR scanner
+     */
     @Override
     public void onBackPressed() {
         if (mScannerView != null) {
@@ -205,8 +212,14 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
             setContentView(R.layout.event_creation);
         }
         initListeners();
+        restoreState();
     }
 
+    /**
+     * Overrides the behavior of the app when the QR Scanner is called. Current state of layout
+     * saved.
+     * @param view
+     */
     public void QrScanner(View view){
         // TODO: 18.10.2017 Check if user granted camera access to app
         mScannerView = new ZXingScannerView(this);
@@ -216,6 +229,11 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
         mScannerView.startCamera();
     }
 
+    /**
+     * Saves the current state of the layout :
+     *      - Event name
+     *      - Already added members
+     */
     private void saveState(){
         eventName = ((EditText)findViewById(R.id.ui_edit_event_name)).getText().toString();
         membersIDs = new ArrayList<>();
@@ -228,6 +246,13 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
 
     }
 
+    /**
+     * Restores the current state of the layout :
+     *      - Event name
+     *      - Already added members
+     *      - State date and time
+     *      - End date and time
+     */
     private void restoreState(){
         ((EditText)findViewById(R.id.ui_edit_event_name)).setText(eventName);
         for(String id : membersIDs){
@@ -245,6 +270,10 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
                 .setText(time_format(date_end.getHourOfDay(), date_end.getMinuteOfHour()));
     }
 
+    /**
+     * Describes the behavior of the app when the QR Scanner get its results.
+     * @param rawResult
+     */
     @Override
     public void handleResult(com.google.zxing.Result rawResult) {
         // Do something with the result here
@@ -256,16 +285,6 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
         initListeners();
         restoreState();
         addNewMember(rawResult.getText());
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState){
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
     }
 
 
