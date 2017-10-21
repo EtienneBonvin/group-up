@@ -21,11 +21,10 @@ import org.joda.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
@@ -48,8 +47,6 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
     TimePickerDialog.OnTimeSetListener{
 
     private final int INPUT_MAX_LENGTH = 50;
-
-    private Event finalEvent;
     private Button start_date, end_date, start_time, end_time;
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
@@ -60,6 +57,10 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
     private LocalDateTime date_start, date_end;
     private ZXingScannerView mScannerView;
     private String qrString;
+
+    private String eventName;
+    private List<String> membersIDs;
+
 
     /**
      * Initialization of all the variables of the class and of the OnClickListeners
@@ -98,7 +99,7 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
         end_time.setText(time_format(date_end.getHourOfDay(), date_end.getMinuteOfHour()));
 
         datePickerDialog = new DatePickerDialog(
-                this, eventCreation.this, date_start.getYear(), date_start.getMonthOfYear(),
+                this, eventCreation.this, date_start.getYear(), date_start.getMonthOfYear() - 1,
                 date_start.getDayOfMonth());
 
         timePickerDialog = new TimePickerDialog(
@@ -209,9 +210,39 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
     public void QrScanner(View view){
         // TODO: 18.10.2017 Check if user granted camera access to app
         mScannerView = new ZXingScannerView(this);
+        saveState();
         setContentView(mScannerView);
         mScannerView.setResultHandler(this);
         mScannerView.startCamera();
+    }
+
+    private void saveState(){
+        eventName = ((EditText)findViewById(R.id.ui_edit_event_name)).getText().toString();
+        membersIDs = new ArrayList<>();
+        Iterator it = uIdsWithOCL.keySet().iterator();
+        while(it.hasNext()){
+            String nextId = uIdsWithOCL.get(it.next());
+            if(!membersIDs.contains(nextId))
+                membersIDs.add(nextId);
+        }
+
+    }
+
+    private void restoreState(){
+        ((EditText)findViewById(R.id.ui_edit_event_name)).setText(eventName);
+        for(String id : membersIDs){
+            addNewMember(id);
+        }
+        ((Button)findViewById(R.id.button_start_date))
+                .setText(date_format(date_start.getDayOfMonth(), date_start.getMonthOfYear(),
+                        date_start.getYear()));
+        ((Button)findViewById(R.id.button_end_date))
+                .setText(date_format(date_end.getDayOfMonth(), date_end.getMonthOfYear(),
+                        date_end.getYear()));
+        ((Button)findViewById(R.id.button_start_time))
+                .setText(time_format(date_start.getHourOfDay(), date_start.getMinuteOfHour()));
+        ((Button)findViewById(R.id.button_end_time))
+                .setText(time_format(date_end.getHourOfDay(), date_end.getMinuteOfHour()));
     }
 
     @Override
@@ -223,19 +254,19 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
         mScannerView.stopCamera();
         setContentView(R.layout.event_creation);
         initListeners();
+        restoreState();
         addNewMember(rawResult.getText());
     }
 
-    /*@Override
+    @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
+    }
 
-    }*/
-
-    /*@Override
+    @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-    }*/
+    }
 
 
         /**
@@ -305,14 +336,14 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         if(set_start_date) {
-            date_start = new LocalDateTime(year, month, dayOfMonth,
+            date_start = new LocalDateTime(year, month + 1, dayOfMonth,
                     date_start.getHourOfDay(), date_start.getMinuteOfHour());
-            start_date.setText(date_format(dayOfMonth, month, year));
+            start_date.setText(date_format(dayOfMonth, month + 1, year));
             set_start_date = false;
         }else if(set_end_date){
-            date_end = new LocalDateTime(year, month, dayOfMonth,
+            date_end = new LocalDateTime(year, month + 1, dayOfMonth,
                     date_end.getHourOfDay(), date_end.getMinuteOfHour());
-            end_date.setText(date_format(dayOfMonth, month, year));
+            end_date.setText(date_format(dayOfMonth, month + 1, year));
             set_end_date = false;
         }
     }
@@ -426,7 +457,7 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
      */
     private String date_format(int day, int month, int year){
         return String.format(Locale.getDefault(), "%02d", day)+"/"+
-                String.format(Locale.getDefault(), "%02d", month+1)+"/"+
+                String.format(Locale.getDefault(), "%02d", month)+"/"+
                 String.format(Locale.getDefault(), "%02d", (year%100));
     }
 
