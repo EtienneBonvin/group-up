@@ -18,7 +18,9 @@
         android:layout_below="@id/toolbar">
 
         <!-- The LinearLayout of all the elements in the ScrollView -->
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <!--xmlns:android="http://schemas.android.com/apk/res/android" line that was in linear layout
+        but lint doesn't want it-->
+        <LinearLayout
             android:id="@+id/linear_layout_event_list"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"

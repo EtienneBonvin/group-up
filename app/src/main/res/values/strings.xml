@@ -40,4 +40,15 @@
 
     <!-- Settings -->
     <string name="settings_tv_top">Settings page</string>
+
+    <!-- activity_display_qr-->
+    <string name="QR_code">QR Code</string>
+
+    <!--event_creation-->
+    <string name="Logo_QR">Logo of the QR code</string>
+    <string name="plus_sign">Plus sign</string>
+
+    <!-- toolbar -->
+    <string name="user_profile">Acces the user profile</string>
+
 </resources>

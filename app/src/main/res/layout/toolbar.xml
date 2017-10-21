@@ -27,6 +27,7 @@
             android:gravity="center"/>
 
         <ImageView
+            android:contentDescription="@string/user_profile"
             android:id="@+id/icon_access_user_profile"
             android:layout_width="0dp"
             android:layout_height="match_parent"
