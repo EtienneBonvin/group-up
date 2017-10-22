@@ -39,11 +39,11 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 
 /**
- * eventCreation class
+ * EventCreation class
  * Offers the possibility to the user to create a new event.
  * Is linked to the layout event_creation.xml
  */
-public class eventCreation extends AppCompatActivity implements ZXingScannerView.ResultHandler, DatePickerDialog.OnDateSetListener,
+public class EventCreation extends AppCompatActivity implements ZXingScannerView.ResultHandler, DatePickerDialog.OnDateSetListener,
     TimePickerDialog.OnTimeSetListener{
 
     private final int INPUT_MAX_LENGTH = 50;
@@ -100,11 +100,11 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
         end_time.setText(time_format(date_end.getHourOfDay(), date_end.getMinuteOfHour()));
 
         datePickerDialog = new DatePickerDialog(
-                this, eventCreation.this, date_start.getYear(), date_start.getMonthOfYear() - 1,
+                this, EventCreation.this, date_start.getYear(), date_start.getMonthOfYear() - 1,
                 date_start.getDayOfMonth());
 
         timePickerDialog = new TimePickerDialog(
-                this, eventCreation.this, date_start.getHourOfDay(), date_start.getMinuteOfHour(), true);
+                this, EventCreation.this, date_start.getHourOfDay(), date_start.getMinuteOfHour(), true);
 
         initListeners();
 
