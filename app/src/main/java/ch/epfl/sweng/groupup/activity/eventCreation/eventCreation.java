@@ -346,6 +346,8 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
      * group list Activity.
      */
     private void saveEvent(){
+        int INPUT_MAX_LENGTH = 50;
+
         EditText eventName = ((EditText)findViewById(R.id.ui_edit_event_name));
         if(eventName.getText().toString().length() == 0){
             eventName.setError("Give a name to your event !");
