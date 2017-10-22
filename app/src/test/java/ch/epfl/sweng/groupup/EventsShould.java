@@ -6,7 +6,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.prefs.Preferences;
 
 import org.joda.time.LocalDateTime;
 
@@ -19,8 +18,7 @@ import static junit.framework.Assert.*;
 
 public class EventsShould {
     private Event event;
-    private int eventID = 1234;
-    private Member member = new Member("UUID", "Even monkeys can fly", "Tester", "Test","test@test.test");
+    private final Member member = new Member("UUID", "Even monkeys can fly", "Tester", "Test","test@test.test");
     @Before
     public void init() {
         List<Member> eventMembers = new ArrayList<>();
