@@ -72,8 +72,8 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_creation);
 
-        date_start = LocalDateTime.now();
-        date_end = LocalDateTime.now();
+        date_start = LocalDateTime.now().plusMinutes(5);
+        date_end = LocalDateTime.now().plusMinutes(6);
 
         set_start_date = false;
         set_end_date = false;
@@ -424,7 +424,7 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
         }
 
         Set<String> distinctUIds = new HashSet<>();
-        distinctUIds.add(Account.shared.getUUID().get());
+        distinctUIds.add(Account.shared.getUUID().getOrElse("Default UUID"));
         for(View.OnClickListener ocl : uIdsWithOCL.keySet()){
             distinctUIds.add(uIdsWithOCL.get(ocl));
         }
