@@ -25,11 +25,9 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.io.ByteArrayOutputStream;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.eventCreation.eventCreation;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
 import ch.epfl.sweng.groupup.activity.settings.Settings;
-import ch.epfl.sweng.groupup.object.account.Account;
 
 import static ch.epfl.sweng.groupup.lib.Login.CONNECTED;
 import static ch.epfl.sweng.groupup.lib.Login.FIREBASE_AUTH;

@@ -13,7 +13,7 @@ import org.joda.time.LocalDateTime;
 import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.eventCreation.eventCreation;
+import ch.epfl.sweng.groupup.activity.eventCreation.EventCreation;
 import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
 import ch.epfl.sweng.groupup.activity.settings.Settings;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -105,7 +105,7 @@ public class EventListingActivity extends AppCompatActivity {
         creatEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(EventListingActivity.this, eventCreation.class);
+                Intent i = new Intent(EventListingActivity.this, EventCreation.class);
                 startActivity(i);
             }
         });
