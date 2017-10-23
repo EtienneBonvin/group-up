@@ -24,8 +24,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public final class Login {
 
-    // TODO: test...
-
     /**
      * Useful constants to represent the connected/connecting states and to have a request code
      * that gets returned once the sign in intent activates its callback.
