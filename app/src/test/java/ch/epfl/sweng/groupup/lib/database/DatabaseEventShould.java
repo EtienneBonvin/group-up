@@ -25,13 +25,13 @@ public class DatabaseEventShould {
         String name = "GroupUp Event";
         String description = "This is going to be fun.";
         String datetime_start = DateTime.now().toString();
-        String datetime_end = DateTime.now().toString();
+        String datetime_end = DateTime.now().plusDays(1).toString();
         String uuid = "myEventUuidIsReallyComplex";
 
         HashMap<String, DatabaseUser> members = new HashMap<>();
-        members.put("userUuid1", new DatabaseUser());
-        members.put("userUuid2", new DatabaseUser());
-        members.put("userUuid3", new DatabaseUser());
+        members.put("userUuid01", new DatabaseUser());
+        members.put("userUuid02", new DatabaseUser());
+        members.put("userUuid03", new DatabaseUser());
 
         DatabaseEvent databaseEvent = new DatabaseEvent(name, description, datetime_start,
                                                         datetime_end, uuid, members);

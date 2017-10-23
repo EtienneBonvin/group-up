@@ -51,9 +51,15 @@ public final class Database {
     /**
      * Function to set up the listener for the "events" node in the database. Has to be set up
      * once when we are ready to receive updates from the database.
+     *
+     * @param listener - the wanted event lister, pass in null to use default one
      */
-    public static void setUpEventListener() {
-        databaseRef.child(NODE_EVENTS_LIST).addValueEventListener(getEventsListener());
+    public static void setUpEventListener(ValueEventListener listener) {
+        if (listener == null) {
+            databaseRef.child(NODE_EVENTS_LIST).addValueEventListener(getEventsListener());
+        } else {
+            databaseRef.child(NODE_EVENTS_LIST).addValueEventListener(listener);
+        }
     }
 
     /**

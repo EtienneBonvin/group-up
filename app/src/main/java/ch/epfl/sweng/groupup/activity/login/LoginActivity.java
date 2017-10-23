@@ -18,7 +18,6 @@ import com.google.firebase.auth.AuthResult;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
-import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 
@@ -155,11 +154,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     .withFamilyName(googleCurrentUser.getFamilyName())
                     .withGivenName(googleCurrentUser.getGivenName())
                     .withUUID(firebaseCurrentUser.getUid());
-            //.withPoneNumber(firebaseCurrentUser.getPhoneNumber(
-          
+            //.withPoneNumber(firebaseCurrentUser.getPhoneNumber();
+
             Database.update();
-            Database.setUpEventListener();
-       
+            Database.setUpEventListener(null);
+
             Intent intent = new Intent(this, EventListingActivity.class);
             startActivity(intent);
         } else {
