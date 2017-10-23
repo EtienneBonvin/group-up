@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Iterator;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
@@ -273,7 +274,7 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
     @Override
     public void handleResult(com.google.zxing.Result rawResult) {
         // Do something with the result here
-        qrString = rawResult.toString();
+        String qrString = rawResult.toString();
 
         // Close camera and return to activity after successful scan
         mScannerView.stopCamera();
