@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Iterator;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
@@ -38,11 +39,11 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 
 /**
- * eventCreation class
+ * EventCreation class
  * Offers the possibility to the user to create a new event.
  * Is linked to the layout event_creation.xml
  */
-public class eventCreation extends AppCompatActivity implements ZXingScannerView.ResultHandler, DatePickerDialog.OnDateSetListener,
+public class EventCreation extends AppCompatActivity implements ZXingScannerView.ResultHandler, DatePickerDialog.OnDateSetListener,
     TimePickerDialog.OnTimeSetListener{
 
     private Button start_date, end_date, start_time, end_time;
@@ -54,6 +55,10 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
     private HashMap<View.OnClickListener, String> uIdsWithOCL;
     private LocalDateTime date_start, date_end;
     private ZXingScannerView mScannerView;
+
+    // Variables for state saving
+    private String eventName;
+    private List<String> membersIDs;
 
     /**
      * Initialization of all the variables of the class and of the OnClickListeners
@@ -92,16 +97,19 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
         end_time.setText(time_format(date_end.getHourOfDay(), date_end.getMinuteOfHour()));
 
         datePickerDialog = new DatePickerDialog(
-                this, eventCreation.this, date_start.getYear(), date_start.getMonthOfYear(),
+                this, EventCreation.this, date_start.getYear(), date_start.getMonthOfYear() - 1,
                 date_start.getDayOfMonth());
 
         timePickerDialog = new TimePickerDialog(
-                this, eventCreation.this, date_start.getHourOfDay(), date_start.getMinuteOfHour(), true);
+                this, EventCreation.this, date_start.getHourOfDay(), date_start.getMinuteOfHour(), true);
 
         initListeners();
 
     }
 
+    /**
+     * Initialize the OnClickListeners of the layout.
+     */
     private void initListeners(){
         findViewById(R.id.icon_access_group_list)
                 .setOnClickListener(new View.OnClickListener() {
@@ -178,7 +186,7 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        QrScanner();
+                        QrScanner(v);
                     }
                 });
 
@@ -191,6 +199,9 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
                 });
     }
 
+    /**
+     * Describe the behavior of the app when the back button is pressed while using the QR scanner
+     */
     @Override
     public void onBackPressed() {
         if (mScannerView != null) {
@@ -198,16 +209,68 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
             setContentView(R.layout.event_creation);
         }
         initListeners();
+        restoreState();
     }
 
-    private void QrScanner(){
+    /**
+     * Overrides the behavior of the app when the QR Scanner is called. Current state of layout
+     * saved.
+     * @param view
+     */
+    public void QrScanner(View view){
         // TODO: 18.10.2017 Check if user granted camera access to app
         mScannerView = new ZXingScannerView(this);
+        saveState();
         setContentView(mScannerView);
         mScannerView.setResultHandler(this);
         mScannerView.startCamera();
     }
 
+    /**
+     * Saves the current state of the layout :
+     *      - Event name
+     *      - Already added members
+     */
+    private void saveState(){
+        eventName = ((EditText)findViewById(R.id.ui_edit_event_name)).getText().toString();
+        membersIDs = new ArrayList<>();
+        Iterator it = uIdsWithOCL.keySet().iterator();
+        while(it.hasNext()){
+            String nextId = uIdsWithOCL.get(it.next());
+            if(!membersIDs.contains(nextId))
+                membersIDs.add(nextId);
+        }
+
+    }
+
+    /**
+     * Restores the current state of the layout :
+     *      - Event name
+     *      - Already added members
+     *      - State date and time
+     *      - End date and time
+     */
+    private void restoreState(){
+        ((EditText)findViewById(R.id.ui_edit_event_name)).setText(eventName);
+        for(String id : membersIDs){
+            addNewMember(id);
+        }
+        ((Button)findViewById(R.id.button_start_date))
+                .setText(date_format(date_start.getDayOfMonth(), date_start.getMonthOfYear(),
+                        date_start.getYear()));
+        ((Button)findViewById(R.id.button_end_date))
+                .setText(date_format(date_end.getDayOfMonth(), date_end.getMonthOfYear(),
+                        date_end.getYear()));
+        ((Button)findViewById(R.id.button_start_time))
+                .setText(time_format(date_start.getHourOfDay(), date_start.getMinuteOfHour()));
+        ((Button)findViewById(R.id.button_end_time))
+                .setText(time_format(date_end.getHourOfDay(), date_end.getMinuteOfHour()));
+    }
+
+    /**
+     * Describes the behavior of the app when the QR Scanner get its results.
+     * @param rawResult
+     */
     @Override
     public void handleResult(com.google.zxing.Result rawResult) {
         // Do something with the result here
@@ -217,24 +280,14 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
         mScannerView.stopCamera();
         setContentView(R.layout.event_creation);
         initListeners();
+        restoreState();
         addNewMember(rawResult.getText());
     }
-
-    /*@Override
-    public void onSaveInstanceState(Bundle savedInstanceState){
-        super.onSaveInstanceState(savedInstanceState);
-
-    }*/
-
-    /*@Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }*/
 
 
         /**
          * Adds a line in the member list on the UI with the user ID address specified by the user
-         * @param memberUId String containing UUID of member
+         * @param memberUId
          */
     private void addNewMember(String memberUId) {
         numberOfMembers++;
@@ -299,14 +352,14 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         if(set_start_date) {
-            date_start = new LocalDateTime(year, month, dayOfMonth,
+            date_start = new LocalDateTime(year, month + 1, dayOfMonth,
                     date_start.getHourOfDay(), date_start.getMinuteOfHour());
-            start_date.setText(date_format(dayOfMonth, month, year));
+            start_date.setText(date_format(dayOfMonth, month + 1, year));
             set_start_date = false;
         }else if(set_end_date){
-            date_end = new LocalDateTime(year, month, dayOfMonth,
+            date_end = new LocalDateTime(year, month + 1, dayOfMonth,
                     date_end.getHourOfDay(), date_end.getMinuteOfHour());
-            end_date.setText(date_format(dayOfMonth, month, year));
+            end_date.setText(date_format(dayOfMonth, month + 1, year));
             set_end_date = false;
         }
     }
@@ -340,8 +393,9 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
      * group list Activity.
      */
     private void saveEvent(){
-        int INPUT_MAX_LENGTH = 50;
 
+        int INPUT_MAX_LENGTH = 50;
+      
         EditText eventName = ((EditText)findViewById(R.id.ui_edit_event_name));
         if(eventName.getText().toString().length() == 0){
             eventName.setError("Give a name to your event !");
@@ -422,7 +476,7 @@ public class eventCreation extends AppCompatActivity implements ZXingScannerView
      */
     private String date_format(int day, int month, int year){
         return String.format(Locale.getDefault(), "%02d", day)+"/"+
-                String.format(Locale.getDefault(), "%02d", month+1)+"/"+
+                String.format(Locale.getDefault(), "%02d", month)+"/"+
                 String.format(Locale.getDefault(), "%02d", (year%100));
     }
 
