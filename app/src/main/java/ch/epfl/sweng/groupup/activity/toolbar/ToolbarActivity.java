@@ -15,11 +15,9 @@ public class ToolbarActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.toolbar);
-        initialize();
     }
 
-    public void initialize(){
+    protected void initializeToolbar(){
         findViewById(R.id.icon_access_group_list)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override

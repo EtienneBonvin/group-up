@@ -1,7 +1,6 @@
 package ch.epfl.sweng.groupup.activity.eventListing;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,8 +13,7 @@ import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventCreation.EventCreation;
-import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
-import ch.epfl.sweng.groupup.activity.settings.Settings;
+import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
 
@@ -26,7 +24,7 @@ import ch.epfl.sweng.groupup.object.event.Event;
  * It is linked to the layout activity_event_listing.xml
  */
 
-public class EventListingActivity extends AppCompatActivity {
+public class EventListingActivity extends ToolbarActivity {
 
     private LinearLayout linearLayout;
     private int heightInSp;
@@ -40,29 +38,12 @@ public class EventListingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_listing);
+        super.initializeToolbar();
 
         initializeVariables();
         initializeEvents(Account.shared.getFutureEvents());
         initializeCreateEvent();
         initializeEvents(Account.shared.getPastEvents());
-
-        findViewById(R.id.icon_access_settings)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), Settings.class);
-                        startActivity(intent);
-                    }
-                });
-
-        findViewById(R.id.icon_access_user_profile)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), EventListActivity.class);
-                        startActivity(intent);
-                    }
-                });
     }
 
     /**
