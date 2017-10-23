@@ -50,24 +50,12 @@ public class EventCreationTest {
         expectedMembers.add(emptyMember.withUUID("5"));
         expectedMembers.add(emptyMember.withUUID(Account.shared.getUUID().getOrElse("Default UUID")));
 
-        onView(withId(R.id.ui_edit_event_name)).perform(typeText("My event"));
-        onView(withId(R.id.edit_text_add_member)).perform(typeText("0"));
-        onView(withId(R.id.image_view_add_member)).perform(click());
-        onView(withId(R.id.edit_text_add_member)).perform(typeText("1"));
-        onView(withId(R.id.image_view_add_member)).perform(click());
-        onView(withId(R.id.edit_text_add_member)).perform(typeText("2"));
-        onView(withId(R.id.image_view_add_member)).perform(click());
-        onView(withId(R.id.edit_text_add_member)).perform(typeText("3"));
-        onView(withId(R.id.image_view_add_member)).perform(click());
-        onView(withId(R.id.edit_text_add_member)).perform(typeText("4"));
-        onView(withId(R.id.image_view_add_member)).perform(click());
-        onView(withId(R.id.edit_text_add_member)).perform(typeText("5"));
-        onView(withId(R.id.image_view_add_member)).perform(click());
+        addEventName("My event");
+        addMembers();
         onView(withId(R.id.save_button)).perform(click());
 
         List<Event> accountEvents = Account.shared.getFutureEvents();
-        Event found = new Event("", LocalDateTime.now(), LocalDateTime.now(), "",
-                new ArrayList<Member>());
+        Event found = null;
 
         LocalDateTime start = LocalDateTime.now().plusMinutes(5);
         LocalDateTime end = LocalDateTime.now().plusMinutes(6);
@@ -81,6 +69,43 @@ public class EventCreationTest {
         }
 
         assert(found.equals(expected));
+    }
+
+    @Test
+    public void noEventCreationOnEmptyEventName(){
+
+        addEventName("");
+        addMembers();
+        onView(withId(R.id.save_button)).perform(click());
+
+        List<Event> accountEvents = Account.shared.getFutureEvents();
+        Event found = null;
+        for(Event e : accountEvents){
+            if(e.getEventName().equals("My event")){
+                found = e;
+                break;
+            }
+        }
+        assert(found == null);
+    }
+
+    private void addMembers(){
+        onView(withId(R.id.edit_text_add_member)).perform(typeText("0"));
+        onView(withId(R.id.image_view_add_member)).perform(click());
+        onView(withId(R.id.edit_text_add_member)).perform(typeText("1"));
+        onView(withId(R.id.image_view_add_member)).perform(click());
+        onView(withId(R.id.edit_text_add_member)).perform(typeText("2"));
+        onView(withId(R.id.image_view_add_member)).perform(click());
+        onView(withId(R.id.edit_text_add_member)).perform(typeText("3"));
+        onView(withId(R.id.image_view_add_member)).perform(click());
+        onView(withId(R.id.edit_text_add_member)).perform(typeText("4"));
+        onView(withId(R.id.image_view_add_member)).perform(click());
+        onView(withId(R.id.edit_text_add_member)).perform(typeText("5"));
+        onView(withId(R.id.image_view_add_member)).perform(click());
+    }
+
+    private void addEventName(String name){
+        onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
     }
 }
 
