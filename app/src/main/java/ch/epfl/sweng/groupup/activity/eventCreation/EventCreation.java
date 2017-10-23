@@ -72,6 +72,16 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_creation);
 
+        initFields();
+
+        initListeners();
+
+    }
+
+    /**
+     * Initialize all fields that will be used in the UI to default values.
+     */
+    private void initFields(){
         date_start = LocalDateTime.now().plusMinutes(5);
         date_end = LocalDateTime.now().plusMinutes(6);
 
@@ -105,9 +115,6 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
 
         timePickerDialog = new TimePickerDialog(
                 this, EventCreation.this, date_start.getHourOfDay(), date_start.getMinuteOfHour(), true);
-
-        initListeners();
-
     }
 
     /**
