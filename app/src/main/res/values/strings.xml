@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">GroupUp</string>
 
-    <!-- Toolbar -->
+    <!-- ToolbarActivity -->
     <string name="toolbar_description_group_list_icon">Icon to click to access group list</string>
     <string name="toolbar_description_settings_icon">Icon to click to access settings</string>
 

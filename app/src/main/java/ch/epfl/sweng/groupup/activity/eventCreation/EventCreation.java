@@ -30,6 +30,7 @@ import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
 import ch.epfl.sweng.groupup.activity.settings.Settings;
+import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -43,7 +44,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
  * Offers the possibility to the user to create a new event.
  * Is linked to the layout event_creation.xml
  */
-public class EventCreation extends AppCompatActivity implements ZXingScannerView.ResultHandler, DatePickerDialog.OnDateSetListener,
+public class EventCreation extends ToolbarActivity implements ZXingScannerView.ResultHandler, DatePickerDialog.OnDateSetListener,
     TimePickerDialog.OnTimeSetListener{
 
     private final int INPUT_MAX_LENGTH = 50;
@@ -114,32 +115,6 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
      * Initialize the OnClickListeners of the layout.
      */
     private void initListeners(){
-        findViewById(R.id.icon_access_group_list)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), EventListingActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-        findViewById(R.id.icon_access_settings)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), Settings.class);
-                        startActivity(intent);
-                    }
-                });
-
-        findViewById(R.id.icon_access_user_profile)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), EventListActivity.class);
-                        startActivity(intent);
-                    }
-                });
 
         findViewById(R.id.button_start_date)
                 .setOnClickListener(new View.OnClickListener() {
