@@ -28,7 +28,7 @@ public class EventListingTest {
     @Test
     public void ensureCreateNewEventWork() {
 
-        // Click on the create_new_event button, when ID is implemented, use it. 
+        // Click on the create_new_event button, when ID is implemented, use it.
         onView(withText(R.string.create_new_event))
                 .perform(click());
 
