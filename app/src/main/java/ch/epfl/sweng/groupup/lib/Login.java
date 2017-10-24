@@ -1,9 +1,7 @@
 package ch.epfl.sweng.groupup.lib;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.auth.api.Auth;
@@ -109,33 +107,5 @@ public final class Login {
                 .getCredential(googleCurrentUser.getIdToken(), null);
         FIREBASE_AUTH.signInWithCredential(credential)
                 .addOnCompleteListener(activity, onCompleteListener);
-    }
-
-    /**
-     * Method to help displaying an alert personalized with the given parameters. This alert is
-     * only used to inform the user of an event, it simply gets dismissed when clicked on the
-     * button.
-     *
-     * @param context    - current context of the activity
-     * @param title      - alert title
-     * @param message    - alert message
-     * @param buttonText - button text
-     */
-    public static void showAlert(Context context, String title, String message, String
-            buttonText) {
-        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-
-        alertDialog.setTitle(title);
-        alertDialog.setMessage(message);
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL,
-                              buttonText,
-                              new DialogInterface.OnClickListener() {
-                                  @Override
-                                  public void onClick(DialogInterface dialog, int which) {
-                                      dialog.dismiss();
-                                  }
-                              });
-
-        alertDialog.show();
     }
 }

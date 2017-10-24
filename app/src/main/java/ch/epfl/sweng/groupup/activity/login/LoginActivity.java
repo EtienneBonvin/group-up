@@ -29,7 +29,7 @@ import static ch.epfl.sweng.groupup.lib.Login.firebaseCurrentUser;
 import static ch.epfl.sweng.groupup.lib.Login.googleApiClient;
 import static ch.epfl.sweng.groupup.lib.Login.googleCurrentUser;
 import static ch.epfl.sweng.groupup.lib.Login.setUpApiClient;
-import static ch.epfl.sweng.groupup.lib.Login.showAlert;
+import static ch.epfl.sweng.groupup.lib.Helper.showAlert;
 
 /**
  * Activity to handle the sign up / login process of the user. It either asks the user to sign up /

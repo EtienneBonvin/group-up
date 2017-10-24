@@ -28,6 +28,7 @@ import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
 import ch.epfl.sweng.groupup.activity.settings.Settings;
+import ch.epfl.sweng.groupup.lib.Helper;
 
 import static ch.epfl.sweng.groupup.lib.Login.CONNECTED;
 import static ch.epfl.sweng.groupup.lib.Login.FIREBASE_AUTH;
@@ -48,9 +49,9 @@ public class EventListActivity extends AppCompatActivity implements
     private TextView familyNameTextView;
     private TextView givenNameTextView;
     private TextView emailTextView;
-    public final static int QRcodeWidth = 500 ;
+    public final static int QRcodeWidth = 500;
     ImageView imageView;
-    Bitmap bitmap ;
+    Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +87,9 @@ public class EventListActivity extends AppCompatActivity implements
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), EventListingActivity.class);
+                        Intent
+                                intent =
+                                new Intent(getApplicationContext(), EventListingActivity.class);
                         startActivity(intent);
                     }
                 });
@@ -102,14 +105,14 @@ public class EventListActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         Intent intent = new Intent(this, EventListingActivity.class);
         startActivity(intent);
     }
 
 
-    public void displayQR(View view){
-        if (!shared.getUUID().isEmpty()){
+    public void displayQR(View view) {
+        if (!shared.getUUID().isEmpty()) {
             String text = shared.getUUID().get();
             QRCodeWriter writer = new QRCodeWriter();
             try {
@@ -136,12 +139,9 @@ public class EventListActivity extends AppCompatActivity implements
             }
         } else {
             // TODO: 19.10.2017  after pausing app, email always empty?
-            Context context = getApplicationContext();
-            int duration = Toast.LENGTH_SHORT;
-            CharSequence text;
-            text = "Unable to generate the QR Code";
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
+            Helper.showToast(getApplicationContext(),
+                             getString(R.string.toast_unable_to_generate_qr),
+                             Toast.LENGTH_SHORT);
         }
     }
 
@@ -156,8 +156,8 @@ public class EventListActivity extends AppCompatActivity implements
     }
 
     private void initializeFields() {
-        displayNameTextView = (TextView) findViewById(R.id.text_view_first_name_text);
-        familyNameTextView = (TextView) findViewById(R.id.text_view_last_name_text);
+        displayNameTextView = (TextView) findViewById(R.id.text_view_display_name_text);
+        familyNameTextView = (TextView) findViewById(R.id.text_view_family_name_text);
         givenNameTextView = (TextView) findViewById(R.id.text_view_given_name_text);
         emailTextView = (TextView) findViewById(R.id.text_view_email_text);
     }
@@ -189,8 +189,14 @@ public class EventListActivity extends AppCompatActivity implements
      * Starts the sign out process for the connected user.
      */
     private void signOut() {
-        Auth.GoogleSignInApi.signOut(googleApiClient)
-                .setResultCallback(getResultCallback(this /* package context  */));
+        if (FIREBASE_AUTH.getCurrentUser() != null) {
+            Auth.GoogleSignInApi.signOut(googleApiClient)
+                    .setResultCallback(getResultCallback(this /* package context  */));
+        } else {
+            Helper.showToast(getApplicationContext(),
+                             getString(R.string.toast_unable_to_sign_out),
+                             Toast.LENGTH_SHORT);
+        }
     }
 
     /**
