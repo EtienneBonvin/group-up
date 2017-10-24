@@ -97,7 +97,66 @@ public class EventCreationTest {
     public void noEventCreatedOnEmptyEventName(){
 
         addEventName("");
-        addMembers();
+        onView(withId(R.id.save_button)).perform(click());
+        assert(findEvent() == null);
+    }
+
+    @Test
+    public void dateWellComparedYear(){
+        addEventName("My event");
+        onView(withId(R.id.button_end_date)).perform(pressBack());
+        setStartDate(2100, 5, 5, 5, 5);
+        setEndDate(2099, 5, 5, 5, 5);
+        onView(withId(R.id.save_button)).perform(click());
+        assert(findEvent() == null);
+    }
+
+    @Test
+    public void dateWellComparedMonth(){
+        addEventName("My event");
+        onView(withId(R.id.button_end_date)).perform(pressBack());
+        setStartDate(2100, 5, 5, 5, 5);
+        setEndDate(2100, 4, 5, 5, 5);
+        onView(withId(R.id.save_button)).perform(click());
+        assert(findEvent() == null);
+    }
+
+    @Test
+    public void dateWellComparedDay(){
+        addEventName("My event");
+        onView(withId(R.id.button_end_date)).perform(pressBack());
+        setStartDate(2100, 5, 5, 5, 5);
+        setEndDate(2100, 5, 4, 5, 5);
+        onView(withId(R.id.save_button)).perform(click());
+        assert(findEvent() == null);
+    }
+
+    @Test
+    public void dateWellComparedHour(){
+        addEventName("My event");
+        onView(withId(R.id.button_end_date)).perform(pressBack());
+        setStartDate(2100, 5, 5, 5, 5);
+        setEndDate(2100, 5, 5, 4, 5);
+        onView(withId(R.id.save_button)).perform(click());
+        assert(findEvent() == null);
+    }
+
+    @Test
+    public void dateWellComparedMinute(){
+        addEventName("My event");
+        onView(withId(R.id.button_end_date)).perform(pressBack());
+        setStartDate(2100, 5, 5, 5, 5);
+        setEndDate(2100, 5, 5, 5, 4);
+        onView(withId(R.id.save_button)).perform(click());
+        assert(findEvent() == null);
+    }
+
+    @Test
+    public void atLeastOneMinuteBetweenStartAndEndDate(){
+        addEventName("My event");
+        onView(withId(R.id.button_end_date)).perform(pressBack());
+        setStartDate(2100, 5, 5, 5, 5);
+        setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
         assert(findEvent() == null);
     }
@@ -105,17 +164,10 @@ public class EventCreationTest {
     @Test
     public void noEventCreationOnPastStartDate(){
         LocalDateTime now = LocalDateTime.now();
-        boolean carry = now.getDayOfMonth() == 0;
-        int day = carry ? 28 : now.getDayOfMonth() - 1;
-        int month = now.getMonthOfYear() - 1;
-        int year = now.getYear();
-        if(carry){
-            carry = now.getMonthOfYear() == 0;
-            month = carry ? 12 : month;
-            if(carry){
-                year --;
-            }
-        }
+        int day = now.getDayOfMonth();
+        int month = now.getMonthOfYear();
+        int year = now.getYear() - 1;
+
         addEventName("My event");
         onView(withId(R.id.button_start_date)).perform(pressBack());
         onView(withId(R.id.button_start_date)).perform(click());
@@ -128,25 +180,35 @@ public class EventCreationTest {
 
     @Test
     public void noEventCreationOnEndDateBeforeStartDate(){
-        LocalDateTime now = LocalDateTime.now();
-        boolean carry = now.getDayOfMonth() == 0;
-        int day = carry ? 28 : now.getDayOfMonth() - 1;
-        int month = now.getMonthOfYear() - 1;
-        int year = now.getYear();
-        if(carry){
-            carry = now.getMonthOfYear() == 0;
-            month = carry ? 12 : month;
-            if(carry){
-                year --;
-            }
-        }
         addEventName("My event");
         onView(withId(R.id.button_end_date)).perform(pressBack());
+        setStartDate(5555, 5, 5, 5, 5);
+        setEndDate(5554, 5, 5, 5, 5);
+        assert(findEvent() == null);
+    }
+
+    private void setStartDate(int year, int month, int day, int hour, int minute){
+        onView(withId(R.id.button_start_date)).perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
+                .perform(PickerActions.setDate(year, month, day));
+        onView(withId(android.R.id.button1)).perform(click());
+
+        onView(withId(R.id.button_start_time)).perform(click());
+        onView(withClassName(Matchers.equalTo(TimePicker.class.getName())))
+                .perform(PickerActions.setTime(hour, minute));
+        onView(withId(android.R.id.button1)).perform(click());
+    }
+
+    private void setEndDate(int year, int month, int day, int hour, int minute){
         onView(withId(R.id.button_end_date)).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
                 .perform(PickerActions.setDate(year, month, day));
         onView(withId(android.R.id.button1)).perform(click());
-        assert(findEvent() == null);
+
+        onView(withId(R.id.button_end_time)).perform(click());
+        onView(withClassName(Matchers.equalTo(TimePicker.class.getName())))
+                .perform(PickerActions.setTime(hour, minute));
+        onView(withId(android.R.id.button1)).perform(click());
     }
 
     private Event findEvent(){
