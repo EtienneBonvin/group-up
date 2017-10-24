@@ -21,7 +21,7 @@ import ch.epfl.sweng.groupup.object.event.Event;
 
 /**
  * EventListing class
- * Lists the future and past events and inbetween a create
+ * Lists the future and past events and in between a create
  * event button for the user to create a new event.
  * It is linked to the layout activity_event_listing.xml
  */
@@ -85,7 +85,7 @@ public class EventListingActivity extends AppCompatActivity {
 
         for(int i=0; i<events.size(); i++){
             Button eventButton = new Button(this);
-            eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
+            eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                     heightInSp));
             eventButton.setText(eventNames[i] + " | " + Integer.toString(eventStartTimes[i].getDayOfMonth()) + "/" + Integer.toString(eventStartTimes[i].getMonthOfYear()) + " - " + Integer.toString(eventEndTimes[i].getDayOfMonth()) + "/" + Integer.toString(eventEndTimes[i].getMonthOfYear()));
             //eventButton.setId(View.generateViewId()); // Assign the ID of the event
@@ -98,25 +98,25 @@ public class EventListingActivity extends AppCompatActivity {
      * of the OnClickListener
      */
     private void initializeCreateEvent() {
-        Button creatEventButton = new Button(this);
-        creatEventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
+        Button createEventButton = new Button(this);
+        createEventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 heightInSp));
-        creatEventButton.setText(R.string.create_new_event);
-        creatEventButton.setOnClickListener(new View.OnClickListener() {
+        createEventButton.setText(R.string.create_new_event);
+        createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(EventListingActivity.this, EventCreation.class);
                 startActivity(i);
             }
         });
-        //creatEventButton.setId(View.generateViewId()); // Assign the ID of the event
-        linearLayout.addView(creatEventButton);
+        //createEventButton.setId(View.generateViewId()); // Assign the ID of the event
+        linearLayout.addView(createEventButton);
     }
 
     /**
      * Getter for the event names of a list of events.
-     * @param events
-     * @return A list of the event names strings
+     * @param events a list of events
+     * @return       a list of the event names strings
      */
     private String[] getEventNames(List<Event> events) {
         String[] eventNames = new String[events.size()];
@@ -128,8 +128,8 @@ public class EventListingActivity extends AppCompatActivity {
 
     /**
      * Getter for the start times of a list of events.
-     * @param events
-     * @return A LocalDateTime list of the start times
+     * @param events a list of events
+     * @return       a LocalDateTime list of the start times
      */
     private LocalDateTime[] getEventStartTimes(List<Event> events) {
         LocalDateTime[] eventStartTimes = new LocalDateTime[events.size()];
@@ -141,8 +141,8 @@ public class EventListingActivity extends AppCompatActivity {
 
     /**
      * Getter for the start times of a list of events.
-     * @param events
-     * @return A LocalDateTime list of the end times
+     * @param events a list of events
+     * @return       a LocalDateTime list of the end times
      */
     private LocalDateTime[] getEventEndTimes(List<Event> events) {
         LocalDateTime[] eventEndTimes = new LocalDateTime[events.size()];
