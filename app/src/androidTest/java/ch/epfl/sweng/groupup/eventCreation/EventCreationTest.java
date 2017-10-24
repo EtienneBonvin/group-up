@@ -6,7 +6,6 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 import org.hamcrest.Matchers;
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.junit.Rule;
 import org.junit.Test;
@@ -108,6 +107,7 @@ public class EventCreationTest {
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2099, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
+
         assert(findEvent() == null);
     }
 
