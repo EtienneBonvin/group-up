@@ -72,7 +72,7 @@ public class EventCreationTest {
     }
 
     @Test
-    public void noEventCreationOnEmptyEventName(){
+    public void noEventCreatedOnEmptyEventName(){
 
         addEventName("");
         addMembers();
