@@ -121,6 +121,8 @@ public class EventCreationTest {
         onView(withId(R.id.button_start_date)).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
                 .perform(PickerActions.setDate(year, month, day));
+        onView(withId(android.R.id.button1)).perform(click());
+        onView(withId(R.id.save_button)).perform(click());
         assert(findEvent() == null);
     }
 
@@ -143,6 +145,7 @@ public class EventCreationTest {
         onView(withId(R.id.button_end_date)).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
                 .perform(PickerActions.setDate(year, month, day));
+        onView(withId(android.R.id.button1)).perform(click());
         assert(findEvent() == null);
     }
 
