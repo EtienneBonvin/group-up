@@ -1,7 +1,10 @@
 package ch.epfl.sweng.groupup.eventCreation;
 
+import android.hardware.Camera;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.uiautomator.UiDevice;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
@@ -9,6 +12,7 @@ import org.hamcrest.Matchers;
 import org.joda.time.LocalDateTime;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +29,10 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressBack;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 public class EventCreationTest {
 
@@ -34,6 +40,11 @@ public class EventCreationTest {
     // third parameter is set to true which means the activity is started automatically
     public ActivityTestRule<EventCreation> mActivityRule =
             new ActivityTestRule<>(EventCreation.class, false, true);
+    //@Rule
+    //public IntentsTestRule<EventCreation> intentsRule = new IntentsTestRule<>(EventCreation.class);
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
 
     /**
@@ -186,6 +197,38 @@ public class EventCreationTest {
         setEndDate(5554, 5, 5, 5, 5);
         assert(findEvent() == null);
     }
+
+    /**
+     * Test QR Scanner
+     */
+    @Test
+    public void OpenCameraOnButtonClick(){
+        // Click Scan QR Code Button
+        onView(withId(R.id.buttonScanQR)).perform(click());
+        Camera camera = null;
+        // Camera should be used by QR Scanner, we expect runtime exception
+        exception.expect(RuntimeException.class);
+        camera = Camera.open();
+        if (camera != null) camera.release();
+    }
+
+    @Test
+    public void stateRestoredAfterCameraOpened(){
+        String eventName = "testEventName";
+        // Name event
+        addEventName(eventName);
+        // Click scan button
+        onView(withId(R.id.buttonScanQR)).perform(click());
+        // Click back
+        UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        mDevice.pressBack();
+        // Check event name
+        onView(withId(R.id.ui_edit_event_name)).check(matches(withText(eventName)));
+    }
+
+    /**
+     * Helper functions
+     */
 
     private void setStartDate(int year, int month, int day, int hour, int minute){
         onView(withId(R.id.button_start_date)).perform(click());
