@@ -414,18 +414,18 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
         eventName.setError(null);
 
         if(compare_date(LocalDateTime.now(), date_start) < 0){
-            Toast.makeText(this.getBaseContext(), "Are you planning to go back to the past ?",
+            Toast.makeText(getApplicationContext(), "Are you planning to go back to the past ?",
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(compare_date(date_start, date_end) < 0){
-            Toast.makeText(this.getBaseContext(), "Your event ends before it begins.",
+            Toast.makeText(getApplicationContext(), "Your event ends before it begins.",
                     Toast.LENGTH_SHORT).show();
             return;
         }
         if(compare_date(date_start, date_end) == 0){
-            Toast.makeText(this.getBaseContext(), "Your event should last for at least 1 minute.",
+            Toast.makeText(getApplicationContext(), "Your event should last for at least 1 minute.",
                     Toast.LENGTH_SHORT).show();
             return;
         }
