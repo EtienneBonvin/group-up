@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -13,7 +12,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -22,9 +20,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.login.LoginActivity;
-import ch.epfl.sweng.groupup.lib.Helper;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 
@@ -42,7 +37,10 @@ public final class FirebaseAuthentication implements GoogleAuthenticationService
     private final GoogleApiClient googleApiClient;
 
 
-    public FirebaseAuthentication(String webClientID, Context activityContext, LoginActivityInterface activity, FragmentActivity fragmentActivity) {
+    public FirebaseAuthentication(String webClientID,
+                                  Context activityContext,
+                                  LoginActivityInterface activity,
+                                  FragmentActivity fragmentActivity) {
         this.webClientID = webClientID;
         this.activityContext = activityContext;
         this.activity = activity;
@@ -91,7 +89,9 @@ public final class FirebaseAuthentication implements GoogleAuthenticationService
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
-            GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            GoogleSignInResult
+                    googleSignInResult =
+                    Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(googleSignInResult);
         }
     }

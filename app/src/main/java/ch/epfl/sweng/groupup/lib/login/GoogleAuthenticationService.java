@@ -8,6 +8,7 @@ public interface GoogleAuthenticationService {
     }
 
     void signIn();
+
     void signOut();
 
     void onActivityResult(int requestCode, int resultCode, Intent data);

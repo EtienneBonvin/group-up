@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -23,9 +22,8 @@ import ch.epfl.sweng.groupup.activity.settings.Settings;
 import ch.epfl.sweng.groupup.lib.Helper;
 import ch.epfl.sweng.groupup.lib.login.FirebaseAuthentication;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService;
-import ch.epfl.sweng.groupup.lib.login.LoginActivityInterface;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService.Status;
-
+import ch.epfl.sweng.groupup.lib.login.LoginActivityInterface;
 
 import static ch.epfl.sweng.groupup.object.account.Account.shared;
 
@@ -50,9 +48,9 @@ public class EventListActivity extends LoginActivityInterface {
         setContentView(R.layout.activity_event_list);
 
         authService = new FirebaseAuthentication(getString(R.string.web_client_id),
-                this,
-                this,
-                this);
+                                                 this,
+                                                 this,
+                                                 this);
 
         initializeFields();
         updateUI(Status.CONNECTED);
@@ -158,7 +156,7 @@ public class EventListActivity extends LoginActivityInterface {
      * @param connected -  if the user is connected or not
      */
     private void updateUI(GoogleAuthenticationService.Status connected) {
-        if (connected == Status.CONNECTING) {
+        if (connected == Status.CONNECTED) {
             displayNameTextView.setText(shared.getDisplayName()
                                                 .getOrElse(getString(R.string.text_view_display_name_text)));
             familyNameTextView.setText(shared.getFamilyName()
@@ -186,8 +184,8 @@ public class EventListActivity extends LoginActivityInterface {
     @Override
     public void onFail() {
         Helper.showToast(getApplicationContext(),
-                getString(R.string.toast_unable_to_sign_out),
-                Toast.LENGTH_SHORT);
+                         getString(R.string.toast_unable_to_sign_out),
+                         Toast.LENGTH_SHORT);
     }
 
     @Override
