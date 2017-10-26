@@ -46,6 +46,7 @@ public class MembersShould {
         assertFalse(m0.withEmail("cedric@maire.de") == m0);
     }
 
+    @SuppressWarnings({"EqualsBetweenInconvertibleTypes", "EqualsWithItself"})
     @Test
     public void beEquatable(){
         Member m1 = new Member("UUID", "XavierP", "Xavier", "Pantet", "xavier@pantet.ch");

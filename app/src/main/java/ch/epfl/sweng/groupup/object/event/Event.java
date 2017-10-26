@@ -9,6 +9,7 @@ import java.util.List;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 
+@SuppressWarnings("SimplifiableIfStatement")
 public final class Event {
 
     private final String UUID;
@@ -178,12 +179,12 @@ public final class Event {
 
         Event event = (Event) o;
 
-        return  eventName.equals(event.eventName) &&
-                this.getEventStatus().equals(event.getEventStatus()) &&
-                startTime.equals(event.startTime) &&
-                endTime.equals(event.endTime) &&
-                UUID.equals(event.UUID) &&
-                eventMembers.equals(event.eventMembers);
+        if (!eventName.equals(event.eventName)) return false;
+        if (!this.getEventStatus().equals(event.getEventStatus())) return false;
+        if (!startTime.equals(event.startTime)) return false;
+        if (!endTime.equals(event.endTime)) return false;
+        if (!(UUID.equals(event.UUID))) return false;
+        return eventMembers.equals(event.eventMembers);
     }
 
     @Override
