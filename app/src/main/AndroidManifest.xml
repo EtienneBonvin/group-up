@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="ch.epfl.sweng.groupup">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -16,23 +16,18 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity android:name=".activity.main.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.login.LoginActivity">
-        </activity>
-        <activity android:name=".activity.home.inactive.EventListActivity">
-        </activity>
-        <activity android:name=".activity.eventListing.EventListingActivity">
-        </activity>
-        <activity android:name=".activity.eventCreation.EventCreation">
-        </activity>
-        <activity android:name=".activity.home.inactive.DisplayQRActivity">
-
-        </activity>
+        <activity android:name=".activity.login.LoginActivity"></activity>
+        <activity android:name=".activity.home.inactive.EventListActivity"></activity>
+        <activity android:name=".activity.eventListing.EventListingActivity"></activity>
+        <activity android:name=".activity.eventCreation.EventCreation"></activity>
+        <activity android:name=".activity.home.inactive.DisplayQRActivity"></activity>
         <activity android:name=".activity.settings.Settings" />
+        <activity android:name=".activity.toolbar.ToolbarActivity"></activity>
     </application>
 
 </manifest>

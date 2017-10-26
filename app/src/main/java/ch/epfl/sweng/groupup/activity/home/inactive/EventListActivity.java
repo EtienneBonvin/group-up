@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,7 +25,7 @@ import java.io.ByteArrayOutputStream;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
-import ch.epfl.sweng.groupup.activity.settings.Settings;
+import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 
 import static ch.epfl.sweng.groupup.lib.Login.CONNECTED;
 import static ch.epfl.sweng.groupup.lib.Login.FIREBASE_AUTH;
@@ -39,7 +38,7 @@ import static ch.epfl.sweng.groupup.object.account.Account.shared;
  * user a way to sign out.
  */
 
-public class EventListActivity extends AppCompatActivity implements
+public class EventListActivity extends ToolbarActivity implements
         GoogleApiClient.OnConnectionFailedListener {
 
     // Fields to represent the different objects on the GUI of the activity.
@@ -52,6 +51,7 @@ public class EventListActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_list);
+        super.initializeToolbar();
 
         initializeFields();
         updateUI(CONNECTED);
@@ -75,24 +75,6 @@ public class EventListActivity extends AppCompatActivity implements
                     @Override
                     public void onClick(View v) {
                         displayQR();
-                    }
-                });
-
-        findViewById(R.id.icon_access_group_list)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), EventListingActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-        findViewById(R.id.icon_access_settings)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), Settings.class);
-                        startActivity(intent);
                     }
                 });
     }

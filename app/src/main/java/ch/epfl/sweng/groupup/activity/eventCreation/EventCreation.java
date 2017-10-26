@@ -5,7 +5,6 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -28,8 +27,7 @@ import java.util.Iterator;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
-import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
-import ch.epfl.sweng.groupup.activity.settings.Settings;
+import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -43,7 +41,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
  * Offers the possibility to the user to create a new event.
  * Is linked to the layout event_creation.xml
  */
-public class EventCreation extends AppCompatActivity implements ZXingScannerView.ResultHandler, DatePickerDialog.OnDateSetListener,
+public class EventCreation extends ToolbarActivity implements ZXingScannerView.ResultHandler, DatePickerDialog.OnDateSetListener,
     TimePickerDialog.OnTimeSetListener{
 
     private Button start_date, end_date, start_time, end_time;
@@ -68,6 +66,7 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_creation);
+        super.initializeToolbar();
 
         date_start = LocalDateTime.now();
         date_end = LocalDateTime.now();
@@ -111,32 +110,8 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
      * Initialize the OnClickListeners of the layout.
      */
     private void initListeners(){
-        findViewById(R.id.icon_access_group_list)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), EventListingActivity.class);
-                        startActivity(intent);
-                    }
-                });
 
-        findViewById(R.id.icon_access_settings)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), Settings.class);
-                        startActivity(intent);
-                    }
-                });
-
-        findViewById(R.id.icon_access_user_profile)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), EventListActivity.class);
-                        startActivity(intent);
-                    }
-                });
+        super.initializeToolbar();
 
         findViewById(R.id.button_start_date)
                 .setOnClickListener(new View.OnClickListener() {
