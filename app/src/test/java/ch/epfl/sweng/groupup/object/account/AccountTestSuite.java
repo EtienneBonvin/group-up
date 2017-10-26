@@ -4,13 +4,10 @@ import org.joda.time.LocalDateTime;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Date;
 
-import static ch.epfl.sweng.groupup.lib.Optional.from;
 import static org.junit.Assert.*;
 
 import ch.epfl.sweng.groupup.lib.Optional;
-import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.event.EventStatus;
 
