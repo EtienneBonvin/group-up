@@ -1,9 +1,11 @@
 package ch.epfl.sweng.groupup.activity.login;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -21,6 +23,7 @@ import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 
+import static ch.epfl.sweng.groupup.lib.Login.CONNECTED;
 import static ch.epfl.sweng.groupup.lib.Login.CONNECTING;
 import static ch.epfl.sweng.groupup.lib.Login.FIREBASE_AUTH;
 import static ch.epfl.sweng.groupup.lib.Login.REQUEST_CODE;
@@ -102,7 +105,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     /**
-     * Method to handle the sign in result. It checks of the process was successful or not and
+     * Method to handle the sign in result. It checks if the process was successful or not and
      * proceeds relatively to this result.
      *
      * @param googleSignInResult - representing the result of the sign in process
@@ -117,8 +120,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             firebaseAuthWithGoogle(this /* activity  */, getOnCompleteListener());
         } else {
-            logInFailed(googleSignInResult.getStatus().getStatusMessage() + " " + googleSignInResult
-                    .getStatus().getStatusCode());
+            //Do not print an error when the user press the back button
+            if (googleSignInResult.getStatus().getStatusCode()!=12501) {
+                logInFailed(googleSignInResult.getStatus().getStatusMessage() + " " + googleSignInResult
+                        .getStatus().getStatusCode());
+            }
+            else {
+                toggleLoading(!CONNECTED);
+            }
         }
     }
 
