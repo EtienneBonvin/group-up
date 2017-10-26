@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
@@ -77,7 +78,7 @@ public class EventCreationTest {
 
         addEventName("My event");
 
-        onView(withId(R.id.button_start_date)).perform(pressBack());
+        Espresso.closeSoftKeyboard();
 
         LocalDateTime start = LocalDateTime.now().plusHours(1).plusMinutes(5);
         LocalDateTime end = LocalDateTime.now().plusHours(1).plusMinutes(6);
@@ -123,7 +124,7 @@ public class EventCreationTest {
     public void noEventCreatedOnTooLongName() {
         addEventName("This event name should be way too long for the event creator to accept it"+
         "I should not be able to tell my life in the event name");
-        onView(withId(R.id.button_end_date)).perform(pressBack());
+        Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 4, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
@@ -133,7 +134,7 @@ public class EventCreationTest {
     @Test
     public void dateWellComparedYear(){
         addEventName("My event");
-        onView(withId(R.id.button_end_date)).perform(pressBack());
+        Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2099, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
@@ -148,7 +149,7 @@ public class EventCreationTest {
     @Test
     public void dateWellComparedMonth(){
         addEventName("My event");
-        onView(withId(R.id.button_end_date)).perform(pressBack());
+        Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 4, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
@@ -163,7 +164,7 @@ public class EventCreationTest {
     @Test
     public void dateWellComparedDay(){
         addEventName("My event");
-        onView(withId(R.id.button_end_date)).perform(pressBack());
+        Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 4, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
@@ -178,7 +179,7 @@ public class EventCreationTest {
     @Test
     public void dateWellComparedHour(){
         addEventName("My event");
-        onView(withId(R.id.button_end_date)).perform(pressBack());
+        Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 4, 5);
         onView(withId(R.id.save_button)).perform(click());
@@ -193,7 +194,7 @@ public class EventCreationTest {
     @Test
     public void dateWellComparedMinute(){
         addEventName("My event");
-        onView(withId(R.id.button_end_date)).perform(pressBack());
+        Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 4);
         onView(withId(R.id.save_button)).perform(click());
@@ -203,7 +204,7 @@ public class EventCreationTest {
     @Test
     public void atLeastOneMinuteBetweenStartAndEndDate(){
         addEventName("My event");
-        onView(withId(R.id.button_end_date)).perform(pressBack());
+        Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
@@ -218,7 +219,7 @@ public class EventCreationTest {
         int year = now.getYear() - 1;
 
         addEventName("My event");
-        onView(withId(R.id.button_start_date)).perform(pressBack());
+        Espresso.closeSoftKeyboard();
         onView(withId(R.id.button_start_date)).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
                 .perform(PickerActions.setDate(year, month, day));
@@ -230,7 +231,7 @@ public class EventCreationTest {
     @Test
     public void noEventCreationOnEndDateBeforeStartDate(){
         addEventName("My event");
-        onView(withId(R.id.button_end_date)).perform(pressBack());
+        Espresso.closeSoftKeyboard();
         setStartDate(5555, 5, 5, 5, 5);
         setEndDate(5554, 5, 5, 5, 5);
         assert(findEvent() == null);
@@ -245,11 +246,11 @@ public class EventCreationTest {
         // Enter event details
         addEventName(eventName);
         addMembers();
+        Espresso.closeSoftKeyboard();
         // Click scan button
         onView(withId(R.id.buttonScanQR)).perform(click());
         // Click back
-        UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        mDevice.pressBack();
+        Espresso.pressBack();
         // Check event details
         onView(withId(R.id.ui_edit_event_name)).check(matches(withText(eventName)));
     }
