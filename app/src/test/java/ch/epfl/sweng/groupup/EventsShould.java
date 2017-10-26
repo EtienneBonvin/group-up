@@ -1,5 +1,8 @@
 package ch.epfl.sweng.groupup;
 
+import android.net.wifi.WifiConfiguration;
+
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,7 +22,6 @@ import static junit.framework.Assert.*;
 
 public class EventsShould {
     private Event event;
-    private int eventID = 1234;
     private Member member = new Member("UUID", "Even monkeys can fly", "Tester", "Test","test@test.test");
     @Before
     public void init() {
@@ -46,6 +48,42 @@ public class EventsShould {
         Event newEvent = event.withEventName(testDescription);
         newEvent.getDescription().toString().equals(testDescription);
 
+    }
+
+    @Test
+    public void printProperShortOutput(){
+        LocalDateTime start = LocalDateTime.now().minusHours(1);
+        LocalDateTime end = LocalDateTime.now().plusHours(1);
+        String eventName = event.getEventName();
+        EventStatus eventStatus = EventStatus.CURRENT;
+        String ID = event.getUUID();
+        event = event.withStartTime(start);
+        event = event.withEndTime(end);
+        event.toStringShort().equals("Event{" +
+                "eventName='" + eventName + '\'' +
+                ", eventStatus='" + eventStatus +
+                ", eventID= " + ID +
+                '}');
+    }
+
+    @Test
+    public void printProperOutput(){
+        LocalDateTime start = LocalDateTime.now().minusHours(1);
+        LocalDateTime end = LocalDateTime.now().plusHours(1);
+        String eventName = event.getEventName();
+        EventStatus eventStatus = EventStatus.CURRENT;
+        String ID = event.getUUID();
+        String eventMembers = event.getEventMembers().toString();
+        event = event.withStartTime(start);
+        event = event.withEndTime(end);
+        event.toStringShort().equals("Event{" +
+                "evenName='" + eventName + '\'' +
+                ", eventMember='" + eventMembers + '\'' +
+                ", startDate='" + start + '\'' +
+                ", endDate=" + end + '\'' +
+                ", evenStatus=" + eventStatus + '\'' +
+                ", eventID= " + ID +
+                '}');
     }
 
     @Test
