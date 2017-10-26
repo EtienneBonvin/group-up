@@ -42,7 +42,7 @@ dependencies {
     then you have to ask the same version too. I found that 11.0.4 was working fine for now. When I
     installed a more recent one then it didn't work correctly.
      */
-
+    
     compile 'me.dm7.barcodescanner:zxing:1.8.4'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
