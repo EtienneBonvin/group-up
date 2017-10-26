@@ -30,7 +30,7 @@
             android:layout_weight="0.6"
             android:textSize="20sp"
             android:textColor="@color/black"
-            android:inputType="textCapSentences|textAutoCorrect"
+            android:inputType="text"
             android:hint="@string/event_creation_hint_event_name"
             android:background="@color/white"/>
 

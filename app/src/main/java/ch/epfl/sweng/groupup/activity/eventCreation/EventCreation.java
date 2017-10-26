@@ -68,8 +68,18 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
         setContentView(R.layout.event_creation);
         super.initializeToolbar();
 
-        date_start = LocalDateTime.now();
-        date_end = LocalDateTime.now();
+        initFields();
+
+        initListeners();
+
+    }
+
+    /**
+     * Initialize all fields that will be used in the UI to default values.
+     */
+    private void initFields(){
+        date_start = LocalDateTime.now().plusMinutes(5);
+        date_end = LocalDateTime.now().plusMinutes(6);
 
         set_start_date = false;
         set_end_date = false;
@@ -101,9 +111,6 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
 
         timePickerDialog = new TimePickerDialog(
                 this, EventCreation.this, date_start.getHourOfDay(), date_start.getMinuteOfHour(), true);
-
-        initListeners();
-
     }
 
     /**
@@ -382,24 +389,24 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
         eventName.setError(null);
 
         if(compare_date(LocalDateTime.now(), date_start) < 0){
-            Toast.makeText(this.getBaseContext(), "Are you planning to go back to the past ?",
+            Toast.makeText(getApplicationContext(), "Are you planning to go back to the past ?",
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(compare_date(date_start, date_end) < 0){
-            Toast.makeText(this.getBaseContext(), "Your event ends before it begins.",
+            Toast.makeText(getApplicationContext(), "Your event ends before it begins.",
                     Toast.LENGTH_SHORT).show();
             return;
         }
         if(compare_date(date_start, date_end) == 0){
-            Toast.makeText(this.getBaseContext(), "Your event should last for at least 1 minute.",
+            Toast.makeText(getApplicationContext(), "Your event should last for at least 1 minute.",
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
         Set<String> distinctUIds = new HashSet<>();
-        distinctUIds.add(Account.shared.getUUID().get());
+        distinctUIds.add(Account.shared.getUUID().getOrElse("Default UUID"));
         for(View.OnClickListener ocl : uIdsWithOCL.keySet()){
             distinctUIds.add(uIdsWithOCL.get(ocl));
         }
