@@ -20,8 +20,9 @@ public class DisplayQRActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         byte[] byteArray = extras.getByteArray("picture");
 
+        assert byteArray != null;
         Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-        ImageView image = (ImageView) findViewById(R.id.qrImageView);
+        ImageView image = findViewById(R.id.qrImageView);
 
         image.setImageBitmap(bmp);
     }
