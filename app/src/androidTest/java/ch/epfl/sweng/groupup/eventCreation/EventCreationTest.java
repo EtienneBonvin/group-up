@@ -104,6 +104,7 @@ public class EventCreationTest {
     public void noEventCreatedOnTooLongName() {
         addEventName("This event name should be way too long for the event creator to accept it"+
         "I should not be able to tell my life in the event name");
+        onView(withId(R.id.button_end_date)).perform(pressBack());
         setStartDate(2100, 5, 5, 4, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
