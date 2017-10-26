@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,9 +46,6 @@ public class EventListActivity extends ToolbarActivity implements
     private TextView familyNameTextView;
     private TextView givenNameTextView;
     private TextView emailTextView;
-    public final static int QRcodeWidth = 500 ;
-    ImageView imageView;
-    Bitmap bitmap ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +74,7 @@ public class EventListActivity extends ToolbarActivity implements
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        displayQR(v);
+                        displayQR();
                     }
                 });
     }
@@ -90,7 +86,7 @@ public class EventListActivity extends ToolbarActivity implements
     }
 
 
-    public void displayQR(View view){
+    public void displayQR(){
         if (!shared.getUUID().isEmpty()){
             String text = shared.getUUID().get();
             QRCodeWriter writer = new QRCodeWriter();
