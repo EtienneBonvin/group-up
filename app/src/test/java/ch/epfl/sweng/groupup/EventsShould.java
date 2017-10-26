@@ -38,12 +38,12 @@ public class EventsShould {
     public void setEventByName(){
         String testName = "Test Name";
         Event newEvent = event.withEventName(testName);
-        newEvent.getEventName().toString().equals(testName);
+        assertEquals(newEvent.getEventName().toString(),testName);
 
     }
 
     @Test
-    public void setEventByDescripton(){
+    public void setEventByDescription(){
         String testDescription = "Test Description";
         Event newEvent = event.withDescription(testDescription);
         newEvent.getDescription().toString().equals(testDescription);
@@ -57,13 +57,16 @@ public class EventsShould {
         String eventName = event.getEventName();
         EventStatus eventStatus = EventStatus.CURRENT;
         String ID = event.getUUID();
-        event = event.withStartTime(start);
-        event = event.withEndTime(end);
-        event.toStringShort().equals("Event{" +
+        String expectedOutput = "Event{" +
                 "eventName='" + eventName + '\'' +
                 ", eventStatus='" + eventStatus +
                 ", eventID= " + ID +
-                '}');
+                '}';
+
+        event = event.withStartTime(start);
+        event = event.withEndTime(end);
+
+        assertEquals(event.toStringShort(),expectedOutput);
     }
 
     @Test
@@ -74,16 +77,17 @@ public class EventsShould {
         EventStatus eventStatus = EventStatus.CURRENT;
         String ID = event.getUUID();
         String eventMembers = event.getEventMembers().toString();
-        event = event.withStartTime(start);
-        event = event.withEndTime(end);
-        event.toString().equals("Event{" +
-                "evenName='" + eventName + '\'' +
+        String expectedOutput = "Event{" +
+                "eventName='" + eventName + '\'' +
                 ", eventMember='" + eventMembers + '\'' +
                 ", startDate='" + start + '\'' +
                 ", endDate=" + end + '\'' +
                 ", evenStatus=" + eventStatus + '\'' +
                 ", eventID= " + ID +
-                '}');
+                '}';
+        event = event.withStartTime(start);
+        event = event.withEndTime(end);
+        assertEquals(event.toString(),expectedOutput);
     }
 
     @Test
