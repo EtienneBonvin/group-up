@@ -45,7 +45,7 @@ public class EventsShould {
     @Test
     public void setEventByDescripton(){
         String testDescription = "Test Description";
-        Event newEvent = event.withEventName(testDescription);
+        Event newEvent = event.withDescription(testDescription);
         newEvent.getDescription().toString().equals(testDescription);
 
     }
@@ -76,7 +76,7 @@ public class EventsShould {
         String eventMembers = event.getEventMembers().toString();
         event = event.withStartTime(start);
         event = event.withEndTime(end);
-        event.toStringShort().equals("Event{" +
+        event.toString().equals("Event{" +
                 "evenName='" + eventName + '\'' +
                 ", eventMember='" + eventMembers + '\'' +
                 ", startDate='" + start + '\'' +
