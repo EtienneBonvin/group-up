@@ -17,7 +17,7 @@ public final class Account extends User {
 
     public static Account shared = new Account(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
             Optional.<String>empty(), Optional.<String>empty(), Optional.<Event>empty(),
-            new ArrayList<Event>(), new ArrayList<Event>());;
+            new ArrayList<Event>(), new ArrayList<Event>());
 
     private final Optional<Event> currentEvent;
     private final List<Event> pastEvents;
@@ -191,7 +191,7 @@ public final class Account extends User {
                 ++i;
             }
             if(!found){
-                newPast.add(past);;
+                newPast.add(past);
             }
             return withPastEvents(newPast);
         } else throw new IllegalArgumentException("Event is not "+ EventStatus.PAST.toString());
