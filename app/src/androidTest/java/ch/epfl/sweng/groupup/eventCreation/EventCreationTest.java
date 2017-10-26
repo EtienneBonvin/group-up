@@ -153,6 +153,11 @@ public class EventCreationTest {
         setEndDate(2100, 5, 5, 4, 5);
         onView(withId(R.id.save_button)).perform(click());
         assert(findEvent() == null);
+
+        setStartDate(2100, 5, 5, 4, 5);
+        setEndDate(2100, 5, 5, 5, 5);
+        onView(withId(R.id.save_button)).perform(click());
+        assert(findEvent() != null);
     }
 
     @Test
