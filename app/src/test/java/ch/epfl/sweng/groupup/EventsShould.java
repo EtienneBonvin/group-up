@@ -46,7 +46,7 @@ public class EventsShould {
     public void setEventByDescription(){
         String testDescription = "Test Description";
         Event newEvent = event.withDescription(testDescription);
-        newEvent.getDescription().toString().equals(testDescription);
+        assertEquals(newEvent.getDescription().toString(),testDescription);
 
     }
 
