@@ -201,7 +201,7 @@ public class EventCreationTest {
     /**
      * Test QR Scanner
      */
-    @Test
+    /*@Test
     public void OpenCameraOnButtonClick(){
         // Click Scan QR Code Button
         onView(withId(R.id.buttonScanQR)).perform(click());
@@ -210,19 +210,19 @@ public class EventCreationTest {
         exception.expect(RuntimeException.class);
         camera = Camera.open();
         if (camera != null) camera.release();
-    }
+    }*/
 
     @Test
     public void stateRestoredAfterCameraOpened(){
         String eventName = "testEventName";
-        // Name event
+        // Enter event details
         addEventName(eventName);
         // Click scan button
         onView(withId(R.id.buttonScanQR)).perform(click());
         // Click back
         UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         mDevice.pressBack();
-        // Check event name
+        // Check event details
         onView(withId(R.id.ui_edit_event_name)).check(matches(withText(eventName)));
     }
 
