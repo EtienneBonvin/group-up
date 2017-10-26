@@ -1,22 +1,14 @@
 package ch.epfl.sweng.groupup.activity.home.inactive;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -29,11 +21,12 @@ import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
 import ch.epfl.sweng.groupup.activity.settings.Settings;
 import ch.epfl.sweng.groupup.lib.Helper;
+import ch.epfl.sweng.groupup.lib.login.FirebaseAuthentication;
+import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService;
+import ch.epfl.sweng.groupup.lib.login.LoginActivityInterface;
+import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService.Status;
 
-import static ch.epfl.sweng.groupup.lib.Login.CONNECTED;
-import static ch.epfl.sweng.groupup.lib.Login.FIREBASE_AUTH;
-import static ch.epfl.sweng.groupup.lib.Login.googleApiClient;
-import static ch.epfl.sweng.groupup.lib.Login.setUpApiClient;
+
 import static ch.epfl.sweng.groupup.object.account.Account.shared;
 
 /**
@@ -41,31 +34,28 @@ import static ch.epfl.sweng.groupup.object.account.Account.shared;
  * user a way to sign out.
  */
 
-public class EventListActivity extends AppCompatActivity implements
-        GoogleApiClient.OnConnectionFailedListener {
+public class EventListActivity extends LoginActivityInterface {
 
     // Fields to represent the different objects on the GUI of the activity.
     private TextView displayNameTextView;
     private TextView familyNameTextView;
     private TextView givenNameTextView;
     private TextView emailTextView;
-    public final static int QRcodeWidth = 500;
-    ImageView imageView;
-    Bitmap bitmap;
+
+    private GoogleAuthenticationService authService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_list);
 
+        authService = new FirebaseAuthentication(getString(R.string.web_client_id),
+                this,
+                this,
+                this);
+
         initializeFields();
-        updateUI(CONNECTED);
-        setUpApiClient(
-                getString(R.string.web_client_id), /* web_client_id  */
-                this, /* context  */
-                this, /* fragment activity  */
-                this /* on connection failed listener  */
-        );
+        updateUI(Status.CONNECTED);
 
         findViewById(R.id.button_sign_out)
                 .setOnClickListener(new View.OnClickListener() {
@@ -167,8 +157,8 @@ public class EventListActivity extends AppCompatActivity implements
      *
      * @param connected -  if the user is connected or not
      */
-    private void updateUI(boolean connected) {
-        if (connected) {
+    private void updateUI(GoogleAuthenticationService.Status connected) {
+        if (connected == Status.CONNECTING) {
             displayNameTextView.setText(shared.getDisplayName()
                                                 .getOrElse(getString(R.string.text_view_display_name_text)));
             familyNameTextView.setText(shared.getFamilyName()
@@ -189,42 +179,22 @@ public class EventListActivity extends AppCompatActivity implements
      * Starts the sign out process for the connected user.
      */
     private void signOut() {
-        if (FIREBASE_AUTH.getCurrentUser() != null) {
-            Auth.GoogleSignInApi.signOut(googleApiClient)
-                    .setResultCallback(getResultCallback(this /* package context  */));
-        } else {
-            Helper.showToast(getApplicationContext(),
-                             getString(R.string.toast_unable_to_sign_out),
-                             Toast.LENGTH_SHORT);
-        }
+        authService.signOut();
     }
 
-    /**
-     * Returns the callback that gets called after the sign out process of the standard Google
-     * login. It then proceeds with the Firebase sign out. And updates the UI accordingly.
-     *
-     * @param PACKAGE_CONTEXT -  the context of the package
-     * @return ResultCallback<Status> -  the result callback for the standard Google sign out
-     */
-    private ResultCallback<Status> getResultCallback(final Context PACKAGE_CONTEXT) {
-        return new ResultCallback<Status>() {
-            @Override
-            public void onResult(@NonNull Status status) {
-                FIREBASE_AUTH.signOut();
-                shared.clear();
-                updateUI(!CONNECTED);
 
-                Intent intent = new Intent(PACKAGE_CONTEXT, LoginActivity.class);
-                startActivity(intent);
-            }
-        };
-    }
-
-    /*
-    UNUSED
-     */
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        // If this gets called, then we have a serious problem.
+    public void onFail() {
+        Helper.showToast(getApplicationContext(),
+                getString(R.string.toast_unable_to_sign_out),
+                Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void onSuccess() {
+        updateUI(Status.CONNECTED);
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }
