@@ -1,8 +1,14 @@
 package ch.epfl.sweng.groupup.eventCreation;
 
+import android.app.Activity;
+import android.app.Instrumentation;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.contrib.PickerActions;
+import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.uiautomator.UiDevice;
 import android.widget.DatePicker;
@@ -30,6 +36,8 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressBack;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intending;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -41,7 +49,7 @@ public class EventCreationTest {
     public ActivityTestRule<EventCreation> mActivityRule =
             new ActivityTestRule<>(EventCreation.class, false, true);
     //@Rule
-    //public IntentsTestRule<EventCreation> intentsRule = new IntentsTestRule<>(EventCreation.class);
+    public IntentsTestRule<EventCreation> intentsRule = new IntentsTestRule<>(EventCreation.class);
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -201,22 +209,12 @@ public class EventCreationTest {
     /**
      * Test QR Scanner
      */
-    /*@Test
-    public void OpenCameraOnButtonClick(){
-        // Click Scan QR Code Button
-        onView(withId(R.id.buttonScanQR)).perform(click());
-        Camera camera = null;
-        // Camera should be used by QR Scanner, we expect runtime exception
-        exception.expect(RuntimeException.class);
-        camera = Camera.open();
-        if (camera != null) camera.release();
-    }*/
-
     @Test
     public void stateRestoredAfterCameraOpened(){
         String eventName = "testEventName";
         // Enter event details
         addEventName(eventName);
+        addMembers();
         // Click scan button
         onView(withId(R.id.buttonScanQR)).perform(click());
         // Click back
