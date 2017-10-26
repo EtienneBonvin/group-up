@@ -190,7 +190,7 @@ public final class Event {
     @Override
     public String toString() {
         return "Event{" +
-                "evenName='" + eventName + '\'' +
+                "eventName='" + eventName + '\'' +
                 ", eventMember='" + eventMembers + '\'' +
                 ", startDate='" + startTime + '\'' +
                 ", endDate=" + endTime + '\'' +
