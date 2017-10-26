@@ -33,6 +33,22 @@ public class EventsShould {
     }
 
     @Test
+    public void setEventByName(){
+        String testName = "Test Name";
+        Event newEvent = event.withEventName(testName);
+        newEvent.getEventName().toString().equals(testName);
+
+    }
+
+    @Test
+    public void setEventByDescripton(){
+        String testDescription = "Test Description";
+        Event newEvent = event.withEventName(testDescription);
+        newEvent.getDescription().toString().equals(testDescription);
+
+    }
+
+    @Test
     public void haveStartTime() {
         LocalDateTime start = new LocalDateTime().now();
         assertEquals(event.withStartTime(start).getStartTime(), start);
