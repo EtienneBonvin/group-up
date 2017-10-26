@@ -1,7 +1,6 @@
 package ch.epfl.sweng.groupup.lib;
 
 import java.util.NoSuchElementException;
-//import java.util.function.Function;
 
 /**
  * The Optional construct allows to deal elegantly with absent values.
@@ -36,7 +35,7 @@ public final class Optional<T> {
      * @return an empty Optional
      */
     public static <T> Optional<T> empty(){
-        return new Optional<T>();
+        return new Optional<>();
     }
 
     /**
@@ -46,9 +45,9 @@ public final class Optional<T> {
      */
     public static <T> Optional<T> from(T element){
         if(element == null)
-            return Optional.<T>empty();
+            return Optional.empty();
         else
-            return new Optional<T>(element);
+            return new Optional<>(element);
     }
 
     /**
@@ -62,7 +61,7 @@ public final class Optional<T> {
     /**
      * Returns the value wrapped into the Optional or throw a NoSuchElementException if the Optional is empty.
      * @return the value wrapped into the Optional
-     * @throws NoSuchElementException
+     * @throws NoSuchElementException if the Optional is empty
      */
     public T get() throws NoSuchElementException {
         if(empty)
@@ -84,46 +83,7 @@ public final class Optional<T> {
 
     }
 
-    /**
-     * Applies a given function to the value wrapped into the Optional and wraps it into a new Optional.
-     * If the Optional is empty, returns an empty Optional.
-     * @param f the function to apply to the value
-     * @return a new Optional containing the new value
-     */
-    /*public <U> Optional<U> map(Function<T, U> f) {
-        if(empty)
-            return Optional.empty();
-        else
-            return Optional.<U>from(f.apply(content));
-    }*/
-
-    /**
-     * Applies a given function to the value wrapped into the Optional and wraps it into a new Optional.
-     * If the Optional is empty, returns an empty Optional.
-     * Note: This method allows Optionals to be monads.
-     * @param f the function to apply to the value
-     * @return a new Optional containing the new value
-     */
-    /*public <U> Optional<U> flatMap(Function<T, Optional<U>> f){
-        if(empty)
-            return Optional.empty();
-        else
-            return f.apply(content);
-    }*/
-
-    /**
-     * Applies a predicate p to an Optional and returns the result.
-     * If the Optional is empty, the methods always returns false
-     * @param p the predicate to apply on the value wrapped into the Optional
-     * @return
-     */
-    /*public boolean match(Function<T, Boolean> p){
-        if(empty)
-            return false;
-        else
-            return p.apply(content);
-    }*/
-
+    @SuppressWarnings("ConstantConditions")
     @Override
     public String toString(){
         if(empty)
@@ -132,7 +92,7 @@ public final class Optional<T> {
             return "Optional[" + content.toString() + "]";
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "ConstantConditions", "SimplifiableIfStatement"})
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

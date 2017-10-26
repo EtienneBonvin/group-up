@@ -76,6 +76,7 @@ public abstract class User {
      */
     public Optional<String> getUUID() {return UUID; }
 
+    @SuppressWarnings("RedundantIfStatement")
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

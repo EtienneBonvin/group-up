@@ -2,10 +2,6 @@ package ch.epfl.sweng.groupup;
 
 import org.junit.Test;
 
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-
 import ch.epfl.sweng.groupup.object.event.Event;
 
 public class EventCreationTest {

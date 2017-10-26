@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings({"EqualsBetweenInconvertibleTypes", "EqualsWithItself"})
 public class NewOptionalsShould {
     private Optional<String> empty;
     private Optional<String> nonEmpty;

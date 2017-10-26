@@ -68,7 +68,7 @@ public final class Account extends User {
 
     /**
      * Change the display name of the shared account
-     * @param displayName
+     * @param displayName the new display name
      * @return the modified shared account, so that it is easier to call in chain
      */
     public Account withDisplayName(String displayName) {
@@ -79,7 +79,7 @@ public final class Account extends User {
 
     /**
      * Change the first name of the shared account
-     * @param givenName
+     * @param givenName the new given name
      * @return the modified shared account, so that it is easier to call in chain
      */
     public Account withGivenName(String givenName) {
@@ -90,7 +90,7 @@ public final class Account extends User {
 
     /**
      * Change the last name of the shared account
-     * @param familyName
+     * @param familyName the new family name
      * @return the modified shared account, so that it is easier to call in chain
      */
     public Account withFamilyName(String familyName) {
@@ -101,7 +101,7 @@ public final class Account extends User {
 
     /**
      * Change the email of the shared account
-     * @param email
+     * @param email the new email
      * @return the modified shared account, so that it is easier to call in chain
      */
     public Account withEmail(String email) {
@@ -267,7 +267,7 @@ public final class Account extends User {
 
     /**
      * Check that the passed email is an "acceptable" form (not the icann official definition)
-     * @param email
+     * @param email the email to check
      * @return true of email ok else false
      */
     private boolean emailCheck(String email){

@@ -1,5 +1,8 @@
 package ch.epfl.sweng.groupup;
 
+import android.net.wifi.WifiConfiguration;
+
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,7 +21,9 @@ import static junit.framework.Assert.*;
 
 public class EventsShould {
     private Event event;
-    private final Member member = new Member("UUID", "Even monkeys can fly", "Tester", "Test","test@test.test");
+
+    private Member member = new Member("UUID", "Even monkeys can fly", "Tester", "Test","test@test.test");
+
     @Before
     public void init() {
         List<Member> eventMembers = new ArrayList<>();
@@ -28,6 +33,62 @@ public class EventsShould {
     @Test
     public void haveName() {
         assertEquals(event.getEventName(), "Name");
+    }
+
+    @Test
+    public void setEventByName(){
+        String testName = "Test Name";
+        Event newEvent = event.withEventName(testName);
+        assertEquals(newEvent.getEventName().toString(),testName);
+
+    }
+
+    @Test
+    public void setEventByDescription(){
+        String testDescription = "Test Description";
+        Event newEvent = event.withDescription(testDescription);
+        assertEquals(newEvent.getDescription().toString(),testDescription);
+
+    }
+
+    @Test
+    public void printProperShortOutput(){
+        LocalDateTime start = LocalDateTime.now().minusHours(1);
+        LocalDateTime end = LocalDateTime.now().plusHours(1);
+        String eventName = event.getEventName();
+        EventStatus eventStatus = EventStatus.CURRENT;
+        String ID = event.getUUID();
+        String expectedOutput = "Event{" +
+                "eventName='" + eventName + '\'' +
+                ", eventStatus='" + eventStatus +
+                ", eventID= " + ID +
+                '}';
+
+        event = event.withStartTime(start);
+        event = event.withEndTime(end);
+
+        assertEquals(event.toStringShort(),expectedOutput);
+    }
+
+    @Test
+    public void printProperOutput(){
+        LocalDateTime start = LocalDateTime.now().minusHours(1);
+        LocalDateTime end = LocalDateTime.now().plusHours(1);
+        String eventName = event.getEventName();
+        EventStatus eventStatus = EventStatus.CURRENT;
+        String ID = event.getUUID();
+        String eventMembers = event.getEventMembers().toString();
+        String expectedOutput = "Event{" +
+                "eventName='" + eventName + '\'' +
+                ", eventMember='" + eventMembers + '\'' +
+                ", startDate='" + start + '\'' +
+                ", endDate=" + end + '\'' +
+                ", evenStatus=" + eventStatus + '\'' +
+                ", eventID= " + ID +
+                '}';
+        event = event.withStartTime(start);
+        event = event.withEndTime(end);
+        assertEquals(event.toString(),expectedOutput);
     }
 
     @Test
@@ -152,7 +213,7 @@ public class EventsShould {
     @Test
     public void allowToRemoveCurrentUserFromMemberList(){
         Account.shared.withUUID("UUID").withGivenName("Xavier").withFamilyName("Pantet").withDisplayName(null).withEmail("xavier.pantet@pindex.ch");
-        List<Member> eventMembers = new ArrayList<Member>(Arrays.asList(new Member("UUID", null, "Xavier", "Pantet", "xavier.pantet@pindex.ch"), new Member("UUID2", null, "Cedric", "Maire", "cedmaire@gmail.com")));
+        List<Member> eventMembers = new ArrayList<>(Arrays.asList(new Member("UUID", null, "Xavier", "Pantet", "xavier.pantet@pindex.ch"), new Member("UUID2", null, "Cedric", "Maire", "cedmaire@gmail.com")));
         Event e = new Event("Name", null, null, null, eventMembers);
         Event withoutMe = e.withoutCurrentUser();
         assertEquals(withoutMe.getEventMembers().size(), 1);
