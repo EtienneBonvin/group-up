@@ -86,7 +86,7 @@ public final class Event {
 
     /**
      * Change the name of an event
-     * @param eventName
+     * @param eventName String containing event name
      * @return the modified event
      */
     public Event withEventName(String eventName){
@@ -95,7 +95,7 @@ public final class Event {
 
     /**
      * Change the start time of an event
-     * @param startTime
+     * @param startTime LocalDateTime containing starting time of event
      * @return the modified event
      */
     public Event withStartTime(LocalDateTime startTime){
@@ -104,7 +104,7 @@ public final class Event {
 
     /**
      * Change the ending time of an event
-     * @param endTime
+     * @param endTime LocalDateTime containing ending time of event
      * @return the modified event
      */
     public Event withEndTime(LocalDateTime endTime){
@@ -113,7 +113,7 @@ public final class Event {
 
     /**
      * Change the description of an event
-     * @param description
+     * @param description String containing event description
      * @return the modified event
      */
     public Event withDescription(String description) {
@@ -122,7 +122,7 @@ public final class Event {
 
     /**
      * Change the list of members of an event
-     * @param eventMembers
+     * @param eventMembers list of members
      * @return the modified event
      */
     public Event withEventMembers(List<Member> eventMembers){

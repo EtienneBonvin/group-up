@@ -126,6 +126,7 @@
         android:textColor="@color/white">
 
         <ImageView
+            android:contentDescription="@string/Logo_QR"
             android:id="@+id/buttonScanQR"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -144,7 +145,7 @@
             android:background="@color/white"/>
 
         <ImageView
-            android:contentDescription="plus sign"
+            android:contentDescription="@string/plus_sign"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.1"
