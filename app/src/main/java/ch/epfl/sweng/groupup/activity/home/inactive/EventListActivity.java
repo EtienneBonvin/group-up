@@ -190,7 +190,7 @@ public class EventListActivity extends LoginActivityInterface {
 
     @Override
     public void onSuccess() {
-        updateUI(Status.CONNECTED);
+        updateUI(Status.DISCONNECTED);
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
