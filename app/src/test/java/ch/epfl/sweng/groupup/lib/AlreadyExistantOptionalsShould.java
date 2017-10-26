@@ -25,17 +25,17 @@ public class AlreadyExistantOptionalsShould {
 
     @Test
     public void returnValueWhenGetIsCalledOnNonEmpty() {
-        assert(nonEmpty.get() == "Hello");
+        assertEquals(nonEmpty.get(), "Hello");
     }
 
     @Test
     public void returnProvidedValueForGetOrElseWhenEmpty() {
-        assert(empty.getOrElse("Alternate") == "Alternate");
+        assertEquals(empty.getOrElse("Alternate"), "Alternate");
     }
 
     @Test
     public void returnInternalValueForGetOrElseWhenNonEmpty() {
-        assert(nonEmpty.getOrElse("Alternate") == "Hello");
+        assertEquals(nonEmpty.getOrElse("Alternate"), "Hello");
     }
 
     /*@Test

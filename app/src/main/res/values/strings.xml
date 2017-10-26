@@ -1,9 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">GroupUp</string>
 
-    <!-- Toolbar -->
+    <!-- ToolbarActivity -->
     <string name="toolbar_description_group_list_icon">Icon to click to access group list</string>
     <string name="toolbar_description_settings_icon">Icon to click to access settings</string>
+    <string name="user_profile">Acces the user profile</string>
 
     <!-- Welcome page -->
     <string name="welcome_view_powered_by">Powered by Flying Monkeys Team</string>
@@ -34,10 +35,18 @@
     <string name="event_creation_tv_invite_new_members">Invite new members</string>
     <string name="event_creation_hint_invite_new_members">Email of new member</string>
     <string name="event_creation_button_add_event">ADD EVENT</string>
+    <string name="Logo_QR">Logo of the QR code</string>
+    <string name="plus_sign">Plus sign</string>
 
     <!-- Event Listing UI -->
     <string name="create_new_event">Create Event</string>
+    <string name="Display_QR">Display QR Code</string>
+
 
     <!-- Settings -->
     <string name="settings_tv_top">Settings page</string>
+
+    <!-- activity_display_qr-->
+    <string name="QR_code">QR Code</string>
+
 </resources>

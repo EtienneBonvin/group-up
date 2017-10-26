@@ -5,7 +5,6 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -21,15 +20,14 @@ import org.joda.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Iterator;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
-import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
-import ch.epfl.sweng.groupup.activity.settings.Settings;
+import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -43,10 +41,9 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
  * Offers the possibility to the user to create a new event.
  * Is linked to the layout event_creation.xml
  */
-public class EventCreation extends AppCompatActivity implements ZXingScannerView.ResultHandler, DatePickerDialog.OnDateSetListener,
+public class EventCreation extends ToolbarActivity implements ZXingScannerView.ResultHandler, DatePickerDialog.OnDateSetListener,
     TimePickerDialog.OnTimeSetListener{
 
-    private final int INPUT_MAX_LENGTH = 50;
     private Button start_date, end_date, start_time, end_time;
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
@@ -56,12 +53,10 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
     private HashMap<View.OnClickListener, String> uIdsWithOCL;
     private LocalDateTime date_start, date_end;
     private ZXingScannerView mScannerView;
-    private String qrString;
 
     // Variables for state saving
     private String eventName;
     private List<String> membersIDs;
-
 
     /**
      * Initialization of all the variables of the class and of the OnClickListeners
@@ -71,6 +66,7 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_creation);
+        super.initializeToolbar();
 
         initFields();
 
@@ -121,32 +117,8 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
      * Initialize the OnClickListeners of the layout.
      */
     private void initListeners(){
-        findViewById(R.id.icon_access_group_list)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), EventListingActivity.class);
-                        startActivity(intent);
-                    }
-                });
 
-        findViewById(R.id.icon_access_settings)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), Settings.class);
-                        startActivity(intent);
-                    }
-                });
-
-        findViewById(R.id.icon_access_user_profile)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), EventListActivity.class);
-                        startActivity(intent);
-                    }
-                });
+        super.initializeToolbar();
 
         findViewById(R.id.button_start_date)
                 .setOnClickListener(new View.OnClickListener() {
@@ -284,7 +256,7 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
     @Override
     public void handleResult(com.google.zxing.Result rawResult) {
         // Do something with the result here
-        qrString = rawResult.toString();
+        String qrString = rawResult.toString();
 
         // Close camera and return to activity after successful scan
         mScannerView.stopCamera();
@@ -355,9 +327,9 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
      * changes the text of the button on the UI accordingly to the data entered by the user
      * on the DatePickerDialog.
      * @param view
-     * @param year
-     * @param month
-     * @param dayOfMonth
+     * @param year int containing year
+     * @param month int containing month
+     * @param dayOfMonth int containing date
      */
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -379,8 +351,8 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
      * changes the text of the button on the UI accordingly to the data entered by the user
      * on the TimePickerDialog.
      * @param view
-     * @param hourOfDay
-     * @param minute
+     * @param hourOfDay int containing hour
+     * @param minute int containing minute
      */
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -403,6 +375,9 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
      * group list Activity.
      */
     private void saveEvent(){
+
+        int INPUT_MAX_LENGTH = 50;
+      
         EditText eventName = ((EditText)findViewById(R.id.ui_edit_event_name));
         if(eventName.getText().toString().length() == 0){
             eventName.setError("Give a name to your event !");
@@ -455,8 +430,8 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
 
     /**
      * Private method to compare two LocalDateTime to the minute level.
-     * @param start
-     * @param end
+     * @param start LocalDateTime containing starting time
+     * @param end LocalDateTime containing ending time
      * @return 1 if start is before end of at least 1 minute, 0 if start and end are the same
      * to the minute level, -1 otherwise.
      */
@@ -476,9 +451,9 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
 
     /**
      * Format a date into a DD/MM/YY string.
-     * @param day
-     * @param month
-     * @param year
+     * @param day int containing date
+     * @param month int containing month
+     * @param year int containing year
      * @return a DD/MM/YY string
      */
     private String date_format(int day, int month, int year){
@@ -489,8 +464,8 @@ public class EventCreation extends AppCompatActivity implements ZXingScannerView
 
     /**
      * Format a time into a HH:MM string.
-     * @param hour
-     * @param minutes
+     * @param hour int containing hour
+     * @param minutes int containing minute
      * @return a HH:MM string
      */
     private String time_format(int hour, int minutes){
