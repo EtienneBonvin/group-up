@@ -32,10 +32,10 @@ public class LoginActivity extends LoginActivityInterface implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        authService = new FirebaseAuthentication(getString(R.string.web_client_id),
-                this,
-                this,
-                this);
+        this.authService = new FirebaseAuthentication(getString(R.string.web_client_id),
+                                                      this,
+                                                      this,
+                                                      this);
 
         initializeFields();
         setOnClickListener();
@@ -111,5 +111,9 @@ public class LoginActivity extends LoginActivityInterface implements View.OnClic
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         authService.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void setAuthService(GoogleAuthenticationService db) {
+        authService = db;
     }
 }
