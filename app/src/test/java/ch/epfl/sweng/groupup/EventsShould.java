@@ -15,6 +15,7 @@ import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.event.EventStatus;
 
 import static junit.framework.Assert.*;
+import static org.junit.Assert.assertNotEquals;
 
 public class EventsShould {
     private Event event;
@@ -217,4 +218,18 @@ public class EventsShould {
         assertEquals(withoutMe.getEventMembers().get(0), new Member("UUID2", null, "Cedric", "Maire", "cedmaire@gmail.com"));
     }
 
+    @Test
+    public void equalsEventsAreEquals(){
+        List<Member> members =  new ArrayList<>(Arrays.asList(new Member("1","Javier","Pavier","Xantet","yolo@yolo.com"), new Member("2","asdf","Médric","Caire","yolo1@yolo.yolo")));
+        Event e = new Event("1","inm", LocalDateTime.now().plusDays(1),LocalDateTime.now().plusDays(2),"Du travail, toujours du travail", members);
+        Event f = new Event("1","inm", LocalDateTime.now().plusDays(1),LocalDateTime.now().plusDays(2),"Du travail, toujours du travail", members);
+        assertEquals(e,f);
+    }
+    @Test
+    public void differentEventsAreDifferent(){
+        List<Member> members =  new ArrayList<>(Arrays.asList(new Member("1","Javier","Pavier","Xantet","yolo@yolo.com"), new Member("2","asdf","Médric","Caire","yolo1@yolo.yolo")));
+        Event e = new Event("2","inm", LocalDateTime.now().plusDays(1),LocalDateTime.now().plusDays(2),"Du travail, toujours du travail", members);
+        Event f = new Event("1","inm", LocalDateTime.now().plusDays(1),LocalDateTime.now().plusDays(2),"Du travail, toujours du travail", members);
+        assertNotEquals(e,f);
+    }
 }

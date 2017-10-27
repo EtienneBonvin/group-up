@@ -4,7 +4,7 @@ import org.joda.time.LocalDateTime;
 import org.junit.Test;
 
 import java.util.ArrayList;
-
+import static ch.epfl.sweng.groupup.lib.Optional.from;
 import static org.junit.Assert.*;
 
 import ch.epfl.sweng.groupup.lib.Optional;
@@ -18,53 +18,59 @@ import static ch.epfl.sweng.groupup.object.account.Account.shared;
  */
 
 @SuppressWarnings("DefaultFileTemplate")
-public class AccountTestSuite {
+public class AccountShould {
 
-    private Member member = new Member("UUID", "Even monkeys can fly", "Tester", "Test","test@test.test");
     @Test
     public void withUUIDOK() {
         shared.withUUID("UUID2");
         assertEquals(shared.getUUID().get(), "UUID2");
+        shared.clear();
     }
 
     @Test
     public void withDisplayNameOK(){
         shared.withDisplayName("Tester");
         assertEquals(shared.getDisplayName().get(),"Tester");
+        shared.clear();
     }
 
     @Test
     public void withFirstNameOK(){
         shared.withGivenName("Tester");
         assertEquals(shared.getGivenName().get(),"Tester");
+        shared.clear();
     }
 
     @Test
     public void withLastNameOK(){
         shared.withFamilyName("Test");
         assertEquals(shared.getFamilyName().get(),"Test");
+        shared.clear();
     }
 
     @Test
     public void withEmailOK(){
         shared.withEmail("test@testedtest.com");
         assertEquals(shared.getEmail().get(),"test@testedtest.com");
+        shared.clear();
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void withEmailNotOK(){
         shared.withEmail("13415.com");
+        shared.clear();
     }
 
     @Test
     public void withCurrentEventOK(){
-        shared.withCurrentEvent(Optional.from(new Event("Test", new LocalDateTime().minusDays(1),
+        shared.withCurrentEvent(from(new Event("Test", new LocalDateTime().minusDays(1),
                 new LocalDateTime().plusDays(1), "", new ArrayList<Member>())));
         assertEquals(shared.getCurrentEvent().get().getEventStatus(),EventStatus.CURRENT);
+        shared.clear();
     }
     @Test(expected = IllegalArgumentException.class)
     public void withCurrentEventNotOKWithPastEvent(){
-        shared.withCurrentEvent(Optional.from(new Event("Test", new LocalDateTime().minusDays(2),
+        shared.withCurrentEvent(from(new Event("Test", new LocalDateTime().minusDays(2),
                 new LocalDateTime().minusDays(1), "", new ArrayList<Member>())));
     }
 
@@ -73,18 +79,21 @@ public class AccountTestSuite {
         shared.addOrUpdatePastEvent(new Event("Test", new LocalDateTime().minusDays(2),
                 new LocalDateTime().minusDays(1), "", new ArrayList<Member>()));
         assertEquals(shared.getPastEvents().get(0).getEventStatus(),EventStatus.PAST);
+        shared.clear();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addPastEventNotOKWithCurrentEvent() {
         shared.addOrUpdatePastEvent(new Event("Test", new LocalDateTime().minusDays(2),
                 new LocalDateTime().plusDays(1), "", new ArrayList<Member>()));
+        shared.clear();
     }
     @Test
     public void addFutureEventOK(){
         shared.addOrUpdateFutureEvent(new Event("Test", new LocalDateTime().plusDays(1),
                 new LocalDateTime().plusDays(2), "", new ArrayList<Member>()));
         assertEquals(shared.getFutureEvents().get(0).getEventStatus(),EventStatus.FUTURE);
+        shared.clear();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -97,12 +106,14 @@ public class AccountTestSuite {
     public void addFutureEventNotOKWithPastEvent() {
         shared.addOrUpdateFutureEvent(new Event("Test", new LocalDateTime().minusDays(2),
                 new LocalDateTime().minusDays(1), "", new ArrayList<Member>()));
+        shared.clear();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addPastEventNotOKWithFutureEvent() {
         shared.addOrUpdatePastEvent(new Event("Test", new LocalDateTime().plusDays(1),
                 new LocalDateTime().plusDays(2), "", new ArrayList<Member>()));
+        shared.clear();
     }
 
     @Test
@@ -110,17 +121,18 @@ public class AccountTestSuite {
         // Test for past event
         shared.addOrUpdatePastEvent(new Event("Test", new LocalDateTime().minusDays(2),
                 new LocalDateTime().minusDays(1), "", new ArrayList<Member>()));
-        assertEquals(shared.getPastEvents().get(1).getEventStatus(),EventStatus.PAST);
+        assertEquals(shared.getPastEvents().get(0).getEventStatus(),EventStatus.PAST);
 
         // Test for future event
         shared.addOrUpdateFutureEvent(new Event("Test", new LocalDateTime().plusDays(1),
                 new LocalDateTime().plusDays(2), "", new ArrayList<Member>()));
-        assertEquals(shared.getFutureEvents().get(1).getEventStatus(),EventStatus.FUTURE);
+        assertEquals(shared.getFutureEvents().get(0).getEventStatus(),EventStatus.FUTURE);
 
         // Test for current event
-        shared.withCurrentEvent(Optional.from(new Event("Test", new LocalDateTime().minusDays(1),
+        shared.withCurrentEvent(from(new Event("Test", new LocalDateTime().minusDays(1),
                 new LocalDateTime().plusDays(1), "", new ArrayList<Member>())));
         assertEquals(shared.getCurrentEvent().get().getEventStatus(),EventStatus.CURRENT);
+        shared.clear();
     }
 
     @Test
@@ -148,16 +160,71 @@ public class AccountTestSuite {
         assertEquals(shared.getFutureEvents().get(c2-1).getEventStatus(),EventStatus.FUTURE);
 
         // Test for current event
-        shared.withCurrentEvent(Optional.from(new Event("UUID", "Test", new LocalDateTime().minusDays(1),
+        shared.withCurrentEvent(from(new Event("UUID", "Test", new LocalDateTime().minusDays(1),
                 new LocalDateTime().plusDays(1), "", new ArrayList<Member>())));
-        shared.withCurrentEvent(Optional.from(new Event("UUID", "Test4", new LocalDateTime().minusDays(1),
+        shared.withCurrentEvent(from(new Event("UUID", "Test4", new LocalDateTime().minusDays(1),
                 new LocalDateTime().plusDays(1), "", new ArrayList<Member>())));
         assertEquals(shared.getCurrentEvent().get().getEventName(), "Test4");
         assertEquals(shared.getCurrentEvent().get().getEventStatus(),EventStatus.CURRENT);
+        shared.clear();
+    }
+
+    @Test
+    public void toStringShortTest(){
+        shared.withCurrentEvent(Optional.from(new Event("1","inm", LocalDateTime.now().minusDays(1),
+                LocalDateTime.now().plusDays(2),"Du travail, toujours du travail",
+                new ArrayList<Member>())));
+        String expected="Account{" +
+             "givenName='" + shared.getGivenName() + '\'' +
+             ", familyName='" + shared.getFamilyName() + '\'' +
+             ", email='" + shared.email + '\'' +
+             ", currentEvent=" + shared.getCurrentEvent().get().toString() +
+             '}';
+        assertEquals(shared.toStringShort(),expected);
+    }
+    @Test
+    public void toStringTest(){
+        shared.withCurrentEvent(Optional.from(new Event("1","inm", LocalDateTime.now().minusDays(1),
+                LocalDateTime.now().plusDays(2),"Du travail, toujours du travail",
+                new ArrayList<Member>())));
+        String expected = "Account{" +
+                "UUID='" + shared.getUUID() + '\'' +
+                "displayName='" + shared.getDisplayName() + '\'' +
+                "givenName='" + shared.getGivenName() + '\'' +
+                ", familyName='" + shared.getFamilyName() + '\'' +
+                ", email='" + shared.getEmail() + '\'' +
+                ", currentEvent=" + shared.getCurrentEvent().get().toString() +
+                ", pastEvents=" + shared.getPastEvents() +
+                ", futureEvents=" + shared.getFutureEvents()+
+                '}';
+        assertEquals(shared.toString(),expected);
+    }
+
+    @Test
+    public void clearTest(){
+        shared.withFamilyName("Test").withUUID("1").withDisplayName("tested").withEmail(
+                "test@test.test").withGivenName("tester").withCurrentEvent(from(
+                new Event("1","inm", LocalDateTime.now().minusDays(1),
+                        LocalDateTime.now().plusDays(2),"Du travail, toujours du travail",
+                        new ArrayList<Member>()))).
+                addOrUpdateFutureEvent(new Event("UUID", "Test", new LocalDateTime().plusDays(1),
+                        new LocalDateTime().plusDays(2), "", new ArrayList<Member>())).
+                addOrUpdatePastEvent(new Event("UUID", "Test", new LocalDateTime().minusDays(2),
+                        new LocalDateTime().minusDays(1), "", new ArrayList<Member>()));
+        shared.clear();
+        assertEquals(shared.getUUID(),Optional.<String>empty());
+        assertEquals(shared.getFamilyName(),Optional.<String>empty());
+        assertEquals(shared.getDisplayName(),Optional.<String>empty());
+        assertEquals(shared.getGivenName(),Optional.<String>empty());
+        assertEquals(shared.getEmail(),Optional.<String>empty());
+        assertEquals(shared.getCurrentEvent(),Optional.<Event>empty());
+        assertEquals(shared.getFutureEvents(),new ArrayList<Event>());
+        assertEquals(shared.getPastEvents(),new ArrayList<Event>());
     }
 
     // Fails in Jenkins.
-    // In Jenkins: ch.epfl.sweng.groupup.object.account.AccountTestSuite > futureEventsOrderedCorrectly FAILED
+    // In Jenkins: ch.epfl.sweng.groupup.object.account.AccountShould >
+    // futureEventsOrderedCorrectly FAILED
     // But when running in Android Studio the test passes.
 
     /*@Test
