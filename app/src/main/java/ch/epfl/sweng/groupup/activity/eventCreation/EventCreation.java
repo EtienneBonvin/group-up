@@ -91,18 +91,18 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
         viewsWithOCL = new HashMap<>();
         uIdsWithOCL = new HashMap<>();
 
-        start_date = (Button)findViewById(R.id.button_start_date);
+        start_date = findViewById(R.id.button_start_date);
         start_date.setText(date_format(date_start.getDayOfMonth(), date_start.getMonthOfYear(),
                 date_start.getYear()));
 
-        start_time = (Button)findViewById(R.id.button_start_time);
+        start_time = findViewById(R.id.button_start_time);
         start_time.setText(time_format(date_start.getHourOfDay(), date_start.getMinuteOfHour()));
 
-        end_date = (Button)findViewById(R.id.button_end_date);
+        end_date = findViewById(R.id.button_end_date);
         end_date.setText(date_format(date_end.getDayOfMonth(), date_end.getMonthOfYear(),
                 date_end.getYear()));
 
-        end_time = (Button)findViewById(R.id.button_end_time);
+        end_time = findViewById(R.id.button_end_time);
         end_time.setText(time_format(date_end.getHourOfDay(), date_end.getMinuteOfHour()));
 
         datePickerDialog = new DatePickerDialog(
@@ -159,7 +159,7 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        EditText memberUId = (EditText)findViewById(R.id.edit_text_add_member);
+                        EditText memberUId = findViewById(R.id.edit_text_add_member);
                         addNewMember(memberUId.getText().toString());
                         memberUId.setText("");
                     }
@@ -378,7 +378,7 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
 
         int INPUT_MAX_LENGTH = 50;
       
-        EditText eventName = ((EditText)findViewById(R.id.ui_edit_event_name));
+        EditText eventName = findViewById(R.id.ui_edit_event_name);
         if(eventName.getText().toString().length() == 0){
             eventName.setError("Give a name to your event !");
             return;

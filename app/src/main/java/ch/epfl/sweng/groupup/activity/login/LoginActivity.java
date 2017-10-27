@@ -2,7 +2,8 @@ package ch.epfl.sweng.groupup.activity.login;
 
 import android.content.Intent;
 import android.os.Bundle;
-
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
 import com.google.android.gms.common.SignInButton;

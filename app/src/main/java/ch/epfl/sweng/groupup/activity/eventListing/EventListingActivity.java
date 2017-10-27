@@ -51,7 +51,7 @@ public class EventListingActivity extends ToolbarActivity {
      * Initialization of the private variables of the class
      */
     private void initializeVariables() {
-        linearLayout = (LinearLayout)findViewById(R.id.linear_layout_event_list);
+        linearLayout = findViewById(R.id.linear_layout_event_list);
         heightInSp = Math.round(100 * getResources().getDisplayMetrics().scaledDensity);
         // Fixed height, best would be to create a dynamical height so it works for all screens
     }

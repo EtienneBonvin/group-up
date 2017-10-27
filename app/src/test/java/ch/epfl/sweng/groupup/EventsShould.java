@@ -1,8 +1,5 @@
 package ch.epfl.sweng.groupup;
 
-import android.net.wifi.WifiConfiguration;
-
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,7 +36,7 @@ public class EventsShould {
     public void setEventByName(){
         String testName = "Test Name";
         Event newEvent = event.withEventName(testName);
-        assertEquals(newEvent.getEventName().toString(),testName);
+        assertEquals(newEvent.getEventName(),testName);
 
     }
 
@@ -47,7 +44,7 @@ public class EventsShould {
     public void setEventByDescription(){
         String testDescription = "Test Description";
         Event newEvent = event.withDescription(testDescription);
-        assertEquals(newEvent.getDescription().toString(),testDescription);
+        assertEquals(newEvent.getDescription(),testDescription);
 
     }
 

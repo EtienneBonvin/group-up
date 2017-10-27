@@ -20,7 +20,7 @@ public final class Member extends User {
      * @return a new member with the given UUID
      */
     public Member withUUID(String UUID) {
-        return new Member(Optional.<String>from(UUID), displayName, givenName, familyName, email);
+        return new Member(Optional.from(UUID), displayName, givenName, familyName, email);
     }
 
     /**
