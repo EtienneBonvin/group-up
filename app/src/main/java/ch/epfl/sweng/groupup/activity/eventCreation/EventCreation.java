@@ -380,27 +380,27 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
       
         EditText eventName = findViewById(R.id.ui_edit_event_name);
         if(eventName.getText().toString().length() == 0){
-            eventName.setError("Give a name to your event !");
+            eventName.setError(getString(R.string.event_creation_toast_non_empty_event_name));
             return;
         }else if(eventName.getText().toString().length() > INPUT_MAX_LENGTH){
-            eventName.setError("The name of the event is too long.");
+            eventName.setError(getString(R.string.event_creation_toast_event_name_too_long));
             return;
         }
         eventName.setError(null);
 
         if(compare_date(LocalDateTime.now(), date_start) < 0){
-            Toast.makeText(getApplicationContext(), "Are you planning to go back to the past ?",
+            Toast.makeText(getApplicationContext(), getString(R.string.event_creation_toast_event_start_before_now),
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(compare_date(date_start, date_end) < 0){
-            Toast.makeText(getApplicationContext(), "Your event ends before it begins.",
+            Toast.makeText(getApplicationContext(), getString(R.string.event_creation_toast_event_end_before_begin),
                     Toast.LENGTH_SHORT).show();
             return;
         }
         if(compare_date(date_start, date_end) == 0){
-            Toast.makeText(getApplicationContext(), "Your event should last for at least 1 minute.",
+            Toast.makeText(getApplicationContext(), getString(R.string.event_craeation_toast_event_last_1_minute),
                     Toast.LENGTH_SHORT).show();
             return;
         }
