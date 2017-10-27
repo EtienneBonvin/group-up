@@ -1,17 +1,10 @@
 package ch.epfl.sweng.groupup.eventCreation;
 
-import android.app.Activity;
-import android.app.Instrumentation;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.hardware.Camera;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.contrib.BuildConfig;
 import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
-import android.support.test.uiautomator.UiDevice;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
@@ -34,11 +27,8 @@ import ch.epfl.sweng.groupup.object.event.Event;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.pressBack;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intending;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -108,8 +98,9 @@ public class EventCreationTest {
         Event expected = new Event("My event", start, end, "", expectedMembers);
 
         Event found = findEvent();
-
-        assert(found.equals(expected));
+        if (BuildConfig.DEBUG && !(found.equals(expected))){
+            throw new AssertionError();
+        }
     }
 
     @Test
@@ -117,18 +108,21 @@ public class EventCreationTest {
 
         addEventName("");
         onView(withId(R.id.save_button)).perform(click());
-        assert(findEvent() == null);
+        if (BuildConfig.DEBUG && !(findEvent()==null)){
+            throw new AssertionError();}
     }
 
     @Test
     public void noEventCreatedOnTooLongName() {
         addEventName("This event name should be way too long for the event creator to accept it"+
-        "I should not be able to tell my life in the event name");
+                "I should not be able to tell my life in the event name");
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 4, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
-        assert(findEvent() == null);
+        if (BuildConfig.DEBUG && !(findEvent()==null)){
+            throw new AssertionError();
+        }
     }
 
     @Test
@@ -138,12 +132,15 @@ public class EventCreationTest {
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2099, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
-        assert(findEvent() == null);
-
+        if (BuildConfig.DEBUG && !(findEvent()==null)){
+            throw new AssertionError();
+        }
         setStartDate(2099, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
-        assert(findEvent() != null);
+        if (BuildConfig.DEBUG && (findEvent()==null)){
+            throw new AssertionError();
+        }
     }
 
     @Test
@@ -153,12 +150,15 @@ public class EventCreationTest {
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 4, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
-        assert(findEvent() == null);
-
+        if (BuildConfig.DEBUG && !(findEvent()==null)){
+            throw new AssertionError();
+        }
         setStartDate(2100, 4, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
-        assert(findEvent() != null);
+        if (BuildConfig.DEBUG && (findEvent()==null)) {
+            throw new AssertionError();
+        }
     }
 
     @Test
@@ -168,12 +168,15 @@ public class EventCreationTest {
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 4, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
-        assert(findEvent() == null);
-
+        if (BuildConfig.DEBUG && !(findEvent()==null)){
+            throw new AssertionError();
+        }
         setStartDate(2100, 5, 4, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
-        assert(findEvent() != null);
+        if (BuildConfig.DEBUG && (findEvent()==null)){
+            throw new AssertionError();
+        }
     }
 
     @Test
@@ -183,12 +186,16 @@ public class EventCreationTest {
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 4, 5);
         onView(withId(R.id.save_button)).perform(click());
-        assert(findEvent() == null);
+        if (BuildConfig.DEBUG && !(findEvent()==null)){
+            throw new AssertionError();
+        }
 
         setStartDate(2100, 5, 5, 4, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
-        assert(findEvent() != null);
+        if (BuildConfig.DEBUG && (findEvent()==null)){
+            throw new AssertionError();
+        }
     }
 
     @Test
@@ -198,7 +205,9 @@ public class EventCreationTest {
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 4);
         onView(withId(R.id.save_button)).perform(click());
-        assert(findEvent() == null);
+        if (BuildConfig.DEBUG && !(findEvent()==null)){
+            throw new AssertionError();
+        }
     }
 
     @Test
@@ -208,7 +217,9 @@ public class EventCreationTest {
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
-        assert(findEvent() == null);
+        if (BuildConfig.DEBUG && !(findEvent()==null)){
+            throw new AssertionError();
+        }
     }
 
     @Test
@@ -225,7 +236,9 @@ public class EventCreationTest {
                 .perform(PickerActions.setDate(year, month, day));
         onView(withId(android.R.id.button1)).perform(click());
         onView(withId(R.id.save_button)).perform(click());
-        assert(findEvent() == null);
+        if (BuildConfig.DEBUG && !(findEvent()==null)){
+            throw new AssertionError();
+        }
     }
 
     @Test
@@ -234,7 +247,9 @@ public class EventCreationTest {
         Espresso.closeSoftKeyboard();
         setStartDate(5555, 5, 5, 5, 5);
         setEndDate(5554, 5, 5, 5, 5);
-        assert(findEvent() == null);
+        if (BuildConfig.DEBUG && !(findEvent()==null)){
+            throw new AssertionError();
+        }
     }
 
     /**

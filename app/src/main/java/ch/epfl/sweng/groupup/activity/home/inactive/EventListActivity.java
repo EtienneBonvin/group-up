@@ -134,10 +134,10 @@ public class EventListActivity extends ToolbarActivity implements
     }
 
     private void initializeFields() {
-        displayNameTextView = (TextView) findViewById(R.id.text_view_first_name_text);
-        familyNameTextView = (TextView) findViewById(R.id.text_view_last_name_text);
-        givenNameTextView = (TextView) findViewById(R.id.text_view_given_name_text);
-        emailTextView = (TextView) findViewById(R.id.text_view_email_text);
+        displayNameTextView = findViewById(R.id.text_view_first_name_text);
+        familyNameTextView = findViewById(R.id.text_view_last_name_text);
+        givenNameTextView = findViewById(R.id.text_view_given_name_text);
+        emailTextView = findViewById(R.id.text_view_email_text);
     }
 
     /**

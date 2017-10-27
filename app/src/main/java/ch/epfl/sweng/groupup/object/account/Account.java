@@ -167,7 +167,7 @@ public final class Account extends User {
             case PAST:
                 return addOrUpdatePastEvent(event);
             default:
-                return withCurrentEvent(Optional.<Event>from(event));
+                return withCurrentEvent(Optional.from(event));
         }
     }
 

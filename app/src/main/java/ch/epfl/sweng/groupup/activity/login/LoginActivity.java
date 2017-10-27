@@ -1,11 +1,9 @@
 package ch.epfl.sweng.groupup.activity.login;
 
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -197,8 +195,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      * Method used to initialize all the fields of the activity.
      */
     private void initializeFields() {
-        signInButton = (SignInButton) findViewById(R.id.sign_in_button_google);
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar_sign_in_login);
+        signInButton = findViewById(R.id.sign_in_button_google);
+        progressBar = findViewById(R.id.progress_bar_sign_in_login);
 
         progressBar.setVisibility(View.GONE);
     }
