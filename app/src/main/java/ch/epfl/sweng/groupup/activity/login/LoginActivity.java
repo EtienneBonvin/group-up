@@ -13,6 +13,7 @@ import ch.epfl.sweng.groupup.lib.login.FirebaseAuthentication;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService;
 import ch.epfl.sweng.groupup.lib.login.LoginActivityInterface;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService.Status;
+import ch.epfl.sweng.groupup.lib.login.MockAuth;
 
 import static ch.epfl.sweng.groupup.lib.Helper.showAlert;
 
@@ -113,7 +114,7 @@ public class LoginActivity extends LoginActivityInterface implements View.OnClic
         authService.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void setAuthService(GoogleAuthenticationService db) {
-        authService = db;
+    void mock(boolean loginStatus, boolean logoutStatus) {
+        this.authService = new MockAuth(this, loginStatus, logoutStatus);
     }
 }
