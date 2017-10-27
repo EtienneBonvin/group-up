@@ -38,6 +38,11 @@
     <string name="event_creation_button_add_event">ADD EVENT</string>
     <string name="Logo_QR">Logo of the QR code</string>
     <string name="plus_sign">Plus sign</string>
+    <string name="event_creation_toast_non_empty_event_name">Give a name to your event !</string>
+    <string name="event_creation_toast_event_name_too_long">The name of the event is too long.</string>
+    <string name="event_creation_toast_event_start_before_now">Are you planning to go back to the past ?</string>
+    <string name="event_creation_toast_event_end_before_begin">Your event ends before it begins.</string>
+    <string name="event_craeation_toast_event_last_1_minute">Your event should last for at least 1 minute.</string>
 
     <!-- Event Listing UI -->
     <string name="create_new_event">Create Event</string>
