@@ -16,6 +16,8 @@
     <string name="text_no_status_message">NO_STATUS_MESSAGE</string>
     <string name="text_button_connection_failed">OK</string>
     <string name="button_sign_out_text">Sign Out</string>
+    <string name="toast_unable_to_generate_qr">Unable to generate the QR Code</string>
+    <string name="toast_unable_to_sign_out">What are you doing here!? You are not even signed it…</string>
 
     <string name="text_view_display_name_info">Display Name:</string>
     <string name="text_view_display_name_text">NO_DISPLAY_NAME</string>
