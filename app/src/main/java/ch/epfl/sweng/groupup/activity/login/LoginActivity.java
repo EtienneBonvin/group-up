@@ -2,6 +2,7 @@ package ch.epfl.sweng.groupup.activity.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import android.view.View;
 import android.widget.ProgressBar;
 import com.google.android.gms.common.SignInButton;
@@ -80,8 +81,8 @@ public class LoginActivity extends LoginActivityInterface implements View.OnClic
      * Method used to initialize all the fields of the activity.
      */
     private void initializeFields() {
-        signInButton = (SignInButton) findViewById(R.id.sign_in_button_google);
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar_sign_in_login);
+        signInButton = findViewById(R.id.sign_in_button_google);
+        progressBar = findViewById(R.id.progress_bar_sign_in_login);
 
         progressBar.setVisibility(View.GONE);
     }

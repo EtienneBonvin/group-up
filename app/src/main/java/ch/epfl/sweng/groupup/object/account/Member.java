@@ -43,7 +43,7 @@ public final class Member extends User {
 
     /**
      * Returns a new member with the given last name
-     * @param newLastName the new last name of the membre
+     * @param newLastName the new last name of the member
      * @return a new member with the given last name
      */
     public Member withLastName(String newLastName){

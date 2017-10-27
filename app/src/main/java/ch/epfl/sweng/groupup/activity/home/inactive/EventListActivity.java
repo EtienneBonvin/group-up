@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+
+
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,12 +20,14 @@ import java.io.ByteArrayOutputStream;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
+
 import ch.epfl.sweng.groupup.activity.settings.Settings;
 import ch.epfl.sweng.groupup.lib.Helper;
 import ch.epfl.sweng.groupup.lib.login.FirebaseAuthentication;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService.Status;
 import ch.epfl.sweng.groupup.lib.login.LoginActivityInterface;
+
 
 import static ch.epfl.sweng.groupup.object.account.Account.shared;
 
@@ -34,6 +38,7 @@ import static ch.epfl.sweng.groupup.object.account.Account.shared;
 
 public class EventListActivity extends LoginActivityInterface {
 
+
     // Fields to represent the different objects on the GUI of the activity.
     private TextView displayNameTextView;
     private TextView familyNameTextView;
@@ -42,10 +47,12 @@ public class EventListActivity extends LoginActivityInterface {
 
     private GoogleAuthenticationService authService;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_list);
+        super.initializeToolbar();
 
         authService = new FirebaseAuthentication(getString(R.string.web_client_id),
                                                  this,
@@ -67,7 +74,7 @@ public class EventListActivity extends LoginActivityInterface {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        displayQR(v);
+                        displayQR();
                     }
                 });
 
@@ -88,6 +95,7 @@ public class EventListActivity extends LoginActivityInterface {
                     public void onClick(View v) {
                         Intent intent = new Intent(getApplicationContext(), Settings.class);
                         startActivity(intent);
+                        displayQR();
                     }
                 });
     }
@@ -98,9 +106,8 @@ public class EventListActivity extends LoginActivityInterface {
         startActivity(intent);
     }
 
-
-    public void displayQR(View view) {
-        if (!shared.getUUID().isEmpty()) {
+    public void displayQR(){
+        if (!shared.getUUID().isEmpty()){
             String text = shared.getUUID().get();
             QRCodeWriter writer = new QRCodeWriter();
             try {
@@ -144,10 +151,10 @@ public class EventListActivity extends LoginActivityInterface {
     }
 
     private void initializeFields() {
-        displayNameTextView = (TextView) findViewById(R.id.text_view_display_name_text);
-        familyNameTextView = (TextView) findViewById(R.id.text_view_family_name_text);
-        givenNameTextView = (TextView) findViewById(R.id.text_view_given_name_text);
-        emailTextView = (TextView) findViewById(R.id.text_view_email_text);
+        displayNameTextView = findViewById(R.id.text_view_display_name_text);
+        familyNameTextView = findViewById(R.id.text_view_family_name_text);
+        givenNameTextView = findViewById(R.id.text_view_given_name_text);
+        emailTextView = findViewById(R.id.text_view_email_text);
     }
 
     /**
