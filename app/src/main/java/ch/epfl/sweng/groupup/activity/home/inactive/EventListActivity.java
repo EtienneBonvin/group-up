@@ -1,20 +1,15 @@
 package ch.epfl.sweng.groupup.activity.home.inactive;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+
+
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -25,12 +20,15 @@ import java.io.ByteArrayOutputStream;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
-import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 
-import static ch.epfl.sweng.groupup.lib.Login.CONNECTED;
-import static ch.epfl.sweng.groupup.lib.Login.FIREBASE_AUTH;
-import static ch.epfl.sweng.groupup.lib.Login.googleApiClient;
-import static ch.epfl.sweng.groupup.lib.Login.setUpApiClient;
+import ch.epfl.sweng.groupup.activity.settings.Settings;
+import ch.epfl.sweng.groupup.lib.Helper;
+import ch.epfl.sweng.groupup.lib.login.FirebaseAuthentication;
+import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService;
+import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService.Status;
+import ch.epfl.sweng.groupup.lib.login.LoginActivityInterface;
+
+
 import static ch.epfl.sweng.groupup.object.account.Account.shared;
 
 /**
@@ -38,8 +36,8 @@ import static ch.epfl.sweng.groupup.object.account.Account.shared;
  * user a way to sign out.
  */
 
-public class EventListActivity extends ToolbarActivity implements
-        GoogleApiClient.OnConnectionFailedListener {
+public class EventListActivity extends LoginActivityInterface {
+
 
     // Fields to represent the different objects on the GUI of the activity.
     private TextView displayNameTextView;
@@ -47,20 +45,22 @@ public class EventListActivity extends ToolbarActivity implements
     private TextView givenNameTextView;
     private TextView emailTextView;
 
+    private GoogleAuthenticationService authService;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_list);
         super.initializeToolbar();
 
+        authService = new FirebaseAuthentication(getString(R.string.web_client_id),
+                                                 this,
+                                                 this,
+                                                 this);
+
         initializeFields();
-        updateUI(CONNECTED);
-        setUpApiClient(
-                getString(R.string.web_client_id), /* web_client_id  */
-                this, /* context  */
-                this, /* fragment activity  */
-                this /* on connection failed listener  */
-        );
+        updateUI(Status.CONNECTED);
 
         findViewById(R.id.button_sign_out)
                 .setOnClickListener(new View.OnClickListener() {
@@ -77,14 +77,34 @@ public class EventListActivity extends ToolbarActivity implements
                         displayQR();
                     }
                 });
+
+        findViewById(R.id.icon_access_group_list)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent
+                                intent =
+                                new Intent(getApplicationContext(), EventListingActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+        findViewById(R.id.icon_access_settings)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), Settings.class);
+                        startActivity(intent);
+                        displayQR();
+                    }
+                });
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         Intent intent = new Intent(this, EventListingActivity.class);
         startActivity(intent);
     }
-
 
     public void displayQR(){
         if (!shared.getUUID().isEmpty()){
@@ -114,12 +134,9 @@ public class EventListActivity extends ToolbarActivity implements
             }
         } else {
             // TODO: 19.10.2017  after pausing app, email always empty?
-            Context context = getApplicationContext();
-            int duration = Toast.LENGTH_SHORT;
-            CharSequence text;
-            text = "Unable to generate the QR Code";
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
+            Helper.showToast(getApplicationContext(),
+                             getString(R.string.toast_unable_to_generate_qr),
+                             Toast.LENGTH_SHORT);
         }
     }
 
@@ -134,10 +151,10 @@ public class EventListActivity extends ToolbarActivity implements
     }
 
     private void initializeFields() {
-        displayNameTextView = (TextView) findViewById(R.id.text_view_first_name_text);
-        familyNameTextView = (TextView) findViewById(R.id.text_view_last_name_text);
-        givenNameTextView = (TextView) findViewById(R.id.text_view_given_name_text);
-        emailTextView = (TextView) findViewById(R.id.text_view_email_text);
+        displayNameTextView = findViewById(R.id.text_view_display_name_text);
+        familyNameTextView = findViewById(R.id.text_view_family_name_text);
+        givenNameTextView = findViewById(R.id.text_view_given_name_text);
+        emailTextView = findViewById(R.id.text_view_email_text);
     }
 
     /**
@@ -145,8 +162,8 @@ public class EventListActivity extends ToolbarActivity implements
      *
      * @param connected -  if the user is connected or not
      */
-    private void updateUI(boolean connected) {
-        if (connected) {
+    private void updateUI(GoogleAuthenticationService.Status connected) {
+        if (connected == Status.CONNECTED) {
             displayNameTextView.setText(shared.getDisplayName()
                                                 .getOrElse(getString(R.string.text_view_display_name_text)));
             familyNameTextView.setText(shared.getFamilyName()
@@ -167,36 +184,22 @@ public class EventListActivity extends ToolbarActivity implements
      * Starts the sign out process for the connected user.
      */
     private void signOut() {
-        Auth.GoogleSignInApi.signOut(googleApiClient)
-                .setResultCallback(getResultCallback(this /* package context  */));
+        authService.signOut();
     }
 
-    /**
-     * Returns the callback that gets called after the sign out process of the standard Google
-     * login. It then proceeds with the Firebase sign out. And updates the UI accordingly.
-     *
-     * @param PACKAGE_CONTEXT -  the context of the package
-     * @return ResultCallback<Status> -  the result callback for the standard Google sign out
-     */
-    private ResultCallback<Status> getResultCallback(final Context PACKAGE_CONTEXT) {
-        return new ResultCallback<Status>() {
-            @Override
-            public void onResult(@NonNull Status status) {
-                FIREBASE_AUTH.signOut();
-                shared.clear();
-                updateUI(!CONNECTED);
 
-                Intent intent = new Intent(PACKAGE_CONTEXT, LoginActivity.class);
-                startActivity(intent);
-            }
-        };
-    }
-
-    /*
-    UNUSED
-     */
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        // If this gets called, then we have a serious problem.
+    public void onFail() {
+        Helper.showToast(getApplicationContext(),
+                         getString(R.string.toast_unable_to_sign_out),
+                         Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void onSuccess() {
+        updateUI(Status.DISCONNECTED);
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }
