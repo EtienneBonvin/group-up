@@ -13,7 +13,6 @@
     <string name="web_client_id" tools:ignore="TypographyDashes">418104898937-1n61g2sra1bfnd1eupddavfabqqbahi1.apps.googleusercontent.com</string>
     <string name="title_connection_failed">Connection Failed</string>
     <string name="text_firebase_login_failed">Firebase Login Failed</string>
-    <string name="text_no_status_message">NO_STATUS_MESSAGE</string>
     <string name="text_button_connection_failed">OK</string>
     <string name="button_sign_out_text">Sign Out</string>
     <string name="toast_unable_to_generate_qr">Unable to generate the QR Code</string>

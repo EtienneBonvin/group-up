@@ -4,8 +4,6 @@ import org.joda.time.LocalDateTime;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -19,6 +17,7 @@ import static ch.epfl.sweng.groupup.object.account.Account.shared;
  * Created by alix on 10/8/17.
  */
 
+@SuppressWarnings("DefaultFileTemplate")
 public class AccountTestSuite {
 
     private Member member = new Member("UUID", "Even monkeys can fly", "Tester", "Test","test@test.test");

@@ -1,5 +1,6 @@
 package ch.epfl.sweng.groupup.settings;
 
+import android.support.test.espresso.contrib.BuildConfig;
 import android.support.test.rule.ActivityTestRule;
 
 import org.junit.Rule;
@@ -15,7 +16,9 @@ public class SettingsTest {
 
     @Test
     public void launchedWithoutErrors(){
-        assert(true);
+        if (BuildConfig.DEBUG){
+            throw new AssertionError();
+        }
     }
 
 }
