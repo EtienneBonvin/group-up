@@ -50,4 +50,11 @@
     <!-- activity_display_qr-->
     <string name="QR_code">QR Code</string>
 
+    <!-- Event Description -->
+    <string name="event_description_tv_name">Event Name : </string>
+    <string name="event_description_tv_start_date">Start Date : </string>
+    <string name="event_description_tv_end_date">End Date : </string>
+    <string name="event_description_tv_description">Description : </string>
+    <string name="event_description_tv_members">Members : </string>
+
 </resources>
