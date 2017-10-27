@@ -14,6 +14,13 @@ public final class Helper {
     private static Toast lastShowedToast = null;
 
     /**
+     * Private constructor, we don't want to instantiate this class.
+     */
+    private Helper() {
+        // Not instantiable.
+    }
+
+    /**
      * Method to help displaying an alert personalized with the given parameters. This alert is
      * only used to inform the user of an event, it simply gets dismissed when clicked on the
      * button. It return the shown alert for further modifications.

@@ -33,27 +33,15 @@ public class LoginTestSuite {
 
     @Test
     public void newLoginSuccessLogoutFail() throws Exception {
-        mActivityRule.getActivity().mock(true, true);
+        mActivityRule.getActivity().mock(true, false);
         loginThenLogout();
     }
 
     @Test
     public void newLoginFail() throws Exception {
-        mActivityRule.getActivity().mock(true, true);
+        mActivityRule.getActivity().mock(false, true);
         onView(withId(R.id.sign_in_button_google)).perform(click());
     }
-
-    /* // TODO: timeout
-    @Test
-    public void testLoginButton() {
-        mActivityRule.getActivity().mock(true, true);
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            onView(withId(R.id.sign_in_button_google)).check(matches(isDisplayed()));
-        } else {
-            onView(withId(R.id.sign_in_button_google)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
-        }
-    }
-    */
 
     @Test
     public void testPressBackBeforeSignInReturnLoginActivity() {
