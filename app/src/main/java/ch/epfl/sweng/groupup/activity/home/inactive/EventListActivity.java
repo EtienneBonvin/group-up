@@ -66,7 +66,7 @@ public class EventListActivity extends LoginActivityInterface {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        signOut();
+                        authService.signOut();
                     }
                 });
 
@@ -179,14 +179,6 @@ public class EventListActivity extends LoginActivityInterface {
             emailTextView.setText(R.string.text_view_email_text);
         }
     }
-
-    /**
-     * Starts the sign out process for the connected user.
-     */
-    private void signOut() {
-        authService.signOut();
-    }
-
 
     @Override
     public void onFail() {

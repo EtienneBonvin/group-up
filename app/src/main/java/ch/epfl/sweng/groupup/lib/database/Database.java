@@ -83,10 +83,6 @@ public final class Database {
      * @param event - the real "Event" object
      */
     private static void storeEvent(Event event) {
-        if (event == null) {
-            throw new NullPointerException("event cannot be null");
-        }
-
         HashMap<String, DatabaseUser> uuidToUserMap = new HashMap<>();
         for (Member memberToStore : event.getEventMembers()) {
             DatabaseUser databaseUser =
@@ -114,10 +110,6 @@ public final class Database {
      * @param databaseEvent - the "DatabaseEvent" object
      */
     private static void storeEvent(DatabaseEvent databaseEvent) {
-        if (databaseEvent == null) {
-            throw new NullPointerException("databaseEvent cannot be null");
-        }
-
         DatabaseReference events = databaseRef.child(NODE_EVENTS_LIST);
         DatabaseReference currentEvent = events.child(databaseEvent.uuid);
 
