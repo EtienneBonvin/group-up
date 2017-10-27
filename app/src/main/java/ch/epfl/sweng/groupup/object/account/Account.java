@@ -240,13 +240,20 @@ public final class Account extends User {
 
     @Override
     public String toString() {
+        String currEvent;
+        if (!currentEvent.isEmpty()){
+            currEvent = currentEvent.get().toString();
+        }
+        else {
+            currEvent = "No current event";
+        }
         return "Account{" +
                 "UUID='" + UUID + '\'' +
                 "displayName='" + displayName + '\'' +
                 "givenName='" + givenName + '\'' +
                 ", familyName='" + familyName + '\'' +
                 ", email='" + email + '\'' +
-                ", currentEvent=" + currentEvent.get().toString() +
+                ", currentEvent=" + currEvent +
                 ", pastEvents=" + pastEvents +
                 ", futureEvents=" + futureEvents +
                 '}';
@@ -257,11 +264,18 @@ public final class Account extends User {
      * @return string containing basic informations about an account
      */
     public String toStringShort() {
+        String currEvent;
+        if (!currentEvent.isEmpty()){
+            currEvent = currentEvent.get().toString();
+        }
+        else {
+            currEvent = "No current event";
+        }
         return "Account{" +
                 "givenName='" + givenName + '\'' +
                 ", familyName='" + familyName + '\'' +
                 ", email='" + email + '\'' +
-                ", currentEvent=" + currentEvent.get().toString() +
+                ", currentEvent=" + currEvent +
                 '}';
     }
 
