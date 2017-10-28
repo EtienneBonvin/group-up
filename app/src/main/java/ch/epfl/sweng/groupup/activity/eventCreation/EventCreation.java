@@ -482,9 +482,12 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
                 String.format(Locale.getDefault(), "%02d", minutes);
     }
 
+    /**
+     * Event builder. Follows the Design Pattern of a builder.
+     */
     protected class EventBuilder{
 
-        private String eventName = "NO NAME";
+        private String eventName = "";
         private String description = "";
         private LocalDateTime startDate = LocalDateTime.now().plusMinutes(5);
         private LocalDateTime endDate = LocalDateTime.now().plusMinutes(6);
@@ -492,62 +495,129 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
 
         protected EventBuilder(){}
 
+        /**
+         * Setter for the name of the event.
+         * @param eventName the name of the event.
+         */
         protected void setEventName(String eventName){
             this.eventName = eventName;
         }
 
+        /**
+         * Getter for the name of the event.
+         * @return the name of the event.
+         */
         protected String getEventName(){
             return eventName;
         }
 
+        /**
+         * Setter for the description of the event.
+         * @param description the description of the event.
+         */
         protected void setDescription(String description){
             this.description = description;
         }
 
+        /**
+         * Getter for the descritpion of the event.
+         * @return the description of the event.
+         */
         protected String getDescription(){
             return description;
         }
 
+        /**
+         * Setter for the start date of the event.
+         * @param year the year.
+         * @param monthOfYear the month of the year.
+         * @param dayOfMonth the day of the month.
+         */
         protected void setStartDate(int year, int monthOfYear, int dayOfMonth){
             startDate = startDate.withYear(year).withMonthOfYear(monthOfYear).withDayOfMonth(dayOfMonth);
         }
 
+        /**
+         * Setter for the end date of the event.
+         * @param year the year.
+         * @param monthOfYear the month of the year.
+         * @param dayOfMonth the day of the month.
+         */
         protected void setEndDate(int year, int monthOfYear, int dayOfMonth){
             endDate = endDate.withYear(year).withMonthOfYear(monthOfYear).withDayOfMonth(dayOfMonth);
         }
 
+        /**
+         * Setter for the start time of the event.
+         * @param hoursOfDay the hour of the day.
+         * @param minutesOfHour the minute of the hour.
+         */
         protected void setStartTime(int hoursOfDay, int minutesOfHour){
             startDate = startDate.withHourOfDay(hoursOfDay).withMinuteOfHour(minutesOfHour);
         }
 
+        /**
+         * Setter for the end time of the event.
+         * @param hoursOfDay the hour of the day.
+         * @param minutesOfHour the minute of the hour.
+         */
         protected void setEndTime(int hoursOfDay, int minutesOfHour){
             endDate = endDate.withHourOfDay(hoursOfDay).withMinuteOfHour(minutesOfHour);
         }
 
+        /**
+         * Getter for the start time of the event under the form of a LocaleDateTime.
+         * Both the start date and the start time are in it.
+         * @return a LocaleDateTime for the start date and time.
+         */
         protected LocalDateTime getStartDate(){
             return new LocalDateTime(startDate);
         }
 
+        /**
+         * Getter for the end time of the event under the form of a LocaleDateTime.
+         * Both the end date and the end time are in it.
+         * @return a LocaleDateTime for the end date and time.
+         */
         protected LocalDateTime getEndDate(){
             return new LocalDateTime(endDate);
         }
 
+        /**
+         * Add a new member to the event.
+         * If the member already belongs to the event he won't be added a second time.
+         * @param newMember the new member to add.
+         */
         protected void addMember(Member newMember){
             members.add(newMember);
         }
 
-        protected void removeMember(Member newMember){
-            if(members.contains(newMember)){
-                members.remove(newMember);
+        /**
+         * Remove a member from the event.
+         * If the member isn't already in the event, nothing will happen.
+         * @param member the member to remove.
+         */
+        protected void removeMember(Member member){
+            if(members.contains(member)){
+                members.remove(member);
             }
         }
 
+        /**
+         * Returns a List of all the members added until now to the event.
+         * @return a List containing all the event members.
+         */
         protected List<Member> getMembers(){
             List<Member> membersList = new ArrayList<>();
             membersList.addAll(members);
             return membersList;
         }
 
+        /**
+         * Builds an event containing all the properties set until now.
+         * Note : the user who is creating the event is automatically added to the list of the members.
+         * @return an event containing all the properties set until now.
+         */
         protected Event build(){
             List<Member> members = getMembers();
             members.add(new Member(Optional.<String>empty(),
