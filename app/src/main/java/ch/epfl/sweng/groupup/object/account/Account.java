@@ -176,7 +176,7 @@ public final class Account extends User {
      * @param past event to add
      * @return the modified shared account, so that it is easier to call in chain
      */
-    public Account addOrUpdatePastEvent(Event past) {
+    private Account addOrUpdatePastEvent(Event past) {
         if (past.getEventStatus().equals(EventStatus.PAST)) {
             List<Event> newPast = new ArrayList<>(pastEvents);
             Iterator<Event> eventIterator = pastEvents.iterator();
@@ -202,7 +202,7 @@ public final class Account extends User {
      * @param future event to add
      * @return the modified shared account, so that it is easier to call in chain
      */
-    public Account addOrUpdateFutureEvent(Event future) {
+    private Account addOrUpdateFutureEvent(Event future) {
         if (future.getEventStatus().equals(EventStatus.FUTURE)) {
 
             List<Event> newFuture = new ArrayList<>(futureEvents);

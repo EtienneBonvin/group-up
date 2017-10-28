@@ -67,16 +67,13 @@ public class EventListingActivity extends ToolbarActivity {
 
         for(int i=0; i<events.size(); i++){
             Button eventButton = new Button(this);
-            eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                    heightInSp));
-            /*eventButton.setText(eventNames[i] + " | " + Integer.toString(eventStartTimes[i].
-                    getDayOfMonth()) + "/" + Integer.toString(eventStartTimes[i].getMonthOfYear()) +
-                    " - " + Integer.toString(eventEndTimes[i].getDayOfMonth()) + "/" +
-                    Integer.toString(eventEndTimes[i].getDayOfMonth()));*/
+            eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
+                    MATCH_PARENT,heightInSp));
+
             eventButton.setText(String.format(Locale.FRANCE, "%s | %d/%d - %d/%d",eventNames[i],
                     eventStartTimes[i].getDayOfMonth(),eventStartTimes[i].getMonthOfYear(),
                     eventEndTimes[i].getDayOfMonth(), eventEndTimes[i].getDayOfMonth()));
-            //eventButton.setId(View.generateViewId()); // Assign the ID of the event
+
             linearLayout.addView(eventButton);
         }
     }
@@ -87,8 +84,8 @@ public class EventListingActivity extends ToolbarActivity {
      */
     private void initializeCreateEvent() {
         Button createEventButton = new Button(this);
-        createEventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                heightInSp));
+        createEventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
+                MATCH_PARENT, heightInSp));
         createEventButton.setText(R.string.create_new_event);
         createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override

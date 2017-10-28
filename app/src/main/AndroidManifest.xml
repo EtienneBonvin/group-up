@@ -28,6 +28,7 @@
         <activity android:name=".activity.home.inactive.DisplayQRActivity"></activity>
         <activity android:name=".activity.settings.Settings" />
         <activity android:name=".activity.toolbar.ToolbarActivity"></activity>
+        <activity android:name=".activity.eventDescription.EventDescriptionActivity"></activity>
     </application>
 
 </manifest>
