@@ -43,9 +43,8 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
  * Is linked to the layout event_creation.xml
  */
 public class EventCreation extends ToolbarActivity implements ZXingScannerView.ResultHandler, DatePickerDialog.OnDateSetListener,
-    TimePickerDialog.OnTimeSetListener{
+        TimePickerDialog.OnTimeSetListener{
 
-    private Button start_date, end_date, start_time, end_time;
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
     private boolean set_start_date, set_end_date, set_start_time, set_end_time;
@@ -89,27 +88,27 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
         viewsWithOCL = new HashMap<>();
         uIdsWithOCL = new HashMap<>();
 
-        start_date = findViewById(R.id.button_start_date);
-        start_date.setText(date_format(
-                builder.getStartDate().getDayOfMonth(),
-                builder.getStartDate().getMonthOfYear(),
-                builder.getStartDate().getYear()));
+        ((Button)findViewById(R.id.button_start_date))
+                .setText(date_format(
+                        builder.getStartDate().getDayOfMonth(),
+                        builder.getStartDate().getMonthOfYear(),
+                        builder.getStartDate().getYear()));
 
-        start_time = findViewById(R.id.button_start_time);
-        start_time.setText(time_format(
-                builder.getStartDate().getHourOfDay(),
-                builder.getStartDate().getMinuteOfHour()));
+        ((Button)findViewById(R.id.button_start_time))
+                .setText(time_format(
+                        builder.getStartDate().getHourOfDay(),
+                        builder.getStartDate().getMinuteOfHour()));
 
-        end_date = findViewById(R.id.button_end_date);
-        end_date.setText(date_format(
-                builder.getEndDate().getDayOfMonth(),
-                builder.getEndDate().getMonthOfYear(),
-                builder.getEndDate().getYear()));
+        ((Button)findViewById(R.id.button_end_date))
+                .setText(date_format(
+                        builder.getEndDate().getDayOfMonth(),
+                        builder.getEndDate().getMonthOfYear(),
+                        builder.getEndDate().getYear()));
 
-        end_time = findViewById(R.id.button_end_time);
-        end_time.setText(time_format(
-                builder.getEndDate().getHourOfDay(),
-                builder.getEndDate().getMinuteOfHour()));
+        ((Button)findViewById(R.id.button_end_time))
+                .setText(time_format(
+                        builder.getEndDate().getHourOfDay(),
+                        builder.getEndDate().getMinuteOfHour()));
 
         datePickerDialog = new DatePickerDialog(
                 this, EventCreation.this,
@@ -292,10 +291,10 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
     }
 
 
-        /**
-         * Adds a line in the member list on the UI with the user ID address specified by the user
-         * @param memberUId
-         */
+    /**
+     * Adds a line in the member list on the UI with the user ID address specified by the user
+     * @param memberUId
+     */
     private void addNewMember(String memberUId) {
         numberOfMembers++;
 
@@ -360,11 +359,13 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         if(set_start_date) {
             builder.setStartDate(year, month + 1, dayOfMonth);
-            start_date.setText(date_format(dayOfMonth, month + 1, year));
+            ((Button)findViewById(R.id.button_start_date))
+                    .setText(date_format(dayOfMonth, month + 1, year));
             set_start_date = false;
         }else if(set_end_date){
             builder.setEndDate(year, month + 1, dayOfMonth);
-            end_date.setText(date_format(dayOfMonth, month + 1, year));
+            ((Button)findViewById(R.id.button_end_date))
+                    .setText(date_format(dayOfMonth, month + 1, year));
             set_end_date = false;
         }
     }
@@ -381,11 +382,13 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         if(set_start_time) {
             builder.setStartTime(hourOfDay, minute);
-            start_time.setText(time_format(hourOfDay, minute));
+            ((Button)findViewById(R.id.button_start_time))
+                    .setText(time_format(hourOfDay, minute));
             set_start_time = false;
         }else if(set_end_time){
             builder.setEndTime(hourOfDay, minute);
-            end_time.setText(time_format(hourOfDay, minute));
+            ((Button)findViewById(R.id.button_end_time))
+                    .setText(time_format(hourOfDay, minute));
             set_end_time = false;
         }
     }
@@ -398,7 +401,7 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
     private void saveEvent(){
 
         int INPUT_MAX_LENGTH = 50;
-      
+
         EditText eventName = findViewById(R.id.ui_edit_event_name);
         if(eventName.getText().toString().length() == 0){
             eventName.setError(getString(R.string.event_creation_toast_non_empty_event_name));
