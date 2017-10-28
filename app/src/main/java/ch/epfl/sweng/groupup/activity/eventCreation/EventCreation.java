@@ -2,6 +2,7 @@ package ch.epfl.sweng.groupup.activity.eventCreation;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.app.VoiceInteractor;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -51,12 +52,9 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
     private int numberOfMembers;
     private HashMap<View.OnClickListener, View> viewsWithOCL;
     private HashMap<View.OnClickListener, String> uIdsWithOCL;
-    private LocalDateTime date_start, date_end;
     private ZXingScannerView mScannerView;
 
-    // Variables for state saving
-    private String eventName;
-    private List<String> membersIDs;
+    private EventBuilder builder;
 
     /**
      * Initialization of all the variables of the class and of the OnClickListeners
@@ -78,8 +76,8 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
      * Initialize all fields that will be used in the UI to default values.
      */
     private void initFields(){
-        date_start = LocalDateTime.now().plusMinutes(5);
-        date_end = LocalDateTime.now().plusMinutes(6);
+
+        builder = new EventBuilder();
 
         set_start_date = false;
         set_end_date = false;
@@ -92,25 +90,37 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
         uIdsWithOCL = new HashMap<>();
 
         start_date = findViewById(R.id.button_start_date);
-        start_date.setText(date_format(date_start.getDayOfMonth(), date_start.getMonthOfYear(),
-                date_start.getYear()));
+        start_date.setText(date_format(
+                builder.getStartDate().getDayOfMonth(),
+                builder.getStartDate().getMonthOfYear(),
+                builder.getStartDate().getYear()));
 
         start_time = findViewById(R.id.button_start_time);
-        start_time.setText(time_format(date_start.getHourOfDay(), date_start.getMinuteOfHour()));
+        start_time.setText(time_format(
+                builder.getStartDate().getHourOfDay(),
+                builder.getStartDate().getMinuteOfHour()));
 
         end_date = findViewById(R.id.button_end_date);
-        end_date.setText(date_format(date_end.getDayOfMonth(), date_end.getMonthOfYear(),
-                date_end.getYear()));
+        end_date.setText(date_format(
+                builder.getEndDate().getDayOfMonth(),
+                builder.getEndDate().getMonthOfYear(),
+                builder.getEndDate().getYear()));
 
         end_time = findViewById(R.id.button_end_time);
-        end_time.setText(time_format(date_end.getHourOfDay(), date_end.getMinuteOfHour()));
+        end_time.setText(time_format(
+                builder.getEndDate().getHourOfDay(),
+                builder.getEndDate().getMinuteOfHour()));
 
         datePickerDialog = new DatePickerDialog(
-                this, EventCreation.this, date_start.getYear(), date_start.getMonthOfYear() - 1,
-                date_start.getDayOfMonth());
+                this, EventCreation.this,
+                builder.getStartDate().getYear(),
+                builder.getStartDate().getMonthOfYear() - 1,
+                builder.getStartDate().getDayOfMonth());
 
         timePickerDialog = new TimePickerDialog(
-                this, EventCreation.this, date_start.getHourOfDay(), date_start.getMinuteOfHour(), true);
+                this, EventCreation.this,
+                builder.getStartDate().getHourOfDay(),
+                builder.getStartDate().getMinuteOfHour(), true);
     }
 
     /**
@@ -214,15 +224,16 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
      *      - Already added members
      */
     private void saveState(){
-        eventName = ((EditText)findViewById(R.id.ui_edit_event_name)).getText().toString();
-        membersIDs = new ArrayList<>();
+        builder.setEventName(((EditText)findViewById(R.id.ui_edit_event_name)).getText().toString());
+        // Change this line when the description will be available
+        builder.setDescription("");
+
+        Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(),
+                Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty());
         Iterator it = uIdsWithOCL.keySet().iterator();
         while(it.hasNext()){
-            String nextId = uIdsWithOCL.get(it.next());
-            if(!membersIDs.contains(nextId))
-                membersIDs.add(nextId);
+            builder.addMember(emptyMember.withUUID(uIdsWithOCL.get(it.next())));
         }
-
     }
 
     /**
@@ -233,20 +244,34 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
      *      - End date and time
      */
     private void restoreState(){
-        ((EditText)findViewById(R.id.ui_edit_event_name)).setText(eventName);
-        for(String id : membersIDs){
-            addNewMember(id);
+        ((EditText)findViewById(R.id.ui_edit_event_name)).setText(builder.getEventName());
+
+        for(Member member : builder.members){
+            if(!member.getUUID().isEmpty()) {
+                addNewMember(member.getUUID().get());
+            }else if(!member.getEmail().isEmpty()){
+                addNewMember(member.getEmail().get());
+            }
         }
+
         ((Button)findViewById(R.id.button_start_date))
-                .setText(date_format(date_start.getDayOfMonth(), date_start.getMonthOfYear(),
-                        date_start.getYear()));
+                .setText(date_format(
+                        builder.getStartDate().getDayOfMonth(),
+                        builder.getStartDate().getMonthOfYear(),
+                        builder.getStartDate().getYear()));
         ((Button)findViewById(R.id.button_end_date))
-                .setText(date_format(date_end.getDayOfMonth(), date_end.getMonthOfYear(),
-                        date_end.getYear()));
+                .setText(date_format(
+                        builder.getEndDate().getDayOfMonth(),
+                        builder.getEndDate().getMonthOfYear(),
+                        builder.getEndDate().getYear()));
         ((Button)findViewById(R.id.button_start_time))
-                .setText(time_format(date_start.getHourOfDay(), date_start.getMinuteOfHour()));
+                .setText(time_format(
+                        builder.getStartDate().getHourOfDay(),
+                        builder.getStartDate().getMinuteOfHour()));
         ((Button)findViewById(R.id.button_end_time))
-                .setText(time_format(date_end.getHourOfDay(), date_end.getMinuteOfHour()));
+                .setText(time_format(
+                        builder.getEndDate().getHourOfDay(),
+                        builder.getEndDate().getMinuteOfHour()));
     }
 
     /**
@@ -334,13 +359,11 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         if(set_start_date) {
-            date_start = new LocalDateTime(year, month + 1, dayOfMonth,
-                    date_start.getHourOfDay(), date_start.getMinuteOfHour());
+            builder.setStartDate(year, month + 1, dayOfMonth);
             start_date.setText(date_format(dayOfMonth, month + 1, year));
             set_start_date = false;
         }else if(set_end_date){
-            date_end = new LocalDateTime(year, month + 1, dayOfMonth,
-                    date_end.getHourOfDay(), date_end.getMinuteOfHour());
+            builder.setEndDate(year, month + 1, dayOfMonth);
             end_date.setText(date_format(dayOfMonth, month + 1, year));
             set_end_date = false;
         }
@@ -357,13 +380,11 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         if(set_start_time) {
-            date_start = new LocalDateTime(date_start.getYear(), date_start.getMonthOfYear(),
-                    date_start.getDayOfMonth(), hourOfDay, minute);
+            builder.setStartTime(hourOfDay, minute);
             start_time.setText(time_format(hourOfDay, minute));
             set_start_time = false;
         }else if(set_end_time){
-            date_end = new LocalDateTime(date_end.getYear(), date_end.getMonthOfYear(),
-                    date_end.getDayOfMonth(), hourOfDay, minute);
+            builder.setEndTime(hourOfDay, minute);
             end_time.setText(time_format(hourOfDay, minute));
             set_end_time = false;
         }
@@ -388,40 +409,28 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
         }
         eventName.setError(null);
 
-        if(compare_date(LocalDateTime.now(), date_start) < 0){
+        if(compare_date(LocalDateTime.now(), builder.getStartDate()) < 0){
             Toast.makeText(getApplicationContext(), getString(R.string.event_creation_toast_event_start_before_now),
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if(compare_date(date_start, date_end) < 0){
+        if(compare_date(builder.getStartDate(), builder.getEndDate()) < 0){
             Toast.makeText(getApplicationContext(), getString(R.string.event_creation_toast_event_end_before_begin),
                     Toast.LENGTH_SHORT).show();
             return;
         }
-        if(compare_date(date_start, date_end) == 0){
+        if(compare_date(builder.getStartDate(), builder.getEndDate()) == 0){
             Toast.makeText(getApplicationContext(), getString(R.string.event_craeation_toast_event_last_1_minute),
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Set<String> distinctUIds = new HashSet<>();
-        distinctUIds.add(Account.shared.getUUID().getOrElse("Default UUID"));
-        for(View.OnClickListener ocl : uIdsWithOCL.keySet()){
-            distinctUIds.add(uIdsWithOCL.get(ocl));
-        }
+        builder.setEventName(((EditText)findViewById(R.id.ui_edit_event_name)).getText().toString());
+        //Change this line when description will be available
+        builder.setDescription("");
 
-        List<Member> members = new ArrayList<>();
-        Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
-                Optional.<String>empty(), Optional.<String>empty());
-
-        for(String id : distinctUIds){
-            members.add(emptyMember.withUUID(id));
-        }
-
-        Event event = new Event(eventName.getText().toString(), date_start, date_end, "", members);
-
-        Account.shared.addOrUpdateEvent(event);
+        Account.shared.addOrUpdateEvent(builder.build());
         Database.update();
 
         Intent intent = new Intent(this, EventListingActivity.class);
@@ -471,5 +480,81 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
     private String time_format(int hour, int minutes){
         return String.format(Locale.getDefault(), "%02d", hour)+":"+
                 String.format(Locale.getDefault(), "%02d", minutes);
+    }
+
+    protected class EventBuilder{
+
+        private String eventName = "NO NAME";
+        private String description = "";
+        private LocalDateTime startDate = LocalDateTime.now().plusMinutes(5);
+        private LocalDateTime endDate = LocalDateTime.now().plusMinutes(6);
+        private Set<Member> members = new HashSet<>();
+
+        protected EventBuilder(){}
+
+        protected void setEventName(String eventName){
+            this.eventName = eventName;
+        }
+
+        protected String getEventName(){
+            return eventName;
+        }
+
+        protected void setDescription(String description){
+            this.description = description;
+        }
+
+        protected String getDescription(){
+            return description;
+        }
+
+        protected void setStartDate(int year, int monthOfYear, int dayOfMonth){
+            startDate = startDate.withYear(year).withMonthOfYear(monthOfYear).withDayOfMonth(dayOfMonth);
+        }
+
+        protected void setEndDate(int year, int monthOfYear, int dayOfMonth){
+            endDate = endDate.withYear(year).withMonthOfYear(monthOfYear).withDayOfMonth(dayOfMonth);
+        }
+
+        protected void setStartTime(int hoursOfDay, int minutesOfHour){
+            startDate = startDate.withHourOfDay(hoursOfDay).withMinuteOfHour(minutesOfHour);
+        }
+
+        protected void setEndTime(int hoursOfDay, int minutesOfHour){
+            endDate = endDate.withHourOfDay(hoursOfDay).withMinuteOfHour(minutesOfHour);
+        }
+
+        protected LocalDateTime getStartDate(){
+            return new LocalDateTime(startDate);
+        }
+
+        protected LocalDateTime getEndDate(){
+            return new LocalDateTime(endDate);
+        }
+
+        protected void addMember(Member newMember){
+            members.add(newMember);
+        }
+
+        protected void removeMember(Member newMember){
+            if(members.contains(newMember)){
+                members.remove(newMember);
+            }
+        }
+
+        protected List<Member> getMembers(){
+            List<Member> membersList = new ArrayList<>();
+            membersList.addAll(members);
+            return membersList;
+        }
+
+        protected Event build(){
+            List<Member> members = getMembers();
+            members.add(new Member(Optional.<String>empty(),
+                    Optional.<String>empty(), Optional.<String>empty(),
+                    Optional.<String>empty(), Optional.<String>empty())
+                    .withUUID(Account.shared.getUUID().getOrElse("Default UUID")));
+            return new Event(eventName, startDate, endDate, description, getMembers());
+        }
     }
 }
