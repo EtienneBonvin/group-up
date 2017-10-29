@@ -9,6 +9,7 @@ import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
@@ -52,11 +53,14 @@ public class EventDescriptionActivity extends ToolbarActivity {
                 });
     }
 
+    /**
+     * Remove the user from the Event
+     */
     private void removeEvent() {
-        if (eventToDisplay.getEventMembers().size()==1){
-            //If we are the last member we delete the event
-            Account.shared.addOrUpdateEvent()
-        }
+        List<Member> futureMember = eventToDisplay.getEventMembers();
+        futureMember.remove(Account.shared.toMember());
+
+        Account.shared.addOrUpdateEvent(eventToDisplay.withEventMembers(futureMember));
     }
 
     public void initializeField(){
