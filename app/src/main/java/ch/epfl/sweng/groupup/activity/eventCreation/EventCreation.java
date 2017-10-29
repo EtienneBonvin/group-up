@@ -19,12 +19,15 @@ import android.widget.Toast;
 import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
@@ -226,13 +229,7 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
         builder.setEventName(((EditText)findViewById(R.id.ui_edit_event_name)).getText().toString());
         // Change this line when the description will be available
         builder.setDescription("");
-
-        Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(),
-                Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty());
-        Iterator it = uIdsWithOCL.keySet().iterator();
-        while(it.hasNext()){
-            builder.addMember(emptyMember.withUUID(uIdsWithOCL.get(it.next())));
-        }
+        builder.setMembersTo(uIdsWithOCL.values());
     }
 
     /**
@@ -432,6 +429,7 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
         builder.setEventName(((EditText)findViewById(R.id.ui_edit_event_name)).getText().toString());
         //Change this line when description will be available
         builder.setDescription("");
+        builder.setMembersTo(uIdsWithOCL.values());
 
         Account.shared.addOrUpdateEvent(builder.build());
         Database.update();
@@ -607,6 +605,31 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
         }
 
         /**
+         * Remove all the members added until now to the event.
+         */
+        protected void cleanMembers(){
+            members = new HashSet<>();
+        }
+
+        /**
+         * Set the list of the members according to the set of String given as argument.
+         * The Strings can be either the UUID either the email address of the member.
+         * @param members the set of the representative strings of the members
+         */
+        protected void setMembersTo(Collection<String> members){
+            cleanMembers();
+            Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(),
+                    Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty());
+            for(String s : members){
+                if(emailCheck(s)){
+                    addMember(emptyMember.withEmail(s));
+                }else{
+                    addMember(emptyMember.withUUID(s));
+                }
+            }
+        }
+
+        /**
          * Returns a List of all the members added until now to the event.
          * @return a List containing all the event members.
          */
@@ -628,6 +651,17 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
                     Optional.<String>empty(), Optional.<String>empty())
                     .withUUID(Account.shared.getUUID().getOrElse("Default UUID")));
             return new Event(eventName, startDate, endDate, description, getMembers());
+        }
+
+        /**
+         * Check that the passed email is an "acceptable" form (not the icann official definition)
+         * @param email the email to check
+         * @return true if email ok else false
+         */
+        private boolean emailCheck(String email){
+            Pattern p = Pattern.compile("\\b[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,13}\\b",Pattern.CASE_INSENSITIVE);
+            Matcher m=p.matcher(email);
+            return m.matches();
         }
     }
 }
