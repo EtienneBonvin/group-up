@@ -69,13 +69,9 @@ public class EventListingActivity extends ToolbarActivity {
             Button eventButton = new Button(this);
             eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                     heightInSp));
-            /*eventButton.setText(eventNames[i] + " | " + Integer.toString(eventStartTimes[i].
-                    getDayOfMonth()) + "/" + Integer.toString(eventStartTimes[i].getMonthOfYear()) +
-                    " - " + Integer.toString(eventEndTimes[i].getDayOfMonth()) + "/" +
-                    Integer.toString(eventEndTimes[i].getDayOfMonth()));*/
             eventButton.setText(String.format(Locale.FRANCE, "%s | %d/%d - %d/%d",eventNames[i],
                     eventStartTimes[i].getDayOfMonth(),eventStartTimes[i].getMonthOfYear(),
-                    eventEndTimes[i].getDayOfMonth(), eventEndTimes[i].getDayOfMonth()));
+                    eventEndTimes[i].getDayOfMonth(), eventEndTimes[i].getMonthOfYear()));
             //eventButton.setId(View.generateViewId()); // Assign the ID of the event
             linearLayout.addView(eventButton);
         }
