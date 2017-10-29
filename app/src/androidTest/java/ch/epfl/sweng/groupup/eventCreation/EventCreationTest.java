@@ -353,7 +353,7 @@ public class EventCreationTest {
         onView(withId(R.id.image_view_add_member)).perform(click());
         onView(withId(R.id.edit_text_add_member)).perform(typeText("4"));
         onView(withId(R.id.image_view_add_member)).perform(click());
-        onView(withId(R.id.edit_text_add_member)).perform(typeText("5"));
+        onView(withId(R.id.edit_text_add_member)).perform(typeText("swenggroupup@gmail.com"));
         onView(withId(R.id.image_view_add_member)).perform(click());
     }
 
