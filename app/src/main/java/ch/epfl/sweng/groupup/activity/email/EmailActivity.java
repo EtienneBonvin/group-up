@@ -26,8 +26,8 @@ public class EmailActivity extends AppCompatActivity {
                     GMailSender sender = new GMailSender("swenggroupup@gmail.com", "swengswengsweng");
                     sender.sendMail("This is Subject",
                             "This is Body",
-                            "hampusram93@gmail.com",
-                            "hampusram93@gmail.com");
+                            "xavpantet@gmail.com",
+                            "xavpantet@gmail.com");
                 } catch (Exception e) {
                     Log.e("SendMail", e.getMessage(), e);
                 }
