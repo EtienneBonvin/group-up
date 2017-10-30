@@ -1,5 +1,7 @@
 package ch.epfl.sweng.groupup.object.account;
 
+import android.provider.CalendarContract;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ch.epfl.sweng.groupup.lib.Optional;
+import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.event.EventStatus;
 
@@ -53,7 +56,7 @@ public final class Account extends User {
      * Getter for the list of future events
      * @return List<Event> future events
      */
-    public List<Event> getFutureEvents() {
+    public List<Event> getFutureEvents(){
         return futureEvents;
     }
 
@@ -61,12 +64,12 @@ public final class Account extends User {
      * Getter for all events, return first the future then current then past
      */
     public List<Event> getEvents(){
-        List<Event> all=getFutureEvents();
+        List<Event> allEvents=getFutureEvents();
         if (!currentEvent.isEmpty()){
-            all.add(currentEvent.get());
+            allEvents.add(currentEvent.get());
         }
-        all.addAll(getPastEvents());
-        return all;
+        allEvents.addAll(getPastEvents());
+        return allEvents;
     }
 
     /**
@@ -168,6 +171,7 @@ public final class Account extends User {
         return shared;
     }
 
+
     /**
      * Add an event to the right event list depending on its EventStatus property
      * @param event the event to add
@@ -181,12 +185,14 @@ public final class Account extends User {
                 return addOrUpdatePastEvent(event);
             default:
                 return withCurrentEvent(Optional.from(event));
+
         }
     }
 
     /**
      * Add a past event list of the shared account or updates it if it already exists
      * @param past event to add
+     * @throws IllegalArgumentException
      * @return the modified shared account, so that it is easier to call in chain
      */
     private Account addOrUpdatePastEvent(Event past) {
@@ -205,6 +211,12 @@ public final class Account extends User {
             }
             if(!found){
                 newPast.add(past);
+                Collections.sort(newPast, new Comparator<Event>() {
+                    @Override
+                    public int compare(Event o1, Event o2) {
+                        return o1.getStartTime().compareTo(o2.getStartTime());
+                    }
+                });
             }
             return withPastEvents(newPast);
         } else throw new IllegalArgumentException("Event is not "+ EventStatus.PAST.toString());
@@ -212,7 +224,9 @@ public final class Account extends User {
 
     /**
      * Add a future event list of the shared account or updates it if is already exists
+     * This guarentees that the event are sorted
      * @param future event to add
+     * @throws IllegalArgumentException
      * @return the modified shared account, so that it is easier to call in chain
      */
     private Account addOrUpdateFutureEvent(Event future) {
