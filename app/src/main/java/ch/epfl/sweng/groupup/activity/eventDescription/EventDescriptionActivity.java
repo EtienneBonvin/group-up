@@ -35,9 +35,12 @@ public class EventDescriptionActivity extends ToolbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_description);
         super.initializeToolbar();
+
         Intent i= getIntent();
         eventIndex = i.getIntExtra("eventIndex",0);
+
         eventToDisplay=Account.shared.getEvents().get(eventIndex);
+
         initializeField();
         printEvent();
 

@@ -74,17 +74,18 @@ public class EventListingActivity extends ToolbarActivity {
             eventButton.setText(String.format(Locale.FRANCE, "%s | %d/%d - %d/%d",eventNames[i],
                     eventStartTimes[i].getDayOfMonth(),eventStartTimes[i].getMonthOfYear(),
                     eventEndTimes[i].getDayOfMonth(), eventEndTimes[i].getDayOfMonth()));
+
             final int finalI = i;
-            eventButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
-                    Bundle b = new Bundle();
-                    b.putInt("eventIndex", finalI);
-                    intent.putExtra("eventToDisplay",b);
-                    startActivity(intent);
-                }
-            });
+            if (eventButton != null) {
+                eventButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
+                        intent.putExtra("eventIndex", finalI);
+                        startActivity(intent);
+                    }
+                });
+            }
 
             linearLayout.addView(eventButton);
         }
