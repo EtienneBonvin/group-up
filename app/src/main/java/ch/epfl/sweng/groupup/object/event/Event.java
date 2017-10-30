@@ -2,6 +2,7 @@ package ch.epfl.sweng.groupup.object.event;
 
 import org.joda.time.LocalDateTime;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,7 +11,7 @@ import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 
 @SuppressWarnings("SimplifiableIfStatement")
-public final class Event {
+public final class Event implements Serializable {
 
     private final String UUID;
     private final String eventName;

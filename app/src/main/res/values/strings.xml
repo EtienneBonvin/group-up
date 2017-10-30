@@ -61,5 +61,7 @@
     <string name="no_event_name">NO_EVENT_NAME</string>
     <string name="no_event_start_date">NO_EVENT_START_DATE</string>
     <string name="remove_yourself_from_the_event">Remove yourself from the event</string>
+    <string name="change_name">Change Name</string>
+    <string name="change_description">Change Description</string>
 
 </resources>

@@ -1,6 +1,7 @@
 package ch.epfl.sweng.groupup.object.account;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -54,6 +55,18 @@ public final class Account extends User {
      */
     public List<Event> getFutureEvents() {
         return futureEvents;
+    }
+
+    /**
+     * Getter for all events, return first the future then current then past
+     */
+    public List<Event> getEvents(){
+        List<Event> all=getFutureEvents();
+        if (!currentEvent.isEmpty()){
+            all.add(currentEvent.get());
+        }
+        all.addAll(getPastEvents());
+        return all;
     }
 
     /**

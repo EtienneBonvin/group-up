@@ -1,17 +1,17 @@
 package ch.epfl.sweng.groupup.activity.eventDescription;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.joda.time.LocalDateTime;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
@@ -23,32 +23,50 @@ import ch.epfl.sweng.groupup.object.event.Event;
 
 public class EventDescriptionActivity extends ToolbarActivity {
     LinearLayout linear;
-    TextView displayEventName;
+    EditText displayEventName;
     TextView displayEventStartDate;
     TextView displayEventEndDate;
     TextView displayEventMembers;
-    TextView displayEventDescription;
-    Event eventToDisplay;
-
+    EditText displayEventDescription;
+    private int eventIndex;
+    private Event eventToDisplay;
     @Override
     protected void onCreate (Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_description);
         super.initializeToolbar();
+        Intent i= getIntent();
+        eventIndex = i.getIntExtra("eventIndex",0);
+        eventToDisplay=Account.shared.getEvents().get(eventIndex);
         initializeField();
-
-        //To test before while I don't have an Intent, destined to be deleted of curse
-        eventToDisplay = new Event("Name", new LocalDateTime(), new LocalDateTime().plusDays(1),
-                "My amazing description", new ArrayList<>(Arrays.asList(new Member("1","displayed","","",""),
-                new Member("2","YOLO","","",""),new Member("3","LOOOOOOOOOOOOOOL","","",""))));
-
         printEvent();
 
+        //Remove and go to the event creation
         findViewById(R.id.remove_event_button)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         removeEvent();
+                        Intent i = new Intent(EventDescriptionActivity.this, EventListingActivity.class);
+                        startActivity(i);
+                    }
+                });
+        findViewById(R.id.modifyName)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String name= displayEventName.getText().toString();
+                        displayEventName.setText(name);
+                        Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name));
+                    }
+                });
+        findViewById(R.id.modifyDescription)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String description=displayEventDescription.getText().toString();
+                        displayEventDescription.setText(description);
+                        Account.shared.addOrUpdateEvent(eventToDisplay.withDescription(description));
                     }
                 });
     }
@@ -57,10 +75,9 @@ public class EventDescriptionActivity extends ToolbarActivity {
      * Remove the user from the Event
      */
     private void removeEvent() {
-        List<Member> futureMember = eventToDisplay.getEventMembers();
-        futureMember.remove(Account.shared.toMember());
-
-        Account.shared.addOrUpdateEvent(eventToDisplay.withEventMembers(futureMember));
+        List<Member> futureMembers = eventToDisplay.getEventMembers();
+        futureMembers.remove(Account.shared.toMember());
+        Account.shared.addOrUpdateEvent(eventToDisplay.withEventMembers(futureMembers));
     }
 
     public void initializeField(){
@@ -72,16 +89,18 @@ public class EventDescriptionActivity extends ToolbarActivity {
     }
 
     public void printEvent() {
-       /* displayEventName.setText(eventToDisplay.getEventName());
-        displayEventStartDate.setText(eventToDisplay.getStartTime().toString(null, Locale.FRANCE));
-        displayEventEndDate.setText(eventToDisplay.getEndTime().toString(null, Locale.FRANCE));
-        displayEventDescription.setText(eventToDisplay.getDescription());*/
+        if (eventToDisplay!=null) {
+            displayEventName.setText(eventToDisplay.getEventName());
+            displayEventStartDate.setText(eventToDisplay.getStartTime().toString(null, Locale.FRANCE));
+            displayEventEndDate.setText(eventToDisplay.getEndTime().toString(null, Locale.FRANCE));
+            displayEventDescription.setText(eventToDisplay.getDescription());
 
-        for (Member member : eventToDisplay.getEventMembers()) {
-            TextView memberName = new TextView(this);
-            memberName.setText(member.getDisplayName().getOrElse("NO_MAME"));
-            linear = findViewById(R.id.linear_scroll_members);
-            linear.addView(memberName);
+            for (Member member : eventToDisplay.getEventMembers()) {
+                TextView memberName = new TextView(this);
+                memberName.setText(member.getDisplayName().getOrElse("NO_NAME"));
+                linear = findViewById(R.id.linear_scroll_members);
+                linear.addView(memberName);
+        }
         }
     }
 }

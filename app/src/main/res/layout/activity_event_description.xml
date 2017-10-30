@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:weightSum="1">
 
     <include
         layout="@layout/toolbar"
@@ -22,6 +23,13 @@
         android:layout_height="wrap_content"
         android:text="@string/no_event_name"
         android:layout_below="@id/toolbar"/>
+
+    <Button
+        android:id="@+id/modifyName"
+        android:layout_width="77dp"
+        android:layout_height="26dp"
+        android:text="@string/change_name"
+        android:textSize="6sp" />
 
     <TextView
         android:id="@+id/event_description_tv_start_date"
@@ -62,7 +70,8 @@
         android:gravity="start"
         android:text="@string/event_description_tv_description"
         android:textAlignment="textStart"
-        android:layout_below="@id/toolbar"/>
+        android:layout_below="@id/toolbar"
+        android:layout_weight="0.48" />
 
     <TextView
         android:id="@+id/event_description_description"
@@ -70,6 +79,13 @@
         android:layout_height="wrap_content"
         android:text="@string/no_event_description"
         android:layout_below="@id/toolbar"/>
+
+    <Button
+        android:id="@+id/modifyDescription"
+        android:layout_width="78dp"
+        android:layout_height="26dp"
+        android:text="@string/change_description"
+        android:textSize="5sp" />
 
     <TextView
         android:id="@+id/event_description_tv_members"
