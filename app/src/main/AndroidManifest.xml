@@ -21,13 +21,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.login.LoginActivity"></activity>
-        <activity android:name=".activity.home.inactive.EventListActivity"></activity>
-        <activity android:name=".activity.eventListing.EventListingActivity"></activity>
-        <activity android:name=".activity.eventCreation.EventCreation"></activity>
-        <activity android:name=".activity.home.inactive.DisplayQRActivity"></activity>
+        <activity android:name=".activity.login.LoginActivity" />
+        <activity android:name=".activity.home.inactive.EventListActivity" />
+        <activity android:name=".activity.eventListing.EventListingActivity" />
+        <activity android:name=".activity.eventCreation.EventCreation" />
+        <activity android:name=".activity.home.inactive.DisplayQRActivity" />
         <activity android:name=".activity.settings.Settings" />
-        <activity android:name=".activity.toolbar.ToolbarActivity"></activity>
+        <activity android:name=".activity.toolbar.ToolbarActivity" />
+        <activity android:name=".activity.email.EmailActivity"></activity>
     </application>
 
 </manifest>
