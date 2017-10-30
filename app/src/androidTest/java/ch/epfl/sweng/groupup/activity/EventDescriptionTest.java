@@ -43,8 +43,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class EventDescriptionTest {
     @Rule
-    public final ActivityTestRule<EventCreation> mActivityRule =
-            new ActivityTestRule<>(EventCreation.class);
+    public final ActivityTestRule<EventDescriptionActivity> mActivityRule =
+            new ActivityTestRule<>(EventDescriptionActivity.class);
 
     Event e = new Event("Name", new LocalDateTime(), new LocalDateTime().plusDays(1),
                 "My amazing description", new ArrayList<>(Arrays.asList(new Member("1","displayed","","",""),
@@ -106,7 +106,7 @@ public class EventDescriptionTest {
     public void nameIsWellChanged(){
         onView(withId(R.id.modifyName)).perform(click());
         onView(withId(R.id.event_description_name)).perform(typeText("Test"))
-                .check(withId())
+                .check(matches(withText("Test")));
     }
 
     @Test
