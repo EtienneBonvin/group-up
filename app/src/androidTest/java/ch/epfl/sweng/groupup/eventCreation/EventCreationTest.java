@@ -77,7 +77,11 @@ public class EventCreationTest {
 
         addEventName("My event");
 
+        Espresso.closeSoftKeyboard();
+
         addDescription("My description");
+
+        Espresso.closeSoftKeyboard();
 
         Espresso.closeSoftKeyboard();
 
