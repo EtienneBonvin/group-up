@@ -303,9 +303,9 @@ public class EventCreationTest {
         onView(withId(R.id.button_add_members)).perform(click());
         Espresso.closeSoftKeyboard();
         // Click scan button
-        onView(withId(R.id.buttonScanQR)).perform(click());
+        //onView(withId(R.id.buttonScanQR)).perform(click());
         // Click back
-        Espresso.pressBack();
+        //Espresso.pressBack();
         onView(withId(R.id.save_button)).perform(click());
         // Check event details
         onView(withId(R.id.ui_edit_event_name)).check(matches(withText(eventName)));
