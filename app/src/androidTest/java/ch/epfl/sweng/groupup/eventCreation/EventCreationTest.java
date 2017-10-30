@@ -72,10 +72,12 @@ public class EventCreationTest {
         expectedMembers.add(emptyMember.withUUID("2"));
         expectedMembers.add(emptyMember.withUUID("3"));
         expectedMembers.add(emptyMember.withUUID("4"));
-        expectedMembers.add(emptyMember.withUUID("swenggroupup@gmail.com"));
+        expectedMembers.add(emptyMember.withUUID(Member.unknow_user+"1").withEmail("swenggroupup@gmail.com"));
         expectedMembers.add(emptyMember.withUUID(Account.shared.getUUID().getOrElse("Default UUID")));
 
         addEventName("My event");
+
+        addDescription("My description");
 
         Espresso.closeSoftKeyboard();
 
@@ -104,7 +106,7 @@ public class EventCreationTest {
 
         addMembers();
         onView(withId(R.id.save_button)).perform(click());
-        Event expected = new Event("My event", start, end, "", expectedMembers);
+        Event expected = new Event("My event", start, end, "My description", expectedMembers);
 
         Event found = findEvent();
         if (BuildConfig.DEBUG && !(found.equals(expected))){
@@ -294,10 +296,12 @@ public class EventCreationTest {
         addEventName(eventName);
         addMembers();
         Espresso.closeSoftKeyboard();
+        onView(withId(R.id.button_add_members)).perform(click());
         // Click scan button
         onView(withId(R.id.buttonScanQR)).perform(click());
         // Click back
         Espresso.pressBack();
+        onView(withId(R.id.save_button)).perform(click());
         // Check event details
         onView(withId(R.id.ui_edit_event_name)).check(matches(withText(eventName)));
     }
@@ -343,6 +347,7 @@ public class EventCreationTest {
     }
 
     private void addMembers(){
+        onView(withId(R.id.button_add_members)).perform(click());
         onView(withId(R.id.edit_text_add_member)).perform(typeText("0"));
         onView(withId(R.id.image_view_add_member)).perform(click());
         onView(withId(R.id.edit_text_add_member)).perform(typeText("1"));
@@ -355,10 +360,15 @@ public class EventCreationTest {
         onView(withId(R.id.image_view_add_member)).perform(click());
         onView(withId(R.id.edit_text_add_member)).perform(typeText("swenggroupup@gmail.com"));
         onView(withId(R.id.image_view_add_member)).perform(click());
+        onView(withId(R.id.save_button)).perform(click());
     }
 
     private void addEventName(String name){
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
+    }
+
+    private void addDescription(String description){
+        onView(withId(R.id.edit_text_description)).perform(typeText(description));
     }
 }
 

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ch.epfl.sweng.groupup.activity.eventCreation.MembersAdding">
+
+    <include layout="@layout/toolbar"
+        android:id="@+id/toolbar"></include>
+
+    <TextView
+        android:id="@+id/greetings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:text="@string/members_adding_tv_greet_user"
+        android:gravity="center"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/members"
+        android:text="@string/members_adding_tv_members"
+        android:layout_below="@id/greetings"
+        android:textSize="20sp"
+        android:paddingTop="20sp"
+        android:textColor="@color/white"/>
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/members_adding_button_save"
+        android:layout_alignParentBottom="true"/>
+
+    <!-- User input for the email address of the invited users -->
+    <LinearLayout
+        android:id="@+id/layout_add_member"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/save_button"
+        android:textColor="@color/white">
+
+        <ImageView
+            android:contentDescription="@string/Logo_QR"
+            android:id="@+id/buttonScanQR"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:src="@drawable/qr_code_logo"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:textSize="20sp"
+            android:id="@+id/edit_text_add_member"
+            android:hint="@string/members_adding_hint_invite_new_members"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:background="@color/white"/>
+
+        <ImageView
+            android:contentDescription="@string/plus_sign"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:id="@+id/image_view_add_member"
+            android:src="@drawable/plussign"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_view_add_members"
+        android:layout_above="@id/layout_add_member"
+        android:text="@string/members_adding_tv_invite_new_members"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:paddingTop="20sp"
+        android:textColor="@color/white"/>
+
+    <!-- Scroll view showing all the already added members
+        with the possibility to delete them -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/members"
+        android:layout_above="@id/text_view_add_members"
+        android:id="@+id/scrollView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/members_list"
+            android:orientation="vertical"
+            android:textColor="@color/white">
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
