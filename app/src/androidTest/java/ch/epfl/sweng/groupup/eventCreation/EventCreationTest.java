@@ -297,6 +297,7 @@ public class EventCreationTest {
         addMembers();
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.button_add_members)).perform(click());
+        Espresso.closeSoftKeyboard();
         // Click scan button
         onView(withId(R.id.buttonScanQR)).perform(click());
         // Click back
