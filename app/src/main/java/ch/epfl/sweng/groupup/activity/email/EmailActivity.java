@@ -1,28 +1,39 @@
 package ch.epfl.sweng.groupup.activity.email;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import ch.epfl.sweng.groupup.R;
 
 public class EmailActivity extends AppCompatActivity {
 
+    /** Called when the activity is first created. */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email);
 
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"hampusram93@gmail.com"});
-        i.putExtra(Intent.EXTRA_SUBJECT, "Invitation to GroupUp!");
-        i.putExtra(Intent.EXTRA_TEXT   , "You rock as a rock");
-        try {
-            startActivity(Intent.createChooser(i, "Send mail..."));
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(EmailActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
-        }
+        //final Button send = (Button) this.findViewById(R.id.send);
+        //send.setOnClickListener(new View.OnClickListener() {
+
+            //public void onClick(View v) {
+                // TODO Auto-generated method stub
+
+                try {
+                    GMailSender sender = new GMailSender("swenggroupup@gmail.com", "swengswengsweng");
+                    sender.sendMail("This is Subject",
+                            "This is Body",
+                            "hampusram93@gmail.com",
+                            "hampusram93@gmail.com");
+                } catch (Exception e) {
+                    Log.e("SendMail", e.getMessage(), e);
+                }
+
+            //}
+        //});
+
     }
 }
