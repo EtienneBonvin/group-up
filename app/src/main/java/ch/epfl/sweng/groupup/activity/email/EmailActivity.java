@@ -16,24 +16,7 @@ public class EmailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email);
 
-        //final Button send = (Button) this.findViewById(R.id.send);
-        //send.setOnClickListener(new View.OnClickListener() {
-
-            //public void onClick(View v) {
-                // TODO Auto-generated method stub
-
-                try {
-                    GMailSender sender = new GMailSender("swenggroupup@gmail.com", "swengswengsweng");
-                    sender.sendMail("This is Subject",
-                            "This is Body",
-                            "xavpantet@gmail.com",
-                            "xavpantet@gmail.com");
-                } catch (Exception e) {
-                    Log.e("SendMail", e.getMessage(), e);
-                }
-
-            //}
-        //});
-
+        MailSender task = new MailSender();
+        task.execute();
     }
 }
