@@ -14,6 +14,7 @@ import java.util.Locale;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventCreation.EventCreation;
+import ch.epfl.sweng.groupup.activity.eventDescription.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
@@ -73,6 +74,17 @@ public class EventListingActivity extends ToolbarActivity {
             eventButton.setText(String.format(Locale.FRANCE, "%s | %d/%d - %d/%d",eventNames[i],
                     eventStartTimes[i].getDayOfMonth(),eventStartTimes[i].getMonthOfYear(),
                     eventEndTimes[i].getDayOfMonth(), eventEndTimes[i].getDayOfMonth()));
+            final int finalI = i;
+            eventButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
+                    Bundle b = new Bundle();
+                    b.putInt("eventIndex", finalI);
+                    intent.putExtra("eventToDisplay",b);
+                    startActivity(intent);
+                }
+            });
 
             linearLayout.addView(eventButton);
         }
