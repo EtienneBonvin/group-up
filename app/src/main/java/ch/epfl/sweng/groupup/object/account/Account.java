@@ -197,29 +197,22 @@ public final class Account extends User {
      */
     public Account addOrUpdatePastEvent(Event past) {
         if (past.getEventStatus().equals(EventStatus.PAST)) {
-            List<Event> newPast = new ArrayList<>(pastEvents);
-            Iterator<Event> eventIterator = pastEvents.iterator();
-            int i = 0;
-            boolean found = false;
-            while(eventIterator.hasNext() && !found){
-                Event e = eventIterator.next();
-                if(e.getUUID().equals(past.getUUID())){
-                    newPast.set(i, past);
-                    found = true;
+            List<Event> newPast = new ArrayList<>(futureEvents);
+            for (Event e : pastEvents){
+                if (e.getUUID().equals(past.getUUID())){
+                    newPast.remove(e);
                 }
-                ++i;
             }
-            if(!found){
-                newPast.add(past);
-                Collections.sort(newPast, new Comparator<Event>() {
-                    @Override
-                    public int compare(Event o1, Event o2) {
-                        return o1.getStartTime().compareTo(o2.getStartTime());
-                    }
-                });
-            }
-            return withPastEvents(newPast);
-        } else throw new IllegalArgumentException("Event is not "+ EventStatus.PAST.toString());
+            newPast.add(past);
+            Collections.sort(newPast, new Comparator<Event>(){
+                @Override
+                public int compare(Event o1, Event o2) {
+                    return o1.getStartTime().compareTo(o2.getStartTime());
+                }
+            });
+            return Account.shared.withFutureEvents(newPast);
+        }
+        throw new IllegalArgumentException("This is not a past event");
     }
 
     /**
@@ -249,29 +242,6 @@ public final class Account extends User {
         }
             throw new IllegalArgumentException("This is not a future event");
     }
-            /*int i = 0;
-            boolean found = false;
-            while(eventIterator.hasNext() && !found){
-                Event e = eventIterator.next();
-                if(e.getUUID().equals(future.getUUID())){
-                    newFuture.set(i, future);
-                    found = true;
-                }
-                ++i;
-            }
-            if(!found){
-                newFuture.add(future);
-                Collections.sort(newFuture, new Comparator<Event>() {
-                  @Override
-                  public int compare(Event o1, Event o2) {
-                      return o2.getStartTime().compareTo(o1.getStartTime());
-                  }
-              });
-            }
-            return withFutureEvents(newFuture);
-        } else throw new IllegalArgumentException("Event is not "+ EventStatus.FUTURE.toString());
-    }*/
-
 
     /**
      * Clear the shared account
