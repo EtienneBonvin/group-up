@@ -8,12 +8,11 @@ import java.net.URL;
 public class MailSender extends AsyncTask<URL, Integer, Long> {
     protected Long doInBackground(URL... urls) {
         try {
-            Log.e("SendMail", "GOGOGOGOGO");
             GMailSender sender = new GMailSender("swenggroupup@gmail.com", "swengswengsweng");
-            sender.sendMail("This is Subject",
-                    "This is Body",
+            sender.sendMail("Hello ✌️",
+                    "That app rocks!",
                     "swenggroupup@gmail.com",
-                    "xavpantet@gmail.com");
+                    "cedric.maire@epfl.ch");
         } catch (Exception e) {
             Log.e("SendMail", e.getMessage(), e);
         }
