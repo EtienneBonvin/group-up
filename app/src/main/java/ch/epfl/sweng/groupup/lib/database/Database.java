@@ -113,7 +113,14 @@ public final class Database {
         DatabaseReference events = databaseRef.child(NODE_EVENTS_LIST);
         DatabaseReference currentEvent = events.child(databaseEvent.uuid);
 
-        currentEvent.setValue(databaseEvent);
+        if (databaseEvent.members.size() > 0) {
+            // We update the event.
+            currentEvent.setValue(databaseEvent);
+        } else {
+            // We delete the event from the database if the last member left.
+            //currentEvent.setValue(null); // TODO: use the best one
+            currentEvent.removeValue();
+        }
     }
 
     /**
