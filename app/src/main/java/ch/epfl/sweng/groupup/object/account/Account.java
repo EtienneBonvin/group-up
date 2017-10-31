@@ -195,7 +195,7 @@ public final class Account extends User {
      * @throws IllegalArgumentException
      * @return the modified shared account, so that it is easier to call in chain
      */
-    private Account addOrUpdatePastEvent(Event past) {
+    public Account addOrUpdatePastEvent(Event past) {
         if (past.getEventStatus().equals(EventStatus.PAST)) {
             List<Event> newPast = new ArrayList<>(pastEvents);
             Iterator<Event> eventIterator = pastEvents.iterator();
@@ -229,12 +229,27 @@ public final class Account extends User {
      * @throws IllegalArgumentException
      * @return the modified shared account, so that it is easier to call in chain
      */
-    private Account addOrUpdateFutureEvent(Event future) {
+    public Account addOrUpdateFutureEvent(Event future) {
         if (future.getEventStatus().equals(EventStatus.FUTURE)) {
 
             List<Event> newFuture = new ArrayList<>(futureEvents);
-            Iterator<Event> eventIterator = futureEvents.iterator();
-            int i = 0;
+             for (Event e : futureEvents){
+                 if (e.getUUID().equals(future.getUUID())){
+                     newFuture.remove(e);
+                 }
+             }
+            newFuture.add(future);
+            Collections.sort(newFuture, new Comparator<Event>(){
+                        @Override
+                        public int compare(Event o1, Event o2) {
+                            return o2.getStartTime().compareTo(o1.getStartTime());
+                        }
+                    });
+            return Account.shared.withFutureEvents(newFuture);
+        }
+            throw new IllegalArgumentException("This is not a future event");
+    }
+            /*int i = 0;
             boolean found = false;
             while(eventIterator.hasNext() && !found){
                 Event e = eventIterator.next();
@@ -255,13 +270,17 @@ public final class Account extends User {
             }
             return withFutureEvents(newFuture);
         } else throw new IllegalArgumentException("Event is not "+ EventStatus.FUTURE.toString());
-    }
+    }*/
+
+
     /**
      * Clear the shared account
      * @return a cleared shared account
      */
     public Account clear() {
-        shared = new Account(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(), Optional.<Event>empty(), new ArrayList<Event>(), new ArrayList<Event>());
+        shared = new Account(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
+                Optional.<String>empty(), Optional.<String>empty(), Optional.<Event>empty(), new ArrayList<Event>(),
+                new ArrayList<Event>());
         return shared;
     }
 
