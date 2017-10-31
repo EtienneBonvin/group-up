@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.activity.email;
+package ch.epfl.sweng.groupup.lib.email;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;

@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.activity.email;
+package ch.epfl.sweng.groupup.lib.email;
 
 /*
  *  Licensed to the Apache Software Foundation (ASF) under one or more
