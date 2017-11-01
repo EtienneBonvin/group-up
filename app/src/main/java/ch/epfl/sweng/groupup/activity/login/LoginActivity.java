@@ -2,10 +2,9 @@ package ch.epfl.sweng.groupup.activity.login;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
+
 import com.google.android.gms.common.SignInButton;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -13,8 +12,8 @@ import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.lib.login.FirebaseAuthentication;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService;
-import ch.epfl.sweng.groupup.lib.login.LoginActivityInterface;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService.Status;
+import ch.epfl.sweng.groupup.lib.login.LoginActivityInterface;
 import ch.epfl.sweng.groupup.lib.login.MockAuth;
 
 import static ch.epfl.sweng.groupup.lib.Helper.showAlert;
@@ -75,6 +74,9 @@ public class LoginActivity extends LoginActivityInterface implements View.OnClic
     @Override
     public void onSuccess() {
         Intent intent = new Intent(this, EventListingActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                        Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

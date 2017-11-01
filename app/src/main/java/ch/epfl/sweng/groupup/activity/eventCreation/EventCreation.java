@@ -377,7 +377,7 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
     private void saveEvent(){
 
         int INPUT_MAX_LENGTH = 50;
-      
+
         EditText eventName = findViewById(R.id.ui_edit_event_name);
         if(eventName.getText().toString().length() == 0){
             eventName.setError(getString(R.string.event_creation_toast_non_empty_event_name));
@@ -425,6 +425,9 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
         Database.update();
 
         Intent intent = new Intent(this, EventListingActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                        Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
