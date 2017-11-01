@@ -52,6 +52,9 @@ public class EventDescriptionActivity extends ToolbarActivity {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(EventDescriptionActivity.this, EventListingActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                        Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(i);
                         removeEvent();
                     }
