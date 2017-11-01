@@ -64,6 +64,8 @@ public class EventCreationTest {
     @Test
     public void testEventWellGenerated() {
 
+        String eventName = "My event";
+
         Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
                 Optional.<String>empty(), Optional.<String>empty());
         List<Member> expectedMembers = new ArrayList<>();
@@ -75,13 +77,11 @@ public class EventCreationTest {
         expectedMembers.add(emptyMember.withUUID(Member.unknow_user+"1").withEmail("swenggroupup@gmail.com"));
         expectedMembers.add(emptyMember.withUUID(Account.shared.getUUID().getOrElse("Default UUID")));
 
-        addEventName("My event");
+        addEventName(eventName);
 
         Espresso.closeSoftKeyboard();
 
         addDescription("My description");
-
-        Espresso.closeSoftKeyboard();
 
         Espresso.closeSoftKeyboard();
 
@@ -109,10 +109,11 @@ public class EventCreationTest {
         onView(withId(android.R.id.button1)).perform(click());
 
         addMembers();
+        Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_button)).perform(click());
-        Event expected = new Event("My event", start, end, "My description", expectedMembers);
+        Event expected = new Event(eventName, start, end, "My description", expectedMembers);
 
-        Event found = findEvent();
+        Event found = findEvent(eventName);
         if (BuildConfig.DEBUG && !(found.equals(expected))){
             throw new AssertionError();
         }
@@ -122,6 +123,7 @@ public class EventCreationTest {
     public void noEventCreatedOnEmptyEventName(){
 
         addEventName("");
+        Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_button)).perform(click());
         onView(withText(R.string.event_creation_toast_non_empty_event_name))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
@@ -298,6 +300,7 @@ public class EventCreationTest {
         String eventName = "testEventName";
         // Enter event details
         addEventName(eventName);
+        Espresso.closeSoftKeyboard();
         addMembers();
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.button_add_members)).perform(click());
@@ -339,11 +342,11 @@ public class EventCreationTest {
         onView(withId(android.R.id.button1)).perform(click());
     }
 
-    private Event findEvent(){
+    private Event findEvent(String eventName){
         List<Event> accountEvents = Account.shared.getFutureEvents();
         Event found = null;
         for(Event e : accountEvents){
-            if(e.getEventName().equals("My event")){
+            if(e.getEventName().equals(eventName)){
                 found = e;
                 break;
             }
