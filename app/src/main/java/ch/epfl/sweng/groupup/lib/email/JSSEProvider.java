@@ -17,11 +17,6 @@ package ch.epfl.sweng.groupup.lib.email;
  *  limitations under the License.
  */
 
-/**
- * @author Alexander Y. Kleymenov
- * @version $Revision$
- */
-
 
 import java.security.AccessController;
 import java.security.Provider;

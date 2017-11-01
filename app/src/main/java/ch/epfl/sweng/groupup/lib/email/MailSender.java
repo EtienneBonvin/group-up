@@ -1,8 +1,11 @@
 package ch.epfl.sweng.groupup.lib.email;
 
+import android.annotation.TargetApi;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 
+@TargetApi(Build.VERSION_CODES.CUPCAKE)
 public class MailSender extends AsyncTask<String, Void, Void> {
 
     @Override
