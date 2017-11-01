@@ -81,7 +81,7 @@ public class EventsShould {
                 ", eventMember='" + eventMembers + '\'' +
                 ", startDate='" + start + '\'' +
                 ", endDate=" + end + '\'' +
-                ", evenStatus=" + eventStatus + '\'' +
+                ", eventStatus=" + eventStatus + '\'' +
                 ", eventID= " + ID +
                 '}';
         event = event.withStartTime(start);

@@ -1,6 +1,6 @@
 package ch.epfl.sweng.groupup.lib.database;
 
-public final class DatabaseUser {
+final class DatabaseUser {
 
     /**
      * Class to represent the user object that will be stored in the database.

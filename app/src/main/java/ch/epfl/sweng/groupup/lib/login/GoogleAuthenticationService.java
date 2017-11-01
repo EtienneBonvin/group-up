@@ -11,5 +11,5 @@ public interface GoogleAuthenticationService {
 
     void signOut();
 
-    void onActivityResult(int requestCode, int resultCode, Intent data);
+    void onActivityResult(int requestCode, Intent data);
 }

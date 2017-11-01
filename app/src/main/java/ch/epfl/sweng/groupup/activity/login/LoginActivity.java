@@ -115,7 +115,7 @@ public class LoginActivity extends LoginActivityInterface implements View.OnClic
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        authService.onActivityResult(requestCode, resultCode, data);
+        authService.onActivityResult(requestCode, data);
     }
 
     void mock(boolean loginStatus, boolean logoutStatus) {

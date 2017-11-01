@@ -26,7 +26,7 @@ public class EventListingTest {
             new ActivityTestRule<>(EventListingActivity.class);
 
     @Test
-    public void ensureCreateNewEventWork() {
+    public void ensureCreateNewEventWork()  {
 
         // Click on the create_new_event button, when ID is implemented, use it.
         onView(withText(R.string.create_new_event))

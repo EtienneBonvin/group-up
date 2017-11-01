@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar"/>
+
+    <TextView
+        android:id="@+id/event_description_tv_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:text="@string/event_description_tv_name"
+        android:textAlignment="textStart"
+        android:layout_below="@id/toolbar"/>
+
+    <EditText
+        android:id="@+id/event_description_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_event_name"
+        android:layout_below="@id/toolbar"/>
+
+    <Button
+        android:id="@+id/modifyName"
+        android:layout_width="77dp"
+        android:layout_height="26dp"
+        android:text="@string/change_name"
+        android:textSize="6sp" />
+
+    <TextView
+        android:id="@+id/event_description_tv_start_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:text="@string/event_description_tv_start_date"
+        android:textAlignment="textStart"
+        android:layout_below="@id/toolbar"/>
+
+    <TextView
+        android:id="@+id/event_description_start_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_event_start_date"
+        android:layout_below="@id/toolbar"/>
+
+    <TextView
+        android:id="@+id/event_description_tv_end_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:text="@string/event_description_tv_end_date"
+        android:textAlignment="textStart"
+        android:layout_below="@id/toolbar"/>
+
+    <TextView
+        android:id="@+id/event_description_end_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_event_end_date"
+        android:layout_below="@id/toolbar"/>
+
+    <TextView
+        android:id="@+id/event_description_tv_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:text="@string/event_description_tv_description"
+        android:textAlignment="textStart"
+        android:layout_below="@id/toolbar"
+        android:layout_weight="0.48" />
+
+    <EditText
+        android:id="@+id/event_description_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_event_description"
+        android:layout_below="@id/toolbar"/>
+
+    <Button
+        android:id="@+id/modifyDescription"
+        android:layout_width="78dp"
+        android:layout_height="26dp"
+        android:text="@string/change_description"
+        android:textSize="5sp" />
+
+    <TextView
+        android:id="@+id/event_description_tv_members"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:text="@string/event_description_tv_members"
+        android:textAlignment="textStart"
+        android:layout_below="@id/toolbar"/>
+
+    <ScrollView
+        android:layout_width="257dp"
+        android:layout_height="275dp">
+
+        <LinearLayout
+            android:id="@+id/linear_scroll_members"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+    <Button
+        android:id="@+id/remove_event_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/remove_yourself_from_the_event" />
+
+
+</LinearLayout>

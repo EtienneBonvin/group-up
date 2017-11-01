@@ -2,7 +2,9 @@ package ch.epfl.sweng.groupup.activity.eventListing;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -11,9 +13,12 @@ import org.joda.time.LocalDateTime;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventCreation.EventCreation;
+import ch.epfl.sweng.groupup.activity.eventDescription.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
@@ -29,6 +34,8 @@ public class EventListingActivity extends ToolbarActivity {
 
     private LinearLayout linearLayout;
     private int heightInSp;
+    private Timer autoUpdate;
+    int size;
 
     /**
      * Initialization of the private variables of the class and
@@ -44,8 +51,51 @@ public class EventListingActivity extends ToolbarActivity {
         initializeVariables();
         initializeEvents(Account.shared.getFutureEvents());
         initializeCreateEvent();
-        initializeEvents(Account.shared.getPastEvents());
+        List<Event> belowCreateButton = Account.shared.getPastEvents();
+        if (!Account.shared.getCurrentEvent().isEmpty()){
+            belowCreateButton.add(Account.shared.getCurrentEvent().get());
+        }
+        initializeEvents(belowCreateButton);
+        size=Account.shared.getEvents().size();
+
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        autoUpdate = new Timer();
+        autoUpdate.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Log.i("futureEvents", Account.shared.getFutureEvents().toString());
+                        if (size != Account.shared.getEvents().size()){
+                            setContentView(R.layout.activity_event_listing);
+                            initializeToolbar();
+                            initializeVariables();
+                            initializeEvents(Account.shared.getFutureEvents());
+                            initializeCreateEvent();
+                            List<Event> belowCreateButton = Account.shared.getPastEvents();
+                            if (!Account.shared.getCurrentEvent().isEmpty()){
+                                belowCreateButton.add(Account.shared.getCurrentEvent().get());
+                            }
+                            initializeEvents(belowCreateButton);
+                            size=Account.shared.getEvents().size();
+                        }
+                    }
+                });
+            }
+        }, 0, 5000); // updates each 5 secs
+    }
+
+
+    @Override
+    public void onPause() {
+        autoUpdate.cancel();
+        super.onPause();
+    }
+
 
     /**
      * Initialization of the private variables of the class
@@ -67,16 +117,25 @@ public class EventListingActivity extends ToolbarActivity {
 
         for(int i=0; i<events.size(); i++){
             Button eventButton = new Button(this);
-            eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                    heightInSp));
-            /*eventButton.setText(eventNames[i] + " | " + Integer.toString(eventStartTimes[i].
-                    getDayOfMonth()) + "/" + Integer.toString(eventStartTimes[i].getMonthOfYear()) +
-                    " - " + Integer.toString(eventEndTimes[i].getDayOfMonth()) + "/" +
-                    Integer.toString(eventEndTimes[i].getDayOfMonth()));*/
+            eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
+                    MATCH_PARENT,heightInSp));
+
             eventButton.setText(String.format(Locale.FRANCE, "%s | %d/%d - %d/%d",eventNames[i],
                     eventStartTimes[i].getDayOfMonth(),eventStartTimes[i].getMonthOfYear(),
-                    eventEndTimes[i].getDayOfMonth(), eventEndTimes[i].getDayOfMonth()));
-            //eventButton.setId(View.generateViewId()); // Assign the ID of the event
+                    eventEndTimes[i].getDayOfMonth(), eventEndTimes[i].getMonthOfYear()));
+
+            final int finalI = i;
+            if (eventButton != null) {
+                eventButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
+                        intent.putExtra("eventIndex", finalI);
+                        startActivity(intent);
+                    }
+                });
+            }
+
             linearLayout.addView(eventButton);
         }
     }
@@ -87,8 +146,8 @@ public class EventListingActivity extends ToolbarActivity {
      */
     private void initializeCreateEvent() {
         Button createEventButton = new Button(this);
-        createEventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                heightInSp));
+        createEventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
+                MATCH_PARENT, heightInSp));
         createEventButton.setText(R.string.create_new_event);
         createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override

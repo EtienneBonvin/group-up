@@ -4,7 +4,7 @@
     <!-- ToolbarActivity -->
     <string name="toolbar_description_group_list_icon">Icon to click to access group list</string>
     <string name="toolbar_description_settings_icon">Icon to click to access settings</string>
-    <string name="user_profile">Acces the user profile</string>
+    <string name="user_profile">Access the user profile</string>
 
     <!-- Welcome page -->
     <string name="welcome_view_powered_by">Powered by Flying Monkeys Team</string>
@@ -54,5 +54,19 @@
 
     <!-- activity_display_qr-->
     <string name="QR_code">QR Code</string>
+
+    <!-- Event Description -->
+    <string name="event_description_tv_name">Event Name : </string>
+    <string name="event_description_tv_start_date">Start Date : </string>
+    <string name="event_description_tv_end_date">End Date : </string>
+    <string name="event_description_tv_description">Description : </string>
+    <string name="event_description_tv_members">Members : </string>
+    <string name="no_event_description">NO_EVENT_DESCRIPTION</string>
+    <string name="no_event_end_date">NO_EVENT_END_DATE</string>
+    <string name="no_event_name">NO_EVENT_NAME</string>
+    <string name="no_event_start_date">NO_EVENT_START_DATE</string>
+    <string name="remove_yourself_from_the_event">Remove yourself from the event</string>
+    <string name="change_name">Change Name</string>
+    <string name="change_description">Change Description</string>
 
 </resources>
