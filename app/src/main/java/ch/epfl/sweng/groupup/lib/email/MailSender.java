@@ -12,11 +12,8 @@ public class MailSender extends AsyncTask<String, Void, Void> {
     protected Void doInBackground(String... receiverEmailAddress) {
         try {
             for (String recMail : receiverEmailAddress) {
-                GMailSender sender = new GMailSender("swenggroupup@gmail.com", "swengswengsweng");
+                GMailSender sender = new GMailSender();
                 sender.sendMail(
-                        "Hello ✌️",
-                        "That app rocks!",
-                        "GroupUp! <swenggroupup@gmail.com>",
                         recMail);
             }
         } catch (Exception e) {

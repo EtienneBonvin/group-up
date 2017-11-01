@@ -91,13 +91,13 @@ public class EventsShould {
 
     @Test
     public void haveStartTime() {
-        LocalDateTime start = new LocalDateTime().now();
+        LocalDateTime start = LocalDateTime.now();
         assertEquals(event.withStartTime(start).getStartTime(), start);
     }
 
     @Test
     public void haveEndTime() {
-        LocalDateTime end = new LocalDateTime().now();
+        LocalDateTime end = LocalDateTime.now();
         assertEquals(event.withEndTime(end).getEndTime(), end);
     }
 

@@ -4,7 +4,7 @@
     <!-- ToolbarActivity -->
     <string name="toolbar_description_group_list_icon">Icon to click to access group list</string>
     <string name="toolbar_description_settings_icon">Icon to click to access settings</string>
-    <string name="user_profile">Acces the user profile</string>
+    <string name="user_profile">Access the user profile</string>
 
     <!-- Welcome page -->
     <string name="welcome_view_powered_by">Powered by Flying Monkeys Team</string>
