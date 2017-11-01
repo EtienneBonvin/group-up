@@ -41,6 +41,7 @@ public final class Account extends User {
      * @return Event current
      */
     public Optional<Event> getCurrentEvent() {
+        updateEventList();
         return currentEvent;
     }
 
@@ -49,6 +50,7 @@ public final class Account extends User {
      * @return List<Event> last events
      */
     public List<Event> getPastEvents() {
+        updateEventList();
         return pastEvents;
     }
 
@@ -57,6 +59,7 @@ public final class Account extends User {
      * @return List<Event> future events
      */
     public List<Event> getFutureEvents(){
+        updateEventList();
         return futureEvents;
     }
 
@@ -64,12 +67,57 @@ public final class Account extends User {
      * Getter for all events, return first the future then current then past
      */
     public List<Event> getEvents(){
+        updateEventList();
         List<Event> allEvents=getFutureEvents();
         if (!currentEvent.isEmpty()){
             allEvents.add(currentEvent.get());
         }
         allEvents.addAll(getPastEvents());
         return allEvents;
+    }
+
+    /**
+     * updated futureEvent and currentEvent based on eventStatus
+     * @return Account with updated and sorted event lists
+     */
+    private Account updateEventList(){
+        List<Event> newFuture = new ArrayList<>(futureEvents);
+
+        Optional<Event> newCurrent = Optional.empty();
+        if (!currentEvent.isEmpty()){
+            newCurrent = currentEvent;
+        }
+
+        List<Event> newPast = new ArrayList<>(pastEvents);
+
+        for (Event e : futureEvents){
+            switch (e.getEventStatus()){
+                case PAST:
+                    newPast.add(e);
+                    newFuture.remove(e);
+                case CURRENT:
+                    if (newCurrent.get().getEventStatus().equals(EventStatus.PAST)){
+                        newPast.add(newCurrent.get());
+                    }
+                    newCurrent = Optional.from(e);
+                    newFuture.remove(e);
+            }
+        }
+        Collections.sort(newFuture, new Comparator<Event>(){
+            @Override
+            public int compare(Event o1, Event o2) {
+                return o2.getStartTime().compareTo(o1.getStartTime());
+            }
+        });
+        Collections.sort(newPast, new Comparator<Event>(){
+            @Override
+            public int compare(Event o1, Event o2) {
+                return o1.getStartTime().compareTo(o2.getStartTime());
+            }
+        });
+        Account.shared.withFutureEvents(newFuture);
+        Account.shared.withCurrentEvent(newCurrent);
+        return Account.shared.withPastEvents(newPast);
     }
 
     /**
@@ -197,7 +245,7 @@ public final class Account extends User {
      */
     public Account addOrUpdatePastEvent(Event past) {
         if (past.getEventStatus().equals(EventStatus.PAST)) {
-            List<Event> newPast = new ArrayList<>(futureEvents);
+            List<Event> newPast = new ArrayList<>(pastEvents);
             for (Event e : pastEvents){
                 if (e.getUUID().equals(past.getUUID())){
                     newPast.remove(e);
@@ -210,7 +258,7 @@ public final class Account extends User {
                     return o1.getStartTime().compareTo(o2.getStartTime());
                 }
             });
-            return Account.shared.withFutureEvents(newPast);
+            return Account.shared.withPastEvents(newPast);
         }
         throw new IllegalArgumentException("This is not a past event");
     }
