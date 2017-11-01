@@ -242,15 +242,16 @@ public class AccountShould {
 
     @Test
     public void numberOfEventsUnchangedAfterCurrentToPastTransition(){
+        shared.clear();
         shared.withCurrentEvent(Optional.from(new Event("CurrentEvent", LocalDateTime.now().minusHours(1),
-                LocalDateTime.now().plusSeconds(12), "Description", new ArrayList<Member>())));
+                LocalDateTime.now().plusSeconds(5), "Description", new ArrayList<Member>())));
         int size = Account.shared.getEvents().size();
         try {
-            TimeUnit.SECONDS.sleep(18);
+            TimeUnit.SECONDS.sleep(10);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        assertEquals(Account.shared.getEvents().size(), size);
+        assertEquals(size, Account.shared.getEvents().size());
         shared.clear();
     }
 
