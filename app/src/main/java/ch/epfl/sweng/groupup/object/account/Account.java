@@ -1,6 +1,7 @@
 package ch.epfl.sweng.groupup.object.account;
 
 import android.provider.CalendarContract;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +42,7 @@ public final class Account extends User {
      * @return Event current
      */
     public Optional<Event> getCurrentEvent() {
+        System.out.print("called from getCurrentEvent ");
         updateEventList();
         return currentEvent;
     }
@@ -50,6 +52,7 @@ public final class Account extends User {
      * @return List<Event> last events
      */
     public List<Event> getPastEvents() {
+        System.out.print("called from getPastEvents ");
         updateEventList();
         return pastEvents;
     }
@@ -59,6 +62,7 @@ public final class Account extends User {
      * @return List<Event> future events
      */
     public List<Event> getFutureEvents(){
+        System.out.print("called from getFutureEvents ");
         updateEventList();
         return futureEvents;
     }
@@ -67,6 +71,7 @@ public final class Account extends User {
      * Getter for all events, return first the future then current then past
      */
     public List<Event> getEvents(){
+        System.out.print("called from getEvents ");
         updateEventList();
         List<Event> allEvents=getFutureEvents();
         if (!currentEvent.isEmpty()){
@@ -80,25 +85,26 @@ public final class Account extends User {
      * updated futureEvent and currentEvent based on eventStatus
      * @return Account with updated and sorted event lists
      */
-    private Account updateEventList(){
+    private void updateEventList(){
         List<Event> newFuture = new ArrayList<>(futureEvents);
 
+        // initialize newCurrent to empty event
         Optional<Event> newCurrent = Optional.empty();
-        if (!currentEvent.isEmpty()){
-            newCurrent = currentEvent;
-        }
 
         List<Event> newPast = new ArrayList<>(pastEvents);
 
+        // check if current event still current
+        if (!currentEvent.isEmpty() && !currentEvent.get().getEventStatus().equals(EventStatus.CURRENT)){
+            newPast.add(currentEvent.get());
+        }
+
+        // check if future event still future
         for (Event e : futureEvents){
             switch (e.getEventStatus()){
                 case PAST:
                     newPast.add(e);
                     newFuture.remove(e);
                 case CURRENT:
-                    if (newCurrent.get().getEventStatus().equals(EventStatus.PAST)){
-                        newPast.add(newCurrent.get());
-                    }
                     newCurrent = Optional.from(e);
                     newFuture.remove(e);
             }
@@ -117,7 +123,7 @@ public final class Account extends User {
         });
         Account.shared.withFutureEvents(newFuture);
         Account.shared.withCurrentEvent(newCurrent);
-        return Account.shared.withPastEvents(newPast);
+        Account.shared.withPastEvents(newPast);
     }
 
     /**
@@ -185,10 +191,12 @@ public final class Account extends User {
 
     public Account withCurrentEvent(Optional<Event> current) {
         if (current.isEmpty()){
+            System.out.println("empty");
             shared = new Account(UUID, displayName, givenName, familyName, email,
                     current, pastEvents, futureEvents);
         }
         else {
+            System.out.println("eventstatus: "+ current.get().getEventStatus().toString());
             if (current.get().getEventStatus().equals(EventStatus.CURRENT)) {
                 shared = new Account(UUID, displayName, givenName, familyName, email,
                         current, pastEvents, futureEvents);
