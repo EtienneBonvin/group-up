@@ -25,7 +25,6 @@ public final class Database {
      * Static fields to help using the database.
      */
     static final String EMPTY_FIELD = "EMPTY_FIELD";
-    public static final String UNKNOWN_USER = "UNKNOWN_USER_";
 
     private static final String NODE_EVENTS_LIST = "events";
 
@@ -222,7 +221,6 @@ public final class Database {
         Collection<DatabaseUser> users = members.values();
         Set<String> unknownUsers = new HashSet<>();
 
-        // TODO: integrate with UNKNOWN_USER_
         for (DatabaseUser user : users) {
             unknownUsers.add(user.email);
         }
