@@ -58,7 +58,8 @@ public final class Database {
      */
     public static void setUpEventListener(ValueEventListener listener) {
         if (listener == null) {
-            databaseRef.child(NODE_EVENTS_LIST).addValueEventListener(getEventsListener());
+            databaseRef.child(NODE_EVENTS_LIST)
+                    .addValueEventListener(getEventsListener());
         } else {
             databaseRef.child(NODE_EVENTS_LIST).addValueEventListener(listener);
         }
@@ -88,19 +89,26 @@ public final class Database {
         HashMap<String, DatabaseUser> uuidToUserMap = new HashMap<>();
         for (Member memberToStore : event.getEventMembers()) {
             DatabaseUser databaseUser =
-                    new DatabaseUser(memberToStore.getGivenName().getOrElse(EMPTY_FIELD),
-                                     memberToStore.getFamilyName().getOrElse(EMPTY_FIELD),
-                                     memberToStore.getDisplayName().getOrElse(EMPTY_FIELD),
-                                     memberToStore.getEmail().getOrElse(EMPTY_FIELD),
-                                     memberToStore.getUUID().getOrElse(EMPTY_FIELD));
+                    new DatabaseUser(memberToStore.getGivenName()
+                                             .getOrElse(EMPTY_FIELD),
+                                     memberToStore.getFamilyName()
+                                             .getOrElse(EMPTY_FIELD),
+                                     memberToStore.getDisplayName()
+                                             .getOrElse(EMPTY_FIELD),
+                                     memberToStore.getEmail()
+                                             .getOrElse(EMPTY_FIELD),
+                                     memberToStore.getUUID()
+                                             .getOrElse(EMPTY_FIELD));
 
             uuidToUserMap.put(databaseUser.uuid, databaseUser);
         }
 
         DatabaseEvent eventToStore = new DatabaseEvent(event.getEventName(),
                                                        event.getDescription(),
-                                                       event.getStartTime().toString(),
-                                                       event.getEndTime().toString(),
+                                                       event.getStartTime()
+                                                               .toString(),
+                                                       event.getEndTime()
+                                                               .toString(),
                                                        event.getUUID(),
                                                        uuidToUserMap);
         storeEvent(eventToStore);
@@ -115,7 +123,13 @@ public final class Database {
         DatabaseReference events = databaseRef.child(NODE_EVENTS_LIST);
         DatabaseReference currentEvent = events.child(databaseEvent.uuid);
 
-        currentEvent.setValue(databaseEvent);
+        if (databaseEvent.members.size() > 0) {
+            // We update the event.
+            currentEvent.setValue(databaseEvent);
+        } else {
+            // We delete the event from the database if the last member left.
+            currentEvent.removeValue();
+        }
     }
 
     /**
@@ -171,8 +185,10 @@ public final class Database {
                                                         user.email);
 
                         // We check if the member we are about to add is Account.shared.
+
                         if (user.uuid.equals(Account.shared.getUUID().getOrElse(EMPTY_FIELD)) ||
                             user.email.equals(Account.shared.getEmail().getOrElse(EMPTY_FIELD))) {
+
 
                             Member mySelfAsMember = Account.shared.toMember();
 

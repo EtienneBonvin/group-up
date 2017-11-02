@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-
-
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,16 +16,12 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.io.ByteArrayOutputStream;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
-
-import ch.epfl.sweng.groupup.activity.settings.Settings;
 import ch.epfl.sweng.groupup.lib.Helper;
 import ch.epfl.sweng.groupup.lib.login.FirebaseAuthentication;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService.Status;
 import ch.epfl.sweng.groupup.lib.login.LoginActivityInterface;
-
 
 import static ch.epfl.sweng.groupup.object.account.Account.shared;
 
@@ -79,13 +73,7 @@ public class EventListActivity extends LoginActivityInterface {
                 });
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(this, EventListingActivity.class);
-        startActivity(intent);
-    }
-
-    public void displayQR(){
+    private void displayQR(){
         if (!shared.getUUID().isEmpty()){
             String text = shared.getUUID().get();
             QRCodeWriter writer = new QRCodeWriter();
@@ -171,6 +159,9 @@ public class EventListActivity extends LoginActivityInterface {
         updateUI(Status.DISCONNECTED);
 
         Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                        Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }

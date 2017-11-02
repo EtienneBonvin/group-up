@@ -2,7 +2,7 @@ package ch.epfl.sweng.groupup.lib.database;
 
 import java.util.HashMap;
 
-public final class DatabaseEvent {
+final class DatabaseEvent {
 
     /**
      * Class to represent the event object that will be stored in the database.

@@ -6,9 +6,9 @@ import ch.epfl.sweng.groupup.object.account.Account;
 
 public final class MockAuth implements GoogleAuthenticationService {
 
-    private LoginActivityInterface activityInterface;
-    private boolean signInSuccess;
-    private boolean signOutSuccess;
+    private final LoginActivityInterface activityInterface;
+    private final boolean signInSuccess;
+    private final boolean signOutSuccess;
 
     public MockAuth(LoginActivityInterface activityInterface, boolean signInSuccess, boolean
             signOutSuccess) {

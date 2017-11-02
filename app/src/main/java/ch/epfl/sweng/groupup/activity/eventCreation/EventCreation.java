@@ -286,6 +286,9 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
         Database.update();
 
         Intent intent = new Intent(this, EventListingActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                        Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
