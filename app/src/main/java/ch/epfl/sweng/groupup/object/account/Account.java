@@ -32,9 +32,9 @@ public final class Account extends User {
                     Optional<String> familyName, Optional<String> email,
                     Optional<Event> currentEvent, List<Event> past, List<Event> future) {
         super(displayName, givenName, familyName, email, UUID);
-        this.currentEvent = currentEvent;
-        this.pastEvents = past;
-        this.futureEvents = future;
+        this.currentEvent = currentEvent.isEmpty() ? Optional.<Event>empty() : Optional.from(currentEvent.get());
+        this.pastEvents = new ArrayList<>(Collections.unmodifiableList(past));
+        this.futureEvents = new ArrayList<>(Collections.unmodifiableList(future));
     }
 
     /**
@@ -43,7 +43,7 @@ public final class Account extends User {
      */
     public Optional<Event> getCurrentEvent() {
         updateEventList();
-        return currentEvent;
+        return currentEvent.isEmpty() ? Optional.<Event>empty() : Optional.from(currentEvent.get());
     }
 
     /**
@@ -52,7 +52,7 @@ public final class Account extends User {
      */
     public List<Event> getPastEvents() {
         updateEventList();
-        return pastEvents;
+        return new ArrayList<>(Collections.unmodifiableList(pastEvents));
     }
 
     /**
@@ -61,7 +61,7 @@ public final class Account extends User {
      */
     public List<Event> getFutureEvents(){
         updateEventList();
-        return futureEvents;
+        return new ArrayList<>(Collections.unmodifiableList(futureEvents));
     }
 
     /**
@@ -77,7 +77,7 @@ public final class Account extends User {
         }
         allEvents.addAll(getPastEvents());
         System.out.println(" past events: "+ getPastEvents());
-        return allEvents;
+        return Collections.unmodifiableList(allEvents);
     }
 
     /**
