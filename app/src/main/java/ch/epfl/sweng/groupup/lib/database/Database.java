@@ -9,7 +9,9 @@ import com.google.firebase.database.ValueEventListener;
 import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -156,8 +158,8 @@ public final class Database {
             if (event != null && !event.uuid.equals(Database.EMPTY_FIELD)) {
 
                 Set<String> uuidsOfMembers = event.members.keySet();
-                if (uuidsOfMembers.contains(
-                        Account.shared.getUUID().getOrElse(EMPTY_FIELD))) {
+                if (uuidsOfMembers.contains(Account.shared.getUUID().getOrElse(EMPTY_FIELD)) ||
+                    containedAsUnknownUser(event.members)) {
 
                     // We transform every DatabaseUser to a Member.
                     List<Member> members = new ArrayList<>();
@@ -169,8 +171,8 @@ public final class Database {
                                                         user.email);
 
                         // We check if the member we are about to add is Account.shared.
-                        if (user.uuid.equals(
-                                Account.shared.getUUID().getOrElse(EMPTY_FIELD))) {
+                        if (user.uuid.equals(Account.shared.getUUID().getOrElse(EMPTY_FIELD)) ||
+                            user.email.equals(Account.shared.getEmail().getOrElse(EMPTY_FIELD))) {
 
                             Member mySelfAsMember = Account.shared.toMember();
 
@@ -206,5 +208,23 @@ public final class Database {
         if (needToUpdateMyself) {
             Database.update();
         }
+    }
+
+    /**
+     * Checks if we are contained as an unknown user (only added by email since we didn't had a
+     * UUID yet).
+     *
+     * @param members - the map of the uuids to the members from an event
+     * @return - true if we are contained through our email
+     */
+    private static boolean containedAsUnknownUser(HashMap<String, DatabaseUser> members) {
+        Collection<DatabaseUser> users = members.values();
+        Set<String> unknownUsers = new HashSet<>();
+
+        for (DatabaseUser user : users) {
+            unknownUsers.add(user.email);
+        }
+
+        return unknownUsers.contains(Account.shared.getEmail().getOrElse(EMPTY_FIELD));
     }
 }
