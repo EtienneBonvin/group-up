@@ -2,8 +2,6 @@ package ch.epfl.sweng.groupup.activity.login;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
 import com.google.android.gms.common.SignInButton;
@@ -113,7 +111,7 @@ public class LoginActivity extends LoginActivityInterface implements View.OnClic
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        authService.onActivityResult(requestCode, resultCode, data);
+        authService.onActivityResult(requestCode, data);
     }
 
     void mock(boolean loginStatus, boolean logoutStatus) {

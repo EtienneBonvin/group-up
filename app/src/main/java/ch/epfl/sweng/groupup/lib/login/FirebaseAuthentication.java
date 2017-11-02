@@ -59,7 +59,7 @@ public final class FirebaseAuthentication implements GoogleAuthenticationService
     public void signOut() {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             Auth.GoogleSignInApi.signOut(googleApiClient)
-                    .setResultCallback(getResultCallback(activityContext));
+                    .setResultCallback(getResultCallback());
             activity.onSuccess();
         } else {
             activity.onFail();
@@ -87,7 +87,7 @@ public final class FirebaseAuthentication implements GoogleAuthenticationService
                 .build();
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
             GoogleSignInResult
                     googleSignInResult =
@@ -136,7 +136,7 @@ public final class FirebaseAuthentication implements GoogleAuthenticationService
         };
     }
 
-    private ResultCallback<com.google.android.gms.common.api.Status> getResultCallback(final Context PACKAGE_CONTEXT) {
+    private ResultCallback<com.google.android.gms.common.api.Status> getResultCallback() {
         return new ResultCallback<com.google.android.gms.common.api.Status>() {
             @Override
             public void onResult(@NonNull com.google.android.gms.common.api.Status status) {

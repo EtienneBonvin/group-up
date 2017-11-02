@@ -44,7 +44,7 @@ public final class MockAuth implements GoogleAuthenticationService {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, Intent data) {
         // UNUSED
     }
 }
