@@ -46,7 +46,7 @@ public class EventDescriptionTest {
     public final ActivityTestRule<EventDescriptionActivity> mActivityRule =
             new ActivityTestRule<>(EventDescriptionActivity.class);
 
-    Event e = new Event("Name", new LocalDateTime(), new LocalDateTime().plusDays(1),
+    private Event e = new Event("Name", new LocalDateTime(), new LocalDateTime().plusDays(1),
                 "My amazing description", new ArrayList<>(Arrays.asList(new Member("1","displayed","","",""),
                 new Member("2","YOLO","","",""),new Member("3","LOOOOOOOOOOOOOOL","","",""))));
 
@@ -104,7 +104,7 @@ public class EventDescriptionTest {
 
     @Test
     public void nameIsWellChanged(){
-        onView(withId(R.id.modifyName)).perform(click());
+        onView(withId(R.id.save)).perform(click());
         onView(withId(R.id.event_description_name)).perform(typeText("Test"))
                 .check(matches(withText("Test")));
     }
