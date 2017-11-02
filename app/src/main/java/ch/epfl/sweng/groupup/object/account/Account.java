@@ -64,13 +64,10 @@ public final class Account extends User {
     public List<Event> getEvents(){
         updateEventList();
         List<Event> allEvents = new ArrayList<>(futureEvents);
-        System.out.println("future events: "+allEvents);
         if (!currentEvent.isEmpty()){
             allEvents.add(currentEvent.get());
-            System.out.println("current event: "+ currentEvent.get());
         }
         allEvents.addAll(pastEvents);
-        System.out.println(" past events: "+ getPastEvents());
         return Collections.unmodifiableList(allEvents);
     }
 
@@ -86,7 +83,6 @@ public final class Account extends User {
         if (!currentEvent.isEmpty() && currentEvent.get().getEventStatus().equals(EventStatus.PAST)){
             newPast.add(currentEvent.get());
             Account.shared.withCurrentEvent(Optional.<Event>empty());
-            System.out.println("supposed to be empty, succeed? : "+currentEvent.isEmpty());
         }
 
         // check if future event still future
@@ -99,7 +95,6 @@ public final class Account extends User {
                 case CURRENT:
                     Account.shared.withCurrentEvent(Optional.from(e));
                     newFuture.remove(e);
-                    System.out.println("supposed to have status current, succeed? " + shared.currentEvent.get().getEventStatus().equals(EventStatus.CURRENT));
                     break;
                 default:
             }
