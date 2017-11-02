@@ -39,32 +39,32 @@ public class ToolbarTest {
         Intents.release();
     }
 
-    @Test
+    /*@Test
     public void SettingsOpenedOnIconClick(){
         mActivityRule.launchActivity(new Intent());
 
         onView(withId(R.id.icon_access_settings)).perform(click());
         intended(hasComponent(Settings.class.getName()));
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void UserProfileOpenedOnIconClick(){
         mActivityRule.launchActivity(new Intent());
 
         onView(withId(R.id.icon_access_user_profile)).perform(click());
         intended(hasComponent(EventListActivity.class.getName()));
 
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void GroupListOpenedOnIconClick(){
         mActivityRule.launchActivity(new Intent());
 
-        onView(withId(R.id.icon_access_group_list)).perform(click());
+        onView(withId(R.id.icon_access_group_list)).perform(click());*/
         /* times(2) is there because the Activity will match two times : 1 times before
         * the click on the icon and another time after.
          */
-        intended(hasComponent(EventListingActivity.class.getName()));
+        /*intended(hasComponent(EventListingActivity.class.getName()));
 
-    }
+    }*/
 }
