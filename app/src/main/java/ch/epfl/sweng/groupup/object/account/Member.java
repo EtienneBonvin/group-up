@@ -6,6 +6,8 @@ import ch.epfl.sweng.groupup.lib.Optional;
  */
 public final class Member extends User {
 
+    public static final String unknow_user = "UNKNOWN_USER_";
+
     public Member(String UUID, String displayName, String givenName, String familyName, String email){
         super(displayName, givenName, familyName, email, UUID);
     }

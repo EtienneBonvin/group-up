@@ -29,6 +29,7 @@
         <activity android:name=".activity.settings.Settings" />
         <activity android:name=".activity.toolbar.ToolbarActivity"/>
         <activity android:name=".activity.eventDescription.EventDescriptionActivity"/>
+        <activity android:name=".activity.eventCreation.MembersAdding"></activity>
     </application>
 
 </manifest>
