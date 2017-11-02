@@ -32,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     private void switchToLoginContentView() {
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                        Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }

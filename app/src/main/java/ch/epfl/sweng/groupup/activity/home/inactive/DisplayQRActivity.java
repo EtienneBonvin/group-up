@@ -26,14 +26,4 @@ public class DisplayQRActivity extends AppCompatActivity {
 
         image.setImageBitmap(bmp);
     }
-
-    @Override
-    public void onBackPressed() {
-        switchToQRMenu();
-    }
-
-    private void switchToQRMenu(){
-        Intent intent = new Intent(this, EventListActivity.class);
-        startActivity(intent);
-    }
 }

@@ -124,6 +124,7 @@ public class EventListingActivity extends ToolbarActivity {
 
         for(int i=0; i<events.size(); i++){
             Button eventButton = new Button(this);
+
             eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
                     MATCH_PARENT,heightInSp));
 
@@ -142,7 +143,6 @@ public class EventListingActivity extends ToolbarActivity {
                     }
                 });
             }
-
             linearLayout.addView(eventButton);
         }
     }
