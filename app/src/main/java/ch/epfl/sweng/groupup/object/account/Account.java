@@ -1,20 +1,14 @@
 package ch.epfl.sweng.groupup.object.account;
 
-import android.provider.CalendarContract;
-import android.util.Log;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ch.epfl.sweng.groupup.lib.Optional;
-import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.event.EventStatus;
 
@@ -32,9 +26,9 @@ public final class Account extends User {
                     Optional<String> familyName, Optional<String> email,
                     Optional<Event> currentEvent, List<Event> past, List<Event> future) {
         super(displayName, givenName, familyName, email, UUID);
-        this.currentEvent = currentEvent;
-        this.pastEvents = past;
-        this.futureEvents = future;
+        this.currentEvent = currentEvent.isEmpty() ? Optional.<Event>empty() : Optional.from(currentEvent.get());
+        this.pastEvents = new ArrayList<>(Collections.unmodifiableList(past));
+        this.futureEvents = new ArrayList<>(Collections.unmodifiableList(future));
     }
 
     /**
@@ -43,7 +37,7 @@ public final class Account extends User {
      */
     public Optional<Event> getCurrentEvent() {
         updateEventList();
-        return currentEvent;
+        return currentEvent.isEmpty() ? Optional.<Event>empty() : Optional.from(currentEvent.get());
     }
 
     /**
@@ -52,7 +46,7 @@ public final class Account extends User {
      */
     public List<Event> getPastEvents() {
         updateEventList();
-        return pastEvents;
+        return new ArrayList<>(Collections.unmodifiableList(pastEvents));
     }
 
     /**
@@ -61,23 +55,20 @@ public final class Account extends User {
      */
     public List<Event> getFutureEvents(){
         updateEventList();
-        return futureEvents;
+        return new ArrayList<>(Collections.unmodifiableList(futureEvents));
     }
 
     /**
      * Getter for all events, return first the future then current then past
      */
     public List<Event> getEvents(){
-        List<Event> allEvents=getFutureEvents();
-        System.out.println("future events: "+allEvents);
+        updateEventList();
+        List<Event> allEvents = new ArrayList<>(futureEvents);
         if (!currentEvent.isEmpty()){
-            updateEventList();
             allEvents.add(currentEvent.get());
-            System.out.println("current event: "+ currentEvent.get());
         }
-        allEvents.addAll(getPastEvents());
-        System.out.println(" past events: "+ getPastEvents());
-        return allEvents;
+        allEvents.addAll(pastEvents);
+        return Collections.unmodifiableList(allEvents);
     }
 
     /**
@@ -92,7 +83,6 @@ public final class Account extends User {
         if (!currentEvent.isEmpty() && currentEvent.get().getEventStatus().equals(EventStatus.PAST)){
             newPast.add(currentEvent.get());
             Account.shared.withCurrentEvent(Optional.<Event>empty());
-            System.out.println("supposed to be empty, succeed? : "+currentEvent.isEmpty());
         }
 
         // check if future event still future
@@ -101,10 +91,12 @@ public final class Account extends User {
                 case PAST:
                     newPast.add(e);
                     newFuture.remove(e);
+                    break;
                 case CURRENT:
                     Account.shared.withCurrentEvent(Optional.from(e));
                     newFuture.remove(e);
-                    System.out.println("supposed to have status current, succeed? " + currentEvent.get().getEventStatus().equals(EventStatus.CURRENT));
+                    break;
+                default:
             }
         }
 
@@ -192,9 +184,10 @@ public final class Account extends User {
             shared = new Account(UUID, displayName, givenName, familyName, email,
                     current, pastEvents, futureEvents);
         } else {
+            Event e = current.get().withEventName(current.get().getEventName());
             if (current.get().getEventStatus().equals(EventStatus.CURRENT)) {
                 shared = new Account(UUID, displayName, givenName, familyName, email,
-                        current, pastEvents, futureEvents);
+                        Optional.from(e), pastEvents, futureEvents);
             } else throw new IllegalArgumentException("Event is "+current.get().getEventStatus()+" and not "+ EventStatus.CURRENT.toString());
         }
         return shared;

@@ -70,9 +70,10 @@ public class AccountShould {
 
     @Test
     public void withCurrentEventOK(){
-        shared.withCurrentEvent(from(new Event("Test", new LocalDateTime().minusDays(1),
+        shared.withCurrentEvent(from(new Event("Test1234", new LocalDateTime().minusDays(1),
                 new LocalDateTime().plusDays(1), "", new ArrayList<Member>())));
         assertEquals(shared.getCurrentEvent().get().getEventStatus(),EventStatus.CURRENT);
+        assertEquals(shared.getCurrentEvent().get().getEventName(), "Test1234");
         shared.clear();
     }
     @Test(expected = IllegalArgumentException.class)
@@ -228,6 +229,7 @@ public class AccountShould {
     // Annoying because need to wait for 10 sec
     @Test
     public void numberOfEventsUnchangedAfterFutureToCurrentTransition(){
+        shared.clear();
         shared.withFutureEvents(Arrays.asList(new Event("FutureEvent", LocalDateTime.now().plusSeconds(5),
                 LocalDateTime.now().plusMinutes(10), "Description", new ArrayList<Member>())));
         int size = Account.shared.getEvents().size();
@@ -306,9 +308,11 @@ public class AccountShould {
     }
     @Test
     public void toStringTest(){
-        shared.withCurrentEvent(Optional.from(new Event("1","inm", LocalDateTime.now().minusDays(1),
+        shared.clear();
+        Event e = new Event("1","inm", LocalDateTime.now().minusDays(1),
                 LocalDateTime.now().plusDays(2),"Du travail, toujours du travail",
-                new ArrayList<Member>())));
+                new ArrayList<Member>());
+        shared.withCurrentEvent(Optional.from(e));
         String expected = "Account{" +
                 "UUID='" + shared.getUUID() + '\'' +
                 "displayName='" + shared.getDisplayName() + '\'' +
