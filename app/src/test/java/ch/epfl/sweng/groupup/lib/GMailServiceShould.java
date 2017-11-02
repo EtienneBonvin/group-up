@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
  */
 
 public class GMailServiceShould {
-    private String recieverAddress;
+    /*private String recieverAddress;
     private GMailService mailSender;
 
     @Before
@@ -27,6 +27,6 @@ public class GMailServiceShould {
     public void beEmptyWhenCreatedEmpty() {
         mailSender.sendInvitationEmail(recieverAddress);
         assertEquals(1,1);
-    }
+    }*/
 
 }
