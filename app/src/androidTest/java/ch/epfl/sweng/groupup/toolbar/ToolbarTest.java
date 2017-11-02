@@ -13,6 +13,7 @@ import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
 import ch.epfl.sweng.groupup.activity.settings.Settings;
+import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -25,8 +26,8 @@ public class ToolbarTest {
 
     @Rule
     // third parameter is set to true which means the activity is started automatically
-    public ActivityTestRule<EventListingActivity> mActivityRule =
-            new ActivityTestRule<>(EventListingActivity.class, false, false);
+    public ActivityTestRule<ToolbarActivity> mActivityRule =
+            new ActivityTestRule<>(ToolbarActivity.class, false, false);
 
     @Before
     public void setup(){
