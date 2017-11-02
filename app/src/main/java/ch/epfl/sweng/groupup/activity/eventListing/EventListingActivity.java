@@ -4,13 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 import org.joda.time.LocalDateTime;
 
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
@@ -48,14 +47,7 @@ public class EventListingActivity extends ToolbarActivity {
         setContentView(R.layout.activity_event_listing);
         super.initializeToolbar();
 
-        initializeVariables();
-        initializeEvents(Account.shared.getFutureEvents());
-        initializeCreateEvent();
-        List<Event> belowCreateButton = Account.shared.getPastEvents();
-        if (!Account.shared.getCurrentEvent().isEmpty()){
-            belowCreateButton.add(Account.shared.getCurrentEvent().get());
-        }
-        initializeEvents(belowCreateButton);
+        initView();
         size=Account.shared.getEvents().size();
 
     }
@@ -73,14 +65,8 @@ public class EventListingActivity extends ToolbarActivity {
                         if (size != Account.shared.getEvents().size()){
                             setContentView(R.layout.activity_event_listing);
                             initializeToolbar();
-                            initializeVariables();
-                            initializeEvents(Account.shared.getFutureEvents());
-                            initializeCreateEvent();
-                            List<Event> belowCreateButton = Account.shared.getPastEvents();
-                            if (!Account.shared.getCurrentEvent().isEmpty()){
-                                belowCreateButton.add(Account.shared.getCurrentEvent().get());
-                            }
-                            initializeEvents(belowCreateButton);
+
+                            initView();
                             size=Account.shared.getEvents().size();
                         }
                     }
@@ -94,6 +80,21 @@ public class EventListingActivity extends ToolbarActivity {
     public void onPause() {
         autoUpdate.cancel();
         super.onPause();
+    }
+
+    public void initView(){
+        initializeVariables();
+        initializeEvents(Account.shared.getFutureEvents());
+        Log.d("log future events", Account.shared.getFutureEvents().toString());
+        initializeCreateEvent();
+        List<Event> belowCreateButton = new ArrayList<>();
+        if (!Account.shared.getCurrentEvent().isEmpty()){
+            belowCreateButton.add(Account.shared.getCurrentEvent().get());
+            Log.d("log current events", Account.shared.getCurrentEvent().toString());
+        }
+        belowCreateButton.addAll(Account.shared.getPastEvents());
+        Log.d("log past events", Account.shared.getPastEvents().toString());
+        initializeEvents(belowCreateButton);
     }
 
 
