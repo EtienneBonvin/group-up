@@ -75,7 +75,7 @@ public final class Account extends User {
             allEvents.add(currentEvent.get());
             System.out.println("current event: "+ currentEvent.get());
         }
-        allEvents.addAll(getPastEvents());
+        allEvents.addAll(pastEvents);
         System.out.println(" past events: "+ getPastEvents());
         return allEvents;
     }
