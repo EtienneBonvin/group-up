@@ -2,8 +2,6 @@ package ch.epfl.sweng.groupup.activity.eventDescription;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.method.KeyListener;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -32,7 +30,6 @@ public class EventDescriptionActivity extends ToolbarActivity {
     private TextView displayEventStartDate;
     private TextView displayEventEndDate;
     private EditText displayEventDescription;
-    private TextView displayEventMembers;
     private Event eventToDisplay;
 
     @Override
@@ -98,18 +95,17 @@ public class EventDescriptionActivity extends ToolbarActivity {
     /**
      * Intilize the different TextView and EditText
      */
-    public void initializeField(){
+    private void initializeField(){
         displayEventName= findViewById(R.id.event_description_name);
         displayEventStartDate= findViewById(R.id.event_description_start_date);
         displayEventEndDate=findViewById(R.id.event_description_end_date);
         displayEventDescription=findViewById(R.id.event_description_description);
-        displayEventMembers = findViewById(R.id.event_description_tv_members);
     }
 
     /**
      * Print the information about the event, if there is no event prints default string in fields.
      */
-    public void printEvent() {
+    private void printEvent() {
         if (eventToDisplay!=null) {
             displayEventName.setText(eventToDisplay.getEventName());
             displayEventStartDate.setText(eventToDisplay.getStartTime().toString(null, Locale.FRANCE));
