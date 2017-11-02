@@ -28,16 +28,12 @@ import ch.epfl.sweng.groupup.object.event.Event;
  */
 
 public class EventDescriptionActivity extends ToolbarActivity {
-    private LinearLayout linear;
     private EditText displayEventName;
     private TextView displayEventStartDate;
     private TextView displayEventEndDate;
-    private TextView displayEventMembers;
     private EditText displayEventDescription;
+    private TextView displayEventMembers;
     private Event eventToDisplay;
-    private KeyListener keylistener;
-    private String newName;
-    private String newDescription;
 
     @Override
     protected void onCreate (Bundle savedInstanceState){
@@ -54,7 +50,6 @@ public class EventDescriptionActivity extends ToolbarActivity {
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
         initializeField();
-        keylistener=displayEventName.getKeyListener();
         printEvent();
 
         //Remove and go to the event creation
@@ -90,7 +85,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
         eventToDisplay=eventToDisplay.withEventMembers(futureMembers);
         Account.shared.addOrUpdateEvent(eventToDisplay);
         Database.update();
-        List<Event> futureEventList=Account.shared.getEvents();
+        List<Event> futureEventList=new ArrayList<>(Account.shared.getEvents());
         Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>()).withCurrentEvent(Optional.<Event>empty());
         futureEventList.remove(eventToDisplay);
         for (Event fe:futureEventList){
@@ -124,7 +119,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
             for (Member member : eventToDisplay.getEventMembers()) {
                 TextView memberName = new TextView(this);
                 memberName.setText(member.getDisplayName().getOrElse("NO_NAME"));
-                linear = findViewById(R.id.linear_scroll_members);
+                LinearLayout linear = findViewById(R.id.linear_scroll_members);
                 linear.addView(memberName);
             }
         }
