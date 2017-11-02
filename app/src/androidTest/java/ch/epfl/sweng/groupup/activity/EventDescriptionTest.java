@@ -66,9 +66,12 @@ public class EventDescriptionTest {
                 .check(matches(withText(R.string.event_description_tv_name)));
         onView(withId(R.id.event_description_name))
                 .check(matches(withText(name)));
+
         onView(withId(R.id.event_description_name)).perform(typeText(endName));
+        Espresso.closeSoftKeyboard();
         onView(withId(R.id.event_description_description)).perform(typeText(description));
         onView(withId(R.id.save)).perform(click());
+        Espresso.closeSoftKeyboard();
         onView(withId(R.id.event_description_name)).check(matches(withText(name + endName)));
         onView(withId(R.id.event_description_description)).check(matches(withText(description)));
         Account.shared.clear();
