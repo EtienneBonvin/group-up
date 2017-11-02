@@ -77,27 +77,6 @@ public class EventListActivity extends LoginActivityInterface {
                         displayQR();
                     }
                 });
-
-        findViewById(R.id.icon_access_group_list)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent
-                                intent =
-                                new Intent(getApplicationContext(), EventListingActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-        findViewById(R.id.icon_access_settings)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), Settings.class);
-                        startActivity(intent);
-                        displayQR();
-                    }
-                });
     }
 
     @Override
