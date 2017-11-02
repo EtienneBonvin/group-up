@@ -25,11 +25,13 @@ import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
 
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
+import static android.support.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -60,6 +62,8 @@ public class EventCreationTest {
     @Test
     public void testEventWellGenerated() {
 
+        String eventName = "My event";
+
         Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
                 Optional.<String>empty(), Optional.<String>empty());
         List<Member> expectedMembers = new ArrayList<>();
@@ -68,10 +72,14 @@ public class EventCreationTest {
         expectedMembers.add(emptyMember.withUUID("2"));
         expectedMembers.add(emptyMember.withUUID("3"));
         expectedMembers.add(emptyMember.withUUID("4"));
-        expectedMembers.add(emptyMember.withUUID("5"));
+        expectedMembers.add(emptyMember.withUUID(Member.unknow_user+"1").withEmail("swenggroupup@gmail.com"));
         expectedMembers.add(emptyMember.withUUID(Account.shared.getUUID().getOrElse("Default UUID")));
 
-        addEventName("My event");
+        addEventName(eventName);
+
+        Espresso.closeSoftKeyboard();
+
+        addDescription("My description");
 
         Espresso.closeSoftKeyboard();
 
@@ -99,10 +107,11 @@ public class EventCreationTest {
         onView(withId(android.R.id.button1)).perform(click());
 
         addMembers();
+        Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_button)).perform(click());
-        Event expected = new Event("My event", start, end, "", expectedMembers);
+        Event expected = new Event(eventName, start, end, "My description", expectedMembers);
 
-        Event found = findEvent();
+        Event found = findEvent(eventName);
         if (BuildConfig.DEBUG && !(found.equals(expected))){
             throw new AssertionError();
         }
@@ -112,12 +121,11 @@ public class EventCreationTest {
     public void noEventCreatedOnEmptyEventName(){
 
         addEventName("");
+        Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_button)).perform(click());
-        onView(withText(R.string.event_creation_toast_non_empty_event_name))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
-                        .getWindow()
-                        .getDecorView()))))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.ui_edit_event_name))
+                .check(matches(hasErrorText(
+                        getTargetContext().getString(R.string.event_creation_toast_non_empty_event_name))));
     }
 
     @Test
@@ -128,11 +136,9 @@ public class EventCreationTest {
         setStartDate(2100, 5, 5, 4, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
-        onView(withText(R.string.event_creation_toast_event_name_too_long))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
-                        .getWindow()
-                        .getDecorView()))))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.ui_edit_event_name))
+                .check(matches(hasErrorText(
+                        getTargetContext().getString(R.string.event_creation_toast_event_name_too_long))));
     }
 
     @Test
@@ -288,12 +294,16 @@ public class EventCreationTest {
         String eventName = "testEventName";
         // Enter event details
         addEventName(eventName);
+        Espresso.closeSoftKeyboard();
         addMembers();
         Espresso.closeSoftKeyboard();
+        onView(withId(R.id.button_add_members)).perform(click());
+        Espresso.closeSoftKeyboard();
         // Click scan button
-        onView(withId(R.id.buttonScanQR)).perform(click());
+        //onView(withId(R.id.buttonScanQR)).perform(click());
         // Click back
-        Espresso.pressBack();
+        //Espresso.pressBack();
+        onView(withId(R.id.save_button)).perform(click());
         // Check event details
         onView(withId(R.id.ui_edit_event_name)).check(matches(withText(eventName)));
     }
@@ -326,11 +336,11 @@ public class EventCreationTest {
         onView(withId(android.R.id.button1)).perform(click());
     }
 
-    private Event findEvent(){
+    private Event findEvent(String eventName){
         List<Event> accountEvents = Account.shared.getFutureEvents();
         Event found = null;
         for(Event e : accountEvents){
-            if(e.getEventName().equals("My event")){
+            if(e.getEventName().equals(eventName)){
                 found = e;
                 break;
             }
@@ -339,6 +349,7 @@ public class EventCreationTest {
     }
 
     private void addMembers(){
+        onView(withId(R.id.button_add_members)).perform(click());
         onView(withId(R.id.edit_text_add_member)).perform(typeText("0"));
         onView(withId(R.id.image_view_add_member)).perform(click());
         onView(withId(R.id.edit_text_add_member)).perform(typeText("1"));
@@ -349,12 +360,17 @@ public class EventCreationTest {
         onView(withId(R.id.image_view_add_member)).perform(click());
         onView(withId(R.id.edit_text_add_member)).perform(typeText("4"));
         onView(withId(R.id.image_view_add_member)).perform(click());
-        onView(withId(R.id.edit_text_add_member)).perform(typeText("5"));
+        onView(withId(R.id.edit_text_add_member)).perform(typeText("swenggroupup@gmail.com"));
         onView(withId(R.id.image_view_add_member)).perform(click());
+        onView(withId(R.id.save_button)).perform(click());
     }
 
     private void addEventName(String name){
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
+    }
+
+    private void addDescription(String description){
+        onView(withId(R.id.edit_text_description)).perform(typeText(description));
     }
 }
 

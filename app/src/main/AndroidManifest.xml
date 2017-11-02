@@ -28,6 +28,7 @@
         <activity android:name=".activity.home.inactive.DisplayQRActivity" />
         <activity android:name=".activity.settings.Settings" />
         <activity android:name=".activity.toolbar.ToolbarActivity" />
+        <activity android:name=".activity.eventCreation.MembersAdding"></activity>
     </application>
 
 </manifest>

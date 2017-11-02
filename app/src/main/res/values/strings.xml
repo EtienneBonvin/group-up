@@ -32,17 +32,26 @@
     <string name="event_creation_hint_event_name">Enter name</string>
     <string name="event_creation_tv_start_time">Start time : </string>
     <string name="event_creation_tv_end_time">End time : </string>
-    <string name="event_creation_tv_members">Members : </string>
-    <string name="event_creation_tv_invite_new_members">Invite new members</string>
-    <string name="event_creation_hint_invite_new_members">Email of new member</string>
+    <string name="event_creation_tv_description">Description : </string>
+    <string name="event_creation_button_add_members">Show / Add members</string>
+    <string name="event_creation_tv_number_of_members">Number of members :</string>
     <string name="event_creation_button_add_event">ADD EVENT</string>
-    <string name="Logo_QR">Logo of the QR code</string>
-    <string name="plus_sign">Plus sign</string>
     <string name="event_creation_toast_non_empty_event_name">Give a name to your event !</string>
     <string name="event_creation_toast_event_name_too_long">The name of the event is too long.</string>
     <string name="event_creation_toast_event_start_before_now">Are you planning to go back to the past ?</string>
     <string name="event_creation_toast_event_end_before_begin">Your event ends before it begins.</string>
     <string name="event_craeation_toast_event_last_1_minute">Your event should last for at least 1 minute.</string>
+
+    <!-- Members Adding UI -->
+    <string name="members_adding_tv_greet_user">Let us add some friends to your event !\n\n
+    You can add a friend who does not have the application yet by entering his email address !</string>
+    <string name="members_adding_tv_email">Email : </string>
+    <string name="members_adding_button_save">Save members</string>
+    <string name="members_adding_tv_members">Members : </string>
+    <string name="members_adding_tv_invite_new_members">Invite new members</string>
+    <string name="members_adding_hint_invite_new_members">Email of new member</string>
+    <string name="Logo_QR">Logo of the QR code</string>
+    <string name="plus_sign">Plus sign</string>
 
     <!-- Event Listing UI -->
     <string name="create_new_event">Create Event</string>
