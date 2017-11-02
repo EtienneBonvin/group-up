@@ -1,20 +1,14 @@
 package ch.epfl.sweng.groupup.object.account;
 
-import android.provider.CalendarContract;
-import android.util.Log;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ch.epfl.sweng.groupup.lib.Optional;
-import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.event.EventStatus;
 
@@ -68,14 +62,14 @@ public final class Account extends User {
      * Getter for all events, return first the future then current then past
      */
     public List<Event> getEvents(){
-        List<Event> allEvents=getFutureEvents();
+        updateEventList();
+        List<Event> allEvents = new ArrayList<>(futureEvents);
         System.out.println("future events: "+allEvents);
         if (!currentEvent.isEmpty()){
-            updateEventList();
             allEvents.add(currentEvent.get());
             System.out.println("current event: "+ currentEvent.get());
         }
-        allEvents.addAll(getPastEvents());
+        allEvents.addAll(pastEvents);
         System.out.println(" past events: "+ getPastEvents());
         return Collections.unmodifiableList(allEvents);
     }
@@ -101,10 +95,13 @@ public final class Account extends User {
                 case PAST:
                     newPast.add(e);
                     newFuture.remove(e);
+                    break;
                 case CURRENT:
                     Account.shared.withCurrentEvent(Optional.from(e));
                     newFuture.remove(e);
-                    System.out.println("supposed to have status current, succeed? " + currentEvent.get().getEventStatus().equals(EventStatus.CURRENT));
+                    System.out.println("supposed to have status current, succeed? " + shared.currentEvent.get().getEventStatus().equals(EventStatus.CURRENT));
+                    break;
+                default:
             }
         }
 
@@ -192,9 +189,10 @@ public final class Account extends User {
             shared = new Account(UUID, displayName, givenName, familyName, email,
                     current, pastEvents, futureEvents);
         } else {
+            Event e = current.get().withEventName(current.get().getEventName());
             if (current.get().getEventStatus().equals(EventStatus.CURRENT)) {
                 shared = new Account(UUID, displayName, givenName, familyName, email,
-                        current, pastEvents, futureEvents);
+                        Optional.from(e), pastEvents, futureEvents);
             } else throw new IllegalArgumentException("Event is "+current.get().getEventStatus()+" and not "+ EventStatus.CURRENT.toString());
         }
         return shared;

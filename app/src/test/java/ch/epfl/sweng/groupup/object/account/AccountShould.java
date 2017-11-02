@@ -70,9 +70,10 @@ public class AccountShould {
 
     @Test
     public void withCurrentEventOK(){
-        shared.withCurrentEvent(from(new Event("Test", new LocalDateTime().minusDays(1),
+        shared.withCurrentEvent(from(new Event("Test1234", new LocalDateTime().minusDays(1),
                 new LocalDateTime().plusDays(1), "", new ArrayList<Member>())));
         assertEquals(shared.getCurrentEvent().get().getEventStatus(),EventStatus.CURRENT);
+        assertEquals(shared.getCurrentEvent().get().getEventName(), "Test1234");
         shared.clear();
     }
     @Test(expected = IllegalArgumentException.class)
@@ -228,6 +229,7 @@ public class AccountShould {
     // Annoying because need to wait for 10 sec
     @Test
     public void numberOfEventsUnchangedAfterFutureToCurrentTransition(){
+        shared.clear();
         shared.withFutureEvents(Arrays.asList(new Event("FutureEvent", LocalDateTime.now().plusSeconds(5),
                 LocalDateTime.now().plusMinutes(10), "Description", new ArrayList<Member>())));
         int size = Account.shared.getEvents().size();
