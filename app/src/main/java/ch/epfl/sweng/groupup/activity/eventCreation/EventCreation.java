@@ -28,6 +28,7 @@ import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
+import ch.epfl.sweng.groupup.lib.email.GMailService;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
@@ -527,6 +528,8 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
          */
         private Event build(){
 
+            GMailService gms = new GMailService();
+
             members.add(Account.shared.getUUID().getOrElse("Default UUID"));
             List<Member> finalMembers = new ArrayList<>();
             Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(),
@@ -534,15 +537,20 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
 
             int nb_unknown = 0;
 
+            List<String> mailsToSend = new ArrayList<>();
+
             for(String s : members){
                 if(emailCheck(s)){
                     finalMembers.add(emptyMember
                             .withUUID(Member.unknow_user+(++nb_unknown))
                             .withEmail(s));
+                    mailsToSend.add(s);
                 }else{
                     finalMembers.add(emptyMember.withUUID(s));
                 }
             }
+
+            gms.sendInvitationEmail(mailsToSend);
 
             return new Event(eventName, strToldt(startDate), strToldt(endDate), description, finalMembers);
         }
