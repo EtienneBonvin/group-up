@@ -64,7 +64,7 @@ public class ToolbarTest {
         /* times(2) is there because the Activity will match two times : 1 times before
         * the click on the icon and another time after.
          */
-        intended(hasComponent(EventListingActivity.class.getName()), times(2));
+        intended(hasComponent(EventListingActivity.class.getName()));
 
     }
 }
