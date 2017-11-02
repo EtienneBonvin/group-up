@@ -12,7 +12,8 @@ public class GMailService implements MailService {
      */
     @Override
     public void sendInvitationEmail(List<String> addresses) {
-        s.doInBackground(addresses.toArray(new String[addresses.size()]));
+        s.execute(addresses.toArray(new String[addresses.size()]));
+
     }
 
     /**
@@ -21,6 +22,6 @@ public class GMailService implements MailService {
      */
     @Override
     public void sendInvitationEmail(String address) {
-        s.doInBackground(address);
+        s.execute(address);
     }
 }
