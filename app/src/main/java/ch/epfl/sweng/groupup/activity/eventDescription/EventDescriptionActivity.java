@@ -2,7 +2,10 @@ package ch.epfl.sweng.groupup.activity.eventDescription;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.KeyListener;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,6 +17,7 @@ import java.util.Locale;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
+import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
@@ -24,13 +28,16 @@ import ch.epfl.sweng.groupup.object.event.Event;
  */
 
 public class EventDescriptionActivity extends ToolbarActivity {
-    LinearLayout linear;
-    EditText displayEventName;
-    TextView displayEventStartDate;
-    TextView displayEventEndDate;
-    TextView displayEventMembers;
-    EditText displayEventDescription;
+    private LinearLayout linear;
+    private EditText displayEventName;
+    private TextView displayEventStartDate;
+    private TextView displayEventEndDate;
+    private TextView displayEventMembers;
+    private EditText displayEventDescription;
     private Event eventToDisplay;
+    private KeyListener keylistener;
+    private String newName;
+    private String newDescription;
 
     @Override
     protected void onCreate (Bundle savedInstanceState){
@@ -43,7 +50,11 @@ public class EventDescriptionActivity extends ToolbarActivity {
             //!!!Order the events !!!
             eventToDisplay = Account.shared.getEvents().get(eventIndex);
         }
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
         initializeField();
+        keylistener=displayEventName.getKeyListener();
         printEvent();
 
         //Remove and go to the event creation
@@ -56,29 +67,17 @@ public class EventDescriptionActivity extends ToolbarActivity {
                         removeEvent();
                     }
                 });
-        //Change name
-        findViewById(R.id.modifyName)
+        //Save changes
+        findViewById(R.id.save)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String name= displayEventName.getText().toString();
-                        displayEventName.setText(name);
-                        Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name));
-                        Database.update();
-                        eventToDisplay=Account.shared.getEvents().get(eventIndex);
-                    }
-                });
-        //Change description
-        findViewById(R.id.modifyDescription)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String description=displayEventDescription.getText().toString();
-                        displayEventDescription.setText(description);
-                        Account.shared.addOrUpdateEvent(eventToDisplay.withDescription(description));
-                        Database.update();
-                        eventToDisplay=Account.shared.getEvents().get(eventIndex);
-                    }
+                            String name= displayEventName.getText().toString();
+                            String description = displayEventDescription.getText().toString();
+                            Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name).withDescription(description));
+                            Database.update();
+                            eventToDisplay=Account.shared.getEvents().get(eventIndex);
+                        }
                 });
     }
 
@@ -91,7 +90,12 @@ public class EventDescriptionActivity extends ToolbarActivity {
         eventToDisplay=eventToDisplay.withEventMembers(futureMembers);
         Account.shared.addOrUpdateEvent(eventToDisplay);
         Database.update();
-        Account.shared.getEvents().remove(eventToDisplay);
+        List<Event> futureEventList=Account.shared.getEvents();
+        Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>()).withCurrentEvent(Optional.<Event>empty());
+        futureEventList.remove(eventToDisplay);
+        for (Event fe:futureEventList){
+            Account.shared.addOrUpdateEvent(fe);
+        }
         Database.update();
 
     }
