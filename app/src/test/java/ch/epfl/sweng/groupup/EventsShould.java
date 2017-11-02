@@ -91,13 +91,13 @@ public class EventsShould {
 
     @Test
     public void haveStartTime() {
-        LocalDateTime start = new LocalDateTime().now();
+        LocalDateTime start = LocalDateTime.now();
         assertEquals(event.withStartTime(start).getStartTime(), start);
     }
 
     @Test
     public void haveEndTime() {
-        LocalDateTime end = new LocalDateTime().now();
+        LocalDateTime end = LocalDateTime.now();
         assertEquals(event.withEndTime(end).getEndTime(), end);
     }
 
@@ -220,16 +220,20 @@ public class EventsShould {
 
     @Test
     public void equalsEventsAreEquals(){
+        LocalDateTime start = LocalDateTime.now().plusDays(1);
+        LocalDateTime end = LocalDateTime.now().plusDays(2);
         List<Member> members =  new ArrayList<>(Arrays.asList(new Member("1","Javier","Pavier","Xantet","yolo@yolo.com"), new Member("2","asdf","Médric","Caire","yolo1@yolo.yolo")));
-        Event e = new Event("1","inm", LocalDateTime.now().plusDays(1),LocalDateTime.now().plusDays(2),"Du travail, toujours du travail", members);
-        Event f = new Event("1","inm", LocalDateTime.now().plusDays(1),LocalDateTime.now().plusDays(2),"Du travail, toujours du travail", members);
+        Event e = new Event("1","inm", start, end,"Du travail, toujours du travail", members);
+        Event f = new Event("1","inm", start, end,"Du travail, toujours du travail", members);
         assertEquals(e,f);
     }
     @Test
     public void differentEventsAreDifferent(){
+        LocalDateTime start = LocalDateTime.now().plusDays(1);
+        LocalDateTime end = LocalDateTime.now().plusDays(2);
         List<Member> members =  new ArrayList<>(Arrays.asList(new Member("1","Javier","Pavier","Xantet","yolo@yolo.com"), new Member("2","asdf","Médric","Caire","yolo1@yolo.yolo")));
-        Event e = new Event("2","inm", LocalDateTime.now().plusDays(1),LocalDateTime.now().plusDays(2),"Du travail, toujours du travail", members);
-        Event f = new Event("1","inm", LocalDateTime.now().plusDays(1),LocalDateTime.now().plusDays(2),"Du travail, toujours du travail", members);
+        Event e = new Event("2","inm", start, end,"Du travail, toujours du travail", members);
+        Event f = new Event("1","inm", start, end,"Du travail, toujours du travail", members);
         assertNotEquals(e,f);
     }
 }
