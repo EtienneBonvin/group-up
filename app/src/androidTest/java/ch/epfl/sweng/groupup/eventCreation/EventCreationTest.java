@@ -81,6 +81,7 @@ public class EventCreationTest {
 
         addDescription("My description");
 
+        Espresso.closeSoftKeyboard();
 
         LocalDateTime start = LocalDateTime.now().plusHours(1).plusMinutes(5);
         LocalDateTime end = LocalDateTime.now().plusHours(1).plusMinutes(6);
@@ -90,7 +91,7 @@ public class EventCreationTest {
                 .perform(PickerActions.setDate(start.getYear(), start.getMonthOfYear(), start.getDayOfYear()));
         onView(withId(android.R.id.button1)).perform(click());
 
-        onView(withId(R.id.button_end_date)).perform(click());        Espresso.closeSoftKeyboard();
+        onView(withId(R.id.button_end_date)).perform(click());
 
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
                 .perform(PickerActions.setDate(end.getYear(), end.getMonthOfYear(), end.getDayOfYear()));
