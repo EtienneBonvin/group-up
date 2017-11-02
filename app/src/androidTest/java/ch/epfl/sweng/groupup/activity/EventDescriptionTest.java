@@ -24,6 +24,7 @@ import ch.epfl.sweng.groupup.activity.eventCreation.EventCreation;
 import ch.epfl.sweng.groupup.activity.eventDescription.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.eventCreation.EventCreationTest;
 import ch.epfl.sweng.groupup.lib.Optional;
+import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
@@ -42,78 +43,52 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class EventDescriptionTest {
+    private String name = "My beautiful event";
+
     @Rule
-    public final ActivityTestRule<EventDescriptionActivity> mActivityRule =
-            new ActivityTestRule<>(EventDescriptionActivity.class);
-
-    Event e = new Event("Name", new LocalDateTime(), new LocalDateTime().plusDays(1),
-                "My amazing description", new ArrayList<>(Arrays.asList(new Member("1","displayed","","",""),
-                new Member("2","YOLO","","",""),new Member("3","LOOOOOOOOOOOOOOL","","",""))));
+    public final ActivityTestRule<EventCreation> mActivityRule =
+            new ActivityTestRule<>(EventCreation.class);
 
 
     @Test
-    public void displayDefaultAccountFields() throws Exception {
+    public void createDisplayAndChangeAnEvent() {
+        Database.setUpDatabase();
+        String name = "My beautiful event";
+        String endName = " is changed";
+        String description = "has an awesome description";
+        onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
+        Espresso.closeSoftKeyboard();
+
+        onView(withId(R.id.save_button)).perform(click());
+
+        onView(withId(R.id.linear_layout_event_list)).perform(click());
         onView(withId(R.id.event_description_tv_name))
                 .check(matches(withText(R.string.event_description_tv_name)));
-
         onView(withId(R.id.event_description_name))
-                .check(matches(withText(R.string.no_event_name)));
-
-        onView(withId(R.id.event_description_tv_start_date))
-                .check(matches(withText(R.string.event_description_tv_start_date)));
-
-        onView(withId(R.id.event_description_start_date))
-                .check(matches(withText(R.string.no_event_start_date)));
-
-        onView(withId(R.id.event_description_tv_end_date))
-                .check(matches(withText(R.string.event_description_tv_end_date)));
-
-        onView(withId(R.id.event_description_end_date))
-                .check(matches(withText(R.string.no_event_end_date)));
-
-        onView(withId(R.id.event_description_tv_description))
-                .check(matches(withText(R.string.event_description_tv_description)));
+                .check(matches(withText(name)));
+        onView(withId(R.id.event_description_name)).perform(typeText(endName));
+        onView(withId(R.id.event_description_description)).perform(typeText(description));
+        onView(withId(R.id.save)).perform(click());
+        onView(withId(R.id.event_description_name)).check(matches(withText(name + endName)));
+        onView(withId(R.id.event_description_description)).check(matches(withText(description)));
+        Account.shared.clear();
     }
 
     @Test
-    public void displayCorrectEvent(){
-        onView(withId(R.id.event_description_tv_name))
-                .check(matches(withText(R.string.event_description_tv_name)));
+    public void CreateAndRemoveAnEvent() {
 
-        onView(withId(R.id.event_description_name))
-                .check(matches(withText(e.getEventName())));
+        onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
+        Espresso.closeSoftKeyboard();
 
-        onView(withId(R.id.event_description_tv_start_date))
-                .check(matches(withText(R.string.event_description_tv_start_date)));
+        onView(withId(R.id.save_button)).perform(click());
 
-        onView(withId(R.id.event_description_start_date))
-                .check(matches(withText(e.getStartTime().toString(null, Locale.FRANCE))));
+        onView(withId(R.id.linear_layout_event_list)).perform(click());
 
-        onView(withId(R.id.event_description_tv_end_date))
-                .check(matches(withText(R.string.event_description_tv_end_date)));
-
-        onView(withId(R.id.event_description_end_date))
-                .check(matches(withText(e.getEndTime().toString(null, Locale.FRANCE))));
-
-        onView(withId(R.id.event_description_tv_description))
-                .check(matches(withText(R.string.event_description_tv_description)));
-
-        onView(withId(R.id.event_description_description))
-                .check(matches(withText(e.getDescription())));
-    }
-
-    @Test
-    public void nameIsWellChanged(){
-        onView(withId(R.id.modifyName)).perform(click());
-        onView(withId(R.id.event_description_name)).perform(typeText("Test"))
-                .check(matches(withText("Test")));
-    }
-
-    @Test
-    public void eventIsRemoved(){
         onView(withId(R.id.remove_event_button)).perform(click());
-        if (BuildConfig.DEBUG && !Account.shared.getEvents().contains(e)){
+
+        if (BuildConfig.DEBUG && !(Account.shared.getEvents().isEmpty())){
             throw new AssertionError();
         }
+        Account.shared.clear();
     }
 }
