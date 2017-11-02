@@ -34,7 +34,7 @@ public class EventListingActivity extends ToolbarActivity {
     private LinearLayout linearLayout;
     private int heightInSp;
     private Timer autoUpdate;
-    int size;
+    private int size;
 
     /**
      * Initialization of the private variables of the class and
