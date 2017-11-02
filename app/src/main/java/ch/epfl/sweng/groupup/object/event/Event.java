@@ -195,7 +195,7 @@ public final class Event implements Serializable {
                 ", eventMember='" + eventMembers + '\'' +
                 ", startDate='" + startTime + '\'' +
                 ", endDate=" + endTime + '\'' +
-                ", evenStatus=" + getEventStatus() + '\'' +
+                ", eventStatus=" + getEventStatus() + '\'' +
                 ", eventID= " + UUID +
                 '}';
     }

@@ -106,7 +106,7 @@ public class EventListActivity extends LoginActivityInterface {
         startActivity(intent);
     }
 
-    public void displayQR(){
+    private void displayQR(){
         if (!shared.getUUID().isEmpty()){
             String text = shared.getUUID().get();
             QRCodeWriter writer = new QRCodeWriter();

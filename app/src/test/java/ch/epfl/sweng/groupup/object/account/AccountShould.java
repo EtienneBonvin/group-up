@@ -1,9 +1,16 @@
 package ch.epfl.sweng.groupup.object.account;
 
+import android.util.Log;
+
 import org.joda.time.LocalDateTime;
 import org.junit.Test;
+import org.junit.experimental.categories.Categories;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import static ch.epfl.sweng.groupup.lib.Optional.from;
 import static org.junit.Assert.*;
 
@@ -136,6 +143,119 @@ public class AccountShould {
     }
 
     @Test
+    public void getOnlyFutureEvents(){
+        shared.withPastEvents(Arrays.asList(new Event("PastEvent", LocalDateTime.now().minusDays(2),
+                LocalDateTime.now().minusDays(1), "Description", new ArrayList<Member>())));
+        shared.withFutureEvents(Arrays.asList(new Event("FutureEvent", LocalDateTime.now().plusDays(1),
+                LocalDateTime.now().plusDays(2), "Description", new ArrayList<Member>())));
+        shared.withCurrentEvent(from(new Event("Test", new LocalDateTime().minusDays(1),
+                new LocalDateTime().plusDays(1), "", new ArrayList<Member>())));
+
+        for (Event e : shared.getFutureEvents()){
+            assertEquals(e.getEventStatus(),EventStatus.FUTURE);
+        }
+        shared.clear();
+    }
+
+    @Test
+    public void getOnlyPastEvents(){
+        shared.withPastEvents(Arrays.asList(new Event("PastEvent", LocalDateTime.now().minusDays(2),
+                LocalDateTime.now().minusDays(1), "Description", new ArrayList<Member>())));
+        shared.withFutureEvents(Arrays.asList(new Event("FutureEvent", LocalDateTime.now().plusDays(1),
+                LocalDateTime.now().plusDays(2), "Description", new ArrayList<Member>())));
+        shared.withCurrentEvent(from(new Event("Test", new LocalDateTime().minusDays(1),
+                new LocalDateTime().plusDays(1), "", new ArrayList<Member>())));
+
+        for (Event e : shared.getPastEvents()){
+            assertEquals(e.getEventStatus(),EventStatus.PAST);
+        }
+        shared.clear();
+    }
+
+    @Test
+    public void getAllPastEvents(){
+        shared.withPastEvents(Arrays.asList(new Event("PastEvent1", LocalDateTime.now().minusDays(2),
+                LocalDateTime.now().minusDays(1), "Description", new ArrayList<Member>())));
+        shared.withPastEvents(Arrays.asList(new Event("PastEvent2", LocalDateTime.now().minusDays(3),
+                LocalDateTime.now().minusDays(1), "Description", new ArrayList<Member>())));
+        shared.withPastEvents(Arrays.asList(new Event("PastEvent3", LocalDateTime.now().minusDays(5),
+                LocalDateTime.now().minusDays(1), "Description", new ArrayList<Member>())));
+
+        int amoutPastEvents=0;
+        for (Event e : Account.shared.getEvents()){
+            if (e.getEventStatus().equals(EventStatus.PAST)){
+                amoutPastEvents++;
+            }
+        }
+        assertEquals(Account.shared.getPastEvents().size(),amoutPastEvents);
+        shared.clear();
+    }
+
+    @Test
+    public void getOnlyCurrentEvent(){
+        shared.withPastEvents(Arrays.asList(new Event("PastEvent", LocalDateTime.now().minusDays(2),
+                LocalDateTime.now().minusDays(1), "Description", new ArrayList<Member>())));
+        shared.withFutureEvents(Arrays.asList(new Event("FutureEvent", LocalDateTime.now().plusDays(1),
+                LocalDateTime.now().plusDays(2), "Description", new ArrayList<Member>())));
+        shared.withCurrentEvent(from(new Event("Test", new LocalDateTime().minusDays(1),
+                new LocalDateTime().plusDays(1), "", new ArrayList<Member>())));
+        assertEquals(shared.getCurrentEvent().get().getEventStatus(),EventStatus.CURRENT);
+        shared.clear();
+    }
+
+    @Test
+    public void getAllEventsOnlyOnce(){
+        // add past and future event
+        shared.withPastEvents(Arrays.asList(new Event("PastEvent", LocalDateTime.now().minusDays(2),
+                LocalDateTime.now().minusDays(1), "Description", new ArrayList<Member>())));
+        shared.withFutureEvents(Arrays.asList(new Event("FutureEvent", LocalDateTime.now().plusDays(1),
+                LocalDateTime.now().plusDays(2), "Description", new ArrayList<Member>())));
+
+        int size = Account.shared.getPastEvents().size() + Account.shared.getFutureEvents().size();
+        assertEquals(Account.shared.getEvents().size(), size);
+
+        // add current event
+        shared.withCurrentEvent(from(new Event("Test", new LocalDateTime().minusDays(1),
+                new LocalDateTime().plusDays(1), "", new ArrayList<Member>())));
+        assertEquals(Account.shared.getEvents().size(), size + 1);
+
+        // re-accessing the list should not increase size
+        int amountOfEvents = Account.shared.getEvents().size();
+        assertEquals(amountOfEvents, Account.shared.getEvents().size());
+        shared.clear();
+    }
+
+    // Annoying because need to wait for 10 sec
+    @Test
+    public void numberOfEventsUnchangedAfterFutureToCurrentTransition(){
+        shared.withFutureEvents(Arrays.asList(new Event("FutureEvent", LocalDateTime.now().plusSeconds(5),
+                LocalDateTime.now().plusMinutes(10), "Description", new ArrayList<Member>())));
+        int size = Account.shared.getEvents().size();
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertEquals(Account.shared.getEvents().size(), size);
+        shared.clear();
+    }
+
+    @Test
+    public void numberOfEventsUnchangedAfterCurrentToPastTransition(){
+        shared.clear();
+        shared.withCurrentEvent(Optional.from(new Event("CurrentEvent", LocalDateTime.now().minusHours(1),
+                LocalDateTime.now().plusSeconds(5), "Description", new ArrayList<Member>())));
+        int size = Account.shared.getEvents().size();
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertEquals(size, Account.shared.getEvents().size());
+        shared.clear();
+    }
+
+    @Test
     public void updateEventsCorrectly(){
         // Test for past event
         shared.addOrUpdatePastEvent(new Event("UUID", "Test", new LocalDateTime().minusDays(2),
@@ -171,6 +291,7 @@ public class AccountShould {
 
     @Test
     public void toStringShortTest(){
+        shared.clear();
         shared.withCurrentEvent(Optional.from(new Event("1","inm", LocalDateTime.now().minusDays(1),
                 LocalDateTime.now().plusDays(2),"Du travail, toujours du travail",
                 new ArrayList<Member>())));
@@ -181,12 +302,15 @@ public class AccountShould {
              ", currentEvent=" + shared.getCurrentEvent().get().toString() +
              '}';
         assertEquals(shared.toStringShort(),expected);
+        shared.clear();
     }
     @Test
     public void toStringTest(){
-        shared.withCurrentEvent(Optional.from(new Event("1","inm", LocalDateTime.now().minusDays(1),
+        shared.clear();
+        Event e = new Event("1","inm", LocalDateTime.now().minusDays(1),
                 LocalDateTime.now().plusDays(2),"Du travail, toujours du travail",
-                new ArrayList<Member>())));
+                new ArrayList<Member>());
+        shared.withCurrentEvent(Optional.from(e));
         String expected = "Account{" +
                 "UUID='" + shared.getUUID() + '\'' +
                 "displayName='" + shared.getDisplayName() + '\'' +
@@ -198,6 +322,7 @@ public class AccountShould {
                 ", futureEvents=" + shared.getFutureEvents()+
                 '}';
         assertEquals(shared.toString(),expected);
+        shared.clear();
     }
 
     @Test
@@ -253,5 +378,6 @@ public class AccountShould {
         for(int i = 0; i < correctlyOrderedFutureEvents.size(); i++) {
             assertEquals(shared.getFutureEvents().get(i).getEventName(), correctlyOrderedFutureEvents.get(i).getEventName());
         }
+        shared.clear();
     }*/
 }
