@@ -306,9 +306,11 @@ public class AccountShould {
     }
     @Test
     public void toStringTest(){
-        shared.withCurrentEvent(Optional.from(new Event("1","inm", LocalDateTime.now().minusDays(1),
+        shared.clear();
+        Event e = new Event("1","inm", LocalDateTime.now().minusDays(1),
                 LocalDateTime.now().plusDays(2),"Du travail, toujours du travail",
-                new ArrayList<Member>())));
+                new ArrayList<Member>());
+        shared.withCurrentEvent(Optional.from(e));
         String expected = "Account{" +
                 "UUID='" + shared.getUUID() + '\'' +
                 "displayName='" + shared.getDisplayName() + '\'' +
