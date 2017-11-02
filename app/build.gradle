@@ -24,7 +24,6 @@ android {
     lintOptions {
         abortOnError false
     }
-
 }
 
 configurations.all {
@@ -71,9 +70,21 @@ dependencies {
     androidTestCompile 'com.android.support.test:rules:1.0.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+
     compile files('../libs/activation.jar')
     compile files('../libs/additionnal.jar')
     compile files('../libs/mail.jar')
+    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.2'){
+        /* Be careful, some compile errors could come from here,
+        * because of library conflicts.
+         */
+        exclude module: 'support-annotations'
+        exclude module: 'support-v4'
+        exclude module: 'support-v13'
+        exclude module: 'appcompat-v7'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'design'
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'

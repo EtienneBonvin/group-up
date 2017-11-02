@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -26,31 +28,35 @@ public class ToolbarTest {
     public ActivityTestRule<EventListingActivity> mActivityRule =
             new ActivityTestRule<>(EventListingActivity.class, false, false);
 
-    @Test
-    public void SettingsOpenedOnIconClick(){
+    @Before
+    public void setup(){
         Intents.init();
-        mActivityRule.launchActivity(new Intent());
+    }
 
-        onView(withId(R.id.icon_access_settings)).perform(click());
-        intended(hasComponent(Settings.class.getName()));
-
+    @After
+    public void finish(){
         Intents.release();
     }
 
     @Test
+    public void SettingsOpenedOnIconClick(){
+        mActivityRule.launchActivity(new Intent());
+
+        onView(withId(R.id.icon_access_settings)).perform(click());
+        intended(hasComponent(Settings.class.getName()));
+    }
+
+    @Test
     public void UserProfileOpenedOnIconClick(){
-        Intents.init();
         mActivityRule.launchActivity(new Intent());
 
         onView(withId(R.id.icon_access_user_profile)).perform(click());
         intended(hasComponent(EventListActivity.class.getName()));
 
-        Intents.release();
     }
 
     @Test
     public void GroupListOpenedOnIconClick(){
-        Intents.init();
         mActivityRule.launchActivity(new Intent());
 
         onView(withId(R.id.icon_access_group_list)).perform(click());
@@ -59,6 +65,5 @@ public class ToolbarTest {
          */
         intended(hasComponent(EventListingActivity.class.getName()), times(2));
 
-        Intents.release();
     }
 }
