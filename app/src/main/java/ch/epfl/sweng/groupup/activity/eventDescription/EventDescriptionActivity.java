@@ -34,6 +34,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
 
     @Override
     protected void onCreate (Bundle savedInstanceState){
+        int maxName= 50;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_description);
         super.initializeToolbar();
@@ -69,13 +70,18 @@ public class EventDescriptionActivity extends ToolbarActivity {
                     public void onClick(View view) {
                             String name= displayEventName.getText().toString();
                             String description = displayEventDescription.getText().toString();
+                            if (name.length()>50){
+                                displayEventName.setError(getString(R.string.event_creation_toast_event_name_too_long));
+                            }
+                            else if (name.length()==0){
+                                displayEventName.setError(getString(R.string.event_creation_toast_non_empty_event_name));
+                            }
                             Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name).withDescription(description));
                             Database.update();
                             eventToDisplay=Account.shared.getEvents().get(eventIndex);
                         }
                 });
     }
-
     /**
      * Remove the user from the Event
      */

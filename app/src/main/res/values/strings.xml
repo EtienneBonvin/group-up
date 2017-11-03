@@ -45,7 +45,6 @@
     <!-- Members Adding UI -->
     <string name="members_adding_tv_greet_user">Let us add some friends to your event !\n\n
     You can add a friend who does not have the application yet by entering his email address !</string>
-    <string name="members_adding_tv_email">Email : </string>
     <string name="members_adding_button_save">Save members</string>
     <string name="members_adding_tv_members">Members : </string>
     <string name="members_adding_tv_invite_new_members">Invite new members</string>
