@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/event_description_tv_name"
         android:hint="@string/change_the_name_of_the_event"
+        android:inputType="text"
         android:text="@string/no_event_name" />
 
     <TextView
