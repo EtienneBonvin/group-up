@@ -21,8 +21,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @RunWith(AndroidJUnit4.class)
 public class LoginTestSuite {
     @Rule
-    public final ActivityTestRule<LoginActivity> mActivityRule =
-            new ActivityTestRule<>(LoginActivity.class);
+    public final ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<>(LoginActivity.class);
 
     @Test
     public void newLoginSuccessLogoutSuccess() throws Exception {

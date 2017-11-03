@@ -9,7 +9,9 @@ import com.google.firebase.database.ValueEventListener;
 import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,7 +58,8 @@ public final class Database {
      */
     public static void setUpEventListener(ValueEventListener listener) {
         if (listener == null) {
-            databaseRef.child(NODE_EVENTS_LIST).addValueEventListener(getEventsListener());
+            databaseRef.child(NODE_EVENTS_LIST)
+                    .addValueEventListener(getEventsListener());
         } else {
             databaseRef.child(NODE_EVENTS_LIST).addValueEventListener(listener);
         }
@@ -86,19 +89,26 @@ public final class Database {
         HashMap<String, DatabaseUser> uuidToUserMap = new HashMap<>();
         for (Member memberToStore : event.getEventMembers()) {
             DatabaseUser databaseUser =
-                    new DatabaseUser(memberToStore.getGivenName().getOrElse(EMPTY_FIELD),
-                                     memberToStore.getFamilyName().getOrElse(EMPTY_FIELD),
-                                     memberToStore.getDisplayName().getOrElse(EMPTY_FIELD),
-                                     memberToStore.getEmail().getOrElse(EMPTY_FIELD),
-                                     memberToStore.getUUID().getOrElse(EMPTY_FIELD));
+                    new DatabaseUser(memberToStore.getGivenName()
+                                             .getOrElse(EMPTY_FIELD),
+                                     memberToStore.getFamilyName()
+                                             .getOrElse(EMPTY_FIELD),
+                                     memberToStore.getDisplayName()
+                                             .getOrElse(EMPTY_FIELD),
+                                     memberToStore.getEmail()
+                                             .getOrElse(EMPTY_FIELD),
+                                     memberToStore.getUUID()
+                                             .getOrElse(EMPTY_FIELD));
 
             uuidToUserMap.put(databaseUser.uuid, databaseUser);
         }
 
         DatabaseEvent eventToStore = new DatabaseEvent(event.getEventName(),
                                                        event.getDescription(),
-                                                       event.getStartTime().toString(),
-                                                       event.getEndTime().toString(),
+                                                       event.getStartTime()
+                                                               .toString(),
+                                                       event.getEndTime()
+                                                               .toString(),
                                                        event.getUUID(),
                                                        uuidToUserMap);
         storeEvent(eventToStore);
@@ -113,7 +123,13 @@ public final class Database {
         DatabaseReference events = databaseRef.child(NODE_EVENTS_LIST);
         DatabaseReference currentEvent = events.child(databaseEvent.uuid);
 
-        currentEvent.setValue(databaseEvent);
+        if (databaseEvent.members.size() > 0) {
+            // We update the event.
+            currentEvent.setValue(databaseEvent);
+        } else {
+            // We delete the event from the database if the last member left.
+            currentEvent.removeValue();
+        }
     }
 
     /**
@@ -156,8 +172,8 @@ public final class Database {
             if (event != null && !event.uuid.equals(Database.EMPTY_FIELD)) {
 
                 Set<String> uuidsOfMembers = event.members.keySet();
-                if (uuidsOfMembers.contains(
-                        Account.shared.getUUID().getOrElse(EMPTY_FIELD))) {
+                if (uuidsOfMembers.contains(Account.shared.getUUID().getOrElse(EMPTY_FIELD)) ||
+                    containedAsUnknownUser(event.members)) {
 
                     // We transform every DatabaseUser to a Member.
                     List<Member> members = new ArrayList<>();
@@ -169,8 +185,10 @@ public final class Database {
                                                         user.email);
 
                         // We check if the member we are about to add is Account.shared.
-                        if (user.uuid.equals(
-                                Account.shared.getUUID().getOrElse(EMPTY_FIELD))) {
+
+                        if (user.uuid.equals(Account.shared.getUUID().getOrElse(EMPTY_FIELD)) ||
+                            user.email.equals(Account.shared.getEmail().getOrElse(EMPTY_FIELD))) {
+
 
                             Member mySelfAsMember = Account.shared.toMember();
 
@@ -206,5 +224,23 @@ public final class Database {
         if (needToUpdateMyself) {
             Database.update();
         }
+    }
+
+    /**
+     * Checks if we are contained as an unknown user (only added by email since we didn't had a
+     * UUID yet).
+     *
+     * @param members - the map of the uuids to the members from an event
+     * @return - true if we are contained through our email
+     */
+    private static boolean containedAsUnknownUser(HashMap<String, DatabaseUser> members) {
+        Collection<DatabaseUser> users = members.values();
+        Set<String> unknownUsers = new HashSet<>();
+
+        for (DatabaseUser user : users) {
+            unknownUsers.add(user.email);
+        }
+
+        return unknownUsers.contains(Account.shared.getEmail().getOrElse(EMPTY_FIELD));
     }
 }

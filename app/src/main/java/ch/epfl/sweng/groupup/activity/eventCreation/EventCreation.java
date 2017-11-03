@@ -3,37 +3,35 @@ package ch.epfl.sweng.groupup.activity.eventCreation;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.joda.time.LocalDateTime;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
-import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
+import ch.epfl.sweng.groupup.lib.email.GMailService;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
-import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 
 /**
@@ -41,22 +39,14 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
  * Offers the possibility to the user to create a new event.
  * Is linked to the layout event_creation.xml
  */
-public class EventCreation extends ToolbarActivity implements ZXingScannerView.ResultHandler, DatePickerDialog.OnDateSetListener,
-    TimePickerDialog.OnTimeSetListener{
+public class EventCreation extends ToolbarActivity implements DatePickerDialog.OnDateSetListener,
+        TimePickerDialog.OnTimeSetListener, Serializable{
 
-    private Button start_date, end_date, start_time, end_time;
-    private DatePickerDialog datePickerDialog;
-    private TimePickerDialog timePickerDialog;
-    private boolean set_start_date, set_end_date, set_start_time, set_end_time;
-    private int numberOfMembers;
-    private HashMap<View.OnClickListener, View> viewsWithOCL;
-    private HashMap<View.OnClickListener, String> uIdsWithOCL;
-    private LocalDateTime date_start, date_end;
-    private ZXingScannerView mScannerView;
+    private transient DatePickerDialog datePickerDialog;
+    private transient TimePickerDialog timePickerDialog;
+    private transient boolean set_start_date, set_end_date, set_start_time, set_end_time;
 
-    // Variables for state saving
-    private String eventName;
-    private List<String> membersIDs;
+    private EventBuilder builder;
 
     /**
      * Initialization of all the variables of the class and of the OnClickListeners
@@ -78,39 +68,65 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
      * Initialize all fields that will be used in the UI to default values.
      */
     private void initFields(){
-        date_start = LocalDateTime.now().plusMinutes(5);
-        date_end = LocalDateTime.now().plusMinutes(6);
+
+        try {
+            builder = (EventBuilder)getIntent().getSerializableExtra("Builder");
+        }catch(Exception e){
+            builder = new EventBuilder();
+        }
+        if(builder == null){
+            builder = new EventBuilder();
+        }
 
         set_start_date = false;
         set_end_date = false;
         set_start_time = false;
         set_end_time = false;
 
-        numberOfMembers = 0;
+        ((Button)findViewById(R.id.button_start_date))
+                .setText(date_format(
+                        builder.getStartDate().getDayOfMonth(),
+                        builder.getStartDate().getMonthOfYear(),
+                        builder.getStartDate().getYear()));
 
-        viewsWithOCL = new HashMap<>();
-        uIdsWithOCL = new HashMap<>();
+        ((Button)findViewById(R.id.button_start_time))
+                .setText(time_format(
+                        builder.getStartDate().getHourOfDay(),
+                        builder.getStartDate().getMinuteOfHour()));
 
-        start_date = findViewById(R.id.button_start_date);
-        start_date.setText(date_format(date_start.getDayOfMonth(), date_start.getMonthOfYear(),
-                date_start.getYear()));
+        ((Button)findViewById(R.id.button_end_date))
+                .setText(date_format(
+                        builder.getEndDate().getDayOfMonth(),
+                        builder.getEndDate().getMonthOfYear(),
+                        builder.getEndDate().getYear()));
 
-        start_time = findViewById(R.id.button_start_time);
-        start_time.setText(time_format(date_start.getHourOfDay(), date_start.getMinuteOfHour()));
+        ((Button)findViewById(R.id.button_end_time))
+                .setText(time_format(
+                        builder.getEndDate().getHourOfDay(),
+                        builder.getEndDate().getMinuteOfHour()));
 
-        end_date = findViewById(R.id.button_end_date);
-        end_date.setText(date_format(date_end.getDayOfMonth(), date_end.getMonthOfYear(),
-                date_end.getYear()));
+        ((TextView)findViewById(R.id.number_of_members))
+                .setText(String.format(Locale.getDefault(),
+                        "%s %d",
+                        getString(R.string.event_creation_tv_number_of_members),
+                        builder.getMembers().size()));
 
-        end_time = findViewById(R.id.button_end_time);
-        end_time.setText(time_format(date_end.getHourOfDay(), date_end.getMinuteOfHour()));
+        ((EditText)findViewById(R.id.ui_edit_event_name))
+                .setText(builder.getEventName());
+
+        ((EditText)findViewById(R.id.edit_text_description))
+                .setText(builder.getDescription());
 
         datePickerDialog = new DatePickerDialog(
-                this, EventCreation.this, date_start.getYear(), date_start.getMonthOfYear() - 1,
-                date_start.getDayOfMonth());
+                this, EventCreation.this,
+                builder.getStartDate().getYear(),
+                builder.getStartDate().getMonthOfYear() - 1,
+                builder.getStartDate().getDayOfMonth());
 
         timePickerDialog = new TimePickerDialog(
-                this, EventCreation.this, date_start.getHourOfDay(), date_start.getMinuteOfHour(), true);
+                this, EventCreation.this,
+                builder.getStartDate().getHourOfDay(),
+                builder.getStartDate().getMinuteOfHour(), true);
     }
 
     /**
@@ -155,23 +171,6 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
                     }
                 });
 
-        findViewById(R.id.image_view_add_member)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        EditText memberUId = findViewById(R.id.edit_text_add_member);
-                        addNewMember(memberUId.getText().toString());
-                        memberUId.setText("");
-                    }
-                });
-        findViewById(R.id.buttonScanQR)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        QrScanner(v);
-                    }
-                });
-
         findViewById(R.id.save_button)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -179,154 +178,29 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
                         saveEvent();
                     }
                 });
-    }
 
-    /**
-     * Describe the behavior of the app when the back button is pressed while using the QR scanner
-     */
-    @Override
-    public void onBackPressed() {
-        if (mScannerView != null) {
-            mScannerView.stopCamera();
-            setContentView(R.layout.event_creation);
-        }
-        initListeners();
-        restoreState();
-    }
-
-    /**
-     * Overrides the behavior of the app when the QR Scanner is called. Current state of layout
-     * saved.
-     * @param view
-     */
-    public void QrScanner(View view){
-        // TODO: 18.10.2017 Check if user granted camera access to app
-        mScannerView = new ZXingScannerView(this);
-        saveState();
-        setContentView(mScannerView);
-        mScannerView.setResultHandler(this);
-        mScannerView.startCamera();
-    }
-
-    /**
-     * Saves the current state of the layout :
-     *      - Event name
-     *      - Already added members
-     */
-    private void saveState(){
-        eventName = ((EditText)findViewById(R.id.ui_edit_event_name)).getText().toString();
-        membersIDs = new ArrayList<>();
-        Iterator it = uIdsWithOCL.keySet().iterator();
-        while(it.hasNext()){
-            String nextId = uIdsWithOCL.get(it.next());
-            if(!membersIDs.contains(nextId))
-                membersIDs.add(nextId);
-        }
-
-    }
-
-    /**
-     * Restores the current state of the layout :
-     *      - Event name
-     *      - Already added members
-     *      - State date and time
-     *      - End date and time
-     */
-    private void restoreState(){
-        ((EditText)findViewById(R.id.ui_edit_event_name)).setText(eventName);
-        for(String id : membersIDs){
-            addNewMember(id);
-        }
-        ((Button)findViewById(R.id.button_start_date))
-                .setText(date_format(date_start.getDayOfMonth(), date_start.getMonthOfYear(),
-                        date_start.getYear()));
-        ((Button)findViewById(R.id.button_end_date))
-                .setText(date_format(date_end.getDayOfMonth(), date_end.getMonthOfYear(),
-                        date_end.getYear()));
-        ((Button)findViewById(R.id.button_start_time))
-                .setText(time_format(date_start.getHourOfDay(), date_start.getMinuteOfHour()));
-        ((Button)findViewById(R.id.button_end_time))
-                .setText(time_format(date_end.getHourOfDay(), date_end.getMinuteOfHour()));
-    }
-
-    /**
-     * Describes the behavior of the app when the QR Scanner get its results.
-     * @param rawResult
-     */
-    @Override
-    public void handleResult(com.google.zxing.Result rawResult) {
-        // Do something with the result here
-        String qrString = rawResult.toString();
-
-        // Close camera and return to activity after successful scan
-        mScannerView.stopCamera();
-        setContentView(R.layout.event_creation);
-        initListeners();
-        restoreState();
-        addNewMember(rawResult.getText());
-    }
-
-
-        /**
-         * Adds a line in the member list on the UI with the user ID address specified by the user
-         * @param memberUId
-         */
-    private void addNewMember(String memberUId) {
-        numberOfMembers++;
-
-        LinearLayout newMember = new LinearLayout(this);
-        newMember.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
-
-
-        TextView textView = new TextView(this);
-        textView.setTextSize(20);
-        textView.setLayoutParams(new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                0.9f));
-        textView.setText(memberUId);
-        textView.setTextColor(Color.WHITE);
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                0.1f);
-        params.setMargins(2, 2, 2, 2);
-        ImageView minus = new ImageView(this);
-        minus.setImageResource(R.drawable.minussign);
-        minus.setLayoutParams(params);
-        minus.setId(numberOfMembers);
-        minus.setBackgroundColor(Color.BLACK);
-
-        newMember.addView(textView);
-        newMember.addView(minus);
-
-        ((LinearLayout) findViewById(R.id.members_list))
-                .addView(newMember);
-
-        View.OnClickListener ocl = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((LinearLayout) findViewById(R.id.members_list))
-                        .removeView(
-                                viewsWithOCL.get(this)
-                        );
-                uIdsWithOCL.remove(this);
-            }
-        };
-
-        minus.setOnClickListener(ocl);
-        viewsWithOCL.put(ocl, newMember);
-        uIdsWithOCL.put(ocl, memberUId);
+        findViewById(R.id.button_add_members)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        builder.setEventName(
+                                ((EditText)findViewById(R.id.ui_edit_event_name))
+                                .getText().toString());
+                        builder.setDescription(
+                                ((EditText)findViewById(R.id.edit_text_description))
+                                .getText().toString());
+                        Intent intent = new Intent(getApplicationContext(), MembersAdding.class);
+                        intent.putExtra("Builder", builder);
+                        startActivity(intent);
+                    }
+                });
     }
 
     /**
      * Overrides the method onDateSet of the interface DatePickerDialog.OnDateSetListener,
      * changes the text of the button on the UI accordingly to the data entered by the user
      * on the DatePickerDialog.
-     * @param view
+     * @param view unused
      * @param year int containing year
      * @param month int containing month
      * @param dayOfMonth int containing date
@@ -334,14 +208,14 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         if(set_start_date) {
-            date_start = new LocalDateTime(year, month + 1, dayOfMonth,
-                    date_start.getHourOfDay(), date_start.getMinuteOfHour());
-            start_date.setText(date_format(dayOfMonth, month + 1, year));
+            builder.setStartDate(year, month + 1, dayOfMonth);
+            ((Button)findViewById(R.id.button_start_date))
+                    .setText(date_format(dayOfMonth, month + 1, year));
             set_start_date = false;
         }else if(set_end_date){
-            date_end = new LocalDateTime(year, month + 1, dayOfMonth,
-                    date_end.getHourOfDay(), date_end.getMinuteOfHour());
-            end_date.setText(date_format(dayOfMonth, month + 1, year));
+            builder.setEndDate(year, month + 1, dayOfMonth);
+            ((Button)findViewById(R.id.button_end_date))
+                    .setText(date_format(dayOfMonth, month + 1, year));
             set_end_date = false;
         }
     }
@@ -350,21 +224,21 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
      * Overrides the method onTimeSet of the interface TimePickerDialog.OnTimeSetListener,
      * changes the text of the button on the UI accordingly to the data entered by the user
      * on the TimePickerDialog.
-     * @param view
+     * @param view unused
      * @param hourOfDay int containing hour
      * @param minute int containing minute
      */
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         if(set_start_time) {
-            date_start = new LocalDateTime(date_start.getYear(), date_start.getMonthOfYear(),
-                    date_start.getDayOfMonth(), hourOfDay, minute);
-            start_time.setText(time_format(hourOfDay, minute));
+            builder.setStartTime(hourOfDay, minute);
+            ((Button)findViewById(R.id.button_start_time))
+                    .setText(time_format(hourOfDay, minute));
             set_start_time = false;
         }else if(set_end_time){
-            date_end = new LocalDateTime(date_end.getYear(), date_end.getMonthOfYear(),
-                    date_end.getDayOfMonth(), hourOfDay, minute);
-            end_time.setText(time_format(hourOfDay, minute));
+            builder.setEndTime(hourOfDay, minute);
+            ((Button)findViewById(R.id.button_end_time))
+                    .setText(time_format(hourOfDay, minute));
             set_end_time = false;
         }
     }
@@ -377,7 +251,7 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
     private void saveEvent(){
 
         int INPUT_MAX_LENGTH = 50;
-      
+
         EditText eventName = findViewById(R.id.ui_edit_event_name);
         if(eventName.getText().toString().length() == 0){
             eventName.setError(getString(R.string.event_creation_toast_non_empty_event_name));
@@ -388,43 +262,34 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
         }
         eventName.setError(null);
 
-        if(compare_date(LocalDateTime.now(), date_start) < 0){
+        if(compare_date(LocalDateTime.now(), builder.getStartDate()) < 0){
             Toast.makeText(getApplicationContext(), getString(R.string.event_creation_toast_event_start_before_now),
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if(compare_date(date_start, date_end) < 0){
+        if(compare_date(builder.getStartDate(), builder.getEndDate()) < 0){
             Toast.makeText(getApplicationContext(), getString(R.string.event_creation_toast_event_end_before_begin),
                     Toast.LENGTH_SHORT).show();
             return;
         }
-        if(compare_date(date_start, date_end) == 0){
+        if(compare_date(builder.getStartDate(), builder.getEndDate()) == 0){
             Toast.makeText(getApplicationContext(), getString(R.string.event_craeation_toast_event_last_1_minute),
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Set<String> distinctUIds = new HashSet<>();
-        distinctUIds.add(Account.shared.getUUID().getOrElse("Default UUID"));
-        for(View.OnClickListener ocl : uIdsWithOCL.keySet()){
-            distinctUIds.add(uIdsWithOCL.get(ocl));
-        }
+        builder.setEventName(((EditText)findViewById(R.id.ui_edit_event_name)).getText().toString());
 
-        List<Member> members = new ArrayList<>();
-        Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
-                Optional.<String>empty(), Optional.<String>empty());
+        builder.setDescription(((EditText)findViewById(R.id.edit_text_description)).getText().toString());
 
-        for(String id : distinctUIds){
-            members.add(emptyMember.withUUID(id));
-        }
-
-        Event event = new Event(eventName.getText().toString(), date_start, date_end, "", members);
-
-        Account.shared.addOrUpdateEvent(event);
+        Account.shared.addOrUpdateEvent(builder.build());
         Database.update();
 
         Intent intent = new Intent(this, EventListingActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                        Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
@@ -471,5 +336,234 @@ public class EventCreation extends ToolbarActivity implements ZXingScannerView.R
     private String time_format(int hour, int minutes){
         return String.format(Locale.getDefault(), "%02d", hour)+":"+
                 String.format(Locale.getDefault(), "%02d", minutes);
+    }
+
+    /**
+     * Event builder. Follows the Design Pattern of a builder.
+     */
+    protected class EventBuilder implements Serializable{
+
+        private String eventName = "";
+        private String description = "";
+        private String startDate = ldtToStr(LocalDateTime.now().plusMinutes(5));
+        private String endDate = ldtToStr(LocalDateTime.now().plusMinutes(6));
+        private HashSet<String> members = new HashSet<>();
+
+        private EventBuilder(){}
+
+        /**
+         * Turns a LocalDateTime into a YYYY/MM/DD/HH/MM string representation
+         * @param date the date to transform.
+         * @return a YYYY/MM/DD/HH/MM string representation.
+         */
+        private String ldtToStr(LocalDateTime date){
+            return date.getYear()
+                    +"/"+date.getMonthOfYear()
+                    +"/"+date.getDayOfMonth()
+                    +"/"+date.getHourOfDay()
+                    +"/"+date.getMinuteOfHour();
+        }
+
+        /**
+         * Turns a YYYY/MM/DD/HH/MM string representation into a LocalDateTime
+         * @param date the YYYY/MM/DD/HH/MM string representation
+         * @return the LocalDateTime corresponding to the representation.
+         */
+        private LocalDateTime strToldt(String date){
+            String[] split = date.split("/");
+            return LocalDateTime.now()
+                    .withYear(Integer.parseInt(split[0]))
+                    .withMonthOfYear(Integer.parseInt(split[1]))
+                    .withDayOfMonth(Integer.parseInt(split[2]))
+                    .withHourOfDay(Integer.parseInt(split[3]))
+                    .withMinuteOfHour(Integer.parseInt(split[4]));
+        }
+
+        /**
+         * Setter for the name of the event.
+         * @param eventName the name of the event.
+         */
+        private void setEventName(String eventName){
+            this.eventName = eventName;
+        }
+
+        /**
+         * Getter for the name of the event.
+         * @return the name of the event.
+         */
+        private String getEventName(){
+            return eventName;
+        }
+
+        /**
+         * Setter for the description of the event.
+         * @param description the description of the event.
+         */
+        private void setDescription(String description){
+            this.description = description;
+        }
+
+        /**
+         * Getter for the description of the event.
+         * @return the description of the event.
+         */
+        private String getDescription(){
+            return description;
+        }
+
+        /**
+         * Setter for the start date of the event.
+         * @param year the year.
+         * @param monthOfYear the month of the year.
+         * @param dayOfMonth the day of the month.
+         */
+        private void setStartDate(int year, int monthOfYear, int dayOfMonth){
+            startDate = ldtToStr(
+                    strToldt(startDate)
+                    .withYear(year)
+                    .withMonthOfYear(monthOfYear)
+                    .withDayOfMonth(dayOfMonth));
+        }
+
+        /**
+         * Setter for the end date of the event.
+         * @param year the year.
+         * @param monthOfYear the month of the year.
+         * @param dayOfMonth the day of the month.
+         */
+        private void setEndDate(int year, int monthOfYear, int dayOfMonth){
+            endDate = ldtToStr(
+                    strToldt(endDate)
+                            .withYear(year)
+                            .withMonthOfYear(monthOfYear)
+                            .withDayOfMonth(dayOfMonth));
+        }
+
+        /**
+         * Setter for the start time of the event.
+         * @param hoursOfDay the hour of the day.
+         * @param minutesOfHour the minute of the hour.
+         */
+        private void setStartTime(int hoursOfDay, int minutesOfHour){
+            startDate = ldtToStr(
+                    strToldt(startDate)
+                            .withHourOfDay(hoursOfDay)
+                            .withMinuteOfHour(minutesOfHour));
+        }
+
+        /**
+         * Setter for the end time of the event.
+         * @param hoursOfDay the hour of the day.
+         * @param minutesOfHour the minute of the hour.
+         */
+        private void setEndTime(int hoursOfDay, int minutesOfHour){
+            endDate = ldtToStr(
+                    strToldt(endDate)
+                            .withHourOfDay(hoursOfDay)
+                            .withMinuteOfHour(minutesOfHour));
+        }
+
+        /**
+         * Getter for the start time of the event under the form of a LocaleDateTime.
+         * Both the start date and the start time are in it.
+         * @return a LocaleDateTime for the start date and time.
+         */
+        private LocalDateTime getStartDate(){
+            return strToldt(startDate);
+        }
+
+        /**
+         * Getter for the end time of the event under the form of a LocaleDateTime.
+         * Both the end date and the end time are in it.
+         * @return a LocaleDateTime for the end date and time.
+         */
+        private LocalDateTime getEndDate(){
+            return strToldt(endDate);
+        }
+
+        /**
+         * Add a new member to the event.
+         * If the member already belongs to the event he won't be added a second time.
+         * The member can be given under the form of its UID or its email address.
+         * @param newMember the new member to add.
+         */
+        private void addMember(String newMember){
+            members.add(newMember);
+        }
+
+        /**
+         * Remove all the members added until now to the event.
+         */
+        private void cleanMembers(){
+            members = new HashSet<>();
+        }
+
+        /**
+         * Set the list of the members according to the set of String given as argument.
+         * The Strings can be either the UUID either the email address of the member.
+         * @param members the set of the representative strings of the members
+         */
+        @SuppressWarnings("WeakerAccess")
+        protected void setMembersTo(Collection<String> members){
+            cleanMembers();
+            for(String s : members){
+                addMember(s);
+            }
+        }
+
+        /**
+         * Returns a List of all the members added until now to the event.
+         * @return a List containing all the event members.
+         */
+        protected List<String> getMembers(){
+            List<String> membersList = new ArrayList<>();
+            membersList.addAll(members);
+            return membersList;
+        }
+
+        /**
+         * Builds an event containing all the properties set until now.
+         * Note : the user who is creating the event is automatically added to the list of the members.
+         * @return an event containing all the properties set until now.
+         */
+        private Event build(){
+
+            GMailService gms = new GMailService();
+
+            members.add(Account.shared.getUUID().getOrElse("Default UUID"));
+            List<Member> finalMembers = new ArrayList<>();
+            Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(),
+                    Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty());
+
+            int nb_unknown = 0;
+
+            List<String> mailsToSend = new ArrayList<>();
+
+            for(String s : members){
+                if(emailCheck(s)){
+                    finalMembers.add(emptyMember
+                            .withUUID(Member.unknow_user+(++nb_unknown))
+                            .withEmail(s));
+                    mailsToSend.add(s);
+                }else{
+                    finalMembers.add(emptyMember.withUUID(s));
+                }
+            }
+
+            gms.sendInvitationEmail(mailsToSend);
+
+            return new Event(eventName, strToldt(startDate), strToldt(endDate), description, finalMembers);
+        }
+
+        /**
+         * Check that the passed email is an "acceptable" form (not the icann official definition)
+         * @param email the email to check
+         * @return true if email ok else false
+         */
+        private boolean emailCheck(String email){
+            Pattern p = Pattern.compile("\\b[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,13}\\b",Pattern.CASE_INSENSITIVE);
+            Matcher m=p.matcher(email);
+            return m.matches();
+        }
     }
 }
