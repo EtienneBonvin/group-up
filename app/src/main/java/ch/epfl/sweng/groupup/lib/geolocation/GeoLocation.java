@@ -92,8 +92,8 @@ public final class GeoLocation implements GeoLocationInterface {
     }
 
     /**
-     * Method to be called in the onResume() method of the activity to start
-     * listening for location updates.
+     * Method to be called in the onCreate()/onResume() method of the activity
+     * to start listening for location updates.
      */
     public void requestLocationUpdates() {
         if ((ActivityCompat
