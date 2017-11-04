@@ -5,12 +5,6 @@ import android.os.Bundle;
 
 public final class MockLocation implements GeoLocationInterface {
     @Override
-    public Location getGeoLocation() {
-        // TODO
-        return null;
-    }
-
-    @Override
     public void onLocationChanged(Location location) {
         // TODO
     }
@@ -27,6 +21,16 @@ public final class MockLocation implements GeoLocationInterface {
 
     @Override
     public void onProviderDisabled(String s) {
+        // TODO
+    }
+
+    @Override
+    public void requestLocationUpdates() {
+        // TODO
+    }
+
+    @Override
+    public void pauseLocationUpdates() {
         // TODO
     }
 }
