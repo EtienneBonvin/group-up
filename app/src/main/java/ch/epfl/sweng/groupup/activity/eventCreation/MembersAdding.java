@@ -27,7 +27,6 @@ public class MembersAdding extends EventCreation implements ZXingScannerView.Res
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.members_adding);
-        super.initializeToolbar();
 
         initFields();
         initListeners();
@@ -82,6 +81,8 @@ public class MembersAdding extends EventCreation implements ZXingScannerView.Res
                         returnToEventCreation();
                     }
                 });
+
+        super.initializeToolbar();
     }
 
     /**
