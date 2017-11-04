@@ -57,7 +57,7 @@
     <string name="Display_QR">Display QR Code</string>
 
 
-    <!-- Settings -->
+    <!-- SettingsActivity -->
     <string name="settings_tv_top">Settings page</string>
 
     <!-- activity_display_qr-->

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.eventCreation.EventCreation;
+import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -43,8 +43,8 @@ public class EventCreationTest {
 
     @Rule
     // third parameter is set to true which means the activity is started automatically
-    public ActivityTestRule<EventCreation> mActivityRule =
-            new ActivityTestRule<>(EventCreation.class, true, true);
+    public ActivityTestRule<EventCreationActivity> mActivityRule =
+            new ActivityTestRule<>(EventCreationActivity.class, true, true);
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
