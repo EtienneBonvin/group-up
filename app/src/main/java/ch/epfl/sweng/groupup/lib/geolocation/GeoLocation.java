@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.lib.Helper;
+import ch.epfl.sweng.groupup.lib.database.Database;
+import ch.epfl.sweng.groupup.object.account.Account;
 
 public final class GeoLocation implements GeoLocationInterface {
 
@@ -58,10 +60,9 @@ public final class GeoLocation implements GeoLocationInterface {
 
     @Override
     public void onLocationChanged(Location location) {
-        // TODO
         if (location != null) {
-            Log.e("###", "" + location.getLatitude());
-            Log.e("###", "" + location.getLongitude());
+            Account.shared.withLocation(location);
+            Database.update();
         }
     }
 
