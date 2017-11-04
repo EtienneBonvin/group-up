@@ -9,7 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
+import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -32,7 +32,7 @@ public class EventListingTest {
         onView(withText(R.string.create_new_event))
                 .perform(click());
 
-        // Checks that the EventCreation view is displated by looking for ui_edit_event_name,
+        // Checks that the EventCreationActivity view is displated by looking for ui_edit_event_name,
         // change to same as Etienne when Solal comes back with an answer.
         try {
             onView(withId(R.id.ui_edit_event_name)).check(matches(isDisplayed()));

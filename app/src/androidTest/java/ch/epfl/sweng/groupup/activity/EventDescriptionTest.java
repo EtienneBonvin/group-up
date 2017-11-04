@@ -2,38 +2,22 @@ package ch.epfl.sweng.groupup.activity;
 
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.contrib.BuildConfig;
-import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.widget.DatePicker;
-import android.widget.TimePicker;
 
-import org.hamcrest.Matchers;
-import org.joda.time.LocalDateTime;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.eventCreation.EventCreation;
-import ch.epfl.sweng.groupup.activity.eventDescription.EventDescriptionActivity;
-import ch.epfl.sweng.groupup.eventCreation.EventCreationTest;
-import ch.epfl.sweng.groupup.lib.Optional;
+import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
-import ch.epfl.sweng.groupup.object.account.Member;
-import ch.epfl.sweng.groupup.object.event.Event;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
@@ -46,8 +30,8 @@ public class EventDescriptionTest {
     private String name = "My beautiful event";
 
     @Rule
-    public final ActivityTestRule<EventCreation> mActivityRule =
-            new ActivityTestRule<>(EventCreation.class);
+    public final ActivityTestRule<EventCreationActivity> mActivityRule =
+            new ActivityTestRule<>(EventCreationActivity.class);
 
 
     @Test

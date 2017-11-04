@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.activity.eventCreation;
+package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,7 +15,7 @@ import java.util.MissingResourceException;
 import ch.epfl.sweng.groupup.R;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class MembersAdding extends EventCreation implements ZXingScannerView.ResultHandler{
+public class MembersAddingActivity extends EventCreationActivity implements ZXingScannerView.ResultHandler{
 
     private HashMap<View.OnClickListener, View> viewsWithOCL;
     private HashMap<View.OnClickListener, String> uIdsWithOCL;
@@ -201,7 +201,7 @@ public class MembersAdding extends EventCreation implements ZXingScannerView.Res
     private void returnToEventCreation(){
         builder.setMembersTo(uIdsWithOCL.values());
 
-        Intent intent = new Intent(this, EventCreation.class);
+        Intent intent = new Intent(this, EventCreationActivity.class);
         intent.putExtra("Builder", builder);
         startActivity(intent);
     }

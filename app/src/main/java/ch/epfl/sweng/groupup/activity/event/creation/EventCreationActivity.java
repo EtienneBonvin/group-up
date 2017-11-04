@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.activity.eventCreation;
+package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
+import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
@@ -35,11 +35,11 @@ import ch.epfl.sweng.groupup.object.event.Event;
 
 
 /**
- * EventCreation class
+ * EventCreationActivity class
  * Offers the possibility to the user to create a new event.
  * Is linked to the layout event_creation.xml
  */
-public class EventCreation extends ToolbarActivity implements DatePickerDialog.OnDateSetListener,
+public class EventCreationActivity extends ToolbarActivity implements DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener, Serializable{
 
     private transient DatePickerDialog datePickerDialog;
@@ -118,13 +118,13 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
                 .setText(builder.getDescription());
 
         datePickerDialog = new DatePickerDialog(
-                this, EventCreation.this,
+                this, EventCreationActivity.this,
                 builder.getStartDate().getYear(),
                 builder.getStartDate().getMonthOfYear() - 1,
                 builder.getStartDate().getDayOfMonth());
 
         timePickerDialog = new TimePickerDialog(
-                this, EventCreation.this,
+                this, EventCreationActivity.this,
                 builder.getStartDate().getHourOfDay(),
                 builder.getStartDate().getMinuteOfHour(), true);
     }
@@ -189,7 +189,7 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
                         builder.setDescription(
                                 ((EditText)findViewById(R.id.edit_text_description))
                                 .getText().toString());
-                        Intent intent = new Intent(getApplicationContext(), MembersAdding.class);
+                        Intent intent = new Intent(getApplicationContext(), MembersAddingActivity.class);
                         intent.putExtra("Builder", builder);
                         startActivity(intent);
                     }

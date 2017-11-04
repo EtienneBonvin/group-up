@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.activity.home.inactive;
+package ch.epfl.sweng.groupup.activity.info;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -30,7 +30,7 @@ import static ch.epfl.sweng.groupup.object.account.Account.shared;
  * user a way to sign out.
  */
 
-public class EventListActivity extends LoginActivityInterface {
+public class UserInformationActivity extends LoginActivityInterface {
 
 
     // Fields to represent the different objects on the GUI of the activity.

@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.activity.eventListing;
+package ch.epfl.sweng.groupup.activity.event.listing;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 
 import org.joda.time.LocalDateTime;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -18,8 +17,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.eventCreation.EventCreation;
-import ch.epfl.sweng.groupup.activity.eventDescription.EventDescriptionActivity;
+import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
+import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
@@ -159,7 +158,7 @@ public class EventListingActivity extends ToolbarActivity {
         createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(EventListingActivity.this, EventCreation.class);
+                Intent i = new Intent(EventListingActivity.this, EventCreationActivity.class);
                 startActivity(i);
             }
         });
