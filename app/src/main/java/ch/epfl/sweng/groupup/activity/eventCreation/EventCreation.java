@@ -345,39 +345,11 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
 
         private String eventName = "";
         private String description = "";
-        private String startDate = ldtToStr(LocalDateTime.now().plusMinutes(5));
-        private String endDate = ldtToStr(LocalDateTime.now().plusMinutes(6));
+        private LocalDateTime startDate = LocalDateTime.now().plusMinutes(5);
+        private LocalDateTime endDate = LocalDateTime.now().plusMinutes(6);
         private HashSet<String> members = new HashSet<>();
 
         private EventBuilder(){}
-
-        /**
-         * Turns a LocalDateTime into a YYYY/MM/DD/HH/MM string representation
-         * @param date the date to transform.
-         * @return a YYYY/MM/DD/HH/MM string representation.
-         */
-        private String ldtToStr(LocalDateTime date){
-            return date.getYear()
-                    +"/"+date.getMonthOfYear()
-                    +"/"+date.getDayOfMonth()
-                    +"/"+date.getHourOfDay()
-                    +"/"+date.getMinuteOfHour();
-        }
-
-        /**
-         * Turns a YYYY/MM/DD/HH/MM string representation into a LocalDateTime
-         * @param date the YYYY/MM/DD/HH/MM string representation
-         * @return the LocalDateTime corresponding to the representation.
-         */
-        private LocalDateTime strToldt(String date){
-            String[] split = date.split("/");
-            return LocalDateTime.now()
-                    .withYear(Integer.parseInt(split[0]))
-                    .withMonthOfYear(Integer.parseInt(split[1]))
-                    .withDayOfMonth(Integer.parseInt(split[2]))
-                    .withHourOfDay(Integer.parseInt(split[3]))
-                    .withMinuteOfHour(Integer.parseInt(split[4]));
-        }
 
         /**
          * Setter for the name of the event.
@@ -418,11 +390,9 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
          * @param dayOfMonth the day of the month.
          */
         private void setStartDate(int year, int monthOfYear, int dayOfMonth){
-            startDate = ldtToStr(
-                    strToldt(startDate)
-                    .withYear(year)
+            startDate = startDate.withYear(year)
                     .withMonthOfYear(monthOfYear)
-                    .withDayOfMonth(dayOfMonth));
+                    .withDayOfMonth(dayOfMonth);
         }
 
         /**
@@ -432,11 +402,9 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
          * @param dayOfMonth the day of the month.
          */
         private void setEndDate(int year, int monthOfYear, int dayOfMonth){
-            endDate = ldtToStr(
-                    strToldt(endDate)
-                            .withYear(year)
-                            .withMonthOfYear(monthOfYear)
-                            .withDayOfMonth(dayOfMonth));
+            endDate = endDate.withYear(year)
+                    .withMonthOfYear(monthOfYear)
+                    .withDayOfMonth(dayOfMonth);
         }
 
         /**
@@ -445,10 +413,8 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
          * @param minutesOfHour the minute of the hour.
          */
         private void setStartTime(int hoursOfDay, int minutesOfHour){
-            startDate = ldtToStr(
-                    strToldt(startDate)
-                            .withHourOfDay(hoursOfDay)
-                            .withMinuteOfHour(minutesOfHour));
+            startDate = startDate.withHourOfDay(hoursOfDay)
+                    .withMinuteOfHour(minutesOfHour);
         }
 
         /**
@@ -457,10 +423,8 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
          * @param minutesOfHour the minute of the hour.
          */
         private void setEndTime(int hoursOfDay, int minutesOfHour){
-            endDate = ldtToStr(
-                    strToldt(endDate)
-                            .withHourOfDay(hoursOfDay)
-                            .withMinuteOfHour(minutesOfHour));
+            endDate = endDate.withHourOfDay(hoursOfDay)
+                    .withMinuteOfHour(minutesOfHour);
         }
 
         /**
@@ -469,7 +433,7 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
          * @return a LocaleDateTime for the start date and time.
          */
         private LocalDateTime getStartDate(){
-            return strToldt(startDate);
+            return new LocalDateTime(startDate);
         }
 
         /**
@@ -478,7 +442,7 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
          * @return a LocaleDateTime for the end date and time.
          */
         private LocalDateTime getEndDate(){
-            return strToldt(endDate);
+            return new LocalDateTime(endDate);
         }
 
         /**
@@ -552,7 +516,7 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
 
             gms.sendInvitationEmail(mailsToSend);
 
-            return new Event(eventName, strToldt(startDate), strToldt(endDate), description, finalMembers);
+            return new Event(eventName, startDate, endDate, description, finalMembers);
         }
 
         /**
