@@ -11,6 +11,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -24,6 +25,11 @@ public final class GeoLocation implements GeoLocationInterface {
 
     private static final long MIN_UPDATE_TIME_INTERVAL = 1000;
     private static final float MIN_UPDATE_DISTANCE_INTERVAL = 2;
+
+    private static final String ASK_PERMISSION = "ASK_PERMISSION";
+    private static final String ASK_ENABLE_GPS = "ASK_ENABLE_GPS";
+
+    private static final String INTENT_SCHEME = "package";
 
     private final Activity activity;
     private final Context context;
@@ -43,8 +49,10 @@ public final class GeoLocation implements GeoLocationInterface {
 
         provider = locationManager.getBestProvider(criteria, false);
 
-        if (!locationManager.isProviderEnabled(provider)) {
-            askToEnableProvider();
+        if (provider == null) {
+            askToEnableProvider(ASK_PERMISSION);
+        } else if (!locationManager.isProviderEnabled(provider)) {
+            askToEnableProvider(ASK_ENABLE_GPS);
         }
     }
 
@@ -71,7 +79,6 @@ public final class GeoLocation implements GeoLocationInterface {
                     requestLocationUpdates();
                     break;
                 default:
-                    // If this is the case then we simply ignore the event.
                     break;
             }
         }
@@ -124,7 +131,7 @@ public final class GeoLocation implements GeoLocationInterface {
      * Method used to ask the user to enable the GPS function if it wasn't
      * already enabled.
      */
-    private void askToEnableProvider() {
+    private void askToEnableProvider(final String whatToAsk) {
         AlertDialog.Builder alertDialogBuilder =
                 new AlertDialog.Builder(activity);
 
@@ -139,9 +146,29 @@ public final class GeoLocation implements GeoLocationInterface {
                                                DialogInterface dialogInterface,
                                                int i) {
                                            dialogInterface.dismiss();
-                                           Intent intent =
-                                                   new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                           context.startActivity(intent);
+
+                                           switch (whatToAsk) {
+                                               case ASK_PERMISSION: {
+                                                   Intent intent =
+                                                           new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                                   Uri uri =
+                                                           Uri.fromParts(
+                                                                   INTENT_SCHEME,
+                                                                   activity.getPackageName(),
+                                                                   null);
+                                                   intent.setData(uri);
+                                                   activity.startActivity(intent);
+                                                   break;
+                                               }
+                                               case ASK_ENABLE_GPS: {
+                                                   Intent intent =
+                                                           new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                                   activity.startActivity(intent);
+                                                   break;
+                                               }
+                                               default:
+                                                   break;
+                                           }
                                        }
                                    });
         alertDialogBuilder
