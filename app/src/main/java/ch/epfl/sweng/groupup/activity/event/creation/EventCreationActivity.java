@@ -3,6 +3,7 @@ package ch.epfl.sweng.groupup.activity.event.creation;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -497,7 +498,8 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
             members.add(Account.shared.getUUID().getOrElse("Default UUID"));
             List<Member> finalMembers = new ArrayList<>();
             Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(),
-                    Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty());
+                    Optional.<String>empty(), Optional.<String>empty(),
+                                            Optional.<String>empty(), Optional.<Location>empty());
 
             int nb_unknown = 0;
 
@@ -506,7 +508,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
             for(String s : members){
                 if(emailCheck(s)){
                     finalMembers.add(emptyMember
-                            .withUUID(Member.unknow_user+(++nb_unknown))
+                            .withUUID(Member.UNKNOWN_USER + (++nb_unknown))
                             .withEmail(s));
                     mailsToSend.add(s);
                 }else{

@@ -1,5 +1,6 @@
 package ch.epfl.sweng.groupup.object.event;
 
+import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -7,20 +8,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.joda.time.LocalDateTime;
-
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
-import ch.epfl.sweng.groupup.object.event.Event;
-import ch.epfl.sweng.groupup.object.event.EventStatus;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertNotEquals;
 
 public class EventsShould {
     private Event event;
 
-    private Member member = new Member("UUID", "Even monkeys can fly", "Tester", "Test","test@test.test");
+    private Member member = new Member("UUID", "Even monkeys can fly",
+                                       "Tester", "Test","test@test.test", null);
 
     @Before
     public void init() {
@@ -211,18 +210,18 @@ public class EventsShould {
     @Test
     public void allowToRemoveCurrentUserFromMemberList(){
         Account.shared.withUUID("UUID").withGivenName("Xavier").withFamilyName("Pantet").withDisplayName(null).withEmail("xavier.pantet@pindex.ch");
-        List<Member> eventMembers = new ArrayList<>(Arrays.asList(new Member("UUID", null, "Xavier", "Pantet", "xavier.pantet@pindex.ch"), new Member("UUID2", null, "Cedric", "Maire", "cedmaire@gmail.com")));
+        List<Member> eventMembers = new ArrayList<>(Arrays.asList(new Member("UUID", null, "Xavier", "Pantet", "xavier.pantet@pindex.ch", null), new Member("UUID2", null, "Cedric", "Maire", "cedmaire@gmail.com", null)));
         Event e = new Event("Name", null, null, null, eventMembers);
         Event withoutMe = e.withoutCurrentUser();
         assertEquals(withoutMe.getEventMembers().size(), 1);
-        assertEquals(withoutMe.getEventMembers().get(0), new Member("UUID2", null, "Cedric", "Maire", "cedmaire@gmail.com"));
+        assertEquals(withoutMe.getEventMembers().get(0), new Member("UUID2", null, "Cedric", "Maire", "cedmaire@gmail.com", null));
     }
 
     @Test
     public void equalsEventsAreEquals(){
         LocalDateTime start = LocalDateTime.now().plusDays(1);
         LocalDateTime end = LocalDateTime.now().plusDays(2);
-        List<Member> members =  new ArrayList<>(Arrays.asList(new Member("1","Javier","Pavier","Xantet","yolo@yolo.com"), new Member("2","asdf","Médric","Caire","yolo1@yolo.yolo")));
+        List<Member> members =  new ArrayList<>(Arrays.asList(new Member("1","Javier","Pavier","Xantet","yolo@yolo.com", null), new Member("2","asdf","Médric","Caire","yolo1@yolo.yolo", null)));
         Event e = new Event("1","inm", start, end,"Du travail, toujours du travail", members);
         Event f = new Event("1","inm", start, end,"Du travail, toujours du travail", members);
         assertEquals(e,f);
@@ -231,7 +230,7 @@ public class EventsShould {
     public void differentEventsAreDifferent(){
         LocalDateTime start = LocalDateTime.now().plusDays(1);
         LocalDateTime end = LocalDateTime.now().plusDays(2);
-        List<Member> members =  new ArrayList<>(Arrays.asList(new Member("1","Javier","Pavier","Xantet","yolo@yolo.com"), new Member("2","asdf","Médric","Caire","yolo1@yolo.yolo")));
+        List<Member> members =  new ArrayList<>(Arrays.asList(new Member("1","Javier","Pavier","Xantet","yolo@yolo.com", null), new Member("2","asdf","Médric","Caire","yolo1@yolo.yolo", null)));
         Event e = new Event("2","inm", start, end,"Du travail, toujours du travail", members);
         Event f = new Event("1","inm", start, end,"Du travail, toujours du travail", members);
         assertNotEquals(e,f);

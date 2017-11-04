@@ -91,7 +91,7 @@ public class DatabaseShould {
         String userEmail01 = "user@01.com";
         String userUuid01 = "myUserUuid01";
         membersCurrent.add(new Member(userName01, userFamilyName01, userDisplayName01, userEmail01,
-                                      userUuid01));
+                                      userUuid01, null));
         final Event eventCurrent = new Event(uuidCurrent,
                                              nameCurrent,
                                              startCurrent,
@@ -113,7 +113,7 @@ public class DatabaseShould {
         String userEmail02 = "user@02.com";
         String userUuid02 = "myUserUuid02";
         membersPast.add(new Member(userName02, userFamilyName02, userDisplayName02, userEmail02,
-                                   userUuid02));
+                                   userUuid02, null));
         final Event eventPast = new Event(uuidPast,
                                           namePast,
                                           startPast,
@@ -135,7 +135,7 @@ public class DatabaseShould {
         String userEmail03 = "user@03.com";
         String userUuid03 = "myUserUuid03";
         membersFuture.add(new Member(userName03, userFamilyName03, userDisplayName03, userEmail03,
-                                     userUuid03));
+                                     userUuid03, null));
         final Event eventFuture = new Event(uuidFuture,
                                             nameFuture,
                                             startFuture,
@@ -159,11 +159,12 @@ public class DatabaseShould {
 
                             List<Member> members = new ArrayList<>();
                             for (DatabaseUser user : event.members.values()) {
-                                members.add(new Member(user.uuid,
-                                                       user.display_name,
-                                                       user.given_name,
-                                                       user.family_name,
-                                                       user.email));
+                                members.add(new Member(user.getUUID(),
+                                                       user.getDisplayName(),
+                                                       user.getGivenName(),
+                                                       user.getFamilyName(),
+                                                       user.getEmail(),
+                                                       user.getLocation()));
                             }
 
                             Event tempEvent = new Event(
