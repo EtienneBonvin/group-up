@@ -5,7 +5,6 @@ import android.location.Location;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -479,7 +478,6 @@ public final class Account extends User {
      */
     public Member toMember() {
         return new Member(UUID, displayName, givenName, familyName, email,
-                          location
-        );
+                          location);
     }
 }

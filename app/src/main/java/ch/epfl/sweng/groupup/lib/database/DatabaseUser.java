@@ -49,7 +49,7 @@ final class DatabaseUser {
         }
     }
 
-    public Optional<String> getGivenName() {
+    Optional<String> getGivenName() {
         if (given_name.equals(EMPTY_FIELD)) {
             return Optional.empty();
         } else {
@@ -57,7 +57,7 @@ final class DatabaseUser {
         }
     }
 
-    public Optional<String> getFamilyName() {
+    Optional<String> getFamilyName() {
         if (family_name.equals(EMPTY_FIELD)) {
             return Optional.empty();
         } else {
@@ -65,7 +65,7 @@ final class DatabaseUser {
         }
     }
 
-    public Optional<String> getDisplayName() {
+    Optional<String> getDisplayName() {
         if (display_name.equals(EMPTY_FIELD)) {
             return Optional.empty();
         } else {
@@ -73,7 +73,7 @@ final class DatabaseUser {
         }
     }
 
-    public Optional<String> getEmail() {
+    Optional<String> getEmail() {
         if (email.equals(EMPTY_FIELD)) {
             return Optional.empty();
         } else {
@@ -81,7 +81,7 @@ final class DatabaseUser {
         }
     }
 
-    public Optional<String> getUUID() {
+    Optional<String> getUUID() {
         if (uuid.equals(EMPTY_FIELD)) {
             return Optional.empty();
         } else {
@@ -89,7 +89,7 @@ final class DatabaseUser {
         }
     }
 
-    public Optional<Location> getLocation() {
+    Optional<Location> getLocation() {
         switch (provider) {
             case LocationManager.GPS_PROVIDER:
                 return createLocation();

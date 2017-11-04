@@ -15,7 +15,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.widget.Toast;
 
 import ch.epfl.sweng.groupup.R;
@@ -25,7 +24,7 @@ import ch.epfl.sweng.groupup.object.account.Account;
 
 public final class GeoLocation implements GeoLocationInterface {
 
-    private static final long MIN_UPDATE_TIME_INTERVAL = 1000;
+    private static final long MIN_UPDATE_TIME_INTERVAL = 2000;
     private static final float MIN_UPDATE_DISTANCE_INTERVAL = 2;
 
     private static final String ASK_PERMISSION = "ASK_PERMISSION";
