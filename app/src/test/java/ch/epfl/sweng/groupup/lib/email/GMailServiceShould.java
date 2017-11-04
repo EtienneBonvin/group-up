@@ -1,13 +1,4 @@
-package ch.epfl.sweng.groupup.lib;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import ch.epfl.sweng.groupup.lib.email.GMailService;
-import ch.epfl.sweng.groupup.lib.email.MailSender;
-
-import static junit.framework.Assert.*;
-import static org.junit.Assert.assertTrue;
+package ch.epfl.sweng.groupup.lib.email;
 
 /**
  * Created by hampusramstrom on 2017-11-02.

@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.toolbar;
+package ch.epfl.sweng.groupup.activity.toolbar;
 
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
@@ -7,14 +7,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 
-import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
-
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-public class ToolbarTest {
+public class ToolbarActivityTest {
 
     @Rule
     // third parameter is set to true which means the activity is started automatically

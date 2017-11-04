@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.eventCreation;
+package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.contrib.BuildConfig;
@@ -39,7 +39,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
-public class EventCreationTest {
+public class EventCreationActivityTest {
 
     @Rule
     // third parameter is set to true which means the activity is started automatically

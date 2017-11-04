@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.activity;
+package ch.epfl.sweng.groupup.activity.event.description;
 
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.contrib.BuildConfig;
@@ -26,7 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
  */
 
 @RunWith(AndroidJUnit4.class)
-public class EventDescriptionTest {
+public class EventDescriptioActivitynTest {
     private String name = "My beautiful event";
 
     @Rule

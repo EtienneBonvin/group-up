@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.activity.home.inactive;
+package ch.epfl.sweng.groupup.activity.info;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-public class EventListActivityShould {
+public class UserInformationActivityTest {
     @Rule
     public final ActivityTestRule<UserInformationActivity> mActivityRule =
             new ActivityTestRule<>(UserInformationActivity.class);

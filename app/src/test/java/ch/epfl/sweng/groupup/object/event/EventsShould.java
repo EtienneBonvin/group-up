@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup;
+package ch.epfl.sweng.groupup.object.event;
 
 import org.junit.Before;
 import org.junit.Test;
