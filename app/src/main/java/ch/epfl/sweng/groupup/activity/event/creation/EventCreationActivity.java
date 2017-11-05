@@ -1,8 +1,9 @@
-package ch.epfl.sweng.groupup.activity.eventCreation;
+package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,8 +25,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
+import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
+import ch.epfl.sweng.groupup.lib.Helper;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.lib.email.GMailService;
@@ -35,11 +37,11 @@ import ch.epfl.sweng.groupup.object.event.Event;
 
 
 /**
- * EventCreation class
+ * EventCreationActivity class
  * Offers the possibility to the user to create a new event.
  * Is linked to the layout event_creation.xml
  */
-public class EventCreation extends ToolbarActivity implements DatePickerDialog.OnDateSetListener,
+public class EventCreationActivity extends ToolbarActivity implements DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener, Serializable{
 
     private transient DatePickerDialog datePickerDialog;
@@ -118,13 +120,13 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
                 .setText(builder.getDescription());
 
         datePickerDialog = new DatePickerDialog(
-                this, EventCreation.this,
+                this, EventCreationActivity.this,
                 builder.getStartDate().getYear(),
                 builder.getStartDate().getMonthOfYear() - 1,
                 builder.getStartDate().getDayOfMonth());
 
         timePickerDialog = new TimePickerDialog(
-                this, EventCreation.this,
+                this, EventCreationActivity.this,
                 builder.getStartDate().getHourOfDay(),
                 builder.getStartDate().getMinuteOfHour(), true);
     }
@@ -189,7 +191,7 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
                         builder.setDescription(
                                 ((EditText)findViewById(R.id.edit_text_description))
                                 .getText().toString());
-                        Intent intent = new Intent(getApplicationContext(), MembersAdding.class);
+                        Intent intent = new Intent(getApplicationContext(), MembersAddingActivity.class);
                         intent.putExtra("Builder", builder);
                         startActivity(intent);
                     }
@@ -263,19 +265,22 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
         eventName.setError(null);
 
         if(compare_date(LocalDateTime.now(), builder.getStartDate()) < 0){
-            Toast.makeText(getApplicationContext(), getString(R.string.event_creation_toast_event_start_before_now),
-                    Toast.LENGTH_SHORT).show();
+            Helper.showToast(getApplicationContext(),
+                             getString(R.string.event_creation_toast_event_start_before_now),
+                             Toast.LENGTH_SHORT);
             return;
         }
 
         if(compare_date(builder.getStartDate(), builder.getEndDate()) < 0){
-            Toast.makeText(getApplicationContext(), getString(R.string.event_creation_toast_event_end_before_begin),
-                    Toast.LENGTH_SHORT).show();
+            Helper.showToast(getApplicationContext(),
+                             getString(R.string.event_creation_toast_event_end_before_begin),
+                             Toast.LENGTH_SHORT);
             return;
         }
         if(compare_date(builder.getStartDate(), builder.getEndDate()) == 0){
-            Toast.makeText(getApplicationContext(), getString(R.string.event_craeation_toast_event_last_1_minute),
-                    Toast.LENGTH_SHORT).show();
+            Helper.showToast(getApplicationContext(),
+                             getString(R.string.event_craeation_toast_event_last_1_minute),
+                             Toast.LENGTH_SHORT);
             return;
         }
 
@@ -497,7 +502,8 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
             members.add(Account.shared.getUUID().getOrElse("Default UUID"));
             List<Member> finalMembers = new ArrayList<>();
             Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(),
-                    Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty());
+                    Optional.<String>empty(), Optional.<String>empty(),
+                                            Optional.<String>empty(), Optional.<Location>empty());
 
             int nb_unknown = 0;
 
@@ -506,7 +512,7 @@ public class EventCreation extends ToolbarActivity implements DatePickerDialog.O
             for(String s : members){
                 if(emailCheck(s)){
                     finalMembers.add(emptyMember
-                            .withUUID(Member.unknow_user+(++nb_unknown))
+                            .withUUID(Member.UNKNOWN_USER + (++nb_unknown))
                             .withEmail(s));
                     mailsToSend.add(s);
                 }else{

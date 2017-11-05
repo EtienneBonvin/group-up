@@ -57,7 +57,7 @@
     <string name="Display_QR">Display QR Code</string>
 
 
-    <!-- Settings -->
+    <!-- SettingsActivity -->
     <string name="settings_tv_top">Settings page</string>
 
     <!-- activity_display_qr-->
@@ -77,5 +77,14 @@
     <string name="save_changes">Save changes</string>
     <string name="change_the_description_of_the_event">Change the description of the event</string>
     <string name="change_the_name_of_the_event">Change the name of the event</string>
+
+    <!-- Geo Location -->
+    <string name="alert_dialog_ask_enable_provider_title">Please Enable
+    Your GPS</string>
+    <string name="alert_dialog_ask_enable_provider_message">To be able to share
+    your location you have to enable your GPS and grant the GroupUp! the
+        permission to use it. Do you want to do it now?</string>
+    <string name="alert_dialog_yes">Yes</string>
+    <string name="alert_dialog_no">No</string>
 
 </resources>

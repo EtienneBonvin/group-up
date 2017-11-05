@@ -1,5 +1,6 @@
-package ch.epfl.sweng.groupup.eventCreation;
+package ch.epfl.sweng.groupup.activity.event.creation;
 
+import android.location.Location;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.contrib.BuildConfig;
 import android.support.test.espresso.contrib.PickerActions;
@@ -18,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.eventCreation.EventCreation;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -39,12 +39,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
-public class EventCreationTest {
+public class EventCreationActivityTest {
 
     @Rule
     // third parameter is set to true which means the activity is started automatically
-    public ActivityTestRule<EventCreation> mActivityRule =
-            new ActivityTestRule<>(EventCreation.class, true, true);
+    public ActivityTestRule<EventCreationActivity> mActivityRule =
+            new ActivityTestRule<>(EventCreationActivity.class, true, true);
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -65,14 +65,14 @@ public class EventCreationTest {
         String eventName = "My event";
 
         Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
-                Optional.<String>empty(), Optional.<String>empty());
+                Optional.<String>empty(), Optional.<String>empty(), Optional.<Location>empty());
         List<Member> expectedMembers = new ArrayList<>();
         expectedMembers.add(emptyMember.withUUID("0"));
         expectedMembers.add(emptyMember.withUUID("1"));
         expectedMembers.add(emptyMember.withUUID("2"));
         expectedMembers.add(emptyMember.withUUID("3"));
         expectedMembers.add(emptyMember.withUUID("4"));
-        expectedMembers.add(emptyMember.withUUID(Member.unknow_user+"1").withEmail("swenggroupup@gmail.com"));
+        expectedMembers.add(emptyMember.withUUID(Member.UNKNOWN_USER + "1").withEmail("swenggroupup@gmail.com"));
         expectedMembers.add(emptyMember.withUUID(Account.shared.getUUID().getOrElse("Default UUID")));
 
         addEventName(eventName);

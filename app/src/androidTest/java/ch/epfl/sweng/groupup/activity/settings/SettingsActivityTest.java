@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.settings;
+package ch.epfl.sweng.groupup.activity.settings;
 
 import android.support.test.espresso.contrib.BuildConfig;
 import android.support.test.rule.ActivityTestRule;
@@ -6,13 +6,11 @@ import android.support.test.rule.ActivityTestRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-import ch.epfl.sweng.groupup.activity.settings.Settings;
-
-public class SettingsTest {
+public class SettingsActivityTest {
 
     @Rule
-    public ActivityTestRule<Settings> mActivityRule = new ActivityTestRule<>(
-            Settings.class);
+    public ActivityTestRule<SettingsActivity> mActivityRule = new ActivityTestRule<>(
+            SettingsActivity.class);
 
     @Test
     public void launchedWithoutErrors(){

@@ -1,6 +1,10 @@
 package ch.epfl.sweng.groupup.lib.database;
 
+import android.location.Location;
+
 import org.junit.Test;
+
+import ch.epfl.sweng.groupup.lib.Optional;
 
 import static org.junit.Assert.assertEquals;
 
@@ -24,8 +28,12 @@ public class DatabaseUserShould {
         String email = "groupup@flyingmonkeys.com";
         String uuid = "myUserUuidIsVeryComplex";
 
-        DatabaseUser databaseUser = new DatabaseUser(givenName, familyName, displayName, email,
-                                                     uuid);
+        DatabaseUser databaseUser = new DatabaseUser(Optional.from(givenName),
+                                                     Optional.from(familyName),
+                                                     Optional.from(displayName),
+                                                     Optional.from(email),
+                                                     Optional.from(uuid),
+                                                     Optional.<Location>empty());
 
         assertEquals(givenName, databaseUser.given_name);
         assertEquals(familyName, databaseUser.family_name);

@@ -1,16 +1,20 @@
 package ch.epfl.sweng.groupup.activity.toolbar;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.eventListing.EventListingActivity;
-import ch.epfl.sweng.groupup.activity.home.inactive.EventListActivity;
-import ch.epfl.sweng.groupup.activity.settings.Settings;
+import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
+import ch.epfl.sweng.groupup.activity.info.UserInformationActivity;
+import ch.epfl.sweng.groupup.activity.settings.SettingsActivity;
+import ch.epfl.sweng.groupup.lib.geolocation.GeoLocation;
+import ch.epfl.sweng.groupup.lib.geolocation.GeoLocationInterface;
 
 public class ToolbarActivity extends AppCompatActivity {
+
+    private GeoLocationInterface geoLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +22,30 @@ public class ToolbarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.toolbar);
         initializeToolbar();
+
+        geoLocation = new GeoLocation(this, this);
+        geoLocation.requestLocationUpdates();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        geoLocation.requestLocationUpdates();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        geoLocation.requestLocationUpdates();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        geoLocation.requestLocationUpdates();
     }
 
     protected void initializeToolbar(){
@@ -37,7 +65,7 @@ public class ToolbarActivity extends AppCompatActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), Settings.class);
+                        Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                         Intent.FLAG_ACTIVITY_CLEAR_TASK |
                                         Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -49,7 +77,7 @@ public class ToolbarActivity extends AppCompatActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), EventListActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), UserInformationActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                         Intent.FLAG_ACTIVITY_CLEAR_TASK |
                                         Intent.FLAG_ACTIVITY_NEW_TASK);

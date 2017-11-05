@@ -5,7 +5,7 @@ import android.os.Bundle;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 
-public class Settings extends ToolbarActivity {
+public class SettingsActivity extends ToolbarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

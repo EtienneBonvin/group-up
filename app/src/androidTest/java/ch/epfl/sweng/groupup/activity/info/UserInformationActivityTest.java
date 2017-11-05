@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.activity.home.inactive;
+package ch.epfl.sweng.groupup.activity.info;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.info.UserInformationActivity;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -20,10 +21,10 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-public class EventListActivityShould {
+public class UserInformationActivityTest {
     @Rule
-    public final ActivityTestRule<EventListActivity> mActivityRule =
-            new ActivityTestRule<>(EventListActivity.class);
+    public final ActivityTestRule<UserInformationActivity> mActivityRule =
+            new ActivityTestRule<>(UserInformationActivity.class);
 
     @Test
     public void displayDefaultAccountFields() throws Exception {

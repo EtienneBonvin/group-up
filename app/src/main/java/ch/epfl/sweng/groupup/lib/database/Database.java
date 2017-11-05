@@ -88,17 +88,28 @@ public final class Database {
     private static void storeEvent(Event event) {
         HashMap<String, DatabaseUser> uuidToUserMap = new HashMap<>();
         for (Member memberToStore : event.getEventMembers()) {
-            DatabaseUser databaseUser =
-                    new DatabaseUser(memberToStore.getGivenName()
-                                             .getOrElse(EMPTY_FIELD),
-                                     memberToStore.getFamilyName()
-                                             .getOrElse(EMPTY_FIELD),
-                                     memberToStore.getDisplayName()
-                                             .getOrElse(EMPTY_FIELD),
-                                     memberToStore.getEmail()
-                                             .getOrElse(EMPTY_FIELD),
-                                     memberToStore.getUUID()
-                                             .getOrElse(EMPTY_FIELD));
+            DatabaseUser databaseUser;
+
+            if (!memberToStore.getUUID().isEmpty() && memberToStore.getUUID()
+                    .get().equals(Account.shared.getUUID().getOrElse
+                            (EMPTY_FIELD))) {
+                Member mySelfAsMember = Account.shared.toMember();
+                databaseUser =
+                        new DatabaseUser(mySelfAsMember.getGivenName(),
+                                         mySelfAsMember.getFamilyName(),
+                                         mySelfAsMember.getDisplayName(),
+                                         mySelfAsMember.getEmail(),
+                                         mySelfAsMember.getUUID(),
+                                         mySelfAsMember.getLocation());
+            } else {
+                databaseUser =
+                        new DatabaseUser(memberToStore.getGivenName(),
+                                         memberToStore.getFamilyName(),
+                                         memberToStore.getDisplayName(),
+                                         memberToStore.getEmail(),
+                                         memberToStore.getUUID(),
+                                         memberToStore.getLocation());
+            }
 
             uuidToUserMap.put(databaseUser.uuid, databaseUser);
         }
@@ -172,22 +183,25 @@ public final class Database {
             if (event != null && !event.uuid.equals(Database.EMPTY_FIELD)) {
 
                 Set<String> uuidsOfMembers = event.members.keySet();
-                if (uuidsOfMembers.contains(Account.shared.getUUID().getOrElse(EMPTY_FIELD)) ||
+                if (uuidsOfMembers.contains(Account.shared.getUUID()
+                                                    .getOrElse(EMPTY_FIELD)) ||
                     containedAsUnknownUser(event.members)) {
 
                     // We transform every DatabaseUser to a Member.
                     List<Member> members = new ArrayList<>();
                     for (DatabaseUser user : event.members.values()) {
-                        Member memberToAdd = new Member(user.uuid,
-                                                        user.display_name,
-                                                        user.given_name,
-                                                        user.family_name,
-                                                        user.email);
+                        Member memberToAdd = new Member(user.getUUID(),
+                                                        user.getDisplayName(),
+                                                        user.getGivenName(),
+                                                        user.getFamilyName(),
+                                                        user.getEmail(),
+                                                        user.getLocation());
 
                         // We check if the member we are about to add is Account.shared.
-
-                        if (user.uuid.equals(Account.shared.getUUID().getOrElse(EMPTY_FIELD)) ||
-                            user.email.equals(Account.shared.getEmail().getOrElse(EMPTY_FIELD))) {
+                        if (user.uuid.equals(Account.shared.getUUID()
+                                                     .getOrElse(EMPTY_FIELD)) ||
+                            user.email.equals(Account.shared.getEmail()
+                                                      .getOrElse(EMPTY_FIELD))) {
 
 
                             Member mySelfAsMember = Account.shared.toMember();
@@ -204,12 +218,11 @@ public final class Database {
                     }
 
                     // We create the event that we want to store in the account.
-                    Event tempEvent = new Event(
-                            event.uuid,
-                            event.name,
-                            LocalDateTime.parse(event.datetime_start),
-                            LocalDateTime.parse(event.datetime_end),
-                            event.description, members);
+                    Event tempEvent = new Event(event.uuid,
+                                                event.name,
+                                                LocalDateTime.parse(event.datetime_start),
+                                                LocalDateTime.parse(event.datetime_end),
+                                                event.description, members);
 
                     // We add or update the event.
                     Account.shared.addOrUpdateEvent(tempEvent);
@@ -241,6 +254,7 @@ public final class Database {
             unknownUsers.add(user.email);
         }
 
-        return unknownUsers.contains(Account.shared.getEmail().getOrElse(EMPTY_FIELD));
+        return unknownUsers.contains(Account.shared.getEmail()
+                                             .getOrElse(EMPTY_FIELD));
     }
 }
