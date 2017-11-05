@@ -47,7 +47,7 @@ public class EventListingActivity extends ToolbarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_listing);
-        super.initializeToolbar();
+        super.initializeToolbarActivity();
         size=Account.shared.getEvents().size();
         initView();
     }
@@ -62,7 +62,7 @@ public class EventListingActivity extends ToolbarActivity {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         setContentView(R.layout.activity_event_listing);
-                        initializeToolbar();
+                        initializeToolbarActivity();
 
                         initView();
                     }

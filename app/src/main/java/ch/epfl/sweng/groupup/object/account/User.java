@@ -92,6 +92,7 @@ public abstract class User {
                ",  givenName=" + givenName +
                ", familyName=" + familyName +
                ", email=" + email +
+               ", location=" + location.toString() +
                '}';
     }
 
