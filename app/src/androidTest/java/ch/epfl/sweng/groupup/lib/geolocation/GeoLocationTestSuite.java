@@ -17,60 +17,85 @@ public class GeoLocationTestSuite {
             new ActivityTestRule<>(ToolbarActivity.class);
 
     @Test
-    public void handlesAllStatusChanges() throws Exception {
-        GeoLocation myTestLocation =
-                new GeoLocation(mActivityRule.getActivity(),
-                                mActivityRule.getActivity()
-                                        .getApplicationContext());
+    public void handlesAllStatusChanges() throws Throwable {
+        mActivityRule.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                GeoLocation myTestLocation =
+                        new GeoLocation(mActivityRule.getActivity(),
+                                        mActivityRule.getActivity()
+                                                .getApplicationContext());
 
-        myTestLocation.onStatusChanged(null,
-                                       LocationProvider.OUT_OF_SERVICE,
-                                       null);
-        myTestLocation.onStatusChanged(null,
-                                       LocationProvider.TEMPORARILY_UNAVAILABLE,
-                                       null);
-        myTestLocation.onStatusChanged(null,
-                                       LocationProvider.AVAILABLE,
-                                       null);
+                myTestLocation.onStatusChanged(null,
+                                               LocationProvider.OUT_OF_SERVICE,
+                                               null);
+                myTestLocation.onStatusChanged(null,
+                                               LocationProvider.TEMPORARILY_UNAVAILABLE,
+                                               null);
+                myTestLocation.onStatusChanged(null,
+                                               LocationProvider.AVAILABLE,
+                                               null);
+            }
+        });
     }
 
     @Test
-    public void handlesOnProviderEnabled() throws Exception {
-        GeoLocation myTestLocation =
-                new GeoLocation(mActivityRule.getActivity(),
-                                mActivityRule.getActivity()
-                                        .getApplicationContext());
+    public void handlesOnProviderEnabled() throws Throwable {
+        mActivityRule.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                GeoLocation myTestLocation =
+                        new GeoLocation(mActivityRule.getActivity(),
+                                        mActivityRule.getActivity()
+                                                .getApplicationContext());
 
-        myTestLocation.onProviderEnabled("MY_PROVIDER");
+                myTestLocation.onProviderEnabled("MY_PROVIDER");
+            }
+        });
     }
 
     @Test
-    public void handlesOnProviderDisabled() throws Exception {
-        GeoLocation myTestLocation =
-                new GeoLocation(mActivityRule.getActivity(),
-                                mActivityRule.getActivity()
-                                        .getApplicationContext());
+    public void handlesOnProviderDisabled() throws Throwable {
+        mActivityRule.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                GeoLocation myTestLocation =
+                        new GeoLocation(mActivityRule.getActivity(),
+                                        mActivityRule.getActivity()
+                                                .getApplicationContext());
 
-        myTestLocation.onProviderDisabled("MY_PROVIDER");
+                myTestLocation.onProviderDisabled("MY_PROVIDER");
+            }
+        });
     }
 
     @Test
-    public void canRequestLocationUpdates() throws Exception {
-        GeoLocation myTestLocation =
-                new GeoLocation(mActivityRule.getActivity(),
-                                mActivityRule.getActivity()
-                                        .getApplicationContext());
+    public void canRequestLocationUpdates() throws Throwable {
+        mActivityRule.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                GeoLocation myTestLocation =
+                        new GeoLocation(mActivityRule.getActivity(),
+                                        mActivityRule.getActivity()
+                                                .getApplicationContext());
 
-        myTestLocation.requestLocationUpdates();
+                myTestLocation.requestLocationUpdates();
+            }
+        });
     }
 
     @Test
-    public void canPauseLocationUpdates() throws Exception {
-        GeoLocation myTestLocation =
-                new GeoLocation(mActivityRule.getActivity(),
-                                mActivityRule.getActivity()
-                                        .getApplicationContext());
+    public void canPauseLocationUpdates() throws Throwable {
+        mActivityRule.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                GeoLocation myTestLocation =
+                        new GeoLocation(mActivityRule.getActivity(),
+                                        mActivityRule.getActivity()
+                                                .getApplicationContext());
 
-        myTestLocation.pauseLocationUpdates();
+                myTestLocation.pauseLocationUpdates();
+            }
+        });
     }
 }

@@ -27,7 +27,12 @@ public abstract class User {
         this.familyName = Optional.from(familyName);
         this.email = Optional.from(email);
         this.UUID = Optional.from(UUID);
-        this.location = Optional.from(new Location(location));
+
+        if (location == null) {
+            this.location = Optional.empty();
+        } else {
+            this.location = Optional.from(new Location(location));
+        }
     }
 
     protected User(Optional<String> displayName,

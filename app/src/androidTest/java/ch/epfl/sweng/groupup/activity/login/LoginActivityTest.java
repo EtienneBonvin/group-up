@@ -27,8 +27,6 @@ public class LoginActivityTest {
     @Test
     public void newLoginSuccessLogoutSuccess() throws Exception {
         mActivityRule.getActivity().mock(true, true);
-        mActivityRule.getActivity().onActivityResult(0, 0, null);
-        mActivityRule.getActivity().onSuccess();
         loginThenLogout();
     }
 

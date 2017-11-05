@@ -1,24 +1,21 @@
 package ch.epfl.sweng.groupup.object.account;
 
-import android.util.Log;
-
 import org.joda.time.LocalDateTime;
 import org.junit.Test;
-import org.junit.experimental.categories.Categories;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static ch.epfl.sweng.groupup.lib.Optional.from;
-import static org.junit.Assert.*;
-
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.event.EventStatus;
 
+import static ch.epfl.sweng.groupup.lib.Optional.from;
 import static ch.epfl.sweng.groupup.object.account.Account.shared;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by alix on 10/8/17.
@@ -52,6 +49,13 @@ public class AccountShould {
     public void withLastNameOK(){
         shared.withFamilyName("Test");
         assertEquals(shared.getFamilyName().get(),"Test");
+        shared.clear();
+    }
+
+    @Test
+    public void withLocationOK(){
+        shared.withLocation(null);
+        assertTrue(shared.getLocation().isEmpty());
         shared.clear();
     }
 
@@ -349,12 +353,7 @@ public class AccountShould {
         assertEquals(shared.getPastEvents(),new ArrayList<Event>());
     }
 
-    // Fails in Jenkins.
-    // In Jenkins: ch.epfl.sweng.groupup.object.account.AccountShould >
-    // futureEventsOrderedCorrectly FAILED
-    // But when running in Android Studio the test passes.
-
-    /*@Test
+    @Test
     public void futureEventsOrderedCorrectly(){
 
         // Add future events in an unordered fashion
@@ -381,5 +380,5 @@ public class AccountShould {
             assertEquals(shared.getFutureEvents().get(i).getEventName(), correctlyOrderedFutureEvents.get(i).getEventName());
         }
         shared.clear();
-    }*/
+    }
 }

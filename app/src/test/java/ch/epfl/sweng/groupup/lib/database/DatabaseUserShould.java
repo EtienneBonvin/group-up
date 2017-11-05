@@ -1,7 +1,6 @@
 package ch.epfl.sweng.groupup.lib.database;
 
 import android.location.Location;
-import android.location.LocationManager;
 
 import org.junit.Test;
 
@@ -30,28 +29,19 @@ public class DatabaseUserShould {
         String email = "groupup@flyingmonkeys.com";
         String uuid = "myUserUuidIsVeryComplex";
 
-        DatabaseUser databaseUser0 = new DatabaseUser(Optional.from(givenName),
+        DatabaseUser databaseUser = new DatabaseUser(Optional.from(givenName),
                                                       Optional.from(familyName),
                                                       Optional.from(displayName),
                                                       Optional.from(email),
                                                       Optional.from(uuid),
                                                       Optional.<Location>empty());
 
-        Location myTestLocation = new Location(LocationManager.GPS_PROVIDER);
-        DatabaseUser databaseUser1 = new DatabaseUser(Optional.from(givenName),
-                                                      Optional.from(familyName),
-                                                      Optional.from(displayName),
-                                                      Optional.from(email),
-                                                      Optional.from(uuid),
-                                                      Optional.from(
-                                                              myTestLocation));
-
-        assertEquals(givenName, databaseUser1.given_name);
-        assertEquals(familyName, databaseUser1.family_name);
-        assertEquals(displayName, databaseUser1.display_name);
-        assertEquals(email, databaseUser1.email);
-        assertEquals(uuid, databaseUser1.uuid);
-        assertEquals(myTestLocation, databaseUser1.getLocation().get());
+        assertEquals(givenName, databaseUser.given_name);
+        assertEquals(familyName, databaseUser.family_name);
+        assertEquals(displayName, databaseUser.display_name);
+        assertEquals(email, databaseUser.email);
+        assertEquals(uuid, databaseUser.uuid);
+        assertTrue(databaseUser.getLocation().isEmpty());
     }
 
     @Test
@@ -169,15 +159,5 @@ public class DatabaseUserShould {
                                                      Optional.<Location>empty());
 
         assertTrue(databaseUser.getLocation().isEmpty());
-
-        Location myTestLocation = new Location(LocationManager.GPS_PROVIDER);
-        databaseUser = new DatabaseUser(Optional.<String>empty(),
-                                        Optional.<String>empty(),
-                                        Optional.<String>empty(),
-                                        Optional.<String>empty(),
-                                        Optional.<String>empty(),
-                                        Optional.from(myTestLocation));
-
-        assertTrue(!databaseUser.getLocation().isEmpty());
     }
 }

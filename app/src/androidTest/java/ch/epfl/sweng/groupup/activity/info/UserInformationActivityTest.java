@@ -3,12 +3,13 @@ package ch.epfl.sweng.groupup.activity.info;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.info.UserInformationActivity;
+import ch.epfl.sweng.groupup.object.account.Account;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -26,28 +27,60 @@ public class UserInformationActivityTest {
     public final ActivityTestRule<UserInformationActivity> mActivityRule =
             new ActivityTestRule<>(UserInformationActivity.class);
 
+    @Before
+    public void before() {
+        Account.shared.clear();
+    }
+
     @Test
-    public void displayDefaultAccountFields() throws Exception {
-        onView(withId(R.id.text_view_display_name_text))
-                .check(matches(withText(R.string.text_view_display_name_text)));
+    public void displayRightAccountFields() throws Exception {
+        Account a = Account.shared;
+
         onView(withId(R.id.text_view_display_name_info))
-                .check(matches(withText(R.string.text_view_display_name_info)));
+                .check(matches(withText(a.getDisplayName()
+                                                .getOrElse(mActivityRule
+                                                                   .getActivity()
+                                                                   .getString(R.string.text_view_display_name_info)))));
+        onView(withId(R.id.text_view_display_name_text))
+                .check(matches(withText(a.getDisplayName()
+                                                .getOrElse(mActivityRule
+                                                                   .getActivity()
+                                                                   .getString(R.string.text_view_display_name_text)))));
         onView(withId(R.id.text_view_family_name_text))
-                .check(matches(withText(R.string.text_view_family_name_text)));
+                .check(matches(withText(a.getDisplayName()
+                                                .getOrElse(mActivityRule
+                                                                   .getActivity()
+                                                                   .getString(R.string.text_view_family_name_text)))));
         onView(withId(R.id.text_view_family_name_info))
-                .check(matches(withText(R.string.text_view_family_name_info)));
+                .check(matches(withText(a.getDisplayName()
+                                                .getOrElse(mActivityRule
+                                                                   .getActivity()
+                                                                   .getString(R.string.text_view_family_name_info)))));
         onView(withId(R.id.text_view_given_name_text))
-                .check(matches(withText(R.string.text_view_given_name_text)));
+                .check(matches(withText(a.getDisplayName()
+                                                .getOrElse(mActivityRule
+                                                                   .getActivity()
+                                                                   .getString(R.string.text_view_given_name_text)))));
         onView(withId(R.id.text_view_given_name_info))
-                .check(matches(withText(R.string.text_view_given_name_info)));
+                .check(matches(withText(a.getDisplayName()
+                                                .getOrElse(mActivityRule
+                                                                   .getActivity()
+                                                                   .getString(R.string.text_view_given_name_info)))));
         onView(withId(R.id.text_view_email_text))
-                .check(matches(withText(R.string.text_view_email_text)));
+                .check(matches(withText(a.getDisplayName()
+                                                .getOrElse(mActivityRule
+                                                                   .getActivity()
+                                                                   .getString(R.string.text_view_email_text)))));
         onView(withId(R.id.text_view_email_info))
-                .check(matches(withText(R.string.text_view_email_info)));
+                .check(matches(withText(a.getDisplayName()
+                                                .getOrElse(mActivityRule
+                                                                   .getActivity()
+                                                                   .getString(R.string.text_view_email_info)))));
     }
 
     @Test
     public void displayErrorToastOnQrButtonClick() throws Exception {
+        Account.shared.clear();
         onView(withId(R.id.buttonDisplayQR)).perform(click());
         onView(withText(R.string.toast_unable_to_generate_qr))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
@@ -55,8 +88,10 @@ public class UserInformationActivityTest {
                                                      .getDecorView()))))
                 .check(matches(isDisplayed()));
         onView(withId(R.id.buttonDisplayQR)).perform(click());
+        Account.shared.clear();
     }
 
+    /* IMPLEMENTATION CHANGED, THIS IS NOW USELESS
     @Test
     public void displayErrorToastOnSignOutButtonClick() throws Exception {
         onView(withId(R.id.button_sign_out)).perform(click());
@@ -66,4 +101,5 @@ public class UserInformationActivityTest {
                                                      .getDecorView()))))
                 .check(matches(isDisplayed()));
     }
+    */
 }

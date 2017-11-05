@@ -48,6 +48,7 @@ public final class MockLocation implements GeoLocationInterface {
 
     @Override
     public void requestLocationUpdates() {
+        locationMocker.cancel();
         locationMocker.schedule(new TimerTask() {
             @Override
             public void run() {
