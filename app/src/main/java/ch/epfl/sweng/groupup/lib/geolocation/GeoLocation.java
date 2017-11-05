@@ -67,29 +67,27 @@ public final class GeoLocation implements GeoLocationInterface {
 
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
-        if (provider.equals(s)) {
-            switch (i) {
-                case LocationProvider.OUT_OF_SERVICE:
-                    pauseLocationUpdates();
-                    Helper.showToast(context,
-                                     "Provider \"" + s + "\" out of service.",
-                                     Toast.LENGTH_SHORT);
-                    break;
-                case LocationProvider.TEMPORARILY_UNAVAILABLE:
-                    pauseLocationUpdates();
-                    Helper.showToast(context,
-                                     "Provider \"" + s + "\" unavailable.",
-                                     Toast.LENGTH_SHORT);
-                    break;
-                case LocationProvider.AVAILABLE:
-                    requestLocationUpdates();
-                    Helper.showToast(context,
-                                     "Provider \"" + s + "\" available.",
-                                     Toast.LENGTH_SHORT);
-                    break;
-                default:
-                    break;
-            }
+        switch (i) {
+            case LocationProvider.OUT_OF_SERVICE:
+                pauseLocationUpdates();
+                Helper.showToast(context,
+                                 "Provider \"" + s + "\" out of service.",
+                                 Toast.LENGTH_SHORT);
+                break;
+            case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                pauseLocationUpdates();
+                Helper.showToast(context,
+                                 "Provider \"" + s + "\" unavailable.",
+                                 Toast.LENGTH_SHORT);
+                break;
+            case LocationProvider.AVAILABLE:
+                requestLocationUpdates();
+                Helper.showToast(context,
+                                 "Provider \"" + s + "\" available.",
+                                 Toast.LENGTH_SHORT);
+                break;
+            default:
+                break;
         }
     }
 
