@@ -1,5 +1,6 @@
 package ch.epfl.sweng.groupup.lib.database;
 
+import android.location.Location;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.groupup.activity.main.MainActivity;
+import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
@@ -90,8 +92,12 @@ public class DatabaseShould {
         String userDisplayName01 = "User01";
         String userEmail01 = "user@01.com";
         String userUuid01 = "myUserUuid01";
-        membersCurrent.add(new Member(userName01, userFamilyName01, userDisplayName01, userEmail01,
-                                      userUuid01, null));
+        membersCurrent.add(new Member(Optional.from(userName01),
+                                      Optional.from(userFamilyName01),
+                                      Optional.from(userDisplayName01),
+                                      Optional.from(userEmail01),
+                                      Optional.from(userUuid01),
+                                      Optional.<Location>empty()));
         final Event eventCurrent = new Event(uuidCurrent,
                                              nameCurrent,
                                              startCurrent,
@@ -112,8 +118,12 @@ public class DatabaseShould {
         String userDisplayName02 = "User02";
         String userEmail02 = "user@02.com";
         String userUuid02 = "myUserUuid02";
-        membersPast.add(new Member(userName02, userFamilyName02, userDisplayName02, userEmail02,
-                                   userUuid02, null));
+        membersPast.add(new Member(Optional.from(userName02),
+                                   Optional.from(userFamilyName02),
+                                   Optional.from(userDisplayName02),
+                                   Optional.from(userEmail02),
+                                   Optional.from(userUuid02),
+                                   Optional.<Location>empty()));
         final Event eventPast = new Event(uuidPast,
                                           namePast,
                                           startPast,
@@ -134,8 +144,12 @@ public class DatabaseShould {
         String userDisplayName03 = "User03";
         String userEmail03 = "user@03.com";
         String userUuid03 = "myUserUuid03";
-        membersFuture.add(new Member(userName03, userFamilyName03, userDisplayName03, userEmail03,
-                                     userUuid03, null));
+        membersFuture.add(new Member(Optional.from(userName03),
+                                     Optional.from(userFamilyName03),
+                                     Optional.from(userDisplayName03),
+                                     Optional.from(userEmail03),
+                                     Optional.from(userUuid03),
+                                     Optional.<Location>empty()));
         final Event eventFuture = new Event(uuidFuture,
                                             nameFuture,
                                             startFuture,

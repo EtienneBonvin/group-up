@@ -26,7 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
  */
 
 @RunWith(AndroidJUnit4.class)
-public class EventDescriptioActivitynTest {
+public class EventDescriptioActivityTest {
     private String name = "My beautiful event";
 
     @Rule
@@ -37,7 +37,7 @@ public class EventDescriptioActivitynTest {
     @Test
     public void createDisplayAndChangeAnEvent() {
         Database.setUpDatabase();
-        String name = "My beautiful event";
+        String name = "My event";
         String endName = " is changed";
         String description = "has an awesome description";
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
