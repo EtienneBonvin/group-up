@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import ch.epfl.sweng.groupup.R;
 
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
+import ch.epfl.sweng.groupup.activity.map.MapActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void switchToLoginContentView() {
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MapActivity.class);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                         Intent.FLAG_ACTIVITY_CLEAR_TASK |
