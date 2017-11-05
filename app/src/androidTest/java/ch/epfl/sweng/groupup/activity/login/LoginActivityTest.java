@@ -21,12 +21,14 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @RunWith(AndroidJUnit4.class)
 public class LoginActivityTest {
     @Rule
-    public final ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<>(LoginActivity.class);
+    public final ActivityTestRule<LoginActivity> mActivityRule =
+            new ActivityTestRule<>(LoginActivity.class);
 
     @Test
     public void newLoginSuccessLogoutSuccess() throws Exception {
         mActivityRule.getActivity().mock(true, true);
         mActivityRule.getActivity().onActivityResult(0, 0, null);
+        mActivityRule.getActivity().onSuccess();
         loginThenLogout();
     }
 
