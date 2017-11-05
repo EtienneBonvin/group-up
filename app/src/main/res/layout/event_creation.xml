@@ -141,14 +141,14 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/text_view_description"
         android:layout_above="@id/linear_layout_friends">
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textAutoComplete"
+            android:layout_height="match_parent"
+            android:inputType="textMultiLine"
             android:id="@id/edit_text_description"/>
 
     </ScrollView>
