@@ -2,7 +2,9 @@ package ch.epfl.sweng.groupup.object.account;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class MembersShould {
     @Test
@@ -12,23 +14,27 @@ public class MembersShould {
 
     @Test
     public void allowAccessToItsAttributes(){
-        Member m = new Member("UUID", "XavierP", "Xavier", "Pantet", "xavier@pantet.ch", null);
+        Member m = new Member("UUID", "XavierP", "Xavier", "Pantet",
+                              "xavier@pantet.ch", null);
         assertEquals(m.getUUID().get(), "UUID");
         assertEquals(m.getDisplayName().get(), "XavierP");
         assertEquals(m.getGivenName().get(), "Xavier");
         assertEquals(m.getFamilyName().get(), "Pantet");
         assertEquals(m.getEmail().get(), "xavier@pantet.ch");
+        assertTrue(m.getLocation().isEmpty());
     }
 
     @Test
     public void allowToBeModified(){
         Member m = new Member("UUID", "XavierP", "Xavier", "Pantet", "xavier@pantet.ch", null);
-        m = m.withUUID("UUID2").withDisplayName("CedricM").withFirstName("Cedric").withLastName("Maire").withEmail("cedric@maire.de");
+        m = m.withUUID("UUID2").withDisplayName("CedricM").withFirstName("Cedric").withLastName("Maire")
+                .withEmail("cedric@maire.de").withLocation(null);
         assertEquals(m.getUUID().get(), "UUID2");
         assertEquals(m.getDisplayName().get(), "CedricM");
         assertEquals(m.getGivenName().get(), "Cedric");
         assertEquals(m.getFamilyName().get(), "Maire");
         assertEquals(m.getEmail().get(), "cedric@maire.de");
+        assertTrue(m.getLocation().isEmpty());
     }
 
     @Test

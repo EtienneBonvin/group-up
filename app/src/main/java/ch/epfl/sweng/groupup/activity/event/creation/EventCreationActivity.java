@@ -58,7 +58,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_creation);
-        super.initializeToolbar();
+        super.initializeToolbarActivity();
 
         initFields();
 
@@ -136,7 +136,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
      */
     private void initListeners(){
 
-        super.initializeToolbar();
+        super.initializeToolbarActivity();
 
         findViewById(R.id.button_start_date)
                 .setOnClickListener(new View.OnClickListener() {

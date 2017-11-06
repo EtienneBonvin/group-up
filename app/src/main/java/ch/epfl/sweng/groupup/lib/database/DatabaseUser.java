@@ -109,7 +109,7 @@ final class DatabaseUser {
             location.setLatitude(Double.parseDouble(latitude));
             location.setLongitude(Double.parseDouble(longitude));
         } catch (NumberFormatException exception) {
-            Log.e("DATABASE_USER_LOCATION", exception.getMessage());
+            Log.e("DATABASE_USER_LOCATION:", exception.getMessage());
             return Optional.empty();
         }
 

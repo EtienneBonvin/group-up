@@ -118,7 +118,7 @@ public class LoginActivity extends LoginActivityInterface implements View.OnClic
         authService.onActivityResult(requestCode, data);
     }
 
-    void mock(boolean loginStatus, boolean logoutStatus) {
+    public void mock(boolean loginStatus, boolean logoutStatus) {
         this.authService = new MockAuth(this, loginStatus, logoutStatus);
     }
 }

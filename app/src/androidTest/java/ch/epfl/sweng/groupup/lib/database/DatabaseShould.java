@@ -77,8 +77,12 @@ public class DatabaseShould {
         String displayName = "GroupUp";
         String email = "groupup@flyingmonkeys.com";
         String uuid = "myAccountUuidIsVeryComplex";
-        Account.shared.withGivenName(givenName).withFamilyName(familyName).withDisplayName
-                (displayName).withEmail(email).withUUID(uuid);
+        Account.shared.withGivenName(givenName)
+                .withFamilyName(familyName)
+                .withDisplayName
+                        (displayName)
+                .withEmail(email)
+                .withUUID(uuid);
 
         // Add of current event.
         String nameCurrent = "Current Event";
@@ -91,12 +95,11 @@ public class DatabaseShould {
         String userFamilyName01 = "01";
         String userDisplayName01 = "User01";
         String userEmail01 = "user@01.com";
-        String userUuid01 = "myUserUuid01";
         membersCurrent.add(new Member(Optional.from(userName01),
                                       Optional.from(userFamilyName01),
                                       Optional.from(userDisplayName01),
                                       Optional.from(userEmail01),
-                                      Optional.from(userUuid01),
+                                      Optional.from(uuid),
                                       Optional.<Location>empty()));
         final Event eventCurrent = new Event(uuidCurrent,
                                              nameCurrent,
@@ -156,7 +159,15 @@ public class DatabaseShould {
                                             endFuture,
                                             descriptionFuture,
                                             membersFuture);
+        final String uuidEmpty = "EmptyUUID";
+        final Event eventEmpty = new Event(uuidEmpty,
+                                           "Event",
+                                           LocalDateTime.now().plusDays(7),
+                                           LocalDateTime.now().plusDays(9),
+                                           descriptionFuture,
+                                           new ArrayList<Member>());
         Account.shared.addOrUpdateEvent(eventFuture);
+        Account.shared.addOrUpdateEvent(eventEmpty);
 
         Database.update();
 
@@ -165,10 +176,14 @@ public class DatabaseShould {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
-                    DatabaseEvent event = eventSnapshot.getValue(DatabaseEvent.class);
+                    DatabaseEvent
+                            event =
+                            eventSnapshot.getValue(DatabaseEvent.class);
 
-                    if (event != null && !event.uuid.equals(Database.EMPTY_FIELD)) {
-                        if (event.uuid.equals(uuidCurrent) || event.uuid.equals(uuidPast) ||
+                    if (event != null &&
+                        !event.uuid.equals(Database.EMPTY_FIELD)) {
+                        if (event.uuid.equals(uuidCurrent) ||
+                            event.uuid.equals(uuidPast) ||
                             event.uuid.equals(uuidFuture)) {
 
                             List<Member> members = new ArrayList<>();
@@ -198,8 +213,12 @@ public class DatabaseShould {
                                 case uuidFuture:
                                     assertEquals(eventFuture, tempEvent);
                                     break;
+                                case uuidEmpty:
+                                    assertEquals(eventEmpty, tempEvent);
+                                    break;
                                 default:
-                                    throw new Error("default case in switch statement");
+                                    throw new Error(
+                                            "default case in switch statement");
                             }
                         }
                     }
@@ -213,11 +232,13 @@ public class DatabaseShould {
         });
 
         Database.update();
+        Database.setUpEventListener(null);
+        Database.update();
 
         /*
          This is to ensure that the onDataChange listener had enough time be be called in the
          background and pass all the asserts.
           */
-        Thread.sleep(1000);
+        Thread.sleep(2000);
     }
 }

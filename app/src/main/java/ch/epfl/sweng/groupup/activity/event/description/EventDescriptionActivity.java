@@ -38,7 +38,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
         int maxName= 50;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_description);
-        super.initializeToolbar();
+        super.initializeToolbarActivity();
         Intent i= getIntent();
         final int eventIndex = i.getIntExtra("eventIndex", -1);
         if (eventIndex >-1) {

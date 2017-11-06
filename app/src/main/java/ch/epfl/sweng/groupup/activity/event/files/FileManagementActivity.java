@@ -33,7 +33,7 @@ public class FileManagementActivity extends ToolbarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_management);
-        super.initializeToolbar();
+        super.initializeToolbarActivity();
 
         findViewById(R.id.add_files).setOnClickListener(new Button.OnClickListener(){
 

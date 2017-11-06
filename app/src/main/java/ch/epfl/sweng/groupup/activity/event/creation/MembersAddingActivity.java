@@ -82,7 +82,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                     }
                 });
 
-        super.initializeToolbar();
+        super.initializeToolbarActivity();
     }
 
     /**
