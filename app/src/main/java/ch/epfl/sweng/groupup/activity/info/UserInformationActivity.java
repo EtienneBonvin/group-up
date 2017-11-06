@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -22,6 +23,7 @@ import ch.epfl.sweng.groupup.lib.login.FirebaseAuthentication;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService.Status;
 import ch.epfl.sweng.groupup.lib.login.LoginActivityInterface;
+import ch.epfl.sweng.groupup.lib.login.MockAuth;
 
 import static ch.epfl.sweng.groupup.object.account.Account.shared;
 
@@ -46,12 +48,17 @@ public class UserInformationActivity extends LoginActivityInterface {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_list);
-        super.initializeToolbar();
+        super.initializeToolbarActivity();
 
-        authService = new FirebaseAuthentication(getString(R.string.web_client_id),
-                                                 this,
-                                                 this,
-                                                 this);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            authService = new FirebaseAuthentication(
+                    getString(R.string.web_client_id),
+                    this,
+                    this,
+                    this);
+        } else {
+            authService = new MockAuth(this, true, true);
+        }
 
         initializeFields();
         updateUI(Status.CONNECTED);
@@ -73,18 +80,28 @@ public class UserInformationActivity extends LoginActivityInterface {
                 });
     }
 
-    private void displayQR(){
-        if (!shared.getUUID().isEmpty()){
+    private void displayQR() {
+        if (!shared.getUUID().isEmpty()) {
             String text = shared.getUUID().get();
             QRCodeWriter writer = new QRCodeWriter();
             try {
-                BitMatrix bitMatrix = writer.encode(text, BarcodeFormat.QR_CODE, 512, 512);
+                BitMatrix
+                        bitMatrix =
+                        writer.encode(text, BarcodeFormat.QR_CODE, 512, 512);
                 int width = bitMatrix.getWidth();
                 int height = bitMatrix.getHeight();
-                Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                Bitmap
+                        bmp =
+                        Bitmap.createBitmap(width,
+                                            height,
+                                            Bitmap.Config.RGB_565);
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
-                        bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                        bmp.setPixel(x,
+                                     y,
+                                     bitMatrix.get(x, y) ?
+                                     Color.BLACK :
+                                     Color.WHITE);
                     }
                 }
 

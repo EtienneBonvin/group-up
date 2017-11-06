@@ -24,7 +24,7 @@ import ch.epfl.sweng.groupup.object.account.Account;
 
 public final class GeoLocation implements GeoLocationInterface {
 
-    private static final long MIN_UPDATE_TIME_INTERVAL = 2000;
+    private static final long MIN_UPDATE_TIME_INTERVAL = 5000;
     private static final float MIN_UPDATE_DISTANCE_INTERVAL = 2;
 
     private static final String ASK_PERMISSION = "ASK_PERMISSION";
@@ -67,25 +67,33 @@ public final class GeoLocation implements GeoLocationInterface {
 
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
-        if (provider.equals(s)) {
-            switch (i) {
-                case LocationProvider.OUT_OF_SERVICE:
-                    pauseLocationUpdates();
-                    break;
-                case LocationProvider.TEMPORARILY_UNAVAILABLE:
-                    pauseLocationUpdates();
-                    break;
-                case LocationProvider.AVAILABLE:
-                    requestLocationUpdates();
-                    break;
-                default:
-                    break;
-            }
+        switch (i) {
+            case LocationProvider.OUT_OF_SERVICE:
+                pauseLocationUpdates();
+                Helper.showToast(context,
+                                 "Provider \"" + s + "\" out of service.",
+                                 Toast.LENGTH_SHORT);
+                break;
+            case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                pauseLocationUpdates();
+                Helper.showToast(context,
+                                 "Provider \"" + s + "\" unavailable.",
+                                 Toast.LENGTH_SHORT);
+                break;
+            case LocationProvider.AVAILABLE:
+                requestLocationUpdates();
+                Helper.showToast(context,
+                                 "Provider \"" + s + "\" available.",
+                                 Toast.LENGTH_SHORT);
+                break;
+            default:
+                break;
         }
     }
 
     @Override
     public void onProviderEnabled(String s) {
+        requestLocationUpdates();
         Helper.showToast(context,
                          "Provider \"" + s + "\" enabled.",
                          Toast.LENGTH_SHORT);
@@ -93,6 +101,7 @@ public final class GeoLocation implements GeoLocationInterface {
 
     @Override
     public void onProviderDisabled(String s) {
+        pauseLocationUpdates();
         Helper.showToast(context,
                          "Provider \"" + s + "\" disabled.",
                          Toast.LENGTH_SHORT);

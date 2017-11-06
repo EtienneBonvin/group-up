@@ -11,6 +11,6 @@ public class SettingsActivity extends ToolbarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        super.initializeToolbar();
+        super.initializeToolbarActivity();
     }
 }

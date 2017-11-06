@@ -88,30 +88,32 @@ public final class Database {
     private static void storeEvent(Event event) {
         HashMap<String, DatabaseUser> uuidToUserMap = new HashMap<>();
         for (Member memberToStore : event.getEventMembers()) {
-            DatabaseUser databaseUser;
+            if (!memberToStore.getUUID().isEmpty()) {
+                DatabaseUser databaseUser;
 
-            if (!memberToStore.getUUID().isEmpty() && memberToStore.getUUID()
-                    .get().equals(Account.shared.getUUID().getOrElse
-                            (EMPTY_FIELD))) {
-                Member mySelfAsMember = Account.shared.toMember();
-                databaseUser =
-                        new DatabaseUser(mySelfAsMember.getGivenName(),
-                                         mySelfAsMember.getFamilyName(),
-                                         mySelfAsMember.getDisplayName(),
-                                         mySelfAsMember.getEmail(),
-                                         mySelfAsMember.getUUID(),
-                                         mySelfAsMember.getLocation());
-            } else {
-                databaseUser =
-                        new DatabaseUser(memberToStore.getGivenName(),
-                                         memberToStore.getFamilyName(),
-                                         memberToStore.getDisplayName(),
-                                         memberToStore.getEmail(),
-                                         memberToStore.getUUID(),
-                                         memberToStore.getLocation());
+                if (memberToStore.getUUID().get()
+                        .equals(Account.shared.getUUID().getOrElse
+                                (EMPTY_FIELD))) {
+                    Member mySelfAsMember = Account.shared.toMember();
+                    databaseUser =
+                            new DatabaseUser(mySelfAsMember.getGivenName(),
+                                             mySelfAsMember.getFamilyName(),
+                                             mySelfAsMember.getDisplayName(),
+                                             mySelfAsMember.getEmail(),
+                                             mySelfAsMember.getUUID(),
+                                             mySelfAsMember.getLocation());
+                } else {
+                    databaseUser =
+                            new DatabaseUser(memberToStore.getGivenName(),
+                                             memberToStore.getFamilyName(),
+                                             memberToStore.getDisplayName(),
+                                             memberToStore.getEmail(),
+                                             memberToStore.getUUID(),
+                                             memberToStore.getLocation());
+                }
+
+                uuidToUserMap.put(databaseUser.uuid, databaseUser);
             }
-
-            uuidToUserMap.put(databaseUser.uuid, databaseUser);
         }
 
         DatabaseEvent eventToStore = new DatabaseEvent(event.getEventName(),
