@@ -15,10 +15,12 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Helper;
+import ch.epfl.sweng.groupup.lib.fileStorage.FirebaseFileProxy;
 
 public class FileManagementActivity extends ToolbarActivity {
 
@@ -27,6 +29,9 @@ public class FileManagementActivity extends ToolbarActivity {
     private int columnWidth;
     private int rowHeight;
 
+    private FirebaseFileProxy proxy;
+    private List<Bitmap> images;
+
     int imagesAdded = 0;
 
     @Override
@@ -34,6 +39,9 @@ public class FileManagementActivity extends ToolbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_management);
         super.initializeToolbarActivity();
+
+        Intent intent = getIntent();
+        proxy = new FirebaseFileProxy(intent.getStringExtra("EventId"));
 
         findViewById(R.id.add_files).setOnClickListener(new Button.OnClickListener(){
 
@@ -100,21 +108,23 @@ public class FileManagementActivity extends ToolbarActivity {
                 return;
             }
 
-                ImageView image = new ImageView(this);
-
-                GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
-                layoutParams.width = columnWidth;
-                layoutParams.height = rowHeight;
-                image.setLayoutParams(layoutParams);
-
-                image.setImageBitmap(trimBitmap(bitmap));
-
-
-
-                ((GridLayout)findViewById(R.id.image_grid))
-                        .addView(image, imagesAdded++);
-
+            addImageToGrid(bitmap);
+            proxy.uploadFile(bitmap);
         }
+    }
+
+    private void addImageToGrid(Bitmap bitmap){
+        ImageView image = new ImageView(this);
+
+        GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
+        layoutParams.width = columnWidth;
+        layoutParams.height = rowHeight;
+        image.setLayoutParams(layoutParams);
+
+        image.setImageBitmap(trimBitmap(bitmap));
+
+        ((GridLayout)findViewById(R.id.image_grid))
+                .addView(image, imagesAdded++);
     }
 
     private Bitmap trimBitmap(Bitmap bitmap) {

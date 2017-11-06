@@ -89,6 +89,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getApplicationContext(), FileManagementActivity.class);
+                        intent.putExtra("EventId", eventToDisplay.getUUID());
                         startActivity(intent);
                     }
                 });
