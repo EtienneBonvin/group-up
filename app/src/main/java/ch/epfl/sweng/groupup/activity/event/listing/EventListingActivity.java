@@ -19,6 +19,7 @@ import java.util.TimerTask;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
+import ch.epfl.sweng.groupup.activity.map.MapActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
@@ -133,10 +134,20 @@ public class EventListingActivity extends ToolbarActivity {
 
             final int finalI = i + offset;
             if (eventButton != null) {
+                eventButton.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
+                        intent.putExtra("eventIndex", finalI);
+                        startActivity(intent);
+                        return true;
+                    }
+                });
+
                 eventButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
+                        Intent intent = new Intent(EventListingActivity.this, MapActivity.class);
                         intent.putExtra("eventIndex", finalI);
                         startActivity(intent);
                     }
