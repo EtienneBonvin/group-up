@@ -103,12 +103,20 @@
         android:text="@string/remove_yourself_from_the_event"
         android:layout_alignParentBottom="true"/>
 
+    <Button
+        android:id="@+id/upload_file"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_a_file_to_the_event"
+        android:layout_above="@id/remove_event_button"
+        />
+
 
     <ScrollView
-        android:layout_width="257dp"
-        android:layout_height="275dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@id/event_description_tv_members"
-        android:layout_above="@+id/remove_event_button"
+        android:layout_above="@+id/upload_file"
         >
         <LinearLayout
             android:id="@+id/linear_scroll_members"

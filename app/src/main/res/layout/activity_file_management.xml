@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ch.epfl.sweng.groupup.activity.event.files.FileManagementActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/file_management_tv_description"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_below="@id/toolbar"/>
+
+    <Button
+        android:id="@+id/add_files"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/file_management_button_add_file"
+        android:layout_alignParentBottom="true"/>
+
+    <RelativeLayout
+        android:id="@+id/scroll_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/description"
+        android:layout_above="@id/add_files">
+
+        <!-- For now let lint ignore the fact that one of the layout is
+            useless, they are both needed for now, have to find another
+            solution in the future maybe.
+             This is done with tools:ignore -->
+        <ScrollView
+            tools:ignore="UselessParent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <GridLayout
+                android:id="@+id/image_grid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="3"
+                android:rowCount="3">
+            </GridLayout>
+
+        </ScrollView>
+
+    </RelativeLayout>
+
+</RelativeLayout>
