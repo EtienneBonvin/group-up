@@ -5,13 +5,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
@@ -20,10 +23,13 @@ import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Helper;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+
 public class FileManagementActivity extends ToolbarActivity {
 
     private final int COLUMNS = 3;
-    private final int ROWS = 3;
+    private final int ROWS = 4;
     private int columnWidth;
     private int rowHeight;
 
@@ -82,19 +88,7 @@ public class FileManagementActivity extends ToolbarActivity {
             Bitmap bitmap;
             try {
 
-                ImageView image = new ImageView(this);
-                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
-                //Scaling bitmap
-                int nh = (int) ( bitmap.getHeight() * (512.0 / bitmap.getWidth()) );
-                Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
-                image.setImageBitmap(scaled);
-
-                GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
-                layoutParams.width = columnWidth;
-                layoutParams.height = rowHeight;
-                image.setLayoutParams(layoutParams);
-
-                if(imagesAdded % COLUMNS == 0 && imagesAdded > 9){
+                if(imagesAdded % COLUMNS == 0){
                     ((GridLayout)findViewById(R.id.image_grid))
                             .setRowCount(imagesAdded / ROWS + 1);
                     ViewGroup.LayoutParams params = findViewById(R.id.image_grid).getLayoutParams();
@@ -103,8 +97,47 @@ public class FileManagementActivity extends ToolbarActivity {
                             .setLayoutParams(params);
                 }
 
-                ((GridLayout)findViewById(R.id.image_grid))
-                        .addView(image, imagesAdded++);
+                ScrollView displayerVer = new ScrollView(this);
+                displayerVer.setLayoutParams(
+                        new ViewGroup.LayoutParams(columnWidth, WRAP_CONTENT)
+                );
+
+                HorizontalScrollView displayerHor = new HorizontalScrollView(this);
+                displayerHor.setLayoutParams(
+                        new ViewGroup.LayoutParams(WRAP_CONTENT, rowHeight)
+                );
+
+                ImageView image = new ImageView(this);
+
+                GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
+                layoutParams.width = columnWidth;
+                layoutParams.height = rowHeight;
+                image.setLayoutParams(layoutParams);
+
+                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
+                //Scaling bitmap
+                //TODO : Manage problem between two vertical scrollviews
+                Bitmap scaled;
+                if(bitmap.getWidth() > bitmap.getHeight()) {
+                    int nh = (int) (bitmap.getWidth() * (1.0 * rowHeight / bitmap.getHeight()));
+                    scaled = Bitmap.createScaledBitmap(bitmap, nh, rowHeight, true);
+
+                    displayerVer.addView(displayerHor);
+                    displayerHor.addView(image);
+
+                    ((GridLayout)findViewById(R.id.image_grid))
+                            .addView(displayerVer, imagesAdded++);
+                }else{
+                    int nh = (int) (bitmap.getHeight() * (1.0 * columnWidth / bitmap.getWidth()));
+                    scaled = Bitmap.createScaledBitmap(bitmap, columnWidth, nh, true);
+
+                    displayerHor.addView(displayerVer);
+                    displayerVer.addView(image);
+
+                    ((GridLayout)findViewById(R.id.image_grid))
+                            .addView(displayerHor, imagesAdded++);
+                }
+                image.setImageBitmap(scaled);
 
             } catch (FileNotFoundException e) {
                 // TODO Auto-generated catch block
