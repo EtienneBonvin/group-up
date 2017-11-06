@@ -25,7 +25,7 @@ import ch.epfl.sweng.groupup.object.account.Account;
 public final class GeoLocation implements GeoLocationInterface {
 
     private static final long MIN_UPDATE_TIME_INTERVAL = 5000;
-    private static final float MIN_UPDATE_DISTANCE_INTERVAL = 2;
+    private static final float MIN_UPDATE_DISTANCE_INTERVAL = 5;
 
     private static final String ASK_PERMISSION = "ASK_PERMISSION";
     private static final String ASK_ENABLE_GPS = "ASK_ENABLE_GPS";
@@ -45,15 +45,16 @@ public final class GeoLocation implements GeoLocationInterface {
         locationManager = (LocationManager) context
                 .getSystemService(Context.LOCATION_SERVICE);
 
-        Criteria criteria = new Criteria();
-        criteria.setAltitudeRequired(false);
+        if (Helper.isEmulator()) {
+            provider = LocationManager.GPS_PROVIDER;
+        } else {
+            provider = locationManager.getBestProvider(getCriteria(), false);
 
-        provider = locationManager.getBestProvider(criteria, false);
-
-        if (provider == null) {
-            askToEnableProvider(ASK_PERMISSION);
-        } else if (!locationManager.isProviderEnabled(provider)) {
-            askToEnableProvider(ASK_ENABLE_GPS);
+            if (provider == null) {
+                askToEnableProvider(ASK_PERMISSION);
+            } else if (!locationManager.isProviderEnabled(provider)) {
+                askToEnableProvider(ASK_ENABLE_GPS);
+            }
         }
     }
 
@@ -105,6 +106,30 @@ public final class GeoLocation implements GeoLocationInterface {
         Helper.showToast(context,
                          "Provider \"" + s + "\" disabled.",
                          Toast.LENGTH_SHORT);
+    }
+
+    /**
+     * Eases the creation of the criteria we want for the localisation.
+     *
+     * @return - the criteria to use for choosing the right localisation
+     * provider
+     */
+    private Criteria getCriteria() {
+        Criteria criteria = new Criteria();
+
+        criteria.setAccuracy(Criteria.ACCURACY_LOW);
+        criteria.setHorizontalAccuracy(Criteria.ACCURACY_LOW);
+        criteria.setVerticalAccuracy(Criteria.ACCURACY_LOW);
+        criteria.setSpeedAccuracy(Criteria.ACCURACY_LOW);
+        criteria.setBearingAccuracy(Criteria.ACCURACY_LOW);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+
+        criteria.setAltitudeRequired(false);
+        criteria.setSpeedRequired(false);
+        criteria.setBearingRequired(false);
+        criteria.setCostAllowed(false);
+
+        return criteria;
     }
 
     /**
