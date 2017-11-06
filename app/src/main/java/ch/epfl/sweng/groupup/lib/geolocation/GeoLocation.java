@@ -45,13 +45,16 @@ public final class GeoLocation implements GeoLocationInterface {
         locationManager = (LocationManager) context
                 .getSystemService(Context.LOCATION_SERVICE);
 
-        provider = locationManager.getBestProvider(getCriteria(), false);
-        //provider = LocationManager.GPS_PROVIDER; // Use for emulator.
+        if (Helper.isEmulator()) {
+            provider = LocationManager.GPS_PROVIDER;
+        } else {
+            provider = locationManager.getBestProvider(getCriteria(), false);
 
-        if (provider == null) {
-            askToEnableProvider(ASK_PERMISSION);
-        } else if (!locationManager.isProviderEnabled(provider)) {
-            askToEnableProvider(ASK_ENABLE_GPS);
+            if (provider == null) {
+                askToEnableProvider(ASK_PERMISSION);
+            } else if (!locationManager.isProviderEnabled(provider)) {
+                askToEnableProvider(ASK_ENABLE_GPS);
+            }
         }
     }
 
