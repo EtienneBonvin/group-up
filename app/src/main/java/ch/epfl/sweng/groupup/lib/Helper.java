@@ -3,6 +3,7 @@ package ch.epfl.sweng.groupup.lib;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.widget.Toast;
 
 /**
@@ -31,8 +32,11 @@ public final class Helper {
      * @param buttonText - button text
      * @return - the alert dialog that is shown
      */
-    public static AlertDialog showAlert(Context context, String title, String message, String
-            buttonText) {
+    public static AlertDialog showAlert(Context context,
+                                        String title,
+                                        String message,
+                                        String
+                                                buttonText) {
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
 
         alertDialog.setTitle(title);
@@ -41,7 +45,8 @@ public final class Helper {
                               buttonText,
                               new DialogInterface.OnClickListener() {
                                   @Override
-                                  public void onClick(DialogInterface dialog, int which) {
+                                  public void onClick(DialogInterface dialog,
+                                                      int which) {
                                       dialog.dismiss();
                                   }
                               });
@@ -71,5 +76,26 @@ public final class Helper {
         newToast.show();
 
         return newToast;
+    }
+
+    /**
+     * Returns whether we are running on an emulator or not.
+     * Source: https://stackoverflow.com/questions/2799097/how-can-i-detect
+     * -when-an-android-application-is-running-in-the-emulator
+     *
+     * @return - true if we are on an emulator
+     */
+    public static boolean isEmulator() {
+        return Build.FINGERPRINT.startsWith("generic") ||
+               Build.FINGERPRINT.startsWith("unknown") ||
+               Build.MODEL.contains("google_sdk") ||
+               Build.MODEL.contains("Emulator") ||
+               Build.MODEL.contains("Android SDK built for x86") ||
+               Build.MANUFACTURER.contains("Genymotion") ||
+               (Build.BRAND
+                        .startsWith("generic") &&
+                Build.DEVICE
+                        .startsWith("generic")) ||
+               "google_sdk".equals(Build.PRODUCT);
     }
 }
