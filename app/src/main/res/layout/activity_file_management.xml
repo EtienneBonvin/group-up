@@ -19,19 +19,32 @@
         android:gravity="center"
         android:layout_below="@id/toolbar"/>
 
-    <Button
-        android:id="@+id/add_files"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/file_management_button_add_file"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/add_files"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/file_management_button_add_file"/>
+
+        <Button
+            android:id="@+id/update_from_database"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update from database"/>
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/scroll_view_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/description"
-        android:layout_above="@id/add_files">
+        android:layout_above="@id/linear_layout">
 
         <!-- For now let lint ignore the fact that one of the layout is
             useless, they are both needed for now, have to find another

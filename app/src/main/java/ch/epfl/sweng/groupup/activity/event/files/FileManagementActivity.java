@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
@@ -20,7 +22,8 @@ import java.util.List;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Helper;
-import ch.epfl.sweng.groupup.lib.fileStorage.FirebaseFileProxy;
+import ch.epfl.sweng.groupup.object.account.Account;
+import ch.epfl.sweng.groupup.object.event.Event;
 
 public class FileManagementActivity extends ToolbarActivity {
 
@@ -28,8 +31,8 @@ public class FileManagementActivity extends ToolbarActivity {
     private final int ROWS = 4;
     private int columnWidth;
     private int rowHeight;
+    private Event event;
 
-    private FirebaseFileProxy proxy;
     private List<Bitmap> images;
 
     int imagesAdded = 0;
@@ -41,10 +44,12 @@ public class FileManagementActivity extends ToolbarActivity {
         super.initializeToolbarActivity();
 
         Intent intent = getIntent();
-        proxy = new FirebaseFileProxy(intent.getStringExtra("EventId"));
+        int eventIndex = intent.getIntExtra("EventIndex", -1);
+        if (eventIndex >-1) {
+            event = Account.shared.getEvents().get(eventIndex);
+        }
 
         findViewById(R.id.add_files).setOnClickListener(new Button.OnClickListener(){
-
             @Override
             public void onClick(View arg0) {
                 // TODO Auto-generated method stub
@@ -52,6 +57,19 @@ public class FileManagementActivity extends ToolbarActivity {
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, 0);
             }});
+
+        findViewById(R.id.update_from_database)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        clearImages();
+                        images = event.getPictures();
+                        for(Bitmap b : images){
+                            if(b != null)
+                                addImageToGrid(b);
+                        }
+                    }
+                });
 
         final GridLayout grid = findViewById(R.id.image_grid);
         final RelativeLayout container = findViewById(R.id.scroll_view_container);
@@ -70,6 +88,15 @@ public class FileManagementActivity extends ToolbarActivity {
         ViewGroup.LayoutParams params = grid.getLayoutParams();
         params.height = rowHeight;
         grid.setLayoutParams(params);
+        ((TextView)findViewById(R.id.description))
+                .append("\nLoading images ...");
+        event.initializeProxy();
+        images = event.getPictures();
+        for(Bitmap bitmap : images){
+            addImageToGrid(bitmap);
+        }
+        ((TextView)findViewById(R.id.description))
+                .setText(getString(R.string.file_management_tv_description));
     }
 
     @Override
@@ -109,8 +136,14 @@ public class FileManagementActivity extends ToolbarActivity {
             }
 
             addImageToGrid(bitmap);
-            proxy.uploadFile(bitmap);
+            event.addPicture(Account.shared.getUUID().getOrElse("Default ID"), bitmap);
         }
+    }
+
+    private void clearImages(){
+        ((GridLayout)findViewById(R.id.image_grid))
+                .removeAllViews();
+        imagesAdded = 0;
     }
 
     private void addImageToGrid(Bitmap bitmap){

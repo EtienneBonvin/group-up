@@ -1,5 +1,8 @@
 package ch.epfl.sweng.groupup.object.event;
 
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+
 import org.joda.time.LocalDateTime;
 
 import java.io.Serializable;
@@ -7,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import ch.epfl.sweng.groupup.lib.fileStorage.FirebaseFileProxy;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 
@@ -19,14 +23,18 @@ public final class Event implements Serializable {
     private final LocalDateTime endTime;
     private final String description;
     private final List<Member> eventMembers;
+    private List<Bitmap> eventImages;
+    private FirebaseFileProxy proxy;
 
     public Event(String eventName, LocalDateTime startTime, LocalDateTime endTime, String description, List<Member> eventMembers) {
-        this.UUID = java.util.UUID.randomUUID().toString();
+        String uuid = java.util.UUID.randomUUID().toString();
+        this.UUID = uuid;
         this.eventName = eventName;
         this.startTime = startTime;
         this.endTime = endTime;
         this.description = description;
         this.eventMembers = Collections.unmodifiableList(new ArrayList<>(eventMembers));
+        eventImages = new ArrayList<>();
     }
 
     public Event(String uuid, String eventName, LocalDateTime startTime, LocalDateTime endTime, String
@@ -37,6 +45,21 @@ public final class Event implements Serializable {
         this.endTime = endTime;
         this.description = description;
         this.eventMembers = Collections.unmodifiableList(new ArrayList<>(eventMembers));
+        eventImages = new ArrayList<>();
+    }
+
+    public void initializeProxy(){
+        proxy = new FirebaseFileProxy(this);
+    }
+
+    public List<Bitmap> getPictures(){
+        AsyncDownloadFileTask adft = new AsyncDownloadFileTask();
+        eventImages = new ArrayList<>(adft.doInBackground());
+        return new ArrayList<>(eventImages);
+    }
+
+    public void addPicture(String uuid, Bitmap bitmap){
+        proxy.uploadFile(uuid, bitmap);
     }
 
     /**
@@ -210,5 +233,13 @@ public final class Event implements Serializable {
                 ", eventStatus='" + getEventStatus() +
                 ", eventID= " + UUID +
                 '}';
+    }
+
+    private class AsyncDownloadFileTask extends AsyncTask<Void, Integer, List<Bitmap>>{
+
+        @Override
+        protected List<Bitmap> doInBackground(Void... voids) {
+            return proxy.downloadFromDatabase();
+        }
     }
 }

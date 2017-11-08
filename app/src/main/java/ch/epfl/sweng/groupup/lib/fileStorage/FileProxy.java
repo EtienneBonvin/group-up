@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface FileProxy {
 
-    void uploadFile(Bitmap bitmap);
+    void uploadFile(String uuid, Bitmap bitmap);
 
     List<Bitmap> downloadFromDatabase();
 
