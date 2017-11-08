@@ -65,8 +65,7 @@ public class FileManagementActivity extends ToolbarActivity {
                         clearImages();
                         images = event.getPictures();
                         for(Bitmap b : images){
-                            if(b != null)
-                                addImageToGrid(b);
+                            addImageToGrid(b);
                         }
                     }
                 });
@@ -80,23 +79,25 @@ public class FileManagementActivity extends ToolbarActivity {
                 container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 columnWidth = container.getMeasuredWidth() / COLUMNS;
                 rowHeight = container.getMeasuredHeight() / ROWS;
-                // TODO : import images
-                //importImages(height, width);
 
             }
         });
         ViewGroup.LayoutParams params = grid.getLayoutParams();
         params.height = rowHeight;
         grid.setLayoutParams(params);
-        ((TextView)findViewById(R.id.description))
-                .append("\nLoading images ...");
-        event.initializeProxy();
-        images = event.getPictures();
-        for(Bitmap bitmap : images){
-            addImageToGrid(bitmap);
-        }
-        ((TextView)findViewById(R.id.description))
-                .setText(getString(R.string.file_management_tv_description));
+
+        ViewTreeObserver vto_grid = container.getViewTreeObserver();
+        vto_grid.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                images = event.getPictures();
+                Log.e("Size :", ""+images.size());
+                for(Bitmap bitmap : images){
+                    addImageToGrid(bitmap);
+                }
+            }
+        });
     }
 
     @Override

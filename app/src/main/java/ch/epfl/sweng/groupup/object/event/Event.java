@@ -48,13 +48,17 @@ public final class Event implements Serializable {
         eventImages = new ArrayList<>();
     }
 
-    public void initializeProxy(){
+    private void initializeProxy(){
         proxy = new FirebaseFileProxy(this);
     }
 
     public List<Bitmap> getPictures(){
-        AsyncDownloadFileTask adft = new AsyncDownloadFileTask();
-        eventImages = new ArrayList<>(adft.doInBackground());
+        if(proxy == null)
+            initializeProxy();
+        List<Bitmap> proxyImages = proxy.getFromDatabase();
+        if(proxyImages.size() > eventImages.size()) {
+            eventImages = new ArrayList<>(proxyImages);
+        }
         return new ArrayList<>(eventImages);
     }
 
@@ -233,13 +237,5 @@ public final class Event implements Serializable {
                 ", eventStatus='" + getEventStatus() +
                 ", eventID= " + UUID +
                 '}';
-    }
-
-    private class AsyncDownloadFileTask extends AsyncTask<Void, Integer, List<Bitmap>>{
-
-        @Override
-        protected List<Bitmap> doInBackground(Void... voids) {
-            return proxy.downloadFromDatabase();
-        }
     }
 }

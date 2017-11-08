@@ -8,6 +8,6 @@ public interface FileProxy {
 
     void uploadFile(String uuid, Bitmap bitmap);
 
-    List<Bitmap> downloadFromDatabase();
+    List<Bitmap> getFromDatabase();
 
 }

@@ -3,8 +3,8 @@ package ch.epfl.sweng.groupup.lib.fileStorage;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,6 +28,7 @@ public class FirebaseFileProxy implements FileProxy {
     private final Event event;
     private List<Bitmap> recoveredImages;
     private Map<String, Counter> memberCounter;
+    private boolean recovering;
 
     public FirebaseFileProxy(Event event){
         this.event = event;
@@ -36,7 +37,8 @@ public class FirebaseFileProxy implements FileProxy {
         for(Member member : event.getEventMembers()){
             memberCounter.put(member.getUUID().getOrElse("Default ID"), new Counter());
         }
-
+        AsyncDownloadFileTask adft = new AsyncDownloadFileTask();
+        adft.execute();
         getNewImages();
     }
 
@@ -69,36 +71,38 @@ public class FirebaseFileProxy implements FileProxy {
     }
 
     @Override
-    public List<Bitmap> downloadFromDatabase() {
-        return recoveredImages;
+    public List<Bitmap> getFromDatabase() {
+        AsyncDownloadFileTask adft = new AsyncDownloadFileTask();
+        adft.execute();
+        return new ArrayList<>(recoveredImages);
     }
 
     private boolean getNewImages(){
+        if(recovering){
+            return true;
+        }
+        recovering = true;
         boolean noErrors;
         String memberId;
-        Counter memberCount;
         StorageReference folderRef = storageRef.child(event.getUUID());
         StorageReference imageRef;
 
         for(Member member : event.getEventMembers()) {
             memberId = member.getUUID().get();
             noErrors = true;
-            memberCount = memberCounter.get(memberId);
-            final Counter finalCounter = new Counter(memberCount.getCount());
+            final Counter memberCount = memberCounter.get(memberId);
+            final Counter imageCount = new Counter(memberCount.getCount());
             while (noErrors && memberCount.getCount() < 100) {
                 try {
                     final String finalId = memberId;
-                    imageRef = folderRef.child(memberId+"/"+memberCount.getCount());
-                    memberCount.increment();
-                    Log.e("Yolo", imageRef.getPath());
+                    imageRef = folderRef.child(memberId+"/"+imageCount.getCount());
+                    imageCount.increment();
                     imageRef.getBytes(Long.MAX_VALUE)
                             .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                 @Override
                                 public void onSuccess(byte[] bytes) {
                                     recoveredImages.add(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
-                                    memberCounter.remove(finalId);
-                                    finalCounter.increment();
-                                    memberCounter.put(finalId, new Counter(finalCounter.getCount()));
+                                    memberCount.increment();
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -108,14 +112,12 @@ public class FirebaseFileProxy implements FileProxy {
                                 }
                             });
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                     noErrors = false;
-                }
-                if(noErrors){
-
                 }
             }
         }
+        recovering = false;
         return true;
     }
 
@@ -134,8 +136,19 @@ public class FirebaseFileProxy implements FileProxy {
             count ++;
         }
 
+        private void decrement(){count --;}
+
         private int getCount(){
             return count;
+        }
+    }
+
+    private class AsyncDownloadFileTask extends AsyncTask<Void, Integer, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            getNewImages();
+            return true;
         }
     }
 }
