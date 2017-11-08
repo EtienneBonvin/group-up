@@ -48,10 +48,19 @@ public final class Event implements Serializable {
         eventImages = new ArrayList<>();
     }
 
+    /**
+     * Initialize the proxy for the media sharing.
+     */
     private void initializeProxy(){
         proxy = new FirebaseFileProxy(this);
     }
 
+    /**
+     * Returns the pictures of the event.
+     * The pictures list synchronizes itself with the database when the
+     * method is called.
+     * @return the list of Bitmap of the pictures of the event.
+     */
     public List<Bitmap> getPictures(){
         if(proxy == null)
             initializeProxy();
@@ -62,6 +71,11 @@ public final class Event implements Serializable {
         return new ArrayList<>(eventImages);
     }
 
+    /**
+     * Upload a picture to the event and download it on the database.
+     * @param uuid the id of the uploader.
+     * @param bitmap the Bitmap to upload
+     */
     public void addPicture(String uuid, Bitmap bitmap){
         proxy.uploadFile(uuid, bitmap);
     }
