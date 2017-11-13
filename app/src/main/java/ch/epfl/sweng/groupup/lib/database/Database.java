@@ -175,7 +175,7 @@ public final class Database {
         This variable defines if we need to update ourselves in the database and fill in
         our information.
          */
-        boolean needToUpdateMyself = false;
+        boolean needToUpdateMyself =  false;
 
         // We for over all the events received.
         for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
@@ -224,7 +224,7 @@ public final class Database {
                                                 event.name,
                                                 LocalDateTime.parse(event.datetime_start),
                                                 LocalDateTime.parse(event.datetime_end),
-                                                event.description, members);
+                                                event.description, members, needToUpdateMyself);
 
                     // We add or update the event.
                     Account.shared.addOrUpdateEvent(tempEvent);

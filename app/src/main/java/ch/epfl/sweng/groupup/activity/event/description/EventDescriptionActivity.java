@@ -34,7 +34,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
 
     @Override
     protected void onCreate (Bundle savedInstanceState){
-        int maxName= 50;
+        final int maxName= 50;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_description);
         super.initializeToolbarActivity();
@@ -70,7 +70,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
                     public void onClick(View view) {
                             String name= displayEventName.getText().toString();
                             String description = displayEventDescription.getText().toString();
-                            if (name.length()>50){
+                            if (name.length()>maxName){
                                 displayEventName.setError(getString(R.string.event_creation_toast_event_name_too_long));
                             }
                             else if (name.length()==0){
@@ -92,7 +92,8 @@ public class EventDescriptionActivity extends ToolbarActivity {
         Account.shared.addOrUpdateEvent(eventToDisplay);
         Database.update();
         List<Event> futureEventList=new ArrayList<>(Account.shared.getEvents());
-        Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>()).withCurrentEvent(Optional.<Event>empty());
+        Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>
+                ()).withCurrentEvent(Optional.<Event>empty());
         futureEventList.remove(eventToDisplay);
         for (Event fe:futureEventList){
             Account.shared.addOrUpdateEvent(fe);
