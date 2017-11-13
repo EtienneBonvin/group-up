@@ -5,4 +5,8 @@
     <color name="dark_grey">#444444</color>
     <color name="middle_grey">#888888</color>
     <color name="light_grey">#CCCCCC</color>
+    <color name="primaryColor">#f58d3c</color>
+    <color name="primaryLightColor">#ffbe6b</color>
+    <color name="primaryDarkColor">#bd5f06</color>
+    <color name="primaryTextColor">#000000</color>
 </resources>

@@ -51,7 +51,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
         printEvent();
 
         //Remove and go to the event creation
-        findViewById(R.id.remove_event_button)
+        findViewById(R.id.save)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -64,7 +64,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
                     }
                 });
         //Save changes
-        findViewById(R.id.save)
+        findViewById(R.id.remove_event_button)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
