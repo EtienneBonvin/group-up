@@ -9,7 +9,14 @@
         <item name="colorAccent">@color/secondaryColor</item>
         <item name="android:textColorHint">@color/secondaryDarkColor</item>
         <item name="android:background">@color/background</item>
+    </style>
 
+    <style name="ButtonStyle" parent="@android:style/Widget.Button">
+
+    </style>
+
+    <style name="DateButtonStyle" parent="@android:style/Widget.Button">
+        
     </style>
 
 </resources>

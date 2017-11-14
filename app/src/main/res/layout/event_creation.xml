@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/container">
+    android:layout_height="match_parent">
 
     <include
-        layout="@layout/toolbar"
-        android:id="@+id/toolbar" />
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <!-- User input for the event name -->
     <LinearLayout
+        android:id="@+id/ui_event_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/ui_event_name"
         android:layout_below="@id/toolbar">
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="47dp"
             android:layout_weight="0.4"
             android:gravity="center_vertical"
             android:text="@string/event_creation_tv_event_name"
             android:textSize="20sp" />
+
         <EditText
             android:id="@+id/ui_edit_event_name"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.6"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:inputType="text"
             android:hint="@string/event_creation_hint_event_name"
-            android:background="@color/white"/>
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
 
     </LinearLayout>
 
     <!-- User input for the starting date and time of the event -->
     <LinearLayout
+        android:id="@+id/ui_start_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/ui_start_time"
         android:layout_below="@id/ui_event_name">
 
         <TextView
@@ -49,13 +49,14 @@
             android:gravity="center_vertical"
             android:text="@string/event_creation_tv_start_time"
             android:textSize="20sp" />
+
         <Button
             android:id="@+id/button_start_date"
             style="@style/DateButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
-            android:text=""/>
+            android:text="" />
 
         <Button
             android:id="@+id/button_start_time"
@@ -69,9 +70,9 @@
 
     <!-- User input for the ending date and time of the event -->
     <LinearLayout
+        android:id="@+id/ui_end_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/ui_end_time"
         android:layout_below="@id/ui_start_time">
 
         <TextView
@@ -88,7 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
-            android:text=""/>
+            android:text="" />
 
         <Button
             android:id="@+id/button_end_time"
@@ -101,14 +102,14 @@
     </LinearLayout>
 
     <TextView
-        android:labelFor="@+id/edit_text_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/text_view_description"
-        android:text="@string/event_creation_tv_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/ui_end_time"
-        android:textSize="20sp"
-        android:paddingTop="20sp"/>
+        android:labelFor="@+id/edit_text_description"
+        android:paddingTop="20sp"
+        android:text="@string/event_creation_tv_description"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/save_button"
@@ -119,9 +120,9 @@
         android:text="@string/event_creation_button_add_event" />
 
     <LinearLayout
+        android:id="@+id/linear_layout_friends"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linear_layout_friends"
         android:layout_above="@id/save_button">
 
         <TextView
@@ -129,8 +130,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.7"
-            android:textSize="20sp"
-            android:gravity="bottom"/>
+            android:gravity="bottom"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/button_add_members"
@@ -145,17 +146,16 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/text_view_description"
-        android:layout_above="@id/linear_layout_friends">
+        android:layout_above="@id/linear_layout_friends"
+        android:layout_below="@id/text_view_description">
 
         <EditText
+            android:id="@id/edit_text_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textAutoComplete"
-            android:id="@id/edit_text_description"/>
+            android:inputType="textAutoComplete" />
 
     </ScrollView>
-
 
 
 </RelativeLayout>
