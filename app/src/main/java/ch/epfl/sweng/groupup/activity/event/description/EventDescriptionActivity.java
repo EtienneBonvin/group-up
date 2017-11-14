@@ -77,7 +77,8 @@ public class EventDescriptionActivity extends ToolbarActivity {
                                 displayEventName.setError(getString(R.string.event_creation_toast_non_empty_event_name));
                             }
                             Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name).withDescription(description));
-                            Database.update();
+                            //TODO: uncomment once invalid key exception fixed
+                            //Database.update();
                             eventToDisplay=Account.shared.getEvents().get(eventIndex);
                         }
                 });
@@ -90,14 +91,16 @@ public class EventDescriptionActivity extends ToolbarActivity {
         futureMembers.remove(Account.shared.toMember());
         eventToDisplay=eventToDisplay.withEventMembers(futureMembers);
         Account.shared.addOrUpdateEvent(eventToDisplay);
-        Database.update();
+        //TODO: uncomment once invalid key exception fixed
+        //Database.update();
         List<Event> futureEventList=new ArrayList<>(Account.shared.getEvents());
         Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>()).withCurrentEvent(Optional.<Event>empty());
         futureEventList.remove(eventToDisplay);
         for (Event fe:futureEventList){
             Account.shared.addOrUpdateEvent(fe);
         }
-        Database.update();
+        //TODO: uncomment once invalid key exception fixed
+        //Database.update();
 
     }
 
