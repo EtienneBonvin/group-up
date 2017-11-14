@@ -90,7 +90,7 @@
     <string name="title_activity_map">Map</string>
 
     <!-- File Management -->
-    <string name="file_management_tv_description">Let\'s add some files !!</string>
+    <string name="file_management_tv_description">Here you can manage see the files of the event and add some new ones !</string>
     <string name="file_management_button_add_file">Add file</string>
     <string name="file_management_toast_error_file_uri">An error occured when recovering the media</string>
 

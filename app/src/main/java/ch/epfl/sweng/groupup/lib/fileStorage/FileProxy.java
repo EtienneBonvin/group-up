@@ -10,4 +10,6 @@ public interface FileProxy {
 
     List<Bitmap> getFromDatabase();
 
+    boolean isRecovering();
+
 }

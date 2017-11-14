@@ -17,9 +17,13 @@ import java.io.ByteArrayOutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import ch.epfl.sweng.groupup.lib.Watchee;
+import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
 
@@ -27,14 +31,16 @@ import ch.epfl.sweng.groupup.object.event.Event;
  * FirebaseFileProxy
  * Manages the communications between the application and the Firebase Storage.
  */
-public class FirebaseFileProxy implements FileProxy {
+public class FirebaseFileProxy implements FileProxy, Watchee {
 
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final StorageReference storageRef = storage.getReference();
     private final Event event;
-    private List<Bitmap> recoveredImages;
+    private Set<Bitmap> recoveredImages;
     private Map<String, Counter> memberCounter;
-    private boolean operating;
+    private final SuperBoolean operating;
+    private Set<Watcher> watchers;
+    private final TimeBomb ticker;
 
     /**
      * Constructor for FirebaseFileProxy
@@ -42,15 +48,16 @@ public class FirebaseFileProxy implements FileProxy {
      */
     public FirebaseFileProxy(Event event){
         this.event = event;
-        recoveredImages = new ArrayList<>();
+        ticker = new TimeBomb(event.getEventMembers().size());
+        watchers = new HashSet<>();
+        recoveredImages = new HashSet<>();
         memberCounter = new HashMap<>();
         for(Member member : event.getEventMembers()){
             memberCounter.put(member.getUUID().getOrElse("Default ID"), new Counter());
         }
+        operating = SuperBoolean.getSuperBooleanInstance();
         AsyncDownloadFileTask adft = new AsyncDownloadFileTask(this);
         adft.execute();
-        operating = false;
-        getNewImages();
     }
 
     /**
@@ -69,21 +76,25 @@ public class FirebaseFileProxy implements FileProxy {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
-
-        UploadTask uploadTask = imageRef.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                //TODO : manage failure
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                //TODO : manage success
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-            }
-        });
+        //TODO verify : seems like big files makes the application bug
+        try {
+            UploadTask uploadTask = imageRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    //TODO : manage failure
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    //TODO : manage success
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                }
+            });
+        }catch(OutOfMemoryError ex){
+            //TODO : catch the case when the bucket is full ?
+        }
     }
 
     /**
@@ -99,49 +110,69 @@ public class FirebaseFileProxy implements FileProxy {
         return new ArrayList<>(recoveredImages);
     }
 
+    @Override
+    public boolean isRecovering(){
+        return operating.get();
+    }
+
     /**
      * Refreshes the images of the proxy with the content of the database.
      */
     private void getNewImages(){
-        if(operating){
+        if(operating.get()){
             return;
         }
-        operating = true;
-        boolean noErrors;
+        operating.set(true);
         String memberId;
         StorageReference folderRef = storageRef.child(event.getUUID());
         StorageReference imageRef;
 
         for(Member member : event.getEventMembers()) {
             memberId = member.getUUID().get();
-            noErrors = true;
             final Counter memberCount = memberCounter.get(memberId);
             final Counter imageCount = new Counter(memberCount.getCount());
-            while (noErrors && memberCount.getCount() < 100) {
-                try {
-                    imageRef = folderRef.child(memberId+"/"+imageCount.getCount());
-                    imageCount.increment();
-                    imageRef.getBytes(Long.MAX_VALUE)
-                            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                @Override
-                                public void onSuccess(byte[] bytes) {
-                                    recoveredImages.add(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
-                                    memberCount.increment();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // Catch the failures
-                                }
-                            });
-                } catch (Exception e) {
-                    //e.printStackTrace();
-                    noErrors = false;
-                }
+            try {
+                imageRef = folderRef.child(memberId+"/"+imageCount.getCount());
+                imageCount.increment();
+
+                imageRef.getBytes(Long.MAX_VALUE)
+                        .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            @Override
+                            public void onSuccess(byte[] bytes) {
+                                recoveredImages.add(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                                memberCount.increment();
+                                notifyAllWatchers();
+                                ticker.tick();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                            ticker.tick();
+                            }
+                        });
+            } catch (Exception e) {
+                //e.printStackTrace();
             }
         }
-        operating = false;
+    }
+
+    @Override
+    public void notifyAllWatchers() {
+        for(Watcher w : watchers){
+            w.notifyWatcher();
+        }
+    }
+
+    @Override
+    public void addWatcher(Watcher newWatcher) {
+        watchers.add(newWatcher);
+    }
+
+    @Override
+    public void removeWatcher(Watcher watcher) {
+        if(watchers.contains(watcher))
+            watchers.remove(watcher);
     }
 
     /**
@@ -184,13 +215,37 @@ public class FirebaseFileProxy implements FileProxy {
         }
     }
 
+    private static class SuperBoolean {
+        private static SuperBoolean instance;
+        private boolean value;
+
+        private SuperBoolean(boolean initialValue){
+            value = initialValue;
+        }
+
+        private static SuperBoolean getSuperBooleanInstance(){
+            if(instance == null){
+                instance = new SuperBoolean(false);
+            }
+            return instance;
+        }
+
+        private boolean get(){
+            return value;
+        }
+
+        private void set(boolean newValue){
+            value = newValue;
+        }
+    }
+
     /**
      * Private class AsyncDownloadTask.
      * Allow the Proxy to execute tasks in background, thus not slowing down the
      * whole application.
      */
     private class AsyncDownloadFileTask extends AsyncTask<Void, Integer, Void> {
-        private final WeakReference<FirebaseFileProxy> wRef;
+        private final WeakReference<FirebaseFileProxy> wproxy;
 
         /**
          * Constructor for AsyncDownloadFileTask.
@@ -199,7 +254,7 @@ public class FirebaseFileProxy implements FileProxy {
          * @param proxy the FirebaseFileProxy asking for the asynchronous task.
          */
         private AsyncDownloadFileTask(FirebaseFileProxy proxy){
-            wRef = new WeakReference<>(proxy);
+            wproxy = new WeakReference<FirebaseFileProxy>(proxy);
         }
 
         /**
@@ -209,11 +264,39 @@ public class FirebaseFileProxy implements FileProxy {
          */
         @Override
         protected Void doInBackground(Void... voids) {
-            FirebaseFileProxy proxy = wRef.get();
+            FirebaseFileProxy proxy = wproxy.get();
             if(proxy != null) {
-                getNewImages();
+                try {
+                    proxy.getNewImages();
+                }catch(Exception e){
+                    //TODO check if exceptions should be managed
+                }
             }
             return null;
+        }
+    }
+
+    private class TimeBomb {
+
+        private final int timer;
+        private int count;
+
+        private TimeBomb(int timer){
+            this.timer = timer;
+            count = 0;
+        }
+
+        private void tick(){
+            count++;
+            operating.set(false);
+            if(count == timer){
+                boom();
+                count = 0;
+            }
+        }
+
+        private void boom(){
+            getNewImages();
         }
     }
 }

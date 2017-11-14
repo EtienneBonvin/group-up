@@ -22,10 +22,11 @@ import java.util.List;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Helper;
+import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
 
-public class FileManagementActivity extends ToolbarActivity {
+public class FileManagementActivity extends ToolbarActivity implements Watcher {
 
     private final int COLUMNS = 3;
     private final int ROWS = 4;
@@ -48,6 +49,8 @@ public class FileManagementActivity extends ToolbarActivity {
         if (eventIndex >-1) {
             event = Account.shared.getEvents().get(eventIndex);
         }
+
+        event.addWatcher(this);
 
         findViewById(R.id.add_files).setOnClickListener(new Button.OnClickListener(){
             @Override
@@ -92,7 +95,6 @@ public class FileManagementActivity extends ToolbarActivity {
             public void onGlobalLayout() {
                 container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 images = event.getPictures();
-                Log.e("Size :", ""+images.size());
                 for(Bitmap bitmap : images){
                     addImageToGrid(bitmap);
                 }
@@ -101,9 +103,28 @@ public class FileManagementActivity extends ToolbarActivity {
     }
 
     @Override
+    protected void onPause(){
+        super.onPause();
+        event.removeWatcher(this);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        event.removeWatcher(this);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        event.removeWatcher(this);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
+        event.addWatcher(this);
 
         if (resultCode == RESULT_OK) {
             Uri targetUri = data.getData();
@@ -179,5 +200,14 @@ public class FileManagementActivity extends ToolbarActivity {
 
         return Bitmap.createBitmap(scaled, cutOnSide, cutOnTop,
                 columnWidth, rowHeight);
+    }
+
+    @Override
+    public void notifyWatcher() {
+        images = event.getPictures();
+        clearImages();
+        for(Bitmap bitmap : images){
+            addImageToGrid(bitmap);
+        }
     }
 }

@@ -8,14 +8,18 @@ import org.joda.time.LocalDateTime;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import ch.epfl.sweng.groupup.lib.Watchee;
+import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.lib.fileStorage.FirebaseFileProxy;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 
 @SuppressWarnings("SimplifiableIfStatement")
-public final class Event implements Serializable {
+public final class Event implements Serializable, Watcher, Watchee{
 
     private final String UUID;
     private final String eventName;
@@ -25,6 +29,7 @@ public final class Event implements Serializable {
     private final List<Member> eventMembers;
     private List<Bitmap> eventImages;
     private FirebaseFileProxy proxy;
+    private Set<Watcher> watchers;
 
     public Event(String eventName, LocalDateTime startTime, LocalDateTime endTime, String description, List<Member> eventMembers) {
         String uuid = java.util.UUID.randomUUID().toString();
@@ -35,6 +40,7 @@ public final class Event implements Serializable {
         this.description = description;
         this.eventMembers = Collections.unmodifiableList(new ArrayList<>(eventMembers));
         eventImages = new ArrayList<>();
+        watchers = new HashSet<>();
     }
 
     public Event(String uuid, String eventName, LocalDateTime startTime, LocalDateTime endTime, String
@@ -46,6 +52,7 @@ public final class Event implements Serializable {
         this.description = description;
         this.eventMembers = Collections.unmodifiableList(new ArrayList<>(eventMembers));
         eventImages = new ArrayList<>();
+        watchers = new HashSet<>();
     }
 
     /**
@@ -53,6 +60,7 @@ public final class Event implements Serializable {
      */
     private void initializeProxy(){
         proxy = new FirebaseFileProxy(this);
+        proxy.addWatcher(this);
     }
 
     /**
@@ -62,12 +70,7 @@ public final class Event implements Serializable {
      * @return the list of Bitmap of the pictures of the event.
      */
     public List<Bitmap> getPictures(){
-        if(proxy == null)
-            initializeProxy();
-        List<Bitmap> proxyImages = proxy.getFromDatabase();
-        if(proxyImages.size() > eventImages.size()) {
-            eventImages = new ArrayList<>(proxyImages);
-        }
+        verifyProxyInstantiated();
         return new ArrayList<>(eventImages);
     }
 
@@ -77,6 +80,7 @@ public final class Event implements Serializable {
      * @param bitmap the Bitmap to upload
      */
     public void addPicture(String uuid, Bitmap bitmap){
+        verifyProxyInstantiated();
         proxy.uploadFile(uuid, bitmap);
     }
 
@@ -251,5 +255,42 @@ public final class Event implements Serializable {
                 ", eventStatus='" + getEventStatus() +
                 ", eventID= " + UUID +
                 '}';
+    }
+
+    @Override
+    public void notifyAllWatchers() {
+        for(Watcher w : watchers){
+            w.notifyWatcher();
+        }
+    }
+
+    private void verifyProxyInstantiated(){
+        if(proxy == null){
+            initializeProxy();
+        }
+    }
+
+    @Override
+    public void addWatcher(Watcher newWatcher) {
+        watchers.add(newWatcher);
+        verifyProxyInstantiated();
+        proxy.addWatcher(this);
+    }
+
+    @Override
+    public void removeWatcher(Watcher watcher) {
+        if(watchers.contains(watcher))
+            watchers.remove(watcher);
+        if(watchers.isEmpty()){
+            verifyProxyInstantiated();
+            proxy.removeWatcher(this);
+        }
+    }
+
+    @Override
+    public void notifyWatcher() {
+        verifyProxyInstantiated();
+        eventImages = proxy.getFromDatabase();
+        notifyAllWatchers();
     }
 }
