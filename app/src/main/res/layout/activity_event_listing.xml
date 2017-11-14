@@ -40,5 +40,5 @@
         android:layout_marginEnd="39dp"
         android:clickable="true"
         app:backgroundTint="@color/secondaryColor"
-        app:srcCompat="@drawable/plus_icon" />
+        app:srcCompat="@drawable/plussign" />
 </RelativeLayout>
