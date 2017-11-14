@@ -2,6 +2,7 @@ package ch.epfl.sweng.groupup.activity.event.listing;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -151,10 +152,7 @@ public class EventListingActivity extends ToolbarActivity {
      * of the OnClickListener
      */
     private void initializeCreateEvent() {
-        Button createEventButton = new Button(this);
-        createEventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
-                MATCH_PARENT, heightInSp));
-        createEventButton.setText(R.string.create_new_event);
+        FloatingActionButton createEventButton = (FloatingActionButton) this.findViewById(R.id.createEventButton);
         createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,7 +161,6 @@ public class EventListingActivity extends ToolbarActivity {
             }
         });
         //createEventButton.setId(View.generateViewId()); // Assign the ID of the event
-        linearLayout.addView(createEventButton);
     }
 
     /**
