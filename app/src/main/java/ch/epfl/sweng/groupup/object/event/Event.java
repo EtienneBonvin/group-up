@@ -289,8 +289,8 @@ public final class Event implements Serializable, Watcher, Watchee{
      */
     @Override
     public void addWatcher(Watcher newWatcher) {
-        watchers.add(newWatcher);
         verifyProxyInstantiated();
+        watchers.add(newWatcher);
         proxy.addWatcher(this);
     }
 
@@ -305,6 +305,8 @@ public final class Event implements Serializable, Watcher, Watchee{
         if(watchers.isEmpty()){
             verifyProxyInstantiated();
             proxy.removeWatcher(this);
+            proxy.kill();
+            proxy = null;
         }
     }
 
@@ -314,7 +316,9 @@ public final class Event implements Serializable, Watcher, Watchee{
     @Override
     public void notifyWatcher() {
         verifyProxyInstantiated();
-        eventImages = proxy.getFromDatabase();
+        List<Bitmap> proxyImages = proxy.getFromDatabase();
+        if(proxyImages.size() > eventImages.size())
+            eventImages = proxyImages;
         notifyAllWatchers();
     }
 }
