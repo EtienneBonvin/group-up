@@ -1,7 +1,6 @@
 package ch.epfl.sweng.groupup.object.event;
 
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 
 import org.joda.time.LocalDateTime;
 
@@ -32,8 +31,7 @@ public final class Event implements Serializable, Watcher, Watchee{
     private Set<Watcher> watchers;
 
     public Event(String eventName, LocalDateTime startTime, LocalDateTime endTime, String description, List<Member> eventMembers) {
-        String uuid = java.util.UUID.randomUUID().toString();
-        this.UUID = uuid;
+        this.UUID = java.util.UUID.randomUUID().toString();
         this.eventName = eventName;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -218,6 +216,11 @@ public final class Event implements Serializable, Watcher, Watchee{
         return withEventMembers(newMemberList);
     }
 
+    /**
+     * Override the equals method.
+     * @param o the object to be compared with.
+     * @return true if the object o and this are equals, false otherwise.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -233,6 +236,10 @@ public final class Event implements Serializable, Watcher, Watchee{
         return eventMembers.equals(event.eventMembers);
     }
 
+    /**
+     * Override the toString method.
+     * @return a String representing the object.
+     */
     @Override
     public String toString() {
         return "Event{" +
@@ -257,6 +264,9 @@ public final class Event implements Serializable, Watcher, Watchee{
                 '}';
     }
 
+    /**
+     * Override notifyAllWatchers method of Watchee class.
+     */
     @Override
     public void notifyAllWatchers() {
         for(Watcher w : watchers){
@@ -264,12 +274,19 @@ public final class Event implements Serializable, Watcher, Watchee{
         }
     }
 
+    /**
+     * Verifies that the proxy is well instantiated. If it isn't the case, reinitialize it.
+     */
     private void verifyProxyInstantiated(){
         if(proxy == null){
             initializeProxy();
         }
     }
 
+    /**
+     * Override the addWatcher method of Watchee class.
+     * @param newWatcher the watcher to be added.
+     */
     @Override
     public void addWatcher(Watcher newWatcher) {
         watchers.add(newWatcher);
@@ -277,6 +294,10 @@ public final class Event implements Serializable, Watcher, Watchee{
         proxy.addWatcher(this);
     }
 
+    /**
+     * Override the removeWatcher method of Watchee class.
+     * @param watcher the watcher to unregister.
+     */
     @Override
     public void removeWatcher(Watcher watcher) {
         if(watchers.contains(watcher))
@@ -287,6 +308,9 @@ public final class Event implements Serializable, Watcher, Watchee{
         }
     }
 
+    /**
+     * Override the notifyWatcher method of the Watcher class.
+     */
     @Override
     public void notifyWatcher() {
         verifyProxyInstantiated();

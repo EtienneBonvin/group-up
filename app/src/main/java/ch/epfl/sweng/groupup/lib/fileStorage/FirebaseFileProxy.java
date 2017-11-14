@@ -67,6 +67,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
      */
     @Override
     public void uploadFile(String uuid, Bitmap bitmap) {
+        // TODO put in queue and manage when all image are recovered.
         Counter memberCount = memberCounter.get(uuid);
         StorageReference imageRef = storageRef.child(event.getUUID()+"/"+uuid+"/"+memberCount.getCount());
         memberCounter.remove(uuid);
