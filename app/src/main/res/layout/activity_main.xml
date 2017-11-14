@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/mainActivity"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainActivity"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -9,23 +10,20 @@
         android:id="@+id/appName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textSize="50sp"
-        android:gravity="center"
-        android:textColor="@color/white"
         android:layout_centerVertical="true"
+        android:gravity="center"
         android:paddingBottom="170sp"
-        />
+        android:text="@string/app_name"
+        android:textSize="50sp" />
 
     <TextView
         android:id="@+id/poweredBy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:text="@string/welcome_view_powered_by"
         android:layout_below="@id/appName"
         android:gravity="center"
-        android:textSize="20sp"/>
+        android:text="@string/welcome_view_powered_by"
+        android:textSize="20sp" />
 
     <ImageView
         android:id="@+id/flyingMonkey"
