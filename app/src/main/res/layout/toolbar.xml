@@ -12,7 +12,7 @@
         android:layout_weight="0.09"
         android:background="@android:color/transparent"
         android:contentDescription="@string/toolbar_description_group_list_icon"
-        android:src="@drawable/uparrow" />
+        android:src="@drawable/ic_back_arrow" />
 
     <TextView
         android:layout_width="3dp"
@@ -31,7 +31,7 @@
         android:layout_weight="0.065"
         android:background="@android:color/transparent"
         android:contentDescription="@string/user_profile"
-        android:src="@drawable/user_profile" />
+        android:src="@drawable/ic_user" />
 
     <ImageView
         android:id="@+id/icon_access_settings"
@@ -40,7 +40,7 @@
         android:layout_weight="0.065"
         android:background="@android:color/transparent"
         android:contentDescription="@string/toolbar_description_settings_icon"
-        android:src="@drawable/settings_logo"
+        android:src="@drawable/ic_settings"
         android:layout_marginLeft="1dp"
         android:layout_marginRight="10dp"
         />
