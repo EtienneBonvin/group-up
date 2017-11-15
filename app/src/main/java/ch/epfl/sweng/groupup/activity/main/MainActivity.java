@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.view.animation.AnimationUtils;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 switchToLoginContentView();
             }
-        }, 3000); // 3000ms delay
+        }, 2000); // 3000ms delay
     }
 
     private void switchToLoginContentView() {
@@ -36,4 +37,5 @@ public class MainActivity extends AppCompatActivity {
                         Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
 }

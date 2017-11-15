@@ -71,7 +71,7 @@ public class EventDescriptioActivityTest {
 
         onView(withId(R.id.linear_layout_event_list)).perform(click());
 
-        onView(withId(R.id.save)).perform(click());
+        onView(withId(R.id.save_event_modification_button)).perform(click());
 
         if (BuildConfig.DEBUG && !(Account.shared.getEvents().isEmpty())){
             throw new AssertionError();

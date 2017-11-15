@@ -132,6 +132,8 @@ public class EventListingActivity extends ToolbarActivity {
                     eventStartTimes[i].getDayOfMonth(),eventStartTimes[i].getMonthOfYear(),
                     eventEndTimes[i].getDayOfMonth(), eventEndTimes[i].getMonthOfYear()));
 
+            //eventButton.setBackgroundColor(getResources().getColor(R.color.primaryLightColor));
+
             final int finalI = i + offset;
             if (eventButton != null) {
                 eventButton.setOnClickListener(new View.OnClickListener() {

@@ -289,8 +289,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
         builder.setDescription(((EditText)findViewById(R.id.edit_text_description)).getText().toString());
 
         Account.shared.addOrUpdateEvent(builder.build());
-        //TODO: uncomment once invalid key exception fixed
-        //Database.update();
+        Database.update();
 
         Intent intent = new Intent(this, EventListingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |

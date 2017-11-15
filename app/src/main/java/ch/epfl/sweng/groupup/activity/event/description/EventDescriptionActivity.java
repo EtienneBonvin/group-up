@@ -50,8 +50,8 @@ public class EventDescriptionActivity extends ToolbarActivity {
         initializeField();
         printEvent();
 
-        //Remove and go to the event creation
-        findViewById(R.id.save)
+        //Remove and go to the event listing
+        findViewById(R.id.remove_event_button)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -63,8 +63,8 @@ public class EventDescriptionActivity extends ToolbarActivity {
                         startActivity(i);
                     }
                 });
-        //Save changes
-        findViewById(R.id.remove_event_button)
+        //Save changes and go to event listing
+        findViewById(R.id.save_event_modification_button)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -77,9 +77,14 @@ public class EventDescriptionActivity extends ToolbarActivity {
                                 displayEventName.setError(getString(R.string.event_creation_toast_non_empty_event_name));
                             }
                             Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name).withDescription(description));
-                            //TODO: uncomment once invalid key exception fixed
-                            //Database.update();
+                            Database.update();
                             eventToDisplay=Account.shared.getEvents().get(eventIndex);
+
+                        Intent i = new Intent(EventDescriptionActivity.this, EventListingActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(i);
                         }
                 });
     }
@@ -91,16 +96,15 @@ public class EventDescriptionActivity extends ToolbarActivity {
         futureMembers.remove(Account.shared.toMember());
         eventToDisplay=eventToDisplay.withEventMembers(futureMembers);
         Account.shared.addOrUpdateEvent(eventToDisplay);
-        //TODO: uncomment once invalid key exception fixed
-        //Database.update();
+        Database.update();
         List<Event> futureEventList=new ArrayList<>(Account.shared.getEvents());
         Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>()).withCurrentEvent(Optional.<Event>empty());
         futureEventList.remove(eventToDisplay);
         for (Event fe:futureEventList){
             Account.shared.addOrUpdateEvent(fe);
         }
-        //TODO: uncomment once invalid key exception fixed
-        //Database.update();
+
+        Database.update();
 
     }
 
