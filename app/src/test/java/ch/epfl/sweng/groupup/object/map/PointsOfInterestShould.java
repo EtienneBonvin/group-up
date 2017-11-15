@@ -6,6 +6,7 @@ import android.location.LocationManager;
 import org.junit.Before;
 import org.junit.Test;
 
+import static ch.epfl.sweng.groupup.TestHelper.reasonablyEqual;
 import static org.junit.Assert.*;
 
 public class PointsOfInterestShould {
@@ -61,9 +62,4 @@ public class PointsOfInterestShould {
         assert(reasonablyEqual(p3.getLocation().getLatitude(), testLocation.getLatitude()));
         assert(reasonablyEqual(p3.getLocation().getLongitude(), testLocation.getLongitude()));
     }
-
-    private boolean reasonablyEqual(double x, double y){
-        return Math.abs(y - x) < 0.00001;
-    }
-
 }
