@@ -128,11 +128,13 @@ public class EventListingActivity extends ToolbarActivity {
             eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
                     MATCH_PARENT,heightInSp));
 
+            eventButton.setBackgroundColor(getResources().getColor(R.color.primaryLightColor));
+            eventButton.setCompoundDrawablePadding(2);
+
             eventButton.setText(String.format(Locale.FRANCE, "%s | %d/%d - %d/%d",eventNames[i],
                     eventStartTimes[i].getDayOfMonth(),eventStartTimes[i].getMonthOfYear(),
                     eventEndTimes[i].getDayOfMonth(), eventEndTimes[i].getMonthOfYear()));
 
-            //eventButton.setBackgroundColor(getResources().getColor(R.color.primaryLightColor));
 
             final int finalI = i + offset;
             if (eventButton != null) {
