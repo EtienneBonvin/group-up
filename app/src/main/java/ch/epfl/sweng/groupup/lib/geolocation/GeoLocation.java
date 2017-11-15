@@ -169,7 +169,12 @@ public final class GeoLocation implements GeoLocationInterface {
         AlertDialog.Builder alertDialogBuilder =
                 new AlertDialog.Builder(activity);
 
-        alertDialogBuilder.setMessage(R.string.alert_dialog_ask_enable_provider_message)
+        // I have not found another way to change the text color
+        // That is why we can no longer define the text in strings.xml
+        // With lots of love, Selma
+        alertDialogBuilder.setMessage("<font color='#000000'>To be able to share\n" +
+                "    your live location during the event and invite friends via QR Scanner you have to grant the GroupUp! the\n" +
+                "        permission to use your location and camera. Do you want to do it now?</font>")
                 .setTitle(R.string.alert_dialog_ask_enable_provider_title);
 
         alertDialogBuilder
