@@ -14,4 +14,5 @@
     <color name="secondaryDarkColor">#c77c02</color>
     <color name="primaryTextColor">#444444</color>
     <color name="secondaryTextColor">#000000</color>
+    <color name="transparent">@android:color/transparent</color>
 </resources>
