@@ -188,12 +188,12 @@ public class DatabaseShould {
 
                             List<Member> members = new ArrayList<>();
                             for (DatabaseUser user : event.members.values()) {
-                                members.add(new Member(user.getUUID(),
-                                                       user.getDisplayName(),
-                                                       user.getGivenName(),
-                                                       user.getFamilyName(),
-                                                       user.getEmail(),
-                                                       user.getLocation()));
+                                members.add(new Member(user.getOptUUID(),
+                                                       user.getOptDisplayName(),
+                                                       user.getOptGivenName(),
+                                                       user.getOptFamilyName(),
+                                                       user.getOptEmail(),
+                                                       user.getOptLocation()));
                             }
 
                             Event tempEvent = new Event(
