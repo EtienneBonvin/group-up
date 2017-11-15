@@ -53,7 +53,7 @@
             android:contentDescription="@string/Logo_QR"
             android:cropToPadding="false"
             android:background="@android:color/transparent"
-            android:src="@drawable/qr_code_logo" />
+            android:src="@drawable/qr_code" />
 
         <EditText
             android:id="@+id/edit_text_add_member"
@@ -61,6 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
             android:hint="@string/members_adding_hint_invite_new_members"
+            android:textColor="@color/primaryTextColor"
             android:inputType="text"
             android:textSize="20sp" />
 
@@ -71,7 +72,7 @@
             android:layout_weight="0.15"
             android:background="@android:color/transparent"
             android:contentDescription="@string/plus_sign"
-            android:src="@drawable/plus_icon" />
+            android:src="@drawable/ic_plus_box" />
 
     </LinearLayout>
 
