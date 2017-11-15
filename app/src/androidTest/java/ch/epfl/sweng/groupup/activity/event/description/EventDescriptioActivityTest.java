@@ -27,7 +27,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class EventDescriptioActivityTest {
-    private String name = "My beautiful event";
+    private final String name = "My beautiful event";
 
     @Rule
     public final ActivityTestRule<EventCreationActivity> mActivityRule =

@@ -1,5 +1,7 @@
 package ch.epfl.sweng.groupup.lib.database;
 
+import android.util.Log;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -219,6 +221,7 @@ public final class Database {
                         members.add(memberToAdd);
                     }
 
+                    Log.d("NEED TO UPDATEMYSELF : ", "Name : " + event.getName()+""+needToUpdateMyself);
                     // We create the event that we want to store in the account.
                     Event tempEvent = new Event(event.uuid,
                                                 event.name,
@@ -236,9 +239,7 @@ public final class Database {
         If we updated our information in one of the events we have to update it in the
         database as well.
          */
-        if (needToUpdateMyself) {
-            Database.update();
-        }
+
     }
 
     /**

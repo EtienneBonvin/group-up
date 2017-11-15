@@ -56,7 +56,6 @@
     <string name="create_new_event">Create Event</string>
     <string name="Display_QR">Display QR Code</string>
 
-
     <!-- SettingsActivity -->
     <string name="settings_tv_top">Settings page</string>
 
@@ -87,5 +86,17 @@
     <string name="alert_dialog_yes">Yes</string>
     <string name="alert_dialog_no">No</string>
     <string name="title_activity_map">Map</string>
+
+    <!--Event Invitation -->
+    <string name="event_invitation_title">You are invited to an event !</string>
+    <string name="event_invitation_dialog_decline">Decline</string>
+    <string name="event_invitation_dialog_accept">Accept</string>
+    <string name="event_invitation_dialog_name">Event Name :</string>
+    <string name="event_invitation_dialog_start">Start Date :</string>
+    <string name="event_invitation_dialog_end">End Date :</string>
+    <string name="event_invitation_dialog_description">Description :</string>
+    <string name="event_invitation_dialog_members">Members in the event :</string>
+    <string name="event_invitation_dialog_unknow">Name unknown (this mean that this user has not accept the invitation yet)</string>
+    <string name="event_listing_extraindex">eventIndex</string>
 
 </resources>
