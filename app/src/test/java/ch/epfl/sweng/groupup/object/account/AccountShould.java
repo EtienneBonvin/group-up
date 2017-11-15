@@ -297,6 +297,34 @@ public class AccountShould {
     }
 
     @Test
+    public void toStringWithoutEvent(){
+        shared.clear();
+        String expected = "Account{" +
+                "UUID='" + shared.getUUID() + '\'' +
+                "displayName='" + shared.getDisplayName() + '\'' +
+                "givenName='" + shared.getGivenName() + '\'' +
+                ", familyName='" + shared.getFamilyName() + '\'' +
+                ", email='" + shared.getEmail() + '\'' +
+                ", currentEvent=" + "No current event" +
+                ", pastEvents=" + shared.getPastEvents() +
+                ", futureEvents=" + shared.getFutureEvents()+
+                '}';
+        assertEquals(shared.toString(),expected);
+    }
+
+    @Test
+    public void toStringShortWithoutEvent(){
+        shared.clear();
+        String expected="Account{" +
+                "givenName='" + shared.getGivenName() + '\'' +
+                ", familyName='" + shared.getFamilyName() + '\'' +
+                ", email='" + shared.email + '\'' +
+                ", currentEvent=" + "No current event" +
+                '}';
+        assertEquals(shared.toStringShort(),expected);
+    }
+
+    @Test
     public void toStringShortTest(){
         shared.clear();
         shared.withCurrentEvent(Optional.from(new Event("1","inm", LocalDateTime.now().minusDays(1),

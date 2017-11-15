@@ -87,7 +87,6 @@ public class EventListingActivity extends ToolbarActivity {
         List<Event> belowCreateButton = Account.shared.getPastEvents();
         if (!Account.shared.getCurrentEvent().isEmpty()) {
             belowCreateButton.add(Account.shared.getCurrentEvent().get());
-            Log.d("log current events", Account.shared.getCurrentEvent().toString());
         }
         Collections.sort(belowCreateButton, new Comparator<Event>() {
             @Override
@@ -95,7 +94,6 @@ public class EventListingActivity extends ToolbarActivity {
                 return o1.getStartTime().compareTo(o2.getStartTime());
             }
         });
-        Log.d("log events", belowCreateButton.toString());
         initializeEvents(belowCreateButton);
     }
 
