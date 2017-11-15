@@ -193,12 +193,12 @@ public final class Database {
                     // We transform every DatabaseUser to a Member.
                     List<Member> members = new ArrayList<>();
                     for (DatabaseUser user : event.members.values()) {
-                        Member memberToAdd = new Member(user.getUUID(),
-                                                        user.getDisplayName(),
-                                                        user.getGivenName(),
-                                                        user.getFamilyName(),
-                                                        user.getEmail(),
-                                                        user.getLocation());
+                        Member memberToAdd = new Member(user.getOptUUID(),
+                                                        user.getOptDisplayName(),
+                                                        user.getOptGivenName(),
+                                                        user.getOptFamilyName(),
+                                                        user.getOptEmail(),
+                                                        user.getOptLocation());
 
                         // We check if the member we are about to add is Account.shared.
                         if (user.uuid.equals(Account.shared.getUUID()
