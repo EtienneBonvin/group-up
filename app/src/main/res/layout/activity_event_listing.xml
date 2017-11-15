@@ -8,10 +8,7 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp" />
+        layout="@layout/toolbar"/>
 
     <!-- ScrollView of all future events, the create event button, -->
     <!-- and all past events -->
@@ -43,5 +40,5 @@
         android:layout_marginEnd="20dp"
         android:clickable="true"
         app:backgroundTint="@color/secondaryColor"
-        app:srcCompat="@drawable/plussign" />
+        app:srcCompat="@drawable/ic_plus" />
 </RelativeLayout>
