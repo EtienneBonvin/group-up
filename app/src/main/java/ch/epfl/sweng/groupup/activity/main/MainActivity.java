@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 switchToLoginContentView();
             }
-        }, 2000); // 3000ms delay
+        }, 2000); // 2000ms delay
     }
 
     private void switchToLoginContentView() {
