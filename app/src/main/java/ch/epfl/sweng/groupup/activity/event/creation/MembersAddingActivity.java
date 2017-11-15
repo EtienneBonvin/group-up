@@ -161,7 +161,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 0.9f));
         textView.setText(memberUId);
-        textView.setTextColor(Color.WHITE);
+        textView.setTextColor(getResources().getColor(R.color.primaryTextColor));
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 0,
@@ -171,7 +171,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
         ImageView minus = new ImageView(this);
         minus.setImageResource(R.drawable.ic_minus_box);
         minus.setLayoutParams(params);
-        minus.setBackgroundColor(Color.BLACK);
+        minus.setBackgroundColor(getResources().getColor(R.color.transparent));
 
         newMember.addView(textView);
         newMember.addView(minus);
