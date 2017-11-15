@@ -79,6 +79,7 @@ public final class Event implements Serializable, Watcher, Watchee{
      */
     public void addPicture(String uuid, Bitmap bitmap){
         verifyProxyInstantiated();
+        eventImages.add(bitmap);
         proxy.uploadFile(uuid, bitmap);
     }
 

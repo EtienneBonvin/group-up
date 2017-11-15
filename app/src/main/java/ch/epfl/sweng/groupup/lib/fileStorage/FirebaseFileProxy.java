@@ -39,7 +39,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final StorageReference storageRef = storage.getReference();
     private final Event event;
-    private Set<Bitmap> recoveredImages;
+    private List<Bitmap> recoveredImages;
     private Map<String, Counter> memberCounter;
     private final SuperBoolean operating;
     private Set<Watcher> watchers;
@@ -56,7 +56,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
         killed = new SuperBoolean(false);
         ticker = new TimeBomb(event.getEventMembers().size());
         watchers = new HashSet<>();
-        recoveredImages = new HashSet<>();
+        recoveredImages = new ArrayList<>();
         memberCounter = new HashMap<>();
         for(Member member : event.getEventMembers()){
             memberCounter.put(member.getUUID().getOrElse("Default ID"), new Counter());
@@ -86,9 +86,10 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
         // TODO put in queue and manage when all image are recovered.
         Counter memberCount = memberCounter.get(uuid);
         StorageReference imageRef = storageRef.child(event.getUUID()+"/"+uuid+"/"+memberCount.getCount());
-        memberCounter.remove(uuid);
+        //TODO verify if this makes the image reload.
+        /*memberCounter.remove(uuid);
         memberCount.increment();
-        memberCounter.put(uuid, new Counter(memberCount.getCount()));
+        memberCounter.put(uuid, new Counter(memberCount.getCount()));*/
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
