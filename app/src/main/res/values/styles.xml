@@ -9,14 +9,16 @@
         <item name="colorAccent">@color/secondaryColor</item>
         <item name="android:textColorHint">@color/secondaryDarkColor</item>
         <item name="android:background">@color/background</item>
+        <item name="android:textSize">18dp</item>
     </style>
 
     <style name="ButtonStyle" parent="@android:style/Widget.Button">
-
+        <item name="android:color">@color/primaryLightColor</item>
+        <item name="android:textSize">14dp</item>
     </style>
 
     <style name="DateButtonStyle" parent="@android:style/Widget.Button">
-        
+        <item name="android:textSize">14dp</item>
     </style>
 
 </resources>

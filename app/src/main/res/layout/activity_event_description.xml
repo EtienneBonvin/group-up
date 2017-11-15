@@ -101,7 +101,7 @@
 
 
     <Button
-        android:id="@+id/save"
+        android:id="@+id/save_event_modification_button"
         style="@style/ButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -113,7 +113,7 @@
         android:layout_width="257dp"
         android:layout_height="275dp"
         android:layout_below="@id/event_description_tv_members"
-        android:layout_above="@+id/save"
+        android:layout_above="@+id/save_event_modification_button"
         >
         <LinearLayout
             android:id="@+id/linear_scroll_members"
