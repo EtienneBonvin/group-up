@@ -169,7 +169,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                 0.1f);
         params.setMargins(2, 2, 2, 2);
         ImageView minus = new ImageView(this);
-        minus.setImageResource(R.drawable.minussign);
+        minus.setImageResource(R.drawable.ic_minus_box);
         minus.setLayoutParams(params);
         minus.setBackgroundColor(Color.BLACK);
 
