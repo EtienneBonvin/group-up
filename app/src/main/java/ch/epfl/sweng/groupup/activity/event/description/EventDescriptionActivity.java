@@ -1,7 +1,11 @@
 package ch.epfl.sweng.groupup.activity.event.description;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -36,7 +40,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
     protected void onCreate (Bundle savedInstanceState){
         int maxName= 50;
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_description);
+        setContentView(R.layout.activity_scrolling);
         super.initializeToolbarActivity();
         Intent i= getIntent();
         final int eventIndex = i.getIntExtra("eventIndex", -1);
@@ -55,12 +59,30 @@ public class EventDescriptionActivity extends ToolbarActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(EventDescriptionActivity.this, EventListingActivity.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                                        Intent.FLAG_ACTIVITY_NEW_TASK);
-                        removeEvent();
-                        startActivity(i);
+
+                        final AlertDialog alertDialog = new AlertDialog.Builder(EventDescriptionActivity.this).create();
+                        alertDialog.setTitle("Deleting Event");
+                        alertDialog.setMessage(Html.fromHtml("<font color='#000000'>Would you like to leave and delete this event?</font>"));
+                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Continue",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent i = new Intent(EventDescriptionActivity.this, EventListingActivity.class);
+                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                                Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        removeEvent();
+                                        startActivity(i);
+                                    }
+                                });
+
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        alertDialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
                     }
                 });
         //Save changes and go to event listing
@@ -85,6 +107,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
                                 Intent.FLAG_ACTIVITY_CLEAR_TASK |
                                 Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(i);
+
                         }
                 });
     }
@@ -105,7 +128,6 @@ public class EventDescriptionActivity extends ToolbarActivity {
         }
 
         Database.update();
-
     }
 
     /**
@@ -125,7 +147,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
         if (eventToDisplay!=null) {
             displayEventName.setText(eventToDisplay.getEventName());
             displayEventStartDate.setText(eventToDisplay.getStartTime().toString(null, Locale.FRANCE));
-            displayEventEndDate.setText(eventToDisplay.getEndTime().toString(null, Locale.FRANCE));
+            //displayEventEndDate.setText(eventToDisplay.getEndTime().toString(null, Locale.FRANCE));
             displayEventDescription.setText(eventToDisplay.getDescription());
 
             for (Member member : eventToDisplay.getEventMembers()) {
