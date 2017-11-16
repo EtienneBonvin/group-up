@@ -1,5 +1,7 @@
 package ch.epfl.sweng.groupup.lib.database;
 
+import android.util.Log;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -175,7 +177,7 @@ public final class Database {
         This variable defines if we need to update ourselves in the database and fill in
         our information.
          */
-        boolean needToUpdateMyself = false;
+        boolean needToUpdateMyself =  false;
 
         // We for over all the events received.
         for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
@@ -192,12 +194,12 @@ public final class Database {
                     // We transform every DatabaseUser to a Member.
                     List<Member> members = new ArrayList<>();
                     for (DatabaseUser user : event.members.values()) {
-                        Member memberToAdd = new Member(user.getUUID(),
-                                                        user.getDisplayName(),
-                                                        user.getGivenName(),
-                                                        user.getFamilyName(),
-                                                        user.getEmail(),
-                                                        user.getLocation());
+                        Member memberToAdd = new Member(user.getOptUUID(),
+                                                        user.getOptDisplayName(),
+                                                        user.getOptGivenName(),
+                                                        user.getOptFamilyName(),
+                                                        user.getOptEmail(),
+                                                        user.getOptLocation());
 
                         // We check if the member we are about to add is Account.shared.
                         if (user.uuid.equals(Account.shared.getUUID()
@@ -219,12 +221,13 @@ public final class Database {
                         members.add(memberToAdd);
                     }
 
+                    Log.d("NEED TO UPDATEMYSELF : ", "Name : " + event.getName()+""+needToUpdateMyself);
                     // We create the event that we want to store in the account.
                     Event tempEvent = new Event(event.uuid,
                                                 event.name,
                                                 LocalDateTime.parse(event.datetime_start),
                                                 LocalDateTime.parse(event.datetime_end),
-                                                event.description, members);
+                                                event.description, members, needToUpdateMyself);
 
                     // We add or update the event.
                     Account.shared.addOrUpdateEvent(tempEvent);
@@ -236,9 +239,7 @@ public final class Database {
         If we updated our information in one of the events we have to update it in the
         database as well.
          */
-        if (needToUpdateMyself) {
-            Database.update();
-        }
+
     }
 
     /**

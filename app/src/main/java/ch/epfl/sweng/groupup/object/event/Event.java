@@ -19,24 +19,29 @@ public final class Event implements Serializable {
     private final LocalDateTime endTime;
     private final String description;
     private final List<Member> eventMembers;
-
-    public Event(String eventName, LocalDateTime startTime, LocalDateTime endTime, String description, List<Member> eventMembers) {
+    //The invitation is designed only for the user linked to the Account. This state is set to true
+    //in the database on reception and not in the creation of an event
+    private final boolean invitation;
+    public Event(String eventName, LocalDateTime startTime, LocalDateTime endTime, String
+            description, List<Member> eventMembers, boolean invitation) {
         this.UUID = java.util.UUID.randomUUID().toString();
         this.eventName = eventName;
         this.startTime = startTime;
         this.endTime = endTime;
         this.description = description;
         this.eventMembers = Collections.unmodifiableList(new ArrayList<>(eventMembers));
+        this.invitation=invitation;
     }
 
     public Event(String uuid, String eventName, LocalDateTime startTime, LocalDateTime endTime, String
-            description, List<Member> eventMembers) {
+            description, List<Member> eventMembers, boolean invitation) {
         this.UUID = uuid;
         this.eventName = eventName;
         this.startTime = startTime;
         this.endTime = endTime;
         this.description = description;
         this.eventMembers = Collections.unmodifiableList(new ArrayList<>(eventMembers));
+        this.invitation = invitation;
     }
 
     /**
@@ -72,6 +77,14 @@ public final class Event implements Serializable {
     }
 
     /**
+     * get if this event need to display an invitation to the user
+     * @return boolean invitation
+     */
+    public boolean getInvitation(){
+        return invitation;
+    }
+
+    /**
      * Getter for the event ID
      * @return String unique ID of event
      */
@@ -86,12 +99,20 @@ public final class Event implements Serializable {
     public String getDescription() { return description; }
 
     /**
+     * Change the status of the invitation
+     * * @param invitation
+     * @return
+     */
+    public Event withInvitation(boolean invitation){
+        return new Event(UUID,eventName,startTime,endTime,description,eventMembers,invitation);
+    }
+    /**
      * Change the name of an event
      * @param eventName String containing event name
      * @return the modified event
      */
     public Event withEventName(String eventName){
-        return new Event(UUID, eventName, startTime, endTime, description, eventMembers);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers, invitation);
     }
 
     /**
@@ -100,7 +121,7 @@ public final class Event implements Serializable {
      * @return the modified event
      */
     public Event withStartTime(LocalDateTime startTime){
-        return new Event(UUID, eventName, startTime, endTime, description, eventMembers);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers, invitation);
     }
 
     /**
@@ -109,7 +130,7 @@ public final class Event implements Serializable {
      * @return the modified event
      */
     public Event withEndTime(LocalDateTime endTime){
-        return new Event(UUID, eventName, startTime, endTime, description, eventMembers);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers, invitation);
     }
 
     /**
@@ -118,7 +139,7 @@ public final class Event implements Serializable {
      * @return the modified event
      */
     public Event withDescription(String description) {
-        return new Event(UUID, eventName, startTime, endTime, description, eventMembers);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers, invitation);
     }
 
     /**
@@ -127,7 +148,7 @@ public final class Event implements Serializable {
      * @return the modified event
      */
     public Event withEventMembers(List<Member> eventMembers){
-        return new Event(UUID, eventName, startTime, endTime, description, eventMembers);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers, invitation);
     }
 
     /**

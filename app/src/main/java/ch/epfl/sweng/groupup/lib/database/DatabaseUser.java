@@ -4,10 +4,14 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
+
 import ch.epfl.sweng.groupup.lib.Optional;
 
 import static ch.epfl.sweng.groupup.lib.database.Database.EMPTY_FIELD;
 
+@IgnoreExtraProperties
 final class DatabaseUser {
 
     /**
@@ -26,7 +30,7 @@ final class DatabaseUser {
     public DatabaseUser() {
     }
 
-    public DatabaseUser(Optional<String> given_name,
+    DatabaseUser(Optional<String> given_name,
                         Optional<String> family_name,
                         Optional<String> display_name,
                         Optional<String> email,
@@ -49,7 +53,40 @@ final class DatabaseUser {
         }
     }
 
-    Optional<String> getGivenName() {
+    public String getGiven_name() {
+        return given_name;
+    }
+
+    public String getFamily_name() {
+        return family_name;
+    }
+
+    public String getDisplay_name() {
+        return display_name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    @Exclude
+    Optional<String> getOptGivenName() {
         if (given_name.equals(EMPTY_FIELD)) {
             return Optional.empty();
         } else {
@@ -57,7 +94,8 @@ final class DatabaseUser {
         }
     }
 
-    Optional<String> getFamilyName() {
+    @Exclude
+    Optional<String> getOptFamilyName() {
         if (family_name.equals(EMPTY_FIELD)) {
             return Optional.empty();
         } else {
@@ -65,7 +103,8 @@ final class DatabaseUser {
         }
     }
 
-    Optional<String> getDisplayName() {
+    @Exclude
+    Optional<String> getOptDisplayName() {
         if (display_name.equals(EMPTY_FIELD)) {
             return Optional.empty();
         } else {
@@ -73,7 +112,8 @@ final class DatabaseUser {
         }
     }
 
-    Optional<String> getEmail() {
+    @Exclude
+    Optional<String> getOptEmail() {
         if (email.equals(EMPTY_FIELD)) {
             return Optional.empty();
         } else {
@@ -81,7 +121,8 @@ final class DatabaseUser {
         }
     }
 
-    Optional<String> getUUID() {
+    @Exclude
+    Optional<String> getOptUUID() {
         if (uuid.equals(EMPTY_FIELD)) {
             return Optional.empty();
         } else {
@@ -89,20 +130,22 @@ final class DatabaseUser {
         }
     }
 
-    Optional<Location> getLocation() {
+    @Exclude
+    Optional<Location> getOptLocation() {
         switch (provider) {
             case LocationManager.GPS_PROVIDER:
-                return createLocation();
+                return createOptLocation();
             case LocationManager.NETWORK_PROVIDER:
-                return createLocation();
+                return createOptLocation();
             case LocationManager.PASSIVE_PROVIDER:
-                return createLocation();
+                return createOptLocation();
             default:
                 return Optional.empty();
         }
     }
 
-    private Optional<Location> createLocation() {
+    @Exclude
+    private Optional<Location> createOptLocation() {
         Location location = new Location(provider);
 
         try {
