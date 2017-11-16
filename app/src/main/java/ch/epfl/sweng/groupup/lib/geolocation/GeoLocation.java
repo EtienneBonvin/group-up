@@ -170,8 +170,7 @@ public final class GeoLocation implements GeoLocationInterface {
                 new AlertDialog.Builder(activity);
 
         // TODO: make text color black
-        alertDialogBuilder.setMessage("To be able to share your live location during the event and invite friends via QR " +
-                "Scanner you have to grant the GroupUp! the permission to use your location and camera. Do you want to do it now?")
+        alertDialogBuilder.setMessage(R.string.alert_dialog_ask_enable_provider_message)
                 .setTitle(R.string.alert_dialog_ask_enable_provider_title);
 
         alertDialogBuilder

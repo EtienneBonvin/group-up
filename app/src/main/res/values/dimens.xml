@@ -2,8 +2,9 @@
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
-    <dimen name="large_header_size">32dp</dimen>
-    <dimen name="normal_text_size">18dp</dimen>
     <dimen name="normal_header_size">24dp</dimen>
 
+    <!-- text sizes -->
+    <dimen name="large_header_size">32sp</dimen>
+    <dimen name="normal_text_size">18sp</dimen>
 </resources>
