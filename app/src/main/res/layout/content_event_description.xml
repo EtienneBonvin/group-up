@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity"
-    tools:showIn="@layout/activity_scrolling">
+    tools:showIn="@layout/activity_event_description">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -88,7 +88,7 @@
             >
 
             <LinearLayout
-                android:id="@+id/linear_scroll_members"
+                android:id="@+id/event_description_linear_scroll_members"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
