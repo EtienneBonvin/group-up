@@ -173,7 +173,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
                     }
                 });
 
-        findViewById(R.id.save_button)
+        findViewById(R.id.save_members_button)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

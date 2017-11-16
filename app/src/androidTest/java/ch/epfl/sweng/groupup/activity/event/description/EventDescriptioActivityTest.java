@@ -43,11 +43,11 @@ public class EventDescriptioActivityTest {
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
         Espresso.closeSoftKeyboard();
 
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_event_modification_button)).perform(click());
 
         onView(withId(R.id.linear_layout_event_list)).perform(click());
-        onView(withId(R.id.event_description_tv_name))
-                .check(matches(withText(R.string.event_description_tv_name)));
+        onView(withId(R.id.event_description_tv_description))
+                .check(matches(withText(R.string.event_description_tv_description)));
         onView(withId(R.id.event_description_name))
                 .check(matches(withText(name)));
 
@@ -67,11 +67,11 @@ public class EventDescriptioActivityTest {
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
         Espresso.closeSoftKeyboard();
 
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_event_modification_button)).perform(click());
 
         onView(withId(R.id.linear_layout_event_list)).perform(click());
 
-        onView(withId(R.id.save_event_modification_button)).perform(click());
+        onView(withId(R.id.remove_event_button)).perform(click());
 
         if (BuildConfig.DEBUG && !(Account.shared.getEvents().isEmpty())){
             throw new AssertionError();

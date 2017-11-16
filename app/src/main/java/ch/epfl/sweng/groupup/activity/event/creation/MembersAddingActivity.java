@@ -1,7 +1,6 @@
 package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -74,7 +73,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                     }
                 });
 
-        findViewById(R.id.save_button)
+        findViewById(R.id.save_members_button)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
