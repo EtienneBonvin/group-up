@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 
 import ch.epfl.sweng.groupup.R;
@@ -31,8 +32,12 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
     private int columnWidth;
     private int rowHeight;
     private Event event;
+    private int eventIndex;
 
-    int imagesAdded = 0;
+    private int imagesAdded = 0;
+
+    public static final String FILE_EXTRA_NAME = "File";
+    public static final String EVENT_INDEX = "EventIndex";
 
     /**
      * Override onCreate method of ToolbarActivity.
@@ -46,7 +51,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
 
         //Recover event and add ourselves as listeners.
         Intent intent = getIntent();
-        int eventIndex = intent.getIntExtra("EventIndex", -1);
+        eventIndex = intent.getIntExtra(EVENT_INDEX, -1);
         if (eventIndex >-1) {
             event = Account.shared.getEvents().get(eventIndex);
         }
@@ -189,7 +194,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
      * Add an image to the grid and to the Firebase storage.
      * @param bitmap the image to add.
      */
-    private void addImageToGrid(Bitmap bitmap){
+    private void addImageToGrid(final Bitmap bitmap){
         ImageView image = new ImageView(this);
 
         GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
@@ -198,6 +203,21 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
         image.setLayoutParams(layoutParams);
 
         image.setImageBitmap(trimBitmap(bitmap));
+
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), FullScreenFile.class);
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] data = baos.toByteArray();
+
+                intent.putExtra(FILE_EXTRA_NAME, data);
+                intent.putExtra(EVENT_INDEX, eventIndex);
+                startActivity(intent);
+            }
+        });
 
         ((GridLayout)findViewById(R.id.image_grid))
                 .addView(image, imagesAdded++);

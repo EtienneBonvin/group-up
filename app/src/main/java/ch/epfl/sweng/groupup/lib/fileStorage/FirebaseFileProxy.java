@@ -32,6 +32,8 @@ import ch.epfl.sweng.groupup.object.event.Event;
  */
 public class FirebaseFileProxy implements FileProxy, Watchee {
 
+    //TODO check if the download and upload is stable on low internet connectivity
+
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final StorageReference storageRef = storage.getReference();
 
