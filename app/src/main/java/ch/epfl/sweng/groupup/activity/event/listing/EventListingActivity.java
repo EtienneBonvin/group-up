@@ -161,19 +161,20 @@ public class EventListingActivity extends ToolbarActivity {
                 linearLayout.addView(eventButton);
             }
         }
+    }
 
     /**
      * Get the booleans for the invitations
      * @param events
      * @return
      */
-        private boolean[] getEventsInvitations (List < Event > events) {
+    private boolean[] getEventsInvitations(List<Event> events) {
             boolean[] eventInvitations = new boolean[events.size()];
             for (int i = 0; i < events.size(); i++) {
                 eventInvitations[i] = events.get(i).getInvitation();
             }
             return eventInvitations;
-        }
+    }
 
     /**
      * Initialization of the create event button in the linear layout and
