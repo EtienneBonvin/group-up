@@ -1,5 +1,6 @@
 package ch.epfl.sweng.groupup.activity.map;
 
+import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,14 +10,17 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.object.account.Account;
+import ch.epfl.sweng.groupup.object.account.User;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private Marker mDefault;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        User.observer = this;
     }
 
 
@@ -44,9 +50,18 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         // Add a marker in Sydney and move the camera
         if(!Account.shared.getLocation().isEmpty()){
-            LatLng sydney = new LatLng(Account.shared.getLocation().get().getLatitude(), Account.shared.getLocation().get().getLongitude());
-            mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            updateMap(Account.shared.getLocation().get());
         }
+    }
+
+    public void updateMap(Location location) {
+        LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+        if (mDefault == null) {
+            mDefault = mMap.addMarker(new MarkerOptions().position(pos).title("Default marker"));
+        } else {
+            System.out.println("HALLIHALLÅ");
+            mDefault.setPosition(pos);
+        }
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
     }
 }
