@@ -84,7 +84,7 @@ public final class Database {
     }
 
     /**
-     * Helper function to store the events.
+     * AndroidHelper function to store the events.
      *
      * @param event - the real "Event" object
      */
@@ -131,7 +131,7 @@ public final class Database {
     }
 
     /**
-     * Helper function to store the events.
+     * AndroidHelper function to store the events.
      *
      * @param databaseEvent - the "DatabaseEvent" object
      */

@@ -10,14 +10,14 @@ import android.widget.Toast;
  * Class containing some useful methods to help the programmer out.
  */
 
-public final class Helper {
+public final class AndroidHelper {
 
     private static Toast lastShowedToast = null;
 
     /**
      * Private constructor, we don't want to instantiate this class.
      */
-    private Helper() {
+    private AndroidHelper() {
         // Not instantiable.
     }
 

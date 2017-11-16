@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
-import ch.epfl.sweng.groupup.lib.Helper;
+import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.lib.email.GMailService;
@@ -265,22 +265,22 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
         eventName.setError(null);
 
         if(compare_date(LocalDateTime.now(), builder.getStartDate()) < 0){
-            Helper.showToast(getApplicationContext(),
-                             getString(R.string.event_creation_toast_event_start_before_now),
-                             Toast.LENGTH_SHORT);
+            AndroidHelper.showToast(getApplicationContext(),
+                                    getString(R.string.event_creation_toast_event_start_before_now),
+                                    Toast.LENGTH_SHORT);
             return;
         }
 
         if(compare_date(builder.getStartDate(), builder.getEndDate()) < 0){
-            Helper.showToast(getApplicationContext(),
-                             getString(R.string.event_creation_toast_event_end_before_begin),
-                             Toast.LENGTH_SHORT);
+            AndroidHelper.showToast(getApplicationContext(),
+                                    getString(R.string.event_creation_toast_event_end_before_begin),
+                                    Toast.LENGTH_SHORT);
             return;
         }
         if(compare_date(builder.getStartDate(), builder.getEndDate()) == 0){
-            Helper.showToast(getApplicationContext(),
-                             getString(R.string.event_craeation_toast_event_last_1_minute),
-                             Toast.LENGTH_SHORT);
+            AndroidHelper.showToast(getApplicationContext(),
+                                    getString(R.string.event_craeation_toast_event_last_1_minute),
+                                    Toast.LENGTH_SHORT);
             return;
         }
 

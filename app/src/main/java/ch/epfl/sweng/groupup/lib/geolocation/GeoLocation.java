@@ -18,7 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.lib.Helper;
+import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 
@@ -45,7 +45,7 @@ public final class GeoLocation implements GeoLocationInterface {
         locationManager = (LocationManager) context
                 .getSystemService(Context.LOCATION_SERVICE);
 
-        if (Helper.isEmulator()) {
+        if (AndroidHelper.isEmulator()) {
             provider = LocationManager.GPS_PROVIDER;
         } else {
             provider = locationManager.getBestProvider(getCriteria(), false);
@@ -71,21 +71,21 @@ public final class GeoLocation implements GeoLocationInterface {
         switch (i) {
             case LocationProvider.OUT_OF_SERVICE:
                 pauseLocationUpdates();
-                Helper.showToast(context,
+                AndroidHelper.showToast(context,
                                  "Provider \"" + s + "\" out of service.",
-                                 Toast.LENGTH_SHORT);
+                                        Toast.LENGTH_SHORT);
                 break;
             case LocationProvider.TEMPORARILY_UNAVAILABLE:
                 pauseLocationUpdates();
-                Helper.showToast(context,
+                AndroidHelper.showToast(context,
                                  "Provider \"" + s + "\" unavailable.",
-                                 Toast.LENGTH_SHORT);
+                                        Toast.LENGTH_SHORT);
                 break;
             case LocationProvider.AVAILABLE:
                 requestLocationUpdates();
-                Helper.showToast(context,
+                AndroidHelper.showToast(context,
                                  "Provider \"" + s + "\" available.",
-                                 Toast.LENGTH_SHORT);
+                                        Toast.LENGTH_SHORT);
                 break;
             default:
                 break;
@@ -95,17 +95,17 @@ public final class GeoLocation implements GeoLocationInterface {
     @Override
     public void onProviderEnabled(String s) {
         requestLocationUpdates();
-        Helper.showToast(context,
+        AndroidHelper.showToast(context,
                          "Provider \"" + s + "\" enabled.",
-                         Toast.LENGTH_SHORT);
+                                Toast.LENGTH_SHORT);
     }
 
     @Override
     public void onProviderDisabled(String s) {
         pauseLocationUpdates();
-        Helper.showToast(context,
+        AndroidHelper.showToast(context,
                          "Provider \"" + s + "\" disabled.",
-                         Toast.LENGTH_SHORT);
+                                Toast.LENGTH_SHORT);
     }
 
     /**

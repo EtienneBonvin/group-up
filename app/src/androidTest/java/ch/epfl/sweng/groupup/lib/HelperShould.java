@@ -34,10 +34,10 @@ public class HelperShould {
         mActivityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Helper.showAlert(mActivityRule.getActivity().getWindow().getContext(),
-                                 alertTitle,
-                                 alertMessage,
-                                 alertButtonText);
+                AndroidHelper.showAlert(mActivityRule.getActivity().getWindow().getContext(),
+                                        alertTitle,
+                                        alertMessage,
+                                        alertButtonText);
             }
         });
         onView(withText(alertTitle))
@@ -54,9 +54,9 @@ public class HelperShould {
         mActivityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Helper.showToast(mActivityRule.getActivity().getApplicationContext(),
-                                 toastString,
-                                 Toast.LENGTH_SHORT);
+                AndroidHelper.showToast(mActivityRule.getActivity().getApplicationContext(),
+                                        toastString,
+                                        Toast.LENGTH_SHORT);
             }
         });
         onView(withText(toastString))
