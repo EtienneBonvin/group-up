@@ -497,7 +497,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
          */
         private Event build(){
 
-            GMailService gms = new GMailService();
+            GMailService gms = new GMailService(getApplicationContext());
 
             members.add(Account.shared.getUUID().getOrElse("Default UUID"));
             List<Member> finalMembers = new ArrayList<>();
