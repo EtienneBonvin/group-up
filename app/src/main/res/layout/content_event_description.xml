@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/EventFields"
-            android:id="@+id/endDate"
+            android:id="@+id/event_description_end_date"
             android:text="@string/no_event_end_date"
             android:layout_below="@id/event_description_start_date"
             android:layout_toRightOf="@id/event_description_tv_end_date" />
