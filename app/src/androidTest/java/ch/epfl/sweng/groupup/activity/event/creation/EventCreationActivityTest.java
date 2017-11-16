@@ -117,6 +117,7 @@ public class EventCreationActivityTest {
         if (BuildConfig.DEBUG && !(found.equals(expected))){
             throw new AssertionError();
         }
+        Account.shared.clear();
     }
 
     @Test
@@ -141,7 +142,7 @@ public class EventCreationActivityTest {
         onView(withId(R.id.ui_edit_event_name))
                 .check(matches(hasErrorText(
                         getTargetContext().getString(R.string.event_creation_toast_event_name_too_long))));
-    }
+         }
 
     @Test
     public void dateWellComparedYear1(){
@@ -170,6 +171,7 @@ public class EventCreationActivityTest {
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
         //intended(hasComponent(EventListingActivity.class.getName()));
+        Account.shared.clear();
     }
 
     @Test
@@ -199,6 +201,7 @@ public class EventCreationActivityTest {
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
         //intended(hasComponent(EventListingActivity.class.getName()));
+        Account.shared.clear();
     }
 
     @Test
@@ -228,6 +231,7 @@ public class EventCreationActivityTest {
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
         //intended(hasComponent(EventListingActivity.class.getName()));
+        Account.shared.clear();
     }
 
     @Test
@@ -257,6 +261,7 @@ public class EventCreationActivityTest {
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_button)).perform(click());
         //intended(hasComponent(EventListingActivity.class.getName()));
+        Account.shared.clear();
     }
 
     @Test
@@ -291,6 +296,7 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
+
         try {
             Thread.sleep(2000);
         }catch(InterruptedException ie){
@@ -344,6 +350,7 @@ public class EventCreationActivityTest {
         onView(withId(R.id.save_button)).perform(click());
         // Check event details
         onView(withId(R.id.ui_edit_event_name)).check(matches(withText(eventName)));
+        Account.shared.clear();
     }
 
     /**

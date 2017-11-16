@@ -85,6 +85,7 @@ public class EventsShould {
                 '}';
         event = event.withStartTime(start);
         event = event.withEndTime(end);
+        event = event.withInvitation(false);
         assertEquals(event.toString(),expectedOutput);
     }
 
@@ -175,18 +176,7 @@ public class EventsShould {
         assertEquals(updatedMember, eventMembers);
     }
 
-   /* //Test that print an event to the console so that we can visually see if an event is correctly
-   //printed
-   @Test
-    public void testToString(){
-        Member test = new Member("Test", "Tested", "Tester", "test@test.test");
-        Member test1 = new Member("Test1", "Tested1", "Tester1", "test1@test.test");
-        List<Member> members= new ArrayList<>();
-        members.add(test);
-        members.add(test1);
-        Event e =new Event("Name", LocalDateTime.now(),LocalDateTime.now().plusDays(1),members,1);
-        System.out.println(e.toString());
-    }*/
+
 
     @Test(expected = IllegalArgumentException.class)
     public void preventAddingMembersToCurrentEvents() {
@@ -237,8 +227,9 @@ public class EventsShould {
         LocalDateTime start = LocalDateTime.now().plusDays(1);
         LocalDateTime end = LocalDateTime.now().plusDays(2);
         List<Member> members =  new ArrayList<>(Arrays.asList(new Member("1","Javier","Pavier","Xantet","yolo@yolo.com", null), new Member("2","asdf","Médric","Caire","yolo1@yolo.yolo", null)));
-        Event e = new Event("2","inm", start, end,"Du travail, toujours du travail", members,false);
+        Event e = new Event("2","inm", start.plusDays(1), end.plusDays(3),"Pas de travail, toujours pas de travail", members,false);
         Event f = new Event("1","inm", start, end,"Du travail, toujours du travail", members,false);
         assertNotEquals(e,f);
+        assertNotEquals(e,null);
     }
 }
