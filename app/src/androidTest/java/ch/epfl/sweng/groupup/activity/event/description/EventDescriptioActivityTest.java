@@ -46,7 +46,7 @@ public class EventDescriptioActivityTest {
         Espresso.closeSoftKeyboard();
 
         onView(withId(R.id.save_new_event_button)).perform(click());
-        
+
         onView(withId(R.id.linear_layout_event_list)).perform(click());
         onView(withId(R.id.event_description_tv_description))
                 .check(matches(withText(R.string.event_description_tv_description)));

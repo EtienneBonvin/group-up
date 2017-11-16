@@ -67,5 +67,4 @@
         app:layout_anchor="@+id/remove_event_button"
         app:layout_anchorGravity="center|left"
         app:srcCompat="@drawable/ic_save" />
-
 </android.support.design.widget.CoordinatorLayout>

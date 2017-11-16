@@ -158,8 +158,8 @@ public class EventListingActivity extends ToolbarActivity {
                 eventButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(EventListingActivity.this, MapActivity.class);
-                        intent.putExtra("eventIndex", finalI);
+                        Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
+                        intent.putExtra(getString(R.string.event_listing_extraindex), finalI);
                         startActivity(intent);
                     }
                 });
