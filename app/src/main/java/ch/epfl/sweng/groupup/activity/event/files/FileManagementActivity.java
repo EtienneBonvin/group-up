@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -13,16 +12,15 @@ import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
-import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Helper;
 import ch.epfl.sweng.groupup.lib.Watcher;
+import ch.epfl.sweng.groupup.lib.fileStorage.FirebaseFileProxy;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
 
@@ -34,45 +32,37 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
     private int rowHeight;
     private Event event;
 
-    private List<Bitmap> images;
-
     int imagesAdded = 0;
 
+    /**
+     * Override onCreate method of ToolbarActivity.
+     * @param savedInstanceState unused
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_management);
         super.initializeToolbarActivity();
 
+        //Recover event and add ourselves as listeners.
         Intent intent = getIntent();
         int eventIndex = intent.getIntExtra("EventIndex", -1);
         if (eventIndex >-1) {
             event = Account.shared.getEvents().get(eventIndex);
         }
-
         event.addWatcher(this);
 
+        // Set onClickListeners to add files
+        // TODO adding videos.
         findViewById(R.id.add_files).setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View arg0) {
-                // TODO Auto-generated method stub
                 Intent intent = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, 0);
             }});
 
-        findViewById(R.id.update_from_database)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        clearImages();
-                        images = event.getPictures();
-                        for(Bitmap b : images){
-                            addImageToGrid(b);
-                        }
-                    }
-                });
-
+        // Set the GridLayout and initially get the height and width of the rows and columns.
         final GridLayout grid = findViewById(R.id.image_grid);
         final RelativeLayout container = findViewById(R.id.scroll_view_container);
         ViewTreeObserver vto = container.getViewTreeObserver();
@@ -89,40 +79,58 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
         params.height = rowHeight;
         grid.setLayoutParams(params);
 
+        // Add the event pictures as soon as possible to the Grid.
         ViewTreeObserver vto_grid = container.getViewTreeObserver();
         vto_grid.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                images = event.getPictures();
-                for(Bitmap bitmap : images){
+                for(Bitmap bitmap : event.getPictures()){
                     addImageToGrid(bitmap);
                 }
             }
         });
     }
 
+    /**
+     * Override onPause method, remove the activity from the watchers of the event to avoid
+     * exceptions.
+     **/
     @Override
     protected void onPause(){
         super.onPause();
         event.removeWatcher(this);
     }
 
+    /**
+     * Override onStop method, remove the activity from the watchers of the event to avoid
+     * exceptions.
+     **/
     @Override
     public void onStop(){
         super.onStop();
         event.removeWatcher(this);
     }
 
+    /**
+     * Override onDestroy method, remove the activity from the watchers of the event to avoid
+     * exceptions.
+     **/
     @Override
     public void onDestroy(){
         super.onDestroy();
         event.removeWatcher(this);
     }
 
+    /**
+     * Override of onActivityResult method.
+     * Define the behavior when the user finished selecting the picture he wants to add.
+     * @param requestCode unused.
+     * @param resultCode indicate if the operation succeeded.
+     * @param data the data returned by the previous activity.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
         event.addWatcher(this);
 
@@ -157,17 +165,30 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
                 return;
             }
 
-            addImageToGrid(bitmap);
-            event.addPicture(Account.shared.getUUID().getOrElse("Default ID"), bitmap);
+            if(bitmap.getByteCount()/8 > FirebaseFileProxy.MAX_FILE_SIZE){
+                Helper.showToast(getApplicationContext(),
+                        getString(R.string.file_management_toast_error_file_too_big),
+                        Toast.LENGTH_SHORT);
+            }else {
+                addImageToGrid(bitmap);
+                event.addPicture(Account.shared.getUUID().getOrElse("Default ID"), bitmap);
+            }
         }
     }
 
+    /**
+     * Helper method to clear all the images of the grid.
+     */
     private void clearImages(){
         ((GridLayout)findViewById(R.id.image_grid))
                 .removeAllViews();
         imagesAdded = 0;
     }
 
+    /**
+     * Add an image to the grid and to the Firebase storage.
+     * @param bitmap the image to add.
+     */
     private void addImageToGrid(Bitmap bitmap){
         ImageView image = new ImageView(this);
 
@@ -182,6 +203,12 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
                 .addView(image, imagesAdded++);
     }
 
+    /**
+     * Helper method to trim an image, the resulting image will be centered, with a width of a
+     * column and the height of a row in the grid.
+     * @param bitmap the bitmap to trim.
+     * @return the trimmed image.
+     */
     private Bitmap trimBitmap(Bitmap bitmap) {
 
         //Scaling bitmap
@@ -202,11 +229,14 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
                 columnWidth, rowHeight);
     }
 
+    /**
+     * Override of notifyWatcher.
+     * When notified, synchronise the grid images with the event images.
+     */
     @Override
     public void notifyWatcher() {
-        images = event.getPictures();
         clearImages();
-        for(Bitmap bitmap : images){
+        for(Bitmap bitmap : event.getPictures()){
             addImageToGrid(bitmap);
         }
     }

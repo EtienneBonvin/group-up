@@ -31,12 +31,6 @@
             android:layout_height="wrap_content"
             android:text="@string/file_management_button_add_file"/>
 
-        <Button
-            android:id="@+id/update_from_database"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Update from database"/>
-
     </LinearLayout>
 
     <RelativeLayout
