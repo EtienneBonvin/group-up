@@ -522,7 +522,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
 
             gms.sendInvitationEmail(mailsToSend);
 
-            return new Event(eventName, startDate, endDate, description, finalMembers);
+            return new Event(eventName, startDate, endDate, description, finalMembers,false);
         }
 
         /**

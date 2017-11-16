@@ -1,7 +1,10 @@
 package ch.epfl.sweng.groupup.lib.database;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
 import java.util.HashMap;
 
+@IgnoreExtraProperties
 final class DatabaseEvent {
 
     /**
@@ -18,7 +21,7 @@ final class DatabaseEvent {
     public DatabaseEvent() {
     }
 
-    public DatabaseEvent(String name, String description, String datetime_start, String
+    DatabaseEvent(String name, String description, String datetime_start, String
             datetime_end, String uuid, HashMap<String, DatabaseUser> members) {
         this.name = name;
         this.description = description;
@@ -26,5 +29,29 @@ final class DatabaseEvent {
         this.datetime_end = datetime_end;
         this.uuid = uuid;
         this.members = new HashMap<>(members);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getDatetime_start() {
+        return datetime_start;
+    }
+
+    public String getDatetime_end() {
+        return datetime_end;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public HashMap<String, DatabaseUser> getMembers() {
+        return members;
     }
 }
