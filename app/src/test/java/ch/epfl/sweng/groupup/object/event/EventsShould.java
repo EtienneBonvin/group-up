@@ -24,7 +24,7 @@ public class EventsShould {
     @Before
     public void init() {
         List<Member> eventMembers = new ArrayList<>();
-        event = new Event("Name", new LocalDateTime(), new LocalDateTime(), "My amazing description", eventMembers);
+        event = new Event("Name", new LocalDateTime(), new LocalDateTime(), "My amazing description", eventMembers, false);
     }
 
     @Test
@@ -117,7 +117,7 @@ public class EventsShould {
         LocalDateTime startDate = LocalDateTime.now().minusHours(1);
         LocalDateTime endDate = LocalDateTime.now().plusHours(1);
         List<Member> eventMembers = new ArrayList<>();
-        event = new Event("Name", startDate, endDate, "Description", eventMembers);
+        event = new Event("Name", startDate, endDate, "Description", eventMembers,false);
         assertEquals(event.getEventStatus(), EventStatus.CURRENT);
     }
 
@@ -126,7 +126,7 @@ public class EventsShould {
         LocalDateTime startDate = LocalDateTime.now().plusDays(1);
         LocalDateTime endDate = LocalDateTime.now().plusDays(2);
         List<Member> eventMembers = new ArrayList<>();
-        event = new Event("Name", startDate, endDate, "Description", eventMembers);
+        event = new Event("Name", startDate, endDate, "Description", eventMembers,false);
         assertEquals(event.getEventStatus(), EventStatus.FUTURE);
     }
 
@@ -135,7 +135,7 @@ public class EventsShould {
         LocalDateTime startDate = LocalDateTime.now().minusHours(1);
         LocalDateTime endDate = LocalDateTime.now().minusMinutes(2);
         List<Member> eventMembers = new ArrayList<>();
-        event = new Event("Name", startDate, endDate, "Description", eventMembers);
+        event = new Event("Name", startDate, endDate, "Description", eventMembers,false);
         assertEquals(event.getEventStatus(), EventStatus.PAST);
     }
 
@@ -152,7 +152,7 @@ public class EventsShould {
         LocalDateTime startDate = LocalDateTime.now().plusDays(1);
         LocalDateTime endDate = LocalDateTime.now().plusDays(2);
         List<Member> eventMembers = new ArrayList<>();
-        event = new Event("Name", startDate, endDate, "Description", eventMembers);
+        event = new Event("Name", startDate, endDate, "Description", eventMembers,false);
         eventMembers.add(member);
 
         List<Member> updatedMember;
@@ -166,7 +166,7 @@ public class EventsShould {
         LocalDateTime startDate = LocalDateTime.now().plusDays(1);
         LocalDateTime endDate = LocalDateTime.now().plusDays(2);
         List<Member> eventMembers = new ArrayList<>();
-        event = new Event("Name", startDate, endDate, "Description", eventMembers);
+        event = new Event("Name", startDate, endDate, "Description", eventMembers,false);
         eventMembers.add(member);
 
         List<Member> updatedMember;
@@ -193,7 +193,7 @@ public class EventsShould {
         LocalDateTime startDate = LocalDateTime.now().minusHours(1);
         LocalDateTime endDate = LocalDateTime.now().plusDays(2);
         List<Member> eventMembers = new ArrayList<>();
-        event = new Event("Name", startDate, endDate, "Description", eventMembers);
+        event = new Event("Name", startDate, endDate, "Description", eventMembers,false);
         event.addMember(member);
 
     }
@@ -203,27 +203,33 @@ public class EventsShould {
         LocalDateTime startDate = LocalDateTime.now().minusHours(1);
         LocalDateTime endDate = LocalDateTime.now().minusMinutes(2);
         List<Member> eventMembers = new ArrayList<>();
-        event = new Event("Name", startDate, endDate, "Description", eventMembers);
+        event = new Event("Name", startDate, endDate, "Description", eventMembers,false);
         event.addMember(member);
     }
 
     @Test
     public void allowToRemoveCurrentUserFromMemberList(){
-        Account.shared.withUUID("UUID").withGivenName("Xavier").withFamilyName("Pantet").withDisplayName(null).withEmail("xavier.pantet@pindex.ch");
-        List<Member> eventMembers = new ArrayList<>(Arrays.asList(new Member("UUID", null, "Xavier", "Pantet", "xavier.pantet@pindex.ch", null), new Member("UUID2", null, "Cedric", "Maire", "cedmaire@gmail.com", null)));
-        Event e = new Event("Name", null, null, null, eventMembers);
+        Account.shared.withUUID("UUID").withGivenName("Xavier").withFamilyName("Pantet").
+                withDisplayName(null).withEmail("xavier.pantet@pindex.ch");
+        List<Member> eventMembers = new ArrayList<>(Arrays.asList(new Member("UUID", null,
+                "Xavier", "Pantet", "xavier.pantet@pindex.ch", null), new Member("UUID2", null,
+                "Cedric", "Maire", "cedmaire@gmail.com", null)));
+        Event e = new Event("Name", null, null, null, eventMembers,false);
         Event withoutMe = e.withoutCurrentUser();
         assertEquals(withoutMe.getEventMembers().size(), 1);
-        assertEquals(withoutMe.getEventMembers().get(0), new Member("UUID2", null, "Cedric", "Maire", "cedmaire@gmail.com", null));
+        assertEquals(withoutMe.getEventMembers().get(0), new Member("UUID2", null, "Cedric",
+                "Maire", "cedmaire@gmail.com", null));
     }
 
     @Test
     public void equalsEventsAreEquals(){
         LocalDateTime start = LocalDateTime.now().plusDays(1);
         LocalDateTime end = LocalDateTime.now().plusDays(2);
-        List<Member> members =  new ArrayList<>(Arrays.asList(new Member("1","Javier","Pavier","Xantet","yolo@yolo.com", null), new Member("2","asdf","Médric","Caire","yolo1@yolo.yolo", null)));
-        Event e = new Event("1","inm", start, end,"Du travail, toujours du travail", members);
-        Event f = new Event("1","inm", start, end,"Du travail, toujours du travail", members);
+        List<Member> members =  new ArrayList<>(Arrays.asList(new Member("1","Javier","Pavier",
+                "Xantet","yolo@yolo.com", null), new Member("2","asdf","Médric","Caire",
+                "yolo1@yolo.yolo", null)));
+        Event e = new Event("1","inm", start, end,"Du travail, toujours du travail", members,false);
+        Event f = new Event("1","inm", start, end,"Du travail, toujours du travail", members,false);
         assertEquals(e,f);
     }
     @Test
@@ -231,8 +237,8 @@ public class EventsShould {
         LocalDateTime start = LocalDateTime.now().plusDays(1);
         LocalDateTime end = LocalDateTime.now().plusDays(2);
         List<Member> members =  new ArrayList<>(Arrays.asList(new Member("1","Javier","Pavier","Xantet","yolo@yolo.com", null), new Member("2","asdf","Médric","Caire","yolo1@yolo.yolo", null)));
-        Event e = new Event("2","inm", start, end,"Du travail, toujours du travail", members);
-        Event f = new Event("1","inm", start, end,"Du travail, toujours du travail", members);
+        Event e = new Event("2","inm", start, end,"Du travail, toujours du travail", members,false);
+        Event f = new Event("1","inm", start, end,"Du travail, toujours du travail", members,false);
         assertNotEquals(e,f);
     }
 }

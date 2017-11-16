@@ -16,6 +16,7 @@ import ch.epfl.sweng.groupup.object.account.Account;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -28,7 +29,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class EventDescriptioActivityTest {
-    private String name = "My beautiful event";
+    private final String name = "My beautiful event";
 
     @Rule
     public final ActivityTestRule<EventCreationActivity> mActivityRule =
@@ -45,10 +46,11 @@ public class EventDescriptioActivityTest {
         Espresso.closeSoftKeyboard();
 
         onView(withId(R.id.save_new_event_button)).perform(click());
-
+        
         onView(withId(R.id.linear_layout_event_list)).perform(click());
         onView(withId(R.id.event_description_tv_description))
                 .check(matches(withText(R.string.event_description_tv_description)));
+
         onView(withId(R.id.event_description_name))
                 .check(matches(withText(name)));
 
@@ -70,7 +72,7 @@ public class EventDescriptioActivityTest {
 
         onView(withId(R.id.save_new_event_button)).perform(click());
 
-        onView(withId(R.id.linear_layout_event_list)).perform(click());
+        onView(withId(R.id.linear_layout_event_list)).perform(longClick());
 
         onView(withId(R.id.remove_event_button)).perform(click());
 

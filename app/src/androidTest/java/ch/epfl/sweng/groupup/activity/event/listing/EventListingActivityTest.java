@@ -18,7 +18,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class EventListingActivityTest {
@@ -34,7 +33,7 @@ public class EventListingActivityTest {
         onView(ViewMatchers.withId(R.id.createEventButton))
                 .perform(click());
 
-        // Checks that the EventCreationActivity view is displated by looking for ui_edit_event_name,
+        // Checks that the EventCreationActivity view is displayed by looking for ui_edit_event_name,
         // change to same as Etienne when Solal comes back with an answer.
         try {
             onView(withId(R.id.ui_edit_event_name)).check(matches(isDisplayed()));
