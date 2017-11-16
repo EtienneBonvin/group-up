@@ -128,7 +128,6 @@ public class EventCreationActivityTest {
         onView(withId(R.id.ui_edit_event_name))
                 .check(matches(hasErrorText(
                         getTargetContext().getString(R.string.event_creation_toast_non_empty_event_name))));
-        Account.shared.clear();
     }
 
     @Test
@@ -142,8 +141,7 @@ public class EventCreationActivityTest {
         onView(withId(R.id.ui_edit_event_name))
                 .check(matches(hasErrorText(
                         getTargetContext().getString(R.string.event_creation_toast_event_name_too_long))));
-        Account.shared.clear();
-    }
+         }
 
     @Test
     public void dateWellComparedYear1(){
@@ -157,7 +155,6 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
-        Account.shared.clear();
     }
 
     @Test
@@ -183,7 +180,6 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
-        Account.shared.clear();
     }
 
     @Test
@@ -209,7 +205,6 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
-        Account.shared.clear();
     }
 
     @Test
@@ -235,7 +230,6 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
-        Account.shared.clear();
     }
 
     @Test
@@ -261,7 +255,6 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
-        Account.shared.clear();
     }
 
     @Test
@@ -276,8 +269,7 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
-        Account.shared.clear();
-    }
+     }
 
     @Test
     public void noEventCreationOnPastStartDate(){
@@ -298,7 +290,6 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
-        Account.shared.clear();
     }
 
     /**
