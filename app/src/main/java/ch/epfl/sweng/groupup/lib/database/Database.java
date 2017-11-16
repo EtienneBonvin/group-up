@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -249,7 +250,7 @@ public final class Database {
      * @param members - the map of the uuids to the members from an event
      * @return - true if we are contained through our email
      */
-    private static boolean containedAsUnknownUser(HashMap<String, DatabaseUser> members) {
+    private static boolean containedAsUnknownUser(Map<String, DatabaseUser> members) {
         Collection<DatabaseUser> users = members.values();
         Set<String> unknownUsers = new HashSet<>();
 

@@ -7,9 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-
-import org.joda.time.LocalDateTime;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
