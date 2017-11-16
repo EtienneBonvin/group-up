@@ -82,7 +82,7 @@ public class EventCreationActivityTest {
 
         Espresso.closeSoftKeyboard();
 
-        LocalDateTime start = new LocalDateTime(3017, 1, 6, 9, 0, 0, 0);
+        LocalDateTime start = new LocalDateTime(2018, 1, 6, 9, 0, 0, 0);
         LocalDateTime end = start.plusDays(4);
 
         onView(withId(R.id.button_start_date)).perform(click());
