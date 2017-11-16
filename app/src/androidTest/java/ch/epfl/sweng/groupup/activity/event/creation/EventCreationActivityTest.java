@@ -7,6 +7,7 @@ import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import org.hamcrest.Matchers;
 import org.joda.time.LocalDateTime;
@@ -154,6 +155,11 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
+        try {
+            Thread.sleep(Toast.LENGTH_LONG);
+        }catch(InterruptedException ie){
+            //The tests are stopped, nothing to do.
+        }
     }
 
     @Test
@@ -178,6 +184,11 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
+        try {
+            Thread.sleep(Toast.LENGTH_LONG);
+        }catch(InterruptedException ie){
+            //The tests are stopped, nothing to do.
+        }
     }
 
     @Test
@@ -202,6 +213,11 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
+        try {
+            Thread.sleep(Toast.LENGTH_LONG);
+        }catch(InterruptedException ie){
+            //The tests are stopped, nothing to do.
+        }
     }
 
     @Test
@@ -226,6 +242,11 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
+        try {
+            Thread.sleep(Toast.LENGTH_LONG);
+        }catch(InterruptedException ie){
+            //The tests are stopped, nothing to do.
+        }
     }
 
     @Test
@@ -250,6 +271,11 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
+        try {
+            Thread.sleep(Toast.LENGTH_LONG);
+        }catch(InterruptedException ie){
+            //The tests are stopped, nothing to do.
+        }
     }
 
     @Test
@@ -264,6 +290,11 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
+        try {
+            Thread.sleep(Toast.LENGTH_LONG);
+        }catch(InterruptedException ie){
+            //The tests are stopped, nothing to do.
+        }
     }
 
     @Test
@@ -285,6 +316,11 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
+        try {
+            Thread.sleep(Toast.LENGTH_LONG);
+        }catch(InterruptedException ie){
+            //The tests are stopped, nothing to do.
+        }
     }
 
     /**
