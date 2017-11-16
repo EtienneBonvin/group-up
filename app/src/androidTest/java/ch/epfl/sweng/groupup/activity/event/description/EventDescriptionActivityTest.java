@@ -1,7 +1,6 @@
 package ch.epfl.sweng.groupup.activity.event.description;
 
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.contrib.BuildConfig;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -17,7 +16,6 @@ import ch.epfl.sweng.groupup.object.account.Account;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.pressKey;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.typeText;

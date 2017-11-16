@@ -2,7 +2,6 @@ package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.location.Location;
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.contrib.BuildConfig;
 import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.DatePicker;
@@ -111,8 +110,7 @@ public class EventCreationActivityTest {
         Espresso.closeSoftKeyboard();
 
         onView(withId(R.id.save_new_event_button)).perform(click());
-        Espresso.closeSoftKeyboard();
-        onView(withId(R.id.linear_layout_event_list)).perform(click());
+
         Event expected = new Event(eventName, start, end, "My description", expectedMembers,false);
 
         Event found = findEvent(eventName);
@@ -379,7 +377,7 @@ public class EventCreationActivityTest {
         onView(withId(R.id.edit_text_add_member)).perform(typeText("swenggroupup@gmail.com"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.image_view_add_member)).perform(click());
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.save_added_members_button)).perform(click());
     }
 
     private void addEventName(String name){

@@ -73,7 +73,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                     }
                 });
 
-        findViewById(R.id.save_new_event_button)
+        findViewById(R.id.save_added_members_button)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -122,9 +122,9 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
         if (mScannerView != null) {
             mScannerView.stopCamera();
             setContentView(R.layout.members_adding);
+            initListeners();
+            restoreState();
         }
-        initListeners();
-        restoreState();
     }
 
     /**

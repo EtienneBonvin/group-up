@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.view.animation.AnimationUtils;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
