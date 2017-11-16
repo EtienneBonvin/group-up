@@ -156,7 +156,7 @@ public class EventCreationActivityTest {
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
         try {
-            Thread.sleep(Toast.LENGTH_LONG);
+            Thread.sleep(2000);
         }catch(InterruptedException ie){
             //The tests are stopped, nothing to do.
         }
@@ -185,7 +185,7 @@ public class EventCreationActivityTest {
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
         try {
-            Thread.sleep(Toast.LENGTH_LONG);
+            Thread.sleep(2000);
         }catch(InterruptedException ie){
             //The tests are stopped, nothing to do.
         }
@@ -214,7 +214,7 @@ public class EventCreationActivityTest {
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
         try {
-            Thread.sleep(Toast.LENGTH_LONG);
+            Thread.sleep(2000);
         }catch(InterruptedException ie){
             //The tests are stopped, nothing to do.
         }
@@ -243,7 +243,7 @@ public class EventCreationActivityTest {
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
         try {
-            Thread.sleep(Toast.LENGTH_LONG);
+            Thread.sleep(2000);
         }catch(InterruptedException ie){
             //The tests are stopped, nothing to do.
         }
@@ -272,7 +272,7 @@ public class EventCreationActivityTest {
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
         try {
-            Thread.sleep(Toast.LENGTH_LONG);
+            Thread.sleep(2000);
         }catch(InterruptedException ie){
             //The tests are stopped, nothing to do.
         }
@@ -280,6 +280,7 @@ public class EventCreationActivityTest {
 
     @Test
     public void atLeastOneMinuteBetweenStartAndEndDate(){
+        addEventName("My event");
         addEventName("My event");
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
@@ -291,7 +292,7 @@ public class EventCreationActivityTest {
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
         try {
-            Thread.sleep(Toast.LENGTH_LONG);
+            Thread.sleep(2000);
         }catch(InterruptedException ie){
             //The tests are stopped, nothing to do.
         }
@@ -317,7 +318,7 @@ public class EventCreationActivityTest {
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
         try {
-            Thread.sleep(Toast.LENGTH_LONG);
+            Thread.sleep(2000);
         }catch(InterruptedException ie){
             //The tests are stopped, nothing to do.
         }
