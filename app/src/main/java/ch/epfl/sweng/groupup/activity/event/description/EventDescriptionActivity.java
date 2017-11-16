@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.View;
 import android.view.WindowManager;
@@ -40,7 +39,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
     protected void onCreate (Bundle savedInstanceState){
         int maxName= 50;
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scrolling);
+        setContentView(R.layout.activity_event_description);
         super.initializeToolbarActivity();
         Intent i= getIntent();
         final int eventIndex = i.getIntExtra("eventIndex", -1);
@@ -153,7 +152,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
             for (Member member : eventToDisplay.getEventMembers()) {
                 TextView memberName = new TextView(this);
                 memberName.setText(member.getDisplayName().getOrElse("NO_NAME"));
-                LinearLayout linear = findViewById(R.id.linear_scroll_members);
+                LinearLayout linear = findViewById(R.id.event_description_linear_scroll_members);
                 linear.addView(memberName);
             }
         }
