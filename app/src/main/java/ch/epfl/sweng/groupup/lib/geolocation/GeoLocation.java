@@ -172,51 +172,62 @@ public final class GeoLocation implements GeoLocationInterface {
         alertDialogBuilder.setMessage(R.string.alert_dialog_ask_enable_provider_message)
                 .setTitle(R.string.alert_dialog_ask_enable_provider_title);
 
-        alertDialogBuilder
-                .setPositiveButton(R.string.alert_dialog_yes,
-                                   new DialogInterface.OnClickListener() {
-                                       @Override
-                                       public void onClick(
-                                               DialogInterface dialogInterface,
-                                               int i) {
-                                           dialogInterface.dismiss();
-
-                                           switch (whatToAsk) {
-                                               case ASK_PERMISSION: {
-                                                   Intent intent =
-                                                           new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                                   Uri uri =
-                                                           Uri.fromParts(
-                                                                   INTENT_SCHEME,
-                                                                   activity.getPackageName(),
-                                                                   null);
-                                                   intent.setData(uri);
-                                                   activity.startActivity(intent);
-                                                   break;
-                                               }
-                                               case ASK_ENABLE_GPS: {
-                                                   Intent intent =
-                                                           new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                                   activity.startActivity(intent);
-                                                   break;
-                                               }
-                                               default:
-                                                   break;
-                                           }
-                                       }
-                                   });
-        alertDialogBuilder
-                .setNegativeButton(R.string.alert_dialog_no,
-                                   new DialogInterface.OnClickListener() {
-                                       @Override
-                                       public void onClick(
-                                               DialogInterface dialogInterface,
-                                               int i) {
-                                           dialogInterface.dismiss();
-                                       }
-                                   });
+        alertDialogBuilder.setPositiveButton(R.string.alert_dialog_yes,
+                                             getPositiveOnClick(whatToAsk));
+        alertDialogBuilder.setNegativeButton(R.string.alert_dialog_no,
+                                             getNegativeOnClick());
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    /**
+     * Returns the on click listener for the positive button of the dialog.
+     *
+     * @param whatToAsk - what we need to ask to the user
+     * @return - callback for the positive button
+     */
+    private DialogInterface.OnClickListener getPositiveOnClick(final String whatToAsk) {
+        return new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+
+                switch (whatToAsk) {
+                    case ASK_PERMISSION: {
+                        Intent intent =
+                                new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts(INTENT_SCHEME,
+                                                activity.getPackageName(),
+                                                null);
+                        intent.setData(uri);
+                        activity.startActivity(intent);
+                        break;
+                    }
+                    case ASK_ENABLE_GPS: {
+                        Intent intent =
+                                new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        activity.startActivity(intent);
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+        };
+    }
+
+    /**
+     * Returns the on click listener for the negative button on the dialog.
+     *
+     * @return - callback for the negative button
+     */
+    private DialogInterface.OnClickListener getNegativeOnClick() {
+        return new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        };
     }
 }
