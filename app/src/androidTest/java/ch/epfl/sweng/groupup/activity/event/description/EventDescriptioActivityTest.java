@@ -18,6 +18,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
@@ -43,7 +44,7 @@ public class EventDescriptioActivityTest {
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
         Espresso.closeSoftKeyboard();
 
-        onView(withId(R.id.save_event_modification_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
 
         onView(withId(R.id.linear_layout_event_list)).perform(click());
         onView(withId(R.id.event_description_tv_description))
@@ -54,7 +55,8 @@ public class EventDescriptioActivityTest {
         onView(withId(R.id.event_description_name)).perform(typeText(endName));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.event_description_description)).perform(typeText(description));
-        onView(withId(R.id.remove_event_button)).perform(click());
+        onView(withId(R.id.save_event_modification_button)).perform(click());
+        onView(withId(R.id.linear_layout_event_list)).perform(click());
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.event_description_name)).check(matches(withText(name + endName)));
         onView(withId(R.id.event_description_description)).check(matches(withText(description)));
@@ -62,20 +64,17 @@ public class EventDescriptioActivityTest {
     }
 
     @Test
-    public void CreateAndRemoveAnEvent() {
-
+    public void CreateAndDisplayAlertOnDeleteEvent() {
+        Database.setUpDatabase();
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
-        Espresso.closeSoftKeyboard();
 
-        onView(withId(R.id.save_event_modification_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
 
         onView(withId(R.id.linear_layout_event_list)).perform(click());
 
         onView(withId(R.id.remove_event_button)).perform(click());
 
-        if (BuildConfig.DEBUG && !(Account.shared.getEvents().isEmpty())){
-            throw new AssertionError();
-        }
-        Account.shared.clear();
+        onView(withText(R.string.alert_dialog_title_delete_event)).check(matches(isDisplayed()));
+
     }
 }

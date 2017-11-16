@@ -137,16 +137,14 @@ public class EventListingActivity extends ToolbarActivity {
 
 
             final int finalI = i + offset;
-            if (eventButton != null) {
-                eventButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
-                        intent.putExtra("eventIndex", finalI);
-                        startActivity(intent);
-                    }
-                });
-            }
+            eventButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
+                    intent.putExtra("eventIndex", finalI);
+                    startActivity(intent);
+                }
+            });
             linearLayout.addView(eventButton);
         }
     }

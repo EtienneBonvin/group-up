@@ -60,7 +60,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
                     public void onClick(View v) {
 
                         final AlertDialog alertDialog = new AlertDialog.Builder(EventDescriptionActivity.this).create();
-                        alertDialog.setTitle("Deleting Event");
+                        alertDialog.setTitle(R.string.alert_dialog_title_delete_event);
                         alertDialog.setMessage(Html.fromHtml("<font color='#000000'>Would you like to leave and delete this event?</font>"));
                         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Continue",
                                 new DialogInterface.OnClickListener() {
