@@ -37,7 +37,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
 
     @Override
     protected void onCreate (Bundle savedInstanceState){
-        int maxName= 50;
+        final int maxName= 50;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_description);
         super.initializeToolbarActivity();
@@ -89,10 +89,11 @@ public class EventDescriptionActivity extends ToolbarActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
                             String name= displayEventName.getText().toString();
                             String description = displayEventDescription.getText().toString();
-                            if (name.length()>50){
-                                displayEventName.setError(getString(R.string.event_creation_toast_event_name_too_long));
+                            if (name.length()>maxName){
+                            displayEventName.setError(getString(R.string.event_creation_toast_event_name_too_long));
                             }
                             else if (name.length()==0){
                                 displayEventName.setError(getString(R.string.event_creation_toast_non_empty_event_name));
@@ -106,22 +107,29 @@ public class EventDescriptionActivity extends ToolbarActivity {
                                 Intent.FLAG_ACTIVITY_CLEAR_TASK |
                                 Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(i);
-
                         }
+                        else if (name.length()==0){
+                            displayEventName.setError(getString(R.string.event_creation_toast_non_empty_event_name));
+                        }
+                        Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name).withDescription(description));
+                        Database.update();
+                        eventToDisplay=Account.shared.getEvents().get(eventIndex);
+                    }
                 });
     }
     /**
      * Remove the user from the Event
      */
-    private void removeEvent() {
-        List<Member> futureMembers = new ArrayList<>(eventToDisplay.getEventMembers());
+    public static void removeEvent(Event eventToRemove) {
+        List<Member> futureMembers = new ArrayList<>(eventToRemove.getEventMembers());
         futureMembers.remove(Account.shared.toMember());
-        eventToDisplay=eventToDisplay.withEventMembers(futureMembers);
-        Account.shared.addOrUpdateEvent(eventToDisplay);
+        eventToRemove=eventToRemove.withEventMembers(futureMembers);
+        Account.shared.addOrUpdateEvent(eventToRemove);
         Database.update();
         List<Event> futureEventList=new ArrayList<>(Account.shared.getEvents());
-        Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>()).withCurrentEvent(Optional.<Event>empty());
-        futureEventList.remove(eventToDisplay);
+        Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>
+                ()).withCurrentEvent(Optional.<Event>empty());
+        futureEventList.remove(eventToRemove);
         for (Event fe:futureEventList){
             Account.shared.addOrUpdateEvent(fe);
         }

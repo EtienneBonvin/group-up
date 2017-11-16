@@ -109,8 +109,9 @@ public class EventCreationActivityTest {
 
         addMembers();
         Espresso.closeSoftKeyboard();
+
         onView(withId(R.id.save_new_event_button)).perform(click());
-        Event expected = new Event(eventName, start, end, "My description", expectedMembers);
+        Event expected = new Event(eventName, start, end, "My description", expectedMembers,false);
 
         Event found = findEvent(eventName);
         if (BuildConfig.DEBUG && !(found.equals(expected))){
