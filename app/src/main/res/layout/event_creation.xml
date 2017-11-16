@@ -113,7 +113,7 @@
             android:text="@string/event_creation_tv_description"/>
 
         <Button
-            android:id="@+id/save_button"
+            android:id="@+id/save_new_event_button"
             style="@style/ButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -124,7 +124,7 @@
             android:id="@+id/linear_layout_friends"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/save_button">
+            android:layout_above="@id/save_new_event_button">
 
             <TextView
                 android:id="@+id/number_of_members"

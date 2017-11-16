@@ -29,7 +29,7 @@
         android:paddingTop="20sp"/>
 
     <Button
-        android:id="@+id/save_members_button"
+        android:id="@+id/save_new_event_button"
         style="@style/ButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
         android:id="@+id/layout_add_member"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/save_members_button">
+        android:layout_above="@id/save_new_event_button">
 
         <ImageView
             android:id="@+id/buttonScanQR"
