@@ -5,6 +5,7 @@
         <!--text color of datePicker and timePicker-->
         <item name="android:editTextColor">@color/black</item>
 
+        <!-- Color Scheme -->
         <item name="android:textColor">@color/primaryTextColor</item>
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
@@ -12,9 +13,11 @@
         <item name="android:textColorHint">@color/secondaryDarkColor</item>
         <item name="android:background">@color/background</item>
 
+        <!-- Default text size -->
         <item name="android:textSize">@dimen/normal_text_size</item>
     </style>
 
+    <!-- Define style of category and fields used in settings, description and user profile -->
     <style name="EventCategories" parent="Base.TextAppearance.AppCompat.Subhead">
         <item name="android:textColor">@color/black</item>
     </style>
@@ -23,6 +26,8 @@
         <item name="android:textColor">@color/middle_grey</item>
     </style>
 
+
+    <!-- Define style for text buttons, include @style/ButtonStyle in xml -->
     <style name="ButtonStyle" parent="@style/Base.Widget.AppCompat.Button.Colored">
         <item name="android:background">@color/primaryLightColor</item>
         <item name="android:textColor">@color/primaryTextColor</item>
@@ -30,12 +35,16 @@
         <item name="android:textSize">14dp</item>
     </style>
 
+
+    <!-- Define style for timePicker and datePicker here, include @style/DateButtonStyle in xml -->
     <style name="DateButtonStyle" parent="@style/Base.Widget.AppCompat.Button.Colored">
         <item name="backgroundTint">@color/primaryLightColor</item>
         <item name="android:textColor">@color/primaryTextColor</item>
-        <item name="android:textSize">10dp</item>
+        <item name="android:textSize">12dp</item>
     </style>
 
+
+    <!-- Needed for scrolling view used in event description -->
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
