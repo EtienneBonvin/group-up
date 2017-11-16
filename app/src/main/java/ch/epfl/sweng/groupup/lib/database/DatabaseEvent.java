@@ -1,7 +1,8 @@
 package ch.epfl.sweng.groupup.lib.database;
 
-import java.util.Collections;
 import com.google.firebase.database.IgnoreExtraProperties;
+
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,20 +15,20 @@ final class DatabaseEvent {
 
     public String name = Database.EMPTY_FIELD;
     public String description = Database.EMPTY_FIELD;
-    public String datetime_start = Database.EMPTY_FIELD;
-    public String datetime_end = Database.EMPTY_FIELD;
+    public String datetimeStart = Database.EMPTY_FIELD;
+    public String datetimeEnd = Database.EMPTY_FIELD;
     public String uuid = Database.EMPTY_FIELD;
     public Map<String, DatabaseUser> members = new HashMap<>();
 
     public DatabaseEvent() {
     }
 
-    DatabaseEvent(String name, String description, String datetime_start, String
-            datetime_end, String uuid, HashMap<String, DatabaseUser> members) {
+    DatabaseEvent(String name, String description, String datetimeStart, String
+            datetimeEnd, String uuid, HashMap<String, DatabaseUser> members) {
         this.name = name;
         this.description = description;
-        this.datetime_start = datetime_start;
-        this.datetime_end = datetime_end;
+        this.datetimeStart = datetimeStart;
+        this.datetimeEnd = datetimeEnd;
         this.uuid = uuid;
         this.members = Collections.unmodifiableMap(new HashMap<>(members));
     }
@@ -40,12 +41,12 @@ final class DatabaseEvent {
         return description;
     }
 
-    public String getDatetime_start() {
-        return datetime_start;
+    public String getDatetimeStart() {
+        return datetimeStart;
     }
 
-    public String getDatetime_end() {
-        return datetime_end;
+    public String getDatetimeEnd() {
+        return datetimeEnd;
     }
 
     public String getUuid() {
