@@ -31,7 +31,7 @@ public class EventListingActivityTest {
     public void ensureCreateNewEventWork()  {
 
         // Click on the create_new_event button, when ID is implemented, use it.
-        onView(ViewMatchers.withText(R.string.create_new_event))
+        onView(ViewMatchers.withId(R.id.createEventButton))
                 .perform(click());
 
         // Checks that the EventCreationActivity view is displated by looking for ui_edit_event_name,
