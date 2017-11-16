@@ -82,18 +82,20 @@ public class EventCreationActivityTest {
 
         Espresso.closeSoftKeyboard();
 
-        LocalDateTime start = LocalDateTime.now().plusHours(1).plusMinutes(5);
-        LocalDateTime end = LocalDateTime.now().plusHours(1).plusMinutes(6);
+        LocalDateTime start = new LocalDateTime(3017, 1, 6, 9, 0, 0, 0);
+        LocalDateTime end = start.plusDays(4);
 
         onView(withId(R.id.button_start_date)).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
-                .perform(PickerActions.setDate(start.getYear(), start.getMonthOfYear(), start.getDayOfYear()));
+                .perform(PickerActions.setDate(start.getYear(), start
+                        .getMonthOfYear(), start.getDayOfMonth()));
         onView(withId(android.R.id.button1)).perform(click());
 
         onView(withId(R.id.button_end_date)).perform(click());
 
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
-                .perform(PickerActions.setDate(end.getYear(), end.getMonthOfYear(), end.getDayOfYear()));
+                .perform(PickerActions.setDate(end.getYear(), end
+                        .getMonthOfYear(), end.getDayOfMonth()));
         onView(withId(android.R.id.button1)).perform(click());
 
         onView(withId(R.id.button_start_time)).perform(click());
@@ -111,9 +113,11 @@ public class EventCreationActivityTest {
 
         onView(withId(R.id.save_new_event_button)).perform(click());
 
-        Event expected = new Event(eventName, start, end, "My description", expectedMembers,false);
 
         Event found = findEvent(eventName);
+        Event expected = new Event(found.getUUID(), eventName, start, end,
+                                   "My description", expectedMembers, false);
+
         if (!(found.equals(expected))){
             throw new AssertionError();
         }

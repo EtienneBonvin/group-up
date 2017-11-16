@@ -350,8 +350,10 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
 
         private String eventName = "";
         private String description = "";
-        private LocalDateTime startDate = LocalDateTime.now().plusMinutes(5);
-        private LocalDateTime endDate = LocalDateTime.now().plusMinutes(6);
+        private LocalDateTime startDate = LocalDateTime.now().plusMinutes(5)
+                .withMillisOfSecond(0).withSecondOfMinute(0);
+        private LocalDateTime endDate = LocalDateTime.now().plusMinutes(6)
+                .withMillisOfSecond(0).withSecondOfMinute(0);
         private HashSet<String> members = new HashSet<>();
 
         private EventBuilder(){}
