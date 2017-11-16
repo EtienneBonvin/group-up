@@ -81,7 +81,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/event_description_tv_description"
-        android:inputType="textAutoComplete"
+        android:inputType="text"
         android:hint="@string/change_the_description_of_the_event"
         android:text="@string/no_event_description" />
 
@@ -108,10 +108,10 @@
         android:layout_width="257dp"
         android:layout_height="275dp"
         android:layout_below="@id/event_description_tv_members"
-        android:layout_above="@+id/remove_event_button"
-        >
+        android:layout_above="@+id/remove_event_button">
+
         <LinearLayout
-            android:id="@+id/linear_scroll_members"
+            android:id="@+id/event_description_linear_scroll_members"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />

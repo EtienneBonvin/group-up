@@ -41,7 +41,7 @@ public class DatabaseUserShould {
         assertEquals(displayName, databaseUser.display_name);
         assertEquals(email, databaseUser.email);
         assertEquals(uuid, databaseUser.uuid);
-        assertTrue(databaseUser.getLocation().isEmpty());
+        assertTrue(databaseUser.getOptLocation().isEmpty());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class DatabaseUserShould {
                                                      Optional.<String>empty(),
                                                      Optional.<Location>empty());
 
-        assertTrue(databaseUser.getGivenName().isEmpty());
+        assertTrue(databaseUser.getOptGivenName().isEmpty());
 
         databaseUser = new DatabaseUser(Optional.from("NOT_EMPTY"),
                                         Optional.<String>empty(),
@@ -62,7 +62,7 @@ public class DatabaseUserShould {
                                         Optional.<String>empty(),
                                         Optional.<Location>empty());
 
-        assertTrue(!databaseUser.getGivenName().isEmpty());
+        assertTrue(!databaseUser.getOptGivenName().isEmpty());
     }
 
     @Test
@@ -74,7 +74,7 @@ public class DatabaseUserShould {
                                                      Optional.<String>empty(),
                                                      Optional.<Location>empty());
 
-        assertTrue(databaseUser.getFamilyName().isEmpty());
+        assertTrue(databaseUser.getOptFamilyName().isEmpty());
 
         databaseUser = new DatabaseUser(Optional.<String>empty(),
                                         Optional.from("NOT_EMPTY"),
@@ -83,7 +83,7 @@ public class DatabaseUserShould {
                                         Optional.<String>empty(),
                                         Optional.<Location>empty());
 
-        assertTrue(!databaseUser.getFamilyName().isEmpty());
+        assertTrue(!databaseUser.getOptFamilyName().isEmpty());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class DatabaseUserShould {
                                                      Optional.<String>empty(),
                                                      Optional.<Location>empty());
 
-        assertTrue(databaseUser.getDisplayName().isEmpty());
+        assertTrue(databaseUser.getOptDisplayName().isEmpty());
 
         databaseUser = new DatabaseUser(Optional.<String>empty(),
                                         Optional.<String>empty(),
@@ -104,7 +104,7 @@ public class DatabaseUserShould {
                                         Optional.<String>empty(),
                                         Optional.<Location>empty());
 
-        assertTrue(!databaseUser.getDisplayName().isEmpty());
+        assertTrue(!databaseUser.getOptDisplayName().isEmpty());
     }
 
     @Test
@@ -116,7 +116,7 @@ public class DatabaseUserShould {
                                                      Optional.<String>empty(),
                                                      Optional.<Location>empty());
 
-        assertTrue(databaseUser.getEmail().isEmpty());
+        assertTrue(databaseUser.getOptEmail().isEmpty());
 
         databaseUser = new DatabaseUser(Optional.<String>empty(),
                                         Optional.<String>empty(),
@@ -125,7 +125,7 @@ public class DatabaseUserShould {
                                         Optional.<String>empty(),
                                         Optional.<Location>empty());
 
-        assertTrue(!databaseUser.getEmail().isEmpty());
+        assertTrue(!databaseUser.getOptEmail().isEmpty());
     }
 
     @Test
@@ -137,7 +137,7 @@ public class DatabaseUserShould {
                                                      Optional.<String>empty(),
                                                      Optional.<Location>empty());
 
-        assertTrue(databaseUser.getUUID().isEmpty());
+        assertTrue(databaseUser.getOptUUID().isEmpty());
 
         databaseUser = new DatabaseUser(Optional.<String>empty(),
                                         Optional.<String>empty(),
@@ -146,7 +146,7 @@ public class DatabaseUserShould {
                                         Optional.from("NOT_EMPTY"),
                                         Optional.<Location>empty());
 
-        assertTrue(!databaseUser.getUUID().isEmpty());
+        assertTrue(!databaseUser.getOptUUID().isEmpty());
     }
 
     @Test
@@ -158,6 +158,6 @@ public class DatabaseUserShould {
                                                      Optional.<String>empty(),
                                                      Optional.<Location>empty());
 
-        assertTrue(databaseUser.getLocation().isEmpty());
+        assertTrue(databaseUser.getOptLocation().isEmpty());
     }
 }
