@@ -33,7 +33,7 @@ public class EventListingActivityTest {
         onView(ViewMatchers.withText(R.string.create_new_event))
                 .perform(click());
 
-        // Checks that the EventCreationActivity view is displated by looking for ui_edit_event_name,
+        // Checks that the EventCreationActivity view is displayed by looking for ui_edit_event_name,
         // change to same as Etienne when Solal comes back with an answer.
         try {
             onView(withId(R.id.ui_edit_event_name)).check(matches(isDisplayed()));

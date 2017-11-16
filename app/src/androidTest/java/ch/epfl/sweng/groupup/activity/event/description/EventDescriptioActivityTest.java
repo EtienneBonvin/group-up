@@ -16,6 +16,7 @@ import ch.epfl.sweng.groupup.object.account.Account;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -45,7 +46,7 @@ public class EventDescriptioActivityTest {
 
         onView(withId(R.id.save_button)).perform(click());
 
-        onView(withId(R.id.linear_layout_event_list)).perform(click());
+        onView(withId(R.id.linear_layout_event_list)).perform(longClick());
         onView(withId(R.id.event_description_tv_name))
                 .check(matches(withText(R.string.event_description_tv_name)));
         onView(withId(R.id.event_description_name))
@@ -69,7 +70,7 @@ public class EventDescriptioActivityTest {
 
         onView(withId(R.id.save_button)).perform(click());
 
-        onView(withId(R.id.linear_layout_event_list)).perform(click());
+        onView(withId(R.id.linear_layout_event_list)).perform(longClick());
 
         onView(withId(R.id.remove_event_button)).perform(click());
 

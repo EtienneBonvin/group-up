@@ -21,6 +21,7 @@ import java.util.TimerTask;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
+import ch.epfl.sweng.groupup.activity.map.MapActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -137,33 +138,43 @@ public class EventListingActivity extends ToolbarActivity {
                         eventStartTimes[i].getDayOfMonth(), eventStartTimes[i].getMonthOfYear(),
                         eventEndTimes[i].getDayOfMonth(), eventEndTimes[i].getMonthOfYear()));
 
-                final int finalI = i + offset;
-                if (eventButton != null) {
-                    eventButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
-                            intent.putExtra(getString(R.string.event_listing_extraindex), finalI);
-                            startActivity(intent);
-                        }
-                    });
-                }
+            final int finalI = i + offset;
+            if (eventButton != null) {
+                eventButton.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
+                        intent.putExtra("eventIndex", finalI);
+                        startActivity(intent);
+                        return true;
+                    }
+                });
+
+                eventButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(EventListingActivity.this, MapActivity.class);
+                        intent.putExtra("eventIndex", finalI);
+                        startActivity(intent);
+                    }
+                });
                 linearLayout.addView(eventButton);
             }
         }
+    }
 
     /**
      * Get the booleans for the invitations
      * @param events
      * @return
      */
-        private boolean[] getEventsInvitations (List < Event > events) {
+    private boolean[] getEventsInvitations(List<Event> events) {
             boolean[] eventInvitations = new boolean[events.size()];
             for (int i = 0; i < events.size(); i++) {
                 eventInvitations[i] = events.get(i).getInvitation();
             }
             return eventInvitations;
-        }
+    }
 
     /**
      * Initialization of the create event button in the linear layout and
