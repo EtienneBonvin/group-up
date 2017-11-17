@@ -281,7 +281,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
 
         if(builder.getStartDate().isEqual(builder.getEndDate())){
             Helper.showToast(getApplicationContext(),
-                    getString(R.string.event_craeation_toast_event_last_1_minute),
+                    getString(R.string.event_creation_toast_event_last_1_minute),
                     Toast.LENGTH_SHORT);
             return;
         }

@@ -127,7 +127,7 @@ public class EventListingActivity extends ToolbarActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
-                    intent.putExtra(getString(R.string.event_listing_extraindex), indexToPass);
+                    intent.putExtra(getString(R.string.event_listing_extraIndex), indexToPass);
                     startActivity(intent);
                 }
             });
@@ -163,7 +163,7 @@ public class EventListingActivity extends ToolbarActivity {
                 new AlertDialog.Builder(this);
         String members=getString(R.string.event_invitation_dialog_members);
         for(Member member : eventToDisplay.getEventMembers()){
-            members+=member.getDisplayName().getOrElse(getString(R.string.event_invitation_dialog_unknow))+"\n";
+            members+=member.getDisplayName().getOrElse(getString(R.string.event_invitation_dialog_unknown))+"\n";
         }
 
         alertDialogBuilder.setTitle(R.string.event_invitation_title);

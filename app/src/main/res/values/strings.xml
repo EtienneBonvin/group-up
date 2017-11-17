@@ -40,7 +40,7 @@
     <string name="event_creation_toast_event_name_too_long">The name of the event is too long.</string>
     <string name="event_creation_toast_event_start_before_now">Are you planning to go back to the past ?</string>
     <string name="event_creation_toast_event_end_before_begin">Your event ends before it begins.</string>
-    <string name="event_craeation_toast_event_last_1_minute">Your event should last for at least 1 minute.</string>
+    <string name="event_creation_toast_event_last_1_minute">Your event should last for at least 1 minute.</string>
 
     <!-- Members Adding UI -->
     <string name="members_adding_tv_greet_user">Let us add some friends to your event !\n\n
@@ -92,7 +92,7 @@
     <string name="event_invitation_dialog_end">End Date :</string>
     <string name="event_invitation_dialog_description">Description :</string>
     <string name="event_invitation_dialog_members">Members in the event :</string>
-    <string name="event_invitation_dialog_unknow">Name unknown (this mean that this user has not accept the invitation yet)</string>
-    <string name="event_listing_extraindex">eventIndex</string>
+    <string name="event_invitation_dialog_unknown">Name unknown (this mean that this user has not accept the invitation yet)</string>
+    <string name="event_listing_extraIndex">eventIndex</string>
 
 </resources>

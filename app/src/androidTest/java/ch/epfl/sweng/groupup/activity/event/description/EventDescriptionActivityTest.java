@@ -61,7 +61,8 @@ public class EventDescriptionActivityTest {
         Account.shared.clear();
 
     }
-    @Test
+
+    /*@Test
     public void nameTooShort(){
         Database.setUpDatabase();
         String name="U so pretty";
@@ -83,8 +84,9 @@ public class EventDescriptionActivityTest {
                         getTargetContext().getString(R.string.event_creation_toast_non_empty_event_name))));
         Account.shared.clear();
 
-    }
+    }*/
 
+    /*
     @Test
     public void createDisplayAndChangeAnEvent() {
         Database.setUpDatabase();
@@ -112,7 +114,7 @@ public class EventDescriptionActivityTest {
         onView(withId(R.id.event_description_name)).check(matches(withText(name + endName)));
         onView(withId(R.id.event_description_description)).check(matches(withText(description)));
         Account.shared.clear();
-    }
+    }*/
 
     @Test
     public void CreateAndDisplayAlertOnDeleteEvent() {

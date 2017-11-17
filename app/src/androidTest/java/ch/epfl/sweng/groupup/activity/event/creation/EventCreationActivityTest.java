@@ -269,7 +269,7 @@ public class EventCreationActivityTest {
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_new_event_button)).perform(click());
-        onView(withText(R.string.event_craeation_toast_event_last_1_minute))
+        onView(withText(R.string.event_creation_toast_event_last_1_minute))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                         .getWindow()
                         .getDecorView()))))
