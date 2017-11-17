@@ -299,6 +299,7 @@ public class EventCreationActivityTest {
 
     /**
      * Test QR Scanner
+     * Does not work for Jenkins because he does not have a camera
      */
     /*
     @Test
@@ -312,10 +313,10 @@ public class EventCreationActivityTest {
         onView(withId(R.id.button_add_members)).perform(click());
         Espresso.closeSoftKeyboard();
         // Click scan button
-        //onView(withId(R.id.buttonScanQR)).perform(click());
+        onView(withId(R.id.buttonScanQR)).perform(click());
         // Click back
-        //Espresso.pressBack();
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        Espresso.pressBack();
+        onView(withId(R.id.save_added_members_button)).perform(click());
         // Check event details
         onView(withId(R.id.ui_edit_event_name)).check(matches(withText(eventName)));
         Account.shared.clear();

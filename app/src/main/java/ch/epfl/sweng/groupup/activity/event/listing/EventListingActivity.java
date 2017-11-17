@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -172,7 +173,7 @@ public class EventListingActivity extends ToolbarActivity {
     private void askForInvitation(final Event eventToDisplay) {
         onPause();
         AlertDialog.Builder alertDialogBuilder =
-                new AlertDialog.Builder(this);
+                new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AboutDialog));
         String members=getString(R.string.event_invitation_dialog_members);
         for(Member member : eventToDisplay.getEventMembers()){
             members+=member.getDisplayName().getOrElse(getString(R.string.event_invitation_dialog_unknown))+"\n";
