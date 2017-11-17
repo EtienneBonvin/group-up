@@ -30,6 +30,7 @@
 
             <EditText
                 android:id="@+id/event_description_name"
+                android:labelFor="@+id/event_description_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
