@@ -106,7 +106,7 @@ public class DatabaseShould {
                                              startCurrent,
                                              endCurrent,
                                              descriptionCurrent,
-                                             membersCurrent);
+                                             membersCurrent,false);
         Account.shared.addOrUpdateEvent(eventCurrent);
 
         // Add of past event.
@@ -132,7 +132,7 @@ public class DatabaseShould {
                                           startPast,
                                           endPast,
                                           descriptionPast,
-                                          membersPast);
+                                          membersPast,false);
         Account.shared.addOrUpdateEvent(eventPast);
 
         // Add of future event.
@@ -158,14 +158,14 @@ public class DatabaseShould {
                                             startFuture,
                                             endFuture,
                                             descriptionFuture,
-                                            membersFuture);
+                                            membersFuture,false);
         final String uuidEmpty = "EmptyUUID";
         final Event eventEmpty = new Event(uuidEmpty,
                                            "Event",
                                            LocalDateTime.now().plusDays(7),
                                            LocalDateTime.now().plusDays(9),
                                            descriptionFuture,
-                                           new ArrayList<Member>());
+                                           new ArrayList<Member>(),false);
         Account.shared.addOrUpdateEvent(eventFuture);
         Account.shared.addOrUpdateEvent(eventEmpty);
 
@@ -188,12 +188,12 @@ public class DatabaseShould {
 
                             List<Member> members = new ArrayList<>();
                             for (DatabaseUser user : event.members.values()) {
-                                members.add(new Member(user.getUUID(),
-                                                       user.getDisplayName(),
-                                                       user.getGivenName(),
-                                                       user.getFamilyName(),
-                                                       user.getEmail(),
-                                                       user.getLocation()));
+                                members.add(new Member(user.getOptUUID(),
+                                                       user.getOptDisplayName(),
+                                                       user.getOptGivenName(),
+                                                       user.getOptFamilyName(),
+                                                       user.getOptEmail(),
+                                                       user.getOptLocation()));
                             }
 
                             Event tempEvent = new Event(
@@ -201,7 +201,7 @@ public class DatabaseShould {
                                     event.name,
                                     LocalDateTime.parse(event.datetime_start),
                                     LocalDateTime.parse(event.datetime_end),
-                                    event.description, members);
+                                    event.description, members ,false);
 
                             switch (event.uuid) {
                                 case uuidCurrent:

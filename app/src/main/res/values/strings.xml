@@ -56,7 +56,6 @@
     <string name="create_new_event">Create Event</string>
     <string name="Display_QR">Display QR Code</string>
 
-
     <!-- SettingsActivity -->
     <string name="settings_tv_top">Settings page</string>
 
@@ -89,10 +88,24 @@
     <string name="alert_dialog_no">No</string>
     <string name="title_activity_map">Map</string>
 
+
     <!-- File Management -->
     <string name="file_management_tv_description">Here you can manage see the files of the event and add some new ones !</string>
     <string name="file_management_button_add_file">Add file</string>
     <string name="file_management_toast_error_file_uri">An error occured when recovering the media</string>
     <string name="file_management_toast_error_file_too_big">Sorry, this file is too big (limit is 1MB)</string>
+
+    <!--Event Invitation -->
+    <string name="event_invitation_title">You are invited to an event !</string>
+    <string name="event_invitation_dialog_decline">Decline</string>
+    <string name="event_invitation_dialog_accept">Accept</string>
+    <string name="event_invitation_dialog_name">Event Name :</string>
+    <string name="event_invitation_dialog_start">Start Date :</string>
+    <string name="event_invitation_dialog_end">End Date :</string>
+    <string name="event_invitation_dialog_description">Description :</string>
+    <string name="event_invitation_dialog_members">Members in the event :</string>
+    <string name="event_invitation_dialog_unknow">Name unknown (this mean that this user has not accept the invitation yet)</string>
+    <string name="event_listing_extraindex">eventIndex</string>
+
 
 </resources>

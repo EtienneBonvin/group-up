@@ -1,14 +1,12 @@
 package ch.epfl.sweng.groupup.activity.event.listing;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-
-import org.joda.time.LocalDateTime;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -20,9 +18,10 @@ import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
+import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
+import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
-import ch.epfl.sweng.groupup.object.event.EventStatus;
 
 /**
  * EventListing class
@@ -36,7 +35,6 @@ public class EventListingActivity extends ToolbarActivity {
     private LinearLayout linearLayout;
     private int heightInSp;
     private Timer autoUpdate;
-    private int size;
 
     /**
      * Initialization of the private variables of the class and
@@ -48,12 +46,11 @@ public class EventListingActivity extends ToolbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_listing);
         super.initializeToolbarActivity();
-        size=Account.shared.getEvents().size();
         initView();
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         autoUpdate = new Timer();
         autoUpdate.schedule(new TimerTask() {
@@ -78,23 +75,21 @@ public class EventListingActivity extends ToolbarActivity {
         super.onPause();
     }
 
-    public void initView(){
+    private void initView() {
         initializeVariables();
-        initializeEvents(Account.shared.getFutureEvents());
+        initializeEvents(Account.shared.getFutureEvents(), false);
         initializeCreateEvent();
         List<Event> belowCreateButton = Account.shared.getPastEvents();
-        if (!Account.shared.getCurrentEvent().isEmpty()){
+        if (!Account.shared.getCurrentEvent().isEmpty()) {
             belowCreateButton.add(Account.shared.getCurrentEvent().get());
-            Log.d("log current events", Account.shared.getCurrentEvent().toString());
         }
-        Collections.sort(belowCreateButton, new Comparator<Event>(){
+        Collections.sort(belowCreateButton, new Comparator<Event>() {
             @Override
             public int compare(Event o1, Event o2) {
                 return o1.getStartTime().compareTo(o2.getStartTime());
             }
         });
-        Log.d("log events", belowCreateButton.toString());
-        initializeEvents(belowCreateButton);
+        initializeEvents(belowCreateButton, true);
     }
 
 
@@ -111,40 +106,31 @@ public class EventListingActivity extends ToolbarActivity {
      * Initialization of the event buttons in the linear layout with the
      * name and start to event dates stated
      */
-    private void initializeEvents(List<Event> events) {
-        String[] eventNames = getEventNames(events);
-        LocalDateTime[] eventStartTimes = getEventStartTimes(events);
-        LocalDateTime[] eventEndTimes = getEventEndTimes(events);
-
-        int offset = 0;
-        if (!events.isEmpty() && !events.get(0).getEventStatus().equals(EventStatus.FUTURE)){
-            offset = Account.shared.getFutureEvents().size();
-        }
-
-        for(int i=0; i<events.size(); i++){
-            Button eventButton = new Button(this);
-
-            eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
-                    MATCH_PARENT,heightInSp));
-
-            eventButton.setText(String.format(Locale.FRANCE, "%s | %d/%d - %d/%d",eventNames[i],
-                    eventStartTimes[i].getDayOfMonth(),eventStartTimes[i].getMonthOfYear(),
-                    eventEndTimes[i].getDayOfMonth(), eventEndTimes[i].getMonthOfYear()));
-
-            final int finalI = i + offset;
-            if (eventButton != null) {
-                eventButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
-                        intent.putExtra("eventIndex", finalI);
-                        startActivity(intent);
-                    }
-                });
+    private void initializeEvents(List<Event> events, boolean needAnOffset) {
+        int offset= needAnOffset ? Account.shared.getFutureEvents().size() : 0;
+        for(Event e : events){
+            if (e.getInvitation()){
+                askForInvitation(e);
             }
+            Button eventButton =new Button(this);
+            eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
+                    MATCH_PARENT, heightInSp));
+            eventButton.setText(String.format(Locale.FRANCE, "%s | %d/%d - %d/%d", e.getEventName(),
+                    e.getStartTime().getDayOfMonth(), e.getStartTime().getMonthOfYear(),
+                    e.getEndTime().getDayOfMonth(), e.getEndTime().getMonthOfYear()));
+            final int indexToPass=offset;
+            eventButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
+                    intent.putExtra(getString(R.string.event_listing_extraindex), indexToPass);
+                    startActivity(intent);
+                }
+            });
+            offset++;
             linearLayout.addView(eventButton);
         }
-    }
+        }
 
     /**
      * Initialization of the create event button in the linear layout and
@@ -166,42 +152,53 @@ public class EventListingActivity extends ToolbarActivity {
         linearLayout.addView(createEventButton);
     }
 
-    /**
-     * Getter for the event names of a list of events.
-     * @param events a list of events
-     * @return       a list of the event names strings
-     */
-    private String[] getEventNames(List<Event> events) {
-        String[] eventNames = new String[events.size()];
-        for (int i=0; i < events.size(); i++) {
-            eventNames[i] = events.get(i).getEventName();
-        }
-        return eventNames;
-    }
 
     /**
-     * Getter for the start times of a list of events.
-     * @param events a list of events
-     * @return       a LocalDateTime list of the start times
+     * Create a dialog to invite the user to the event
+     * @param eventToDisplay
      */
-    private LocalDateTime[] getEventStartTimes(List<Event> events) {
-        LocalDateTime[] eventStartTimes = new LocalDateTime[events.size()];
-        for (int i=0; i < events.size(); i++) {
-            eventStartTimes[i] = events.get(i).getStartTime();
+    private void askForInvitation(final Event eventToDisplay) {
+        onPause();
+        AlertDialog.Builder alertDialogBuilder =
+                new AlertDialog.Builder(this);
+        String members=getString(R.string.event_invitation_dialog_members);
+        for(Member member : eventToDisplay.getEventMembers()){
+            members+=member.getDisplayName().getOrElse(getString(R.string.event_invitation_dialog_unknow))+"\n";
         }
-        return eventStartTimes;
+
+        alertDialogBuilder.setTitle(R.string.event_invitation_title);
+        alertDialogBuilder.setMessage(getString(R.string.event_invitation_dialog_name) + eventToDisplay.getEventName()+"\n"
+        +getString(R.string.event_invitation_dialog_start) + eventToDisplay.getStartTime().toString()+"\n"
+        +getString(R.string.event_invitation_dialog_end) + eventToDisplay.getEndTime().toString()+"\n"
+        +getString(R.string.event_invitation_dialog_description) + eventToDisplay.getDescription()+"\n"+members);
+        alertDialogBuilder
+                .setPositiveButton(R.string.event_invitation_dialog_accept,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(
+                                    DialogInterface dialogInterface,
+                                    int i) {
+                                Account.shared.addOrUpdateEvent(eventToDisplay.withInvitation(!
+                                        eventToDisplay.getInvitation()));
+                                Database.update();
+                                onResume();
+                                dialogInterface.dismiss();
+                            }
+                        });
+        alertDialogBuilder
+                .setNegativeButton(R.string.event_invitation_dialog_decline,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(
+                                    DialogInterface dialogInterface,
+                                    int i) {
+                                EventDescriptionActivity.removeEvent(eventToDisplay);
+                                onResume();
+                                dialogInterface.dismiss();
+                            }
+                        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
-    /**
-     * Getter for the start times of a list of events.
-     * @param events a list of events
-     * @return       a LocalDateTime list of the end times
-     */
-    private LocalDateTime[] getEventEndTimes(List<Event> events) {
-        LocalDateTime[] eventEndTimes = new LocalDateTime[events.size()];
-        for (int i=0; i < events.size(); i++) {
-            eventEndTimes[i] = events.get(i).getEndTime();
-        }
-        return eventEndTimes;
-    }
 }
