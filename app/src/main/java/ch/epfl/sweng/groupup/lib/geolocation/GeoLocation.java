@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.view.ContextThemeWrapper;
 import android.widget.Toast;
 
 import ch.epfl.sweng.groupup.R;
@@ -167,7 +168,7 @@ public final class GeoLocation implements GeoLocationInterface {
      */
     private void askToEnableProvider(final String whatToAsk) {
         AlertDialog.Builder alertDialogBuilder =
-                new AlertDialog.Builder(activity);
+                new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AboutDialog));
 
         // TODO: make text color black
         alertDialogBuilder.setMessage(R.string.alert_dialog_ask_enable_provider_message)

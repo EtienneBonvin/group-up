@@ -50,9 +50,6 @@ public class EventDescriptionActivityTest {
 
 
         onView(withId(R.id.linear_layout_event_list)).perform(longClick());
-        onView(withId(R.id.event_description_tv_name))
-                .check(matches(withText(R.string.event_description_tv_name)));
-
         onView(withId(R.id.event_description_name))
                 .check(matches(withText(name)));
 
@@ -66,7 +63,8 @@ public class EventDescriptionActivityTest {
 
     }
 
-    /*@Test
+    /*
+    @Test
     public void nameTooShort(){
         Database.setUpDatabase();
         String name="U so pretty";
@@ -88,9 +86,9 @@ public class EventDescriptionActivityTest {
                         getTargetContext().getString(R.string.event_creation_toast_non_empty_event_name))));
         Account.shared.clear();
 
-    }*/
+    }
 
-    /*
+
     @Test
     public void createDisplayAndChangeAnEvent() {
         Database.setUpDatabase();
