@@ -33,14 +33,14 @@ public class EventDescriptionActivity extends ToolbarActivity {
     private Event eventToDisplay;
 
     @Override
-    protected void onCreate (Bundle savedInstanceState){
-        final int maxName= 50;
+    protected void onCreate(Bundle savedInstanceState) {
+        final int maxName = 50;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_description);
         super.initializeToolbarActivity();
-        Intent i= getIntent();
+        Intent i = getIntent();
         final int eventIndex = i.getIntExtra("eventIndex", -1);
-        if (eventIndex >-1) {
+        if (eventIndex > -1) {
             //!!!Order the events !!!
             eventToDisplay = Account.shared.getEvents().get(eventIndex);
         }
@@ -64,38 +64,38 @@ public class EventDescriptionActivity extends ToolbarActivity {
                     }
                 });
         //Save changes
-        findViewById(R.id.save)
+        findViewById(R.id.event_description_save)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String name= displayEventName.getText().toString();
+                        String name = displayEventName.getText().toString();
                         String description = displayEventDescription.getText().toString();
-                        if (name.length()>maxName){
+                        if (name.length() > maxName) {
                             displayEventName.setError(getString(R.string.event_creation_toast_event_name_too_long));
-                        }
-                        else if (name.length()==0){
+                        } else if (name.length() == 0) {
                             displayEventName.setError(getString(R.string.event_creation_toast_non_empty_event_name));
                         }
                         Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name).withDescription(description));
                         Database.update();
-                        eventToDisplay=Account.shared.getEvents().get(eventIndex);
+                        eventToDisplay = Account.shared.getEvents().get(eventIndex);
                     }
                 });
     }
+
     /**
      * Remove the user from the Event
      */
     public static void removeEvent(Event eventToRemove) {
         List<Member> futureMembers = new ArrayList<>(eventToRemove.getEventMembers());
         futureMembers.remove(Account.shared.toMember());
-        eventToRemove=eventToRemove.withEventMembers(futureMembers);
+        eventToRemove = eventToRemove.withEventMembers(futureMembers);
         Account.shared.addOrUpdateEvent(eventToRemove);
         Database.update();
-        List<Event> futureEventList=new ArrayList<>(Account.shared.getEvents());
+        List<Event> futureEventList = new ArrayList<>(Account.shared.getEvents());
         Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>
                 ()).withCurrentEvent(Optional.<Event>empty());
         futureEventList.remove(eventToRemove);
-        for (Event fe:futureEventList){
+        for (Event fe : futureEventList) {
             Account.shared.addOrUpdateEvent(fe);
         }
         Database.update();
@@ -105,29 +105,27 @@ public class EventDescriptionActivity extends ToolbarActivity {
     /**
      * Intilize the different TextView and EditText
      */
-    private void initializeField(){
-        displayEventName= findViewById(R.id.event_description_name);
-        displayEventStartDate= findViewById(R.id.event_description_start_date);
-        displayEventEndDate=findViewById(R.id.event_description_end_date);
-        displayEventDescription=findViewById(R.id.event_description_description);
+    private void initializeField() {
+        displayEventName = findViewById(R.id.event_description_name);
+        displayEventStartDate = findViewById(R.id.event_description_start_date);
+        displayEventEndDate = findViewById(R.id.event_description_end_date);
+        displayEventDescription = findViewById(R.id.event_description_description);
     }
 
     /**
      * Print the information about the event, if there is no event prints default string in fields.
      */
     private void printEvent() {
-        if (eventToDisplay!=null) {
-            displayEventName.setText(eventToDisplay.getEventName());
-            displayEventStartDate.setText(eventToDisplay.getStartTime().toString(null, Locale.FRANCE));
-            displayEventEndDate.setText(eventToDisplay.getEndTime().toString(null, Locale.FRANCE));
-            displayEventDescription.setText(eventToDisplay.getDescription());
+        displayEventName.setText(eventToDisplay.getEventName());
+        displayEventStartDate.setText(eventToDisplay.getStartTime().toString(null, Locale.getDefault()));
+        displayEventEndDate.setText(eventToDisplay.getEndTime().toString(null, Locale.getDefault()));
+        displayEventDescription.setText(eventToDisplay.getDescription());
 
-            for (Member member : eventToDisplay.getEventMembers()) {
-                TextView memberName = new TextView(this);
-                memberName.setText(member.getDisplayName().getOrElse("NO_NAME"));
-                LinearLayout linear = findViewById(R.id.event_description_linear_scroll_members);
-                linear.addView(memberName);
-            }
+        for (Member member : eventToDisplay.getEventMembers()) {
+            TextView memberName = new TextView(this);
+            memberName.setText(member.getDisplayName().getOrElse("NO_NAME"));
+            LinearLayout linear = findViewById(R.id.event_description_linear_scroll_members);
+            linear.addView(memberName);
         }
     }
 }
