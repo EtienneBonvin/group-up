@@ -170,7 +170,6 @@ public final class GeoLocation implements GeoLocationInterface {
         AlertDialog.Builder alertDialogBuilder =
                 new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AboutDialog));
 
-        // TODO: make text color black
         alertDialogBuilder.setMessage(R.string.alert_dialog_ask_enable_provider_message)
                 .setTitle(R.string.alert_dialog_ask_enable_provider_title);
 
