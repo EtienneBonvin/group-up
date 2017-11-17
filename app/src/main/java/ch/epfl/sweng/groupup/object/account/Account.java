@@ -1,6 +1,7 @@
 package ch.epfl.sweng.groupup.object.account;
 
 import android.location.Location;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -324,7 +325,7 @@ public final class Account extends User {
                              Optional.from(location));
 
         if (User.observer != null && location != null) {
-            User.observer.updateMap(location);
+            User.observer.updateDefaultMarker(location);
         }
         return shared;
     }

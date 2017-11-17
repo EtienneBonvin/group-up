@@ -111,11 +111,16 @@ public final class Member extends User {
      * @return - a new member with the given location
      */
     public Member withLocation(Location location) {
-        return new Member(UUID,
-                          displayName,
-                          givenName,
-                          familyName,
-                          email,
-                          Optional.from(location));
+        Member updatedMember = new Member(UUID,
+                displayName,
+                givenName,
+                familyName,
+                email,
+                Optional.from(location));
+
+        if (User.observer != null && location != null) {
+            User.observer.updateMemberMarkers(updatedMember, location);
+        }
+        return updatedMember;
     }
 }

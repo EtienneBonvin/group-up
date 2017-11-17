@@ -72,7 +72,9 @@ public class EventListingActivity extends ToolbarActivity {
 
     @Override
     public void onPause() {
-        autoUpdate.cancel();
+        if (autoUpdate != null) {
+            autoUpdate.cancel();
+        }
         super.onPause();
     }
 
