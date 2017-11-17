@@ -17,6 +17,7 @@ import java.util.TimerTask;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
+import ch.epfl.sweng.groupup.activity.map.MapActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -119,11 +120,22 @@ public class EventListingActivity extends ToolbarActivity {
                     e.getStartTime().getDayOfMonth(), e.getStartTime().getMonthOfYear(),
                     e.getEndTime().getDayOfMonth(), e.getEndTime().getMonthOfYear()));
             final int indexToPass=offset;
+
+            eventButton.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
+                    intent.putExtra("eventIndex", indexToPass);
+                    startActivity(intent);
+                    return true;
+                }
+            });
+
             eventButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
-                    intent.putExtra(getString(R.string.event_listing_extraindex), indexToPass);
+                    Intent intent = new Intent(EventListingActivity.this, MapActivity.class);
+                    intent.putExtra("eventIndex", indexToPass);
                     startActivity(intent);
                 }
             });
