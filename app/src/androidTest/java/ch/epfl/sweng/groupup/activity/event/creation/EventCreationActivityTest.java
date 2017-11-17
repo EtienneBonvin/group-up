@@ -300,6 +300,7 @@ public class EventCreationActivityTest {
     /**
      * Test QR Scanner
      */
+    /*
     @Test
     public void stateRestoredAfterCameraOpened(){
         String eventName = "testEventName";
@@ -318,7 +319,7 @@ public class EventCreationActivityTest {
         // Check event details
         onView(withId(R.id.ui_edit_event_name)).check(matches(withText(eventName)));
         Account.shared.clear();
-    }
+    }*/
 
     /**
      * Helper functions

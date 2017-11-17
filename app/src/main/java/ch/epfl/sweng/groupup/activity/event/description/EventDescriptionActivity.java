@@ -94,8 +94,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
                         String description = displayEventDescription.getText().toString();
                         if (name.length()>maxName){
                             displayEventName.setError(getString(R.string.event_creation_toast_event_name_too_long));
-                        }
-                        else if (name.length()==0){
+                        } else if (name.length() == 0){
                             displayEventName.setError(getString(R.string.event_creation_toast_non_empty_event_name));
                         } else {
                             Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name).withDescription(description));
