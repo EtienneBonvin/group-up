@@ -25,7 +25,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import ch.epfl.sweng.groupup.lib.Helper;
+import ch.epfl.sweng.groupup.lib.AndroidHelper;
 
 public class GMailService implements MailService {
     private final MailSender s;
@@ -59,7 +59,7 @@ public class GMailService implements MailService {
                     GMailSender sender = new GMailSender();
                     sender.sendMail(recMail);
                 } catch (Exception e) {
-                    Helper.showToast(ctx, "Unable to send an email to " + recMail, Toast.LENGTH_SHORT);
+                    AndroidHelper.showToast(ctx, "Unable to send an email to " + recMail, Toast.LENGTH_SHORT);
                 }
             }
             return null;
