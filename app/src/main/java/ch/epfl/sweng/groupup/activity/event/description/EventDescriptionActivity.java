@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.event.files.FileManagementActivity;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
@@ -107,6 +108,17 @@ public class EventDescriptionActivity extends ToolbarActivity {
                                     Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(i);
                         }
+                    }
+                });
+
+        // Do we need to save some data here ?
+        findViewById(R.id.upload_file)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), FileManagementActivity.class);
+                        intent.putExtra("EventIndex", eventIndex);
+                        startActivity(intent);
                     }
                 });
     }

@@ -1,17 +1,24 @@
 package ch.epfl.sweng.groupup.object.event;
 
+import android.graphics.Bitmap;
+
 import org.joda.time.LocalDateTime;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import ch.epfl.sweng.groupup.lib.Watchee;
+import ch.epfl.sweng.groupup.lib.Watcher;
+import ch.epfl.sweng.groupup.lib.fileStorage.FirebaseFileProxy;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 
 @SuppressWarnings("SimplifiableIfStatement")
-public final class Event implements Serializable {
+public final class Event implements Serializable, Watcher, Watchee{
 
     private final String UUID;
     private final String eventName;
@@ -19,6 +26,11 @@ public final class Event implements Serializable {
     private final LocalDateTime endTime;
     private final String description;
     private final List<Member> eventMembers;
+    private List<Bitmap> eventImages;
+    private FirebaseFileProxy proxy;
+    private Set<Watcher> watchers;
+
+
     //The invitation is designed only for the user linked to the Account. This state is set to true
     //in the database on reception and not in the creation of an event
     private final boolean invitation;
@@ -30,6 +42,8 @@ public final class Event implements Serializable {
         this.endTime = endTime;
         this.description = description;
         this.eventMembers = Collections.unmodifiableList(new ArrayList<>(eventMembers));
+        eventImages = new ArrayList<>();
+        watchers = new HashSet<>();
         this.invitation=invitation;
     }
 
@@ -42,6 +56,38 @@ public final class Event implements Serializable {
         this.description = description;
         this.eventMembers = Collections.unmodifiableList(new ArrayList<>(eventMembers));
         this.invitation = invitation;
+        eventImages = new ArrayList<>();
+        watchers = new HashSet<>();
+    }
+
+    /**
+     * Initialize the proxy for the media sharing.
+     */
+    private void initializeProxy(){
+        proxy = new FirebaseFileProxy(this);
+        proxy.addWatcher(this);
+    }
+
+    /**
+     * Returns the pictures of the event.
+     * The pictures list synchronizes itself with the database when the
+     * method is called.
+     * @return the list of Bitmap of the pictures of the event.
+     */
+    public List<Bitmap> getPictures(){
+        verifyProxyInstantiated();
+        return new ArrayList<>(eventImages);
+    }
+
+    /**
+     * Upload a picture to the event and download it on the database.
+     * @param uuid the id of the uploader.
+     * @param bitmap the Bitmap to upload
+     */
+    public void addPicture(String uuid, Bitmap bitmap){
+        verifyProxyInstantiated();
+        eventImages.add(bitmap);
+        proxy.uploadFile(uuid, bitmap);
     }
 
     /**
@@ -194,6 +240,11 @@ public final class Event implements Serializable {
         return withEventMembers(newMemberList);
     }
 
+    /**
+     * Override the equals method.
+     * @param o the object to be compared with.
+     * @return true if the object o and this are equals, false otherwise.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -210,6 +261,10 @@ public final class Event implements Serializable {
                 .getEventMembers().containsAll(eventMembers);
     }
 
+    /**
+     * Override the toString method.
+     * @return a String representing the object.
+     */
     @Override
     public String toString() {
         return "Event{" +
@@ -232,5 +287,63 @@ public final class Event implements Serializable {
                 ", eventStatus='" + getEventStatus() +
                 ", eventID= " + UUID +
                 '}';
+    }
+
+    /**
+     * Override notifyAllWatchers method of Watchee class.
+     */
+    @Override
+    public void notifyAllWatchers() {
+        for(Watcher w : watchers){
+            w.notifyWatcher();
+        }
+    }
+
+    /**
+     * Verifies that the proxy is well instantiated. If it isn't the case, reinitialize it.
+     */
+    private void verifyProxyInstantiated(){
+        if(proxy == null){
+            initializeProxy();
+        }
+    }
+
+    /**
+     * Override the addWatcher method of Watchee class.
+     * @param newWatcher the watcher to be added.
+     */
+    @Override
+    public void addWatcher(Watcher newWatcher) {
+        verifyProxyInstantiated();
+        watchers.add(newWatcher);
+        proxy.addWatcher(this);
+    }
+
+    /**
+     * Override the removeWatcher method of Watchee class.
+     * @param watcher the watcher to unregister.
+     */
+    @Override
+    public void removeWatcher(Watcher watcher) {
+        if(watchers.contains(watcher))
+            watchers.remove(watcher);
+        if(watchers.isEmpty()){
+            verifyProxyInstantiated();
+            proxy.removeWatcher(this);
+            proxy.kill();
+            proxy = null;
+        }
+    }
+
+    /**
+     * Override the notifyWatcher method of the Watcher class.
+     */
+    @Override
+    public void notifyWatcher() {
+        verifyProxyInstantiated();
+        List<Bitmap> proxyImages = proxy.getFromDatabase();
+        if(proxyImages.size() > eventImages.size())
+            eventImages = proxyImages;
+        notifyAllWatchers();
     }
 }

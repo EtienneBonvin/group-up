@@ -154,7 +154,7 @@
                 android:layout_width="match_parent"
                 android:cursorVisible="false"
                 android:layout_height="wrap_content"
-                android:inputType="textAutoComplete"
+                android:inputType="textMultiLine"
                 android:textColor="@color/primaryTextColor"/>
 
         </ScrollView>
