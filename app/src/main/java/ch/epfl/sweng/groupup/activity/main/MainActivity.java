@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 switchToLoginContentView();
             }
-        }, 3000); // 3000ms delay
+        }, 2000); // 2000ms delay
     }
 
     private void switchToLoginContentView() {
@@ -36,4 +36,5 @@ public class MainActivity extends AppCompatActivity {
                         Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
 }

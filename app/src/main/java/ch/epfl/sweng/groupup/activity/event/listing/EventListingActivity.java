@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -17,6 +19,7 @@ import java.util.TimerTask;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
+import ch.epfl.sweng.groupup.activity.map.MapActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -106,6 +109,7 @@ public class EventListingActivity extends ToolbarActivity {
      * Initialization of the event buttons in the linear layout with the
      * name and start to event dates stated
      */
+
     private void initializeEvents(List<Event> events, boolean needAnOffset) {
         int offset= needAnOffset ? Account.shared.getFutureEvents().size() : 0;
         for(Event e : events){
@@ -118,12 +122,25 @@ public class EventListingActivity extends ToolbarActivity {
             eventButton.setText(String.format(Locale.FRANCE, "%s | %d/%d - %d/%d", e.getEventName(),
                     e.getStartTime().getDayOfMonth(), e.getStartTime().getMonthOfYear(),
                     e.getEndTime().getDayOfMonth(), e.getEndTime().getMonthOfYear()));
+            eventButton.setBackgroundColor(getResources().getColor(R.color.primaryLightColor));
+            eventButton.setCompoundDrawablePadding(2);
             final int indexToPass=offset;
+
+            eventButton.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
+                    intent.putExtra("eventIndex", indexToPass);
+                    startActivity(intent);
+                    return true;
+                }
+            });
+
             eventButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
-                    intent.putExtra(getString(R.string.event_listing_extraindex), indexToPass);
+                    Intent intent = new Intent(EventListingActivity.this, MapActivity.class);
+                    intent.putExtra(getString(R.string.event_listing_extraIndex), indexToPass);
                     startActivity(intent);
                 }
             });
@@ -137,10 +154,7 @@ public class EventListingActivity extends ToolbarActivity {
      * of the OnClickListener
      */
     private void initializeCreateEvent() {
-        Button createEventButton = new Button(this);
-        createEventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
-                MATCH_PARENT, heightInSp));
-        createEventButton.setText(R.string.create_new_event);
+        FloatingActionButton createEventButton = (FloatingActionButton) this.findViewById(R.id.createEventButton);
         createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,7 +163,6 @@ public class EventListingActivity extends ToolbarActivity {
             }
         });
         //createEventButton.setId(View.generateViewId()); // Assign the ID of the event
-        linearLayout.addView(createEventButton);
     }
 
 
@@ -160,10 +173,10 @@ public class EventListingActivity extends ToolbarActivity {
     private void askForInvitation(final Event eventToDisplay) {
         onPause();
         AlertDialog.Builder alertDialogBuilder =
-                new AlertDialog.Builder(this);
+                new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AboutDialog));
         String members=getString(R.string.event_invitation_dialog_members);
         for(Member member : eventToDisplay.getEventMembers()){
-            members+=member.getDisplayName().getOrElse(getString(R.string.event_invitation_dialog_unknow))+"\n";
+            members+=member.getDisplayName().getOrElse(getString(R.string.event_invitation_dialog_unknown))+"\n";
         }
 
         alertDialogBuilder.setTitle(R.string.event_invitation_title);
