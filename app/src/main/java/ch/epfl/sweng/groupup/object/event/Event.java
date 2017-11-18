@@ -257,7 +257,8 @@ public final class Event implements Serializable, Watcher, Watchee{
         if (!startTime.equals(event.startTime)) return false;
         if (!endTime.equals(event.endTime)) return false;
         if (!(UUID.equals(event.UUID))) return false;
-        return eventMembers.equals(event.eventMembers);
+        return eventMembers.containsAll(event.getEventMembers()) && event
+                .getEventMembers().containsAll(eventMembers);
     }
 
     /**
