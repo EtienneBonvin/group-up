@@ -111,7 +111,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
                     }
                 });
 
-        // Do we need to save some data here ?
+        // Do we need to store the modifications ?
         findViewById(R.id.upload_file)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
