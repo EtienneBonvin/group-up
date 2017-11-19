@@ -2,7 +2,6 @@ package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.location.Location;
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.contrib.BuildConfig;
 import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.DatePicker;
@@ -83,18 +82,20 @@ public class EventCreationActivityTest {
 
         Espresso.closeSoftKeyboard();
 
-        LocalDateTime start = LocalDateTime.now().plusHours(1).plusMinutes(5);
-        LocalDateTime end = LocalDateTime.now().plusHours(1).plusMinutes(6);
+        LocalDateTime start = new LocalDateTime(2018, 1, 6, 9, 0, 0, 0);
+        LocalDateTime end = start.plusDays(4);
 
         onView(withId(R.id.button_start_date)).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
-                .perform(PickerActions.setDate(start.getYear(), start.getMonthOfYear(), start.getDayOfYear()));
+                .perform(PickerActions.setDate(start.getYear(), start
+                        .getMonthOfYear(), start.getDayOfMonth()));
         onView(withId(android.R.id.button1)).perform(click());
 
         onView(withId(R.id.button_end_date)).perform(click());
 
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
-                .perform(PickerActions.setDate(end.getYear(), end.getMonthOfYear(), end.getDayOfYear()));
+                .perform(PickerActions.setDate(end.getYear(), end
+                        .getMonthOfYear(), end.getDayOfMonth()));
         onView(withId(android.R.id.button1)).perform(click());
 
         onView(withId(R.id.button_start_time)).perform(click());
@@ -109,11 +110,15 @@ public class EventCreationActivityTest {
 
         addMembers();
         Espresso.closeSoftKeyboard();
-        onView(withId(R.id.save_button)).perform(click());
-        Event expected = new Event(eventName, start, end, "My description", expectedMembers,false);
+
+        onView(withId(R.id.save_new_event_button)).perform(click());
+
 
         Event found = findEvent(eventName);
-        if (BuildConfig.DEBUG && !(found.equals(expected))){
+        Event expected = new Event(found.getUUID(), eventName, start, end,
+                                   "My description", expectedMembers, false);
+
+        if (!(found.equals(expected))){
             throw new AssertionError();
         }
         Account.shared.clear();
@@ -124,7 +129,7 @@ public class EventCreationActivityTest {
 
         addEventName("");
         Espresso.closeSoftKeyboard();
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
         onView(withId(R.id.ui_edit_event_name))
                 .check(matches(hasErrorText(
                         getTargetContext().getString(R.string.event_creation_toast_non_empty_event_name))));
@@ -137,7 +142,7 @@ public class EventCreationActivityTest {
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 4, 5);
         setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
         onView(withId(R.id.ui_edit_event_name))
                 .check(matches(hasErrorText(
                         getTargetContext().getString(R.string.event_creation_toast_event_name_too_long))));
@@ -149,7 +154,7 @@ public class EventCreationActivityTest {
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2099, 5, 5, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
         onView(withText(R.string.event_creation_toast_event_end_before_begin))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                         .getWindow()
@@ -163,7 +168,7 @@ public class EventCreationActivityTest {
         Espresso.closeSoftKeyboard();
         setStartDate(2099, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
         //intended(hasComponent(EventListingActivity.class.getName()));
         Account.shared.clear();
     }
@@ -174,7 +179,7 @@ public class EventCreationActivityTest {
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 4, 5, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
         onView(withText(R.string.event_creation_toast_event_end_before_begin))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                         .getWindow()
@@ -188,7 +193,7 @@ public class EventCreationActivityTest {
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 4, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
         //intended(hasComponent(EventListingActivity.class.getName()));
         Account.shared.clear();
     }
@@ -199,7 +204,7 @@ public class EventCreationActivityTest {
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 4, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
         onView(withText(R.string.event_creation_toast_event_end_before_begin))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                         .getWindow()
@@ -213,7 +218,7 @@ public class EventCreationActivityTest {
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 4, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
         //intended(hasComponent(EventListingActivity.class.getName()));
         Account.shared.clear();
     }
@@ -224,7 +229,7 @@ public class EventCreationActivityTest {
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 4, 5);
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
         onView(withText(R.string.event_creation_toast_event_end_before_begin))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                         .getWindow()
@@ -238,7 +243,7 @@ public class EventCreationActivityTest {
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 4, 5);
         setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
         //intended(hasComponent(EventListingActivity.class.getName()));
         Account.shared.clear();
     }
@@ -249,7 +254,7 @@ public class EventCreationActivityTest {
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 4);
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
         onView(withText(R.string.event_creation_toast_event_end_before_begin))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                         .getWindow()
@@ -263,8 +268,8 @@ public class EventCreationActivityTest {
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
-        onView(withText(R.string.event_craeation_toast_event_last_1_minute))
+        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withText(R.string.event_creation_toast_event_last_1_minute))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                         .getWindow()
                         .getDecorView()))))
@@ -284,7 +289,7 @@ public class EventCreationActivityTest {
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
                 .perform(PickerActions.setDate(year, month, day));
         onView(withId(android.R.id.button1)).perform(click());
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
         onView(withText(R.string.event_creation_toast_event_start_before_now))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                         .getWindow()
@@ -294,7 +299,9 @@ public class EventCreationActivityTest {
 
     /**
      * Test QR Scanner
+     * Does not work for Jenkins because he does not have a camera
      */
+    /*
     @Test
     public void stateRestoredAfterCameraOpened(){
         String eventName = "testEventName";
@@ -306,14 +313,14 @@ public class EventCreationActivityTest {
         onView(withId(R.id.button_add_members)).perform(click());
         Espresso.closeSoftKeyboard();
         // Click scan button
-        //onView(withId(R.id.buttonScanQR)).perform(click());
+        onView(withId(R.id.buttonScanQR)).perform(click());
         // Click back
-        //Espresso.pressBack();
-        onView(withId(R.id.save_button)).perform(click());
+        Espresso.pressBack();
+        onView(withId(R.id.save_added_members_button)).perform(click());
         // Check event details
         onView(withId(R.id.ui_edit_event_name)).check(matches(withText(eventName)));
         Account.shared.clear();
-    }
+    }*/
 
     /**
      * Helper functions
@@ -376,7 +383,7 @@ public class EventCreationActivityTest {
         onView(withId(R.id.edit_text_add_member)).perform(typeText("swenggroupup@gmail.com"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.image_view_add_member)).perform(click());
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_added_members_button)).perform(click());
     }
 
     private void addEventName(String name){

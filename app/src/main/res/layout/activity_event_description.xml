@@ -1,121 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:fitsSystemWindows="true"
+    tools:context="ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity">
 
-    <include
-        layout="@layout/toolbar"
-        android:id="@+id/toolbar"/>
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
 
-    <Button
-        android:id="@+id/event_description_save"
-        android:layout_width="130dp"
-        android:layout_height="34dp"
-        android:text="@string/save_changes"
-        android:layout_below="@id/toolbar"
-        android:textSize="12sp" />
-
-
-    <TextView
-        android:id="@+id/event_description_tv_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:text="@string/event_description_tv_name"
-        android:textAlignment="textStart"
-        android:layout_below="@id/event_description_save"/>
+        android:layout_height="@dimen/app_bar_height"
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-    <EditText
-        android:id="@+id/event_description_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/event_description_tv_name"
-        android:hint="@string/change_the_name_of_the_event"
-        android:inputType="text"
-        android:text="@string/no_event_name" />
-
-    <TextView
-        android:id="@+id/event_description_tv_start_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:text="@string/event_description_tv_start_date"
-        android:textAlignment="textStart"
-        android:layout_below="@id/event_description_name"/>
-
-    <TextView
-        android:id="@+id/event_description_start_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/no_event_start_date"
-        android:layout_below="@id/event_description_tv_start_date"/>
-
-    <TextView
-        android:id="@+id/event_description_tv_end_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:text="@string/event_description_tv_end_date"
-        android:textAlignment="textStart"
-        android:layout_below="@id/event_description_start_date"/>
-
-    <TextView
-        android:id="@+id/event_description_end_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/no_event_end_date"
-        android:layout_below="@id/event_description_tv_end_date"/>
-
-    <TextView
-        android:id="@+id/event_description_tv_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:text="@string/event_description_tv_description"
-        android:textAlignment="textStart"
-        android:layout_below="@id/event_description_end_date" />
-
-    <EditText
-        android:id="@+id/event_description_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/event_description_tv_description"
-        android:inputType="text"
-        android:hint="@string/change_the_description_of_the_event"
-        android:text="@string/no_event_description" />
-
-
-    <TextView
-        android:id="@+id/event_description_tv_members"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:text="@string/event_description_tv_members"
-        android:textAlignment="textStart"
-        android:layout_below="@id/event_description_description"/>
-
-
-    <Button
-        android:id="@+id/remove_event_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/remove_yourself_from_the_event"
-        android:layout_alignParentBottom="true"/>
-
-
-    <ScrollView
-        android:layout_width="257dp"
-        android:layout_height="275dp"
-        android:layout_below="@id/event_description_tv_members"
-        android:layout_above="@+id/remove_event_button">
-
-        <LinearLayout
-            android:id="@+id/event_description_linear_scroll_members"
+        <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:toolbarId="@+id/toolbar_description">
 
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar" />
 
-</RelativeLayout>
+            <EditText
+                android:id="@+id/event_description_name"
+                android:labelFor="@+id/event_description_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="@dimen/text_margin"
+                android:background="@android:color/transparent"
+                android:cursorVisible="false"
+                android:selectAllOnFocus="false"
+                android:text="@string/no_event_name"
+                android:gravity="center"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="@dimen/large_header_size"
+                android:inputType="text" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_event_description"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/remove_event_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:fabSize="mini"
+        app:layout_anchor="@+id/app_bar"
+        app:layout_anchorGravity="right|bottom"
+        app:srcCompat="@drawable/ic_delete" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/save_event_modification_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="65dp"
+        app:fabSize="mini"
+        app:layout_anchor="@+id/remove_event_button"
+        app:layout_anchorGravity="center|left"
+        app:srcCompat="@drawable/ic_save" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/upload_file"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="115dp"
+        app:fabSize="mini"
+        app:layout_anchor="@+id/save_event_modification_button"
+        app:layout_anchorGravity="center|left"
+        app:srcCompat="@drawable/ic_plus" />
+</android.support.design.widget.CoordinatorLayout>
+

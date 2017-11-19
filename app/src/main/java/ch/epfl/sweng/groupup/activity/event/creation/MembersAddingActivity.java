@@ -1,7 +1,6 @@
 package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -74,7 +73,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                     }
                 });
 
-        findViewById(R.id.save_button)
+        findViewById(R.id.save_added_members_button)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -123,9 +122,9 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
         if (mScannerView != null) {
             mScannerView.stopCamera();
             setContentView(R.layout.members_adding);
+            initListeners();
+            restoreState();
         }
-        initListeners();
-        restoreState();
     }
 
     /**
@@ -161,7 +160,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 0.9f));
         textView.setText(memberUId);
-        textView.setTextColor(Color.WHITE);
+        textView.setTextColor(getResources().getColor(R.color.primaryTextColor));
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 0,
@@ -169,9 +168,9 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                 0.1f);
         params.setMargins(2, 2, 2, 2);
         ImageView minus = new ImageView(this);
-        minus.setImageResource(R.drawable.minussign);
+        minus.setImageResource(R.drawable.ic_minus_box);
         minus.setLayoutParams(params);
-        minus.setBackgroundColor(Color.BLACK);
+        minus.setBackgroundColor(getResources().getColor(R.color.transparent));
 
         newMember.addView(textView);
         newMember.addView(minus);

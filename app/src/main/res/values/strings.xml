@@ -40,7 +40,7 @@
     <string name="event_creation_toast_event_name_too_long">The name of the event is too long.</string>
     <string name="event_creation_toast_event_start_before_now">Are you planning to go back to the past ?</string>
     <string name="event_creation_toast_event_end_before_begin">Your event ends before it begins.</string>
-    <string name="event_craeation_toast_event_last_1_minute">Your event should last for at least 1 minute.</string>
+    <string name="event_creation_toast_event_last_1_minute">Your event should last for at least 1 minute.</string>
 
     <!-- Members Adding UI -->
     <string name="members_adding_tv_greet_user">Let us add some friends to your event !\n\n
@@ -53,7 +53,6 @@
     <string name="plus_sign">Plus sign</string>
 
     <!-- Event Listing UI -->
-    <string name="create_new_event">Create Event</string>
     <string name="Display_QR">Display QR Code</string>
 
     <!-- SettingsActivity -->
@@ -63,7 +62,6 @@
     <string name="QR_code">QR Code</string>
 
     <!-- Event Description -->
-    <string name="event_description_tv_name">Event Name : </string>
     <string name="event_description_tv_start_date">Start Date : </string>
     <string name="event_description_tv_end_date">End Date : </string>
     <string name="event_description_tv_description">Description : </string>
@@ -72,20 +70,24 @@
     <string name="no_event_end_date">NO_EVENT_END_DATE</string>
     <string name="no_event_name">NO_EVENT_NAME</string>
     <string name="no_event_start_date">NO_EVENT_START_DATE</string>
-    <string name="remove_yourself_from_the_event">Remove yourself from the event</string>
-    <string name="save_changes">Save changes</string>
-    <string name="change_the_description_of_the_event">Change the description of the event</string>
-    <string name="change_the_name_of_the_event">Change the name of the event</string>
+    <string name="change_the_description_of_the_event">Add description of the event</string>
+    <string name="alert_dialog_title_delete_event">Deleting Event</string>
 
     <!-- Geo Location -->
-    <string name="alert_dialog_ask_enable_provider_title">Please Enable
-    Your GPS</string>
-    <string name="alert_dialog_ask_enable_provider_message">To be able to share
-    your location you have to enable your GPS and grant the GroupUp! the
-        permission to use it. Do you want to do it now?</string>
+    <string name="alert_dialog_ask_enable_provider_title">Please Grant Permission</string>
+    <string name="alert_dialog_ask_enable_provider_message">To be able to share your live location
+        during the event and invite friends via QR Scanner you have to grant the GroupUp! the
+        permission to use your location and camera. Do you want to do it now?</string>
     <string name="alert_dialog_yes">Yes</string>
     <string name="alert_dialog_no">No</string>
     <string name="title_activity_map">Map</string>
+
+
+    <!-- File Management -->
+    <string name="file_management_tv_description">Here you can manage see the files of the event and add some new ones !</string>
+    <string name="file_management_button_add_file">Add file</string>
+    <string name="file_management_toast_error_file_uri">An error occured when recovering the media</string>
+    <string name="file_management_toast_error_file_too_big">Sorry, this file is too big (limit is 1MB)</string>
 
     <!--Event Invitation -->
     <string name="event_invitation_title">You are invited to an event !</string>
@@ -96,7 +98,8 @@
     <string name="event_invitation_dialog_end">End Date :</string>
     <string name="event_invitation_dialog_description">Description :</string>
     <string name="event_invitation_dialog_members">Members in the event :</string>
-    <string name="event_invitation_dialog_unknow">Name unknown (this mean that this user has not accept the invitation yet)</string>
-    <string name="event_listing_extraindex">eventIndex</string>
+    <string name="event_invitation_dialog_unknown">Name unknown (this mean that this user has not accept the invitation yet)</string>
+    <string name="event_listing_extraIndex">eventIndex</string>
 
 </resources>
+

@@ -173,7 +173,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
                     }
                 });
 
-        findViewById(R.id.save_button)
+        findViewById(R.id.save_new_event_button)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -264,23 +264,25 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
         }
         eventName.setError(null);
 
-        if(compare_date(LocalDateTime.now(), builder.getStartDate()) < 0){
+
+        if(builder.getStartDate().isBefore(LocalDateTime.now())){
             Helper.showToast(getApplicationContext(),
-                             getString(R.string.event_creation_toast_event_start_before_now),
-                             Toast.LENGTH_SHORT);
+                    getString(R.string.event_creation_toast_event_start_before_now),
+                    Toast.LENGTH_SHORT);
             return;
         }
 
-        if(compare_date(builder.getStartDate(), builder.getEndDate()) < 0){
+        if(builder.getEndDate().isBefore(builder.getStartDate())){
             Helper.showToast(getApplicationContext(),
-                             getString(R.string.event_creation_toast_event_end_before_begin),
-                             Toast.LENGTH_SHORT);
+                    getString(R.string.event_creation_toast_event_end_before_begin),
+                    Toast.LENGTH_SHORT);
             return;
         }
-        if(compare_date(builder.getStartDate(), builder.getEndDate()) == 0){
+
+        if(builder.getStartDate().isEqual(builder.getEndDate())){
             Helper.showToast(getApplicationContext(),
-                             getString(R.string.event_craeation_toast_event_last_1_minute),
-                             Toast.LENGTH_SHORT);
+                    getString(R.string.event_creation_toast_event_last_1_minute),
+                    Toast.LENGTH_SHORT);
             return;
         }
 
@@ -350,8 +352,10 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
 
         private String eventName = "";
         private String description = "";
-        private LocalDateTime startDate = LocalDateTime.now().plusMinutes(5);
-        private LocalDateTime endDate = LocalDateTime.now().plusMinutes(6);
+        private LocalDateTime startDate = LocalDateTime.now().plusMinutes(5)
+                .withMillisOfSecond(0).withSecondOfMinute(0);
+        private LocalDateTime endDate = LocalDateTime.now().plusMinutes(6)
+                .withMillisOfSecond(0).withSecondOfMinute(0);
         private HashSet<String> members = new HashSet<>();
 
         private EventBuilder(){}
