@@ -85,7 +85,8 @@ public class EventCreationActivityTest {
 
         Espresso.closeSoftKeyboard();
 
-        LocalDateTime start = new LocalDateTime(2018, 1, 6, 9, 0, 0, 0);
+        LocalDateTime start = new LocalDateTime(2099, 1, 6, 9,
+                0, 0, 0);
         LocalDateTime end = start.plusDays(4);
 
         onView(withId(R.id.button_start_date)).perform(click());
@@ -95,7 +96,6 @@ public class EventCreationActivityTest {
         onView(withId(android.R.id.button1)).perform(click());
 
         onView(withId(R.id.button_end_date)).perform(click());
-
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
                 .perform(PickerActions.setDate(end.getYear(), end
                         .getMonthOfYear(), end.getDayOfMonth()));
@@ -122,7 +122,7 @@ public class EventCreationActivityTest {
                                    EVENT_DESCRIPTION, expectedMembers, false);
 
         if (!(found.equals(expected))){
-            throw new AssertionError();
+            throw new AssertionError("Expected : "+expected+".\nFound : "+found);
         }
         Account.shared.clear();
     }
