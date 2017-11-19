@@ -227,7 +227,7 @@ public class EventsShould {
         LocalDateTime start = LocalDateTime.now().plusDays(1);
         LocalDateTime end = LocalDateTime.now().plusDays(2);
         List<Member> members =  new ArrayList<>(Arrays.asList(new Member("1","Javier","Pavier","Xantet","yolo@yolo.com", null), new Member("2","asdf","Médric","Caire","yolo1@yolo.yolo", null)));
-        Event e = new Event("2","inm", start.plusDays(1), end.plusDays(3),"Pas de travail, toujours pas de travail", members,false);
+        Event e = new Event("2","inmm", start.minusDays(3), end.minusDays(1),"Pas de travail, toujours pas de travail", members,false);
         Event f = new Event("1","inm", start, end,"Du travail, toujours du travail", members,false);
         assertNotEquals(e,f);
         assertNotEquals(e,null);

@@ -301,27 +301,6 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
     }
 
     /**
-     * Private method to compare two LocalDateTime to the minute level.
-     * @param start LocalDateTime containing starting time
-     * @param end LocalDateTime containing ending time
-     * @return 1 if start is before end of at least 1 minute, 0 if start and end are the same
-     * to the minute level, -1 otherwise.
-     */
-    private int compare_date(LocalDateTime start, LocalDateTime end){
-        if(start.getYear() > end.getYear()) return -1;
-        if(start.getYear() < end.getYear()) return 1;
-        if(start.getMonthOfYear() > end.getMonthOfYear()) return -1;
-        if(start.getMonthOfYear() < end.getMonthOfYear()) return 1;
-        if(start.getDayOfMonth() > end.getDayOfMonth()) return -1;
-        if(start.getDayOfMonth() < end.getDayOfMonth()) return 1;
-        if(start.getHourOfDay() > end.getHourOfDay()) return -1;
-        if(start.getHourOfDay() < end.getHourOfDay()) return 1;
-        if(start.getMinuteOfHour() > end.getMinuteOfHour()) return -1;
-        if(start.getMinuteOfHour() < end.getMinuteOfHour()) return 1;
-        return 0;
-    }
-
-    /**
      * Format a date into a DD/MM/YY string.
      * @param day int containing date
      * @param month int containing month
