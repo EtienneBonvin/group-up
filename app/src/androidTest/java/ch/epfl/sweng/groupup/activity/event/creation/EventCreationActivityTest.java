@@ -27,6 +27,7 @@ import ch.epfl.sweng.groupup.object.event.Event;
 
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -40,6 +41,9 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 public class EventCreationActivityTest {
+
+    private final String EVENT_NAME = "My event";
+    private final String EVENT_DESCRIPTION = "My description";
 
     @Rule
     // third parameter is set to true which means the activity is started automatically
@@ -62,8 +66,6 @@ public class EventCreationActivityTest {
     @Test
     public void testEventWellGenerated() {
 
-        String eventName = "My event";
-
         Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
                 Optional.<String>empty(), Optional.<String>empty(), Optional.<Location>empty());
         List<Member> expectedMembers = new ArrayList<>();
@@ -75,11 +77,11 @@ public class EventCreationActivityTest {
         expectedMembers.add(emptyMember.withUUID(Member.UNKNOWN_USER + "1").withEmail("swenggroupup@gmail.com"));
         expectedMembers.add(emptyMember.withUUID(Account.shared.getUUID().getOrElse("Default UUID")));
 
-        addEventName(eventName);
+        addEventName(EVENT_NAME);
 
         Espresso.closeSoftKeyboard();
 
-        addDescription("My description");
+        addDescription(EVENT_DESCRIPTION);
 
         Espresso.closeSoftKeyboard();
 
@@ -115,9 +117,9 @@ public class EventCreationActivityTest {
         onView(withId(R.id.save_new_event_button)).perform(click());
 
 
-        Event found = findEvent(eventName);
-        Event expected = new Event(found.getUUID(), eventName, start, end,
-                                   "My description", expectedMembers, false);
+        Event found = findEvent(EVENT_NAME);
+        Event expected = new Event(found.getUUID(), EVENT_NAME, start, end,
+                                   EVENT_DESCRIPTION, expectedMembers, false);
 
         if (!(found.equals(expected))){
             throw new AssertionError();
@@ -134,6 +136,10 @@ public class EventCreationActivityTest {
         onView(withId(R.id.ui_edit_event_name))
                 .check(matches(hasErrorText(
                         getTargetContext().getString(R.string.event_creation_toast_non_empty_event_name))));
+
+        //Remove the error text for further tests
+        addEventName(EVENT_NAME);
+        onView(withId(R.id.save_new_event_button)).perform(click());
     }
 
     @Test
@@ -147,11 +153,15 @@ public class EventCreationActivityTest {
         onView(withId(R.id.ui_edit_event_name))
                 .check(matches(hasErrorText(
                         getTargetContext().getString(R.string.event_creation_toast_event_name_too_long))));
-         }
+
+        //Remove the error text for further tests
+        addEventName(EVENT_NAME);
+        onView(withId(R.id.save_new_event_button)).perform(click());
+    }
 
     @Test
     public void dateWellComparedYear1(){
-        addEventName("My event");
+        addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2099, 5, 5, 5, 5);
@@ -170,7 +180,7 @@ public class EventCreationActivityTest {
 
     @Test
     public void dateWellComparedYear2(){
-        addEventName("My event");
+        addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         setStartDate(2099, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
@@ -181,7 +191,7 @@ public class EventCreationActivityTest {
 
     @Test
     public void dateWellComparedMonth1(){
-        addEventName("My event");
+        addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 4, 5, 5, 5);
@@ -200,7 +210,7 @@ public class EventCreationActivityTest {
 
     @Test
     public void dateWellComparedMonth2(){
-        addEventName("My event");
+        addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 4, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
@@ -211,7 +221,7 @@ public class EventCreationActivityTest {
 
     @Test
     public void dateWellComparedDay1(){
-        addEventName("My event");
+        addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 4, 5, 5);
@@ -230,7 +240,7 @@ public class EventCreationActivityTest {
 
     @Test
     public void dateWellComparedDay2(){
-        addEventName("My event");
+        addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 4, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
@@ -241,7 +251,7 @@ public class EventCreationActivityTest {
 
     @Test
     public void dateWellComparedHour1(){
-        addEventName("My event");
+        addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 4, 5);
@@ -260,7 +270,7 @@ public class EventCreationActivityTest {
 
     @Test
     public void dateWellComparedHour2(){
-        addEventName("My event");
+        addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 4, 5);
         setEndDate(2100, 5, 5, 5, 5);
@@ -271,7 +281,7 @@ public class EventCreationActivityTest {
 
     @Test
     public void dateWellComparedMinute1(){
-        addEventName("My event");
+        addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 4);
@@ -290,8 +300,7 @@ public class EventCreationActivityTest {
 
     @Test
     public void atLeastOneMinuteBetweenStartAndEndDate(){
-        addEventName("My event");
-        addEventName("My event");
+        addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
@@ -316,7 +325,7 @@ public class EventCreationActivityTest {
         int month = now.getMonthOfYear();
         int year = now.getYear() - 1;
 
-        addEventName("My event");
+        addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.button_start_date)).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
@@ -425,10 +434,12 @@ public class EventCreationActivityTest {
     }
 
     private void addEventName(String name){
+        onView(withId(R.id.ui_edit_event_name)).perform(clearText());
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
     }
 
     private void addDescription(String description){
+        onView(withId(R.id.edit_text_description)).perform(clearText());
         onView(withId(R.id.edit_text_description)).perform(typeText(description));
     }
 }
