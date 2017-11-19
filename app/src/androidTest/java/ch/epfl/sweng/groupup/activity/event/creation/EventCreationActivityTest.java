@@ -140,6 +140,7 @@ public class EventCreationActivityTest {
         //Remove the error text for further tests
         addEventName(EVENT_NAME);
         onView(withId(R.id.save_new_event_button)).perform(click());
+        Account.shared.clear();
     }
 
     @Test
@@ -157,6 +158,7 @@ public class EventCreationActivityTest {
         //Remove the error text for further tests
         addEventName(EVENT_NAME);
         onView(withId(R.id.save_new_event_button)).perform(click());
+        Account.shared.clear();
     }
 
     @Test
