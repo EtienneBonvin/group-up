@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -31,6 +32,8 @@ import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -187,7 +190,7 @@ public class EventCreationActivityTest {
         setStartDate(2099, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_new_event_button)).perform(click());
-        //intended(hasComponent(EventListingActivity.class.getName()));
+        intended(hasComponent(EventListingActivity.class.getName()));
         Account.shared.clear();
     }
 
@@ -217,7 +220,7 @@ public class EventCreationActivityTest {
         setStartDate(2100, 4, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_new_event_button)).perform(click());
-        //intended(hasComponent(EventListingActivity.class.getName()));
+        intended(hasComponent(EventListingActivity.class.getName()));
         Account.shared.clear();
     }
 
@@ -247,7 +250,7 @@ public class EventCreationActivityTest {
         setStartDate(2100, 5, 4, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_new_event_button)).perform(click());
-        //intended(hasComponent(EventListingActivity.class.getName()));
+        intended(hasComponent(EventListingActivity.class.getName()));
         Account.shared.clear();
     }
 
@@ -277,7 +280,7 @@ public class EventCreationActivityTest {
         setStartDate(2100, 5, 5, 4, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_new_event_button)).perform(click());
-        //intended(hasComponent(EventListingActivity.class.getName()));
+        intended(hasComponent(EventListingActivity.class.getName()));
         Account.shared.clear();
     }
 
