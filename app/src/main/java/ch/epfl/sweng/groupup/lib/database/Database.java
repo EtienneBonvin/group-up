@@ -1,6 +1,5 @@
 package ch.epfl.sweng.groupup.lib.database;
 
-import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +20,7 @@ import java.util.Set;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
+
 
 public final class Database {
 
@@ -178,10 +178,11 @@ public final class Database {
         This variable defines if we need to update ourselves in the database and fill in
         our information.
          */
-        boolean needToUpdateMyself =  false;
 
         // We for over all the events received.
         for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+            boolean needToUpdateMyself =  false;
+
             // Parsing of the database data into the object class.
             DatabaseEvent event = eventSnapshot.getValue(DatabaseEvent.class);
 
@@ -222,7 +223,6 @@ public final class Database {
                         members.add(memberToAdd);
                     }
 
-                    Log.d("NEED TO UPDATEMYSELF : ", "Name : " + event.getName()+""+needToUpdateMyself);
                     // We create the event that we want to store in the account.
                     Event tempEvent = new Event(event.uuid,
                                                 event.name,

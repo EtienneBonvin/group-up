@@ -38,6 +38,7 @@ public class EventListingActivity extends ToolbarActivity {
     private LinearLayout linearLayout;
     private int heightInSp;
     private Timer autoUpdate;
+    private boolean dialogShown;
 
     /**
      * Initialization of the private variables of the class and
@@ -49,6 +50,7 @@ public class EventListingActivity extends ToolbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_listing);
         super.initializeToolbarActivity();
+   //     autoUpdate = new Timer();
         initView();
     }
 
@@ -74,8 +76,11 @@ public class EventListingActivity extends ToolbarActivity {
 
     @Override
     public void onPause() {
-        autoUpdate.cancel();
-        super.onPause();
+        if (! (autoUpdate==null)){
+            autoUpdate.cancel();
+            super.onPause();
+        }
+
     }
 
     private void initView() {
@@ -171,47 +176,53 @@ public class EventListingActivity extends ToolbarActivity {
      * @param eventToDisplay
      */
     private void askForInvitation(final Event eventToDisplay) {
-        onPause();
-        AlertDialog.Builder alertDialogBuilder =
-                new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AboutDialog));
-        String members=getString(R.string.event_invitation_dialog_members);
-        for(Member member : eventToDisplay.getEventMembers()){
-            members+=member.getDisplayName().getOrElse(getString(R.string.event_invitation_dialog_unknown))+"\n";
+     //   onPause();
+        if (!dialogShown) {
+            dialogShown = true;
+            AlertDialog.Builder alertDialogBuilder =
+                    new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AboutDialog));
+            String members = getString(R.string.event_invitation_dialog_members);
+            for (Member member : eventToDisplay.getEventMembers()) {
+                members += member.getDisplayName().getOrElse(getString(R.string.event_invitation_dialog_unknown)) + "\n";
+            }
+
+            alertDialogBuilder.setTitle(R.string.event_invitation_title);
+            alertDialogBuilder.setMessage(getString(R.string.event_invitation_dialog_name) + eventToDisplay.getEventName() + "\n"
+                    + getString(R.string.event_invitation_dialog_start) + eventToDisplay.getStartTime().toString() + "\n"
+                    + getString(R.string.event_invitation_dialog_end) + eventToDisplay.getEndTime().toString() + "\n"
+                    + getString(R.string.event_invitation_dialog_description) + eventToDisplay.getDescription() + "\n" + members);
+            alertDialogBuilder
+                    .setPositiveButton(R.string.event_invitation_dialog_accept,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(
+                                        DialogInterface dialogInterface,
+                                        int i) {
+                                    Account.shared.addOrUpdateEvent(eventToDisplay.withInvitation(!
+                                            eventToDisplay.getInvitation()));
+                                    Database.update();
+                             //       onResume();
+                                    dialogShown = false;
+                                    dialogInterface.dismiss();
+                                    recreate();
+                                }
+                            });
+            alertDialogBuilder
+                    .setNegativeButton(R.string.event_invitation_dialog_decline,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(
+                                        DialogInterface dialogInterface,
+                                        int i) {
+                                    EventDescriptionActivity.removeEvent(eventToDisplay);
+                               //     onResume();
+                                    dialogShown = false;
+                                    dialogInterface.dismiss();
+                                    recreate();
+                                }
+                            });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
         }
-
-        alertDialogBuilder.setTitle(R.string.event_invitation_title);
-        alertDialogBuilder.setMessage(getString(R.string.event_invitation_dialog_name) + eventToDisplay.getEventName()+"\n"
-        +getString(R.string.event_invitation_dialog_start) + eventToDisplay.getStartTime().toString()+"\n"
-        +getString(R.string.event_invitation_dialog_end) + eventToDisplay.getEndTime().toString()+"\n"
-        +getString(R.string.event_invitation_dialog_description) + eventToDisplay.getDescription()+"\n"+members);
-        alertDialogBuilder
-                .setPositiveButton(R.string.event_invitation_dialog_accept,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(
-                                    DialogInterface dialogInterface,
-                                    int i) {
-                                Account.shared.addOrUpdateEvent(eventToDisplay.withInvitation(!
-                                        eventToDisplay.getInvitation()));
-                                Database.update();
-                                onResume();
-                                dialogInterface.dismiss();
-                            }
-                        });
-        alertDialogBuilder
-                .setNegativeButton(R.string.event_invitation_dialog_decline,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(
-                                    DialogInterface dialogInterface,
-                                    int i) {
-                                EventDescriptionActivity.removeEvent(eventToDisplay);
-                                onResume();
-                                dialogInterface.dismiss();
-                            }
-                        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
     }
-
 }
