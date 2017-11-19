@@ -184,112 +184,11 @@ public class EventCreationActivityTest {
     }
 
     @Test
-    public void dateWellComparedYear2(){
-        addEventName(EVENT_NAME);
-        Espresso.closeSoftKeyboard();
-        setStartDate(2099, 5, 5, 5, 5);
-        setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_new_event_button)).perform(click());
-        //intended(hasComponent(EventListingActivity.class.getName()));
-        Account.shared.clear();
-    }
-
-    @Test
-    public void dateWellComparedMonth1(){
+    public void noCreationOnstartDateBeforeEndDate(){
         addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 4, 5, 5, 5);
-        onView(withId(R.id.save_new_event_button)).perform(click());
-        onView(withText(R.string.event_creation_toast_event_end_before_begin))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
-                        .getWindow()
-                        .getDecorView()))))
-                .check(matches(isDisplayed()));
-        try {
-            Thread.sleep(2000);
-        }catch(InterruptedException ie){
-            //The tests are stopped, nothing to do.
-        }
-    }
-
-    @Test
-    public void dateWellComparedMonth2(){
-        addEventName(EVENT_NAME);
-        Espresso.closeSoftKeyboard();
-        setStartDate(2100, 4, 5, 5, 5);
-        setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_new_event_button)).perform(click());
-        //intended(hasComponent(EventListingActivity.class.getName()));
-        Account.shared.clear();
-    }
-
-    @Test
-    public void dateWellComparedDay1(){
-        addEventName(EVENT_NAME);
-        Espresso.closeSoftKeyboard();
-        setStartDate(2100, 5, 5, 5, 5);
-        setEndDate(2100, 5, 4, 5, 5);
-        onView(withId(R.id.save_new_event_button)).perform(click());
-        onView(withText(R.string.event_creation_toast_event_end_before_begin))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
-                        .getWindow()
-                        .getDecorView()))))
-                .check(matches(isDisplayed()));
-        try {
-            Thread.sleep(2000);
-        }catch(InterruptedException ie){
-            //The tests are stopped, nothing to do.
-        }
-    }
-
-    @Test
-    public void dateWellComparedDay2(){
-        addEventName(EVENT_NAME);
-        Espresso.closeSoftKeyboard();
-        setStartDate(2100, 5, 4, 5, 5);
-        setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_new_event_button)).perform(click());
-        //intended(hasComponent(EventListingActivity.class.getName()));
-        Account.shared.clear();
-    }
-
-    @Test
-    public void dateWellComparedHour1(){
-        addEventName(EVENT_NAME);
-        Espresso.closeSoftKeyboard();
-        setStartDate(2100, 5, 5, 5, 5);
-        setEndDate(2100, 5, 5, 4, 5);
-        onView(withId(R.id.save_new_event_button)).perform(click());
-        onView(withText(R.string.event_creation_toast_event_end_before_begin))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
-                        .getWindow()
-                        .getDecorView()))))
-                .check(matches(isDisplayed()));
-        try {
-            Thread.sleep(2000);
-        }catch(InterruptedException ie){
-            //The tests are stopped, nothing to do.
-        }
-    }
-
-    @Test
-    public void dateWellComparedHour2(){
-        addEventName(EVENT_NAME);
-        Espresso.closeSoftKeyboard();
-        setStartDate(2100, 5, 5, 4, 5);
-        setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_new_event_button)).perform(click());
-        //intended(hasComponent(EventListingActivity.class.getName()));
-        Account.shared.clear();
-    }
-
-    @Test
-    public void dateWellComparedMinute1(){
-        addEventName(EVENT_NAME);
-        Espresso.closeSoftKeyboard();
-        setStartDate(2100, 5, 5, 5, 5);
-        setEndDate(2100, 5, 5, 5, 4);
         onView(withId(R.id.save_new_event_button)).perform(click());
         onView(withText(R.string.event_creation_toast_event_end_before_begin))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
