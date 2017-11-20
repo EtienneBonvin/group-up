@@ -60,13 +60,16 @@ public class EventDescriptionActivity extends ToolbarActivity {
                     @Override
                     public void onClick(View v) {
 
-                        final AlertDialog alertDialog = new AlertDialog.Builder(EventDescriptionActivity.this).create();
+                        final AlertDialog alertDialog = new AlertDialog.Builder(
+                                EventDescriptionActivity.this).create();
                         alertDialog.setTitle(R.string.alert_dialog_title_delete_event);
-                        alertDialog.setMessage(Html.fromHtml("<font color='#000000'>Would you like to leave and delete this event?</font>"));
+                        alertDialog.setMessage(Html.fromHtml("<font color='#000000'>Would you " +
+                                "like to leave and delete this event?</font>"));
                         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Continue",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Intent i = new Intent(EventDescriptionActivity.this, EventListingActivity.class);
+                                        Intent i = new Intent(EventDescriptionActivity.this,
+                                                EventListingActivity.class);
                                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                                 Intent.FLAG_ACTIVITY_CLEAR_TASK |
                                                 Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -98,11 +101,13 @@ public class EventDescriptionActivity extends ToolbarActivity {
                         } else if (name.length() == 0){
                             displayEventName.setError(getString(R.string.event_creation_toast_non_empty_event_name));
                         } else {
-                            Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name).withDescription(description));
+                            Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name).
+                                    withDescription(description));
                             Database.update();
                             eventToDisplay = Account.shared.getEvents().get(eventIndex);
 
-                            Intent i = new Intent(EventDescriptionActivity.this, EventListingActivity.class);
+                            Intent i = new Intent(EventDescriptionActivity.this,
+                                    EventListingActivity.class);
                             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                     Intent.FLAG_ACTIVITY_CLEAR_TASK |
                                     Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -116,7 +121,8 @@ public class EventDescriptionActivity extends ToolbarActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), FileManagementActivity.class);
+                        Intent intent = new Intent(getApplicationContext(),
+                                FileManagementActivity.class);
                         intent.putExtra("EventIndex", eventIndex);
                         startActivity(intent);
                     }
@@ -158,8 +164,8 @@ public class EventDescriptionActivity extends ToolbarActivity {
      */
     private void printEvent() {
         displayEventName.setText(eventToDisplay.getEventName());
-        displayEventStartDate.setText(eventToDisplay.getStartTime().toString(null, Locale.FRANCE));
-        displayEventEndDate.setText(eventToDisplay.getEndTime().toString(null, Locale.FRANCE));
+        displayEventStartDate.setText(eventToDisplay.getStartTimeToString());
+        displayEventEndDate.setText(eventToDisplay.getEndTimeToString());
         displayEventDescription.setText(eventToDisplay.getDescription());
 
         for (Member member : eventToDisplay.getEventMembers()) {

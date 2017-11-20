@@ -125,6 +125,7 @@ public class EventListingActivity extends ToolbarActivity {
         int offset = needAnOffset ? Account.shared.getFutureEvents().size() : 0;
         for (Event e : events) {
             if (e.getInvitation()) {
+                Log.d("HASH",""+e.hashCode());
                 eventsToDisplay.add(e);
             }
         }
@@ -198,8 +199,8 @@ public class EventListingActivity extends ToolbarActivity {
 
                 alertDialogBuilder.setTitle(R.string.event_invitation_title);
                 alertDialogBuilder.setMessage(getString(R.string.event_invitation_dialog_name) + eventToDisplay.getEventName() + "\n"
-                        + getString(R.string.event_invitation_dialog_start) + eventToDisplay.getStartTime().toString() + "\n"
-                        + getString(R.string.event_invitation_dialog_end) + eventToDisplay.getEndTime().toString() + "\n"
+                        + getString(R.string.event_invitation_dialog_start) + eventToDisplay.getStartTimeToString() + "\n"
+                        + getString(R.string.event_invitation_dialog_end) + eventToDisplay.getEndTimeToString() + "\n"
                         + getString(R.string.event_invitation_dialog_description) + eventToDisplay.getDescription() + "\n" + members);
                 alertDialogBuilder
                         .setPositiveButton(R.string.event_invitation_dialog_accept,

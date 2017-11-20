@@ -4,9 +4,13 @@ import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
@@ -231,5 +235,14 @@ public class EventsShould {
         Event f = new Event("1","inm", start, end,"Du travail, toujours du travail", members,false);
         assertNotEquals(e,f);
         assertNotEquals(e,null);
+    }
+    @Test
+    public void getCorrectDateString(){
+        LocalDateTime now= LocalDateTime.now();
+        Event e= new Event("1",now,now,"", new ArrayList<>(Collections.singletonList(member)),false);
+        assertEquals(e.getStartTimeToString(), (String.format(Locale.getDefault(),"%d/%d/%d", now.getDayOfMonth(),
+                now.getMonthOfYear(),now.getYear())));
+        assertEquals(e.getEndTimeToString(), (String.format(Locale.getDefault(),"%d/%d/%d", now.getDayOfMonth(),
+                now.getMonthOfYear(),now.getYear())));
     }
 }

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import ch.epfl.sweng.groupup.lib.Watchee;
@@ -29,6 +30,7 @@ public final class Event implements Serializable, Watcher, Watchee{
     private List<Bitmap> eventImages;
     private FirebaseFileProxy proxy;
     private Set<Watcher> watchers;
+
 
 
     //The invitation is designed only for the user linked to the Account. This state is set to true
@@ -106,12 +108,23 @@ public final class Event implements Serializable, Watcher, Watchee{
         return startTime;
     }
 
+    public String getStartTimeToString(){
+        LocalDateTime date =getStartTime();
+        return String.format(Locale.getDefault(),"%d/%d/%d", date.getDayOfMonth(),
+                date.getMonthOfYear(),date.getYear());
+    }
     /**
      * Getter for the end date and time
      * @return LocalDateTime ending time
      */
     public LocalDateTime getEndTime() {
         return endTime;
+    }
+
+    public String getEndTimeToString(){
+        LocalDateTime date =getEndTime();
+        return String.format(Locale.getDefault(),"%d/%d/%d", date.getDayOfMonth(),
+                date.getMonthOfYear(),date.getYear());
     }
 
     /**
@@ -238,6 +251,17 @@ public final class Event implements Serializable, Watcher, Watchee{
             }
         }
         return withEventMembers(newMemberList);
+    }
+
+    /**
+     * Return an hash comparing only what needed to differentiate two invitation.
+     * @return
+     */
+    public int hashCode() {
+        int result = UUID.hashCode();
+        result = 31 * result + startTime.hashCode();
+        result = 31 * result + endTime.hashCode();
+        return result;
     }
 
     /**
