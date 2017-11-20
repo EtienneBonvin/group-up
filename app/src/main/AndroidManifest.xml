@@ -39,6 +39,8 @@
         <activity android:name=".activity.event.description.EventDescriptionActivity" />
         <activity android:name=".activity.event.creation.MembersAddingActivity" />
         <activity android:name=".activity.event.files.FileManagementActivity" />
+        <activity android:name=".activity.event.files.TakePictureActivity" />
+
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
