@@ -158,10 +158,9 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-//            addImageToGrid(imageBitmap);
-        }
-
-        if (resultCode == RESULT_OK) {
+            addImageToGrid(imageBitmap);
+            event.addPicture(Account.shared.getUUID().getOrElse("Default ID"), imageBitmap);
+        }else if (resultCode == RESULT_OK) {
             Uri targetUri = data.getData();
 
             if (targetUri == null) {
@@ -207,7 +206,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
      * Initialize the camera button and open the camera
      */
     private void initializeTakePicture() {
-        Button takePicture = this.findViewById(R.id.take_picture);
+        Button takePicture = findViewById(R.id.take_picture);
         final Context thisContext = this;
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,10 +222,6 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
                                 Toast.LENGTH_SHORT);
                     }
                     if (photo != null) {
-                        Uri photoURI = FileProvider.getUriForFile(thisContext,
-                                "com.example.android.fileprovider",
-                                photo);
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                     }
                 }

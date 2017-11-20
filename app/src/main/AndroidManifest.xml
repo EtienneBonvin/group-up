@@ -39,7 +39,6 @@
         <activity android:name=".activity.event.description.EventDescriptionActivity" />
         <activity android:name=".activity.event.creation.MembersAddingActivity" />
         <activity android:name=".activity.event.files.FileManagementActivity" />
-        <activity android:name=".activity.event.files.TakePictureActivity" />
 
 
         <!--
@@ -58,6 +57,9 @@
             android:name=".activity.map.MapActivity"
             android:label="@string/title_activity_map" />
         <activity android:name=".activity.event.files.FullScreenFile"></activity>
+
+      
+
     </application>
 
 </manifest>
