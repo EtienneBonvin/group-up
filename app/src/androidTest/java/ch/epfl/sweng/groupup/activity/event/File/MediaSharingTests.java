@@ -17,6 +17,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
@@ -93,6 +94,8 @@ public class MediaSharingTests {
         onView(withParent(withId(R.id.image_grid)))
                 .check(matches(isDisplayed()));
 
+        mockMediaSelection(imageUri);
+
     }
 
     @Test
@@ -119,6 +122,38 @@ public class MediaSharingTests {
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
 
+    }
+
+    @Test
+    public void fileNotAddedOnBadResult(){
+
+        Resources resources = InstrumentationRegistry.getTargetContext().getResources();
+
+        Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                resources.getResourcePackageName(R.mipmap.ic_launcher) + '/' +
+                resources.getResourceTypeName(R.mipmap.ic_launcher) + '/' +
+                resources.getResourceEntryName(R.mipmap.ic_launcher));
+
+        mockWrongSelection(imageUri);
+
+        onView(withParent(withId(R.id.image_grid)))
+                .check(doesNotExist());
+    }
+
+    private void mockWrongSelection(Uri imageUri){
+        Intent resultData = new Intent();
+        resultData.setData(imageUri);
+        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(
+                Activity.RESULT_CANCELED, resultData);
+
+        Matcher<Intent> expectedIntent = allOf(hasAction(Intent.ACTION_PICK),
+                hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
+        Intents.init();
+        intending(expectedIntent).respondWith(result);
+
+        onView(withId(R.id.add_files)).perform(click());
+        intended(expectedIntent);
+        Intents.release();
     }
 
     private void mockMediaSelection(Uri imageUri){
