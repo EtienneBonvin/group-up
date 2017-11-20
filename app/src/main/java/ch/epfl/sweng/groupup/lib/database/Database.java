@@ -119,14 +119,18 @@ public final class Database {
             }
         }
 
-        DatabaseEvent eventToStore = new DatabaseEvent(event.getEventName(),
-                                                       event.getDescription(),
-                                                       event.getStartTime()
-                                                               .toString(),
-                                                       event.getEndTime()
-                                                               .toString(),
-                                                       event.getUUID(),
-                                                       uuidToUserMap);
+        DatabaseEvent eventToStore =
+                new DatabaseEvent(event.getEventName(),
+                                  event.getDescription(),
+                                  event.getStartTime()
+                                          .toString(),
+                                  event.getEndTime()
+                                          .toString(),
+                                  event.getUUID(),
+                                  uuidToUserMap, // TODO: change
+                                  new HashMap<String, DatabasePointOfInterest>
+                                          ());
+
         storeEvent(eventToStore);
     }
 
@@ -181,7 +185,7 @@ public final class Database {
 
         // We for over all the events received.
         for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
-            boolean needToUpdateMyself =  false;
+            boolean needToUpdateMyself = false;
 
             // Parsing of the database data into the object class.
             DatabaseEvent event = eventSnapshot.getValue(DatabaseEvent.class);
@@ -228,7 +232,9 @@ public final class Database {
                                                 event.name,
                                                 LocalDateTime.parse(event.datetimeStart),
                                                 LocalDateTime.parse(event.datetimeEnd),
-                                                event.description, members, needToUpdateMyself);
+                                                event.description,
+                                                members,
+                                                needToUpdateMyself);
 
                     // We add or update the event.
                     Account.shared.addOrUpdateEvent(tempEvent);

@@ -19,18 +19,23 @@ final class DatabaseEvent {
     public String datetimeEnd = Database.EMPTY_FIELD;
     public String uuid = Database.EMPTY_FIELD;
     public Map<String, DatabaseUser> members = new HashMap<>();
+    public Map<String, DatabasePointOfInterest> pointsOfInterest = new
+            HashMap<>();
 
     public DatabaseEvent() {
     }
 
     DatabaseEvent(String name, String description, String datetimeStart, String
-            datetimeEnd, String uuid, HashMap<String, DatabaseUser> members) {
+            datetimeEnd, String uuid, HashMap<String, DatabaseUser> members,
+                  HashMap<String, DatabasePointOfInterest> pointsOfInterest) {
         this.name = name;
         this.description = description;
         this.datetimeStart = datetimeStart;
         this.datetimeEnd = datetimeEnd;
         this.uuid = uuid;
         this.members = Collections.unmodifiableMap(new HashMap<>(members));
+        this.pointsOfInterest =
+                Collections.unmodifiableMap(new HashMap<>(pointsOfInterest));
     }
 
     public String getName() {
@@ -54,6 +59,10 @@ final class DatabaseEvent {
     }
 
     public Map<String, DatabaseUser> getMembers() {
-        return members;
+        return new HashMap<>(members);
+    }
+
+    public Map<String, DatabasePointOfInterest> getPointsOfInterest() {
+        return new HashMap<>(pointsOfInterest);
     }
 }
