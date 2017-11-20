@@ -96,9 +96,22 @@ public class MediaSharingTests {
     }
 
     @Test
-    public void fileNotFoundExceptionOnWrongURI(){
+    public void fileNotFoundToastOnWrongURI(){
 
         mockMediaSelection(Uri.parse("scrogneugneu"));
+
+        onView(withText(R.string.file_management_toast_error_file_uri))
+                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
+                        .getWindow()
+                        .getDecorView()))))
+                .check(matches(isDisplayed()));
+
+    }
+
+    @Test
+    public void fileNotFoundToastOnNullURI(){
+
+        mockMediaSelection(null);
 
         onView(withText(R.string.file_management_toast_error_file_uri))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
