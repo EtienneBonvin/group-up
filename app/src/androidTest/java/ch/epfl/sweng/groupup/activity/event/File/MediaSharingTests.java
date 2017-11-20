@@ -23,13 +23,16 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasData;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
+import static android.support.test.espresso.matcher.ViewMatchers.withResourceName;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
@@ -95,9 +98,19 @@ public class MediaSharingTests {
         Intents.release();
 
         onView(withParent(withId(R.id.image_grid)))
+                .check(matches(isDisplayed()));
+
+        onView(withParent(withId(R.id.image_grid)))
                 .perform(click());
+
+        onView(withId(R.id.image_to_display))
+                .check(matches(isDisplayed()));
+
         onView(withId(R.id.image_to_display))
                 .perform(click());
+
+        onView(withParent(withId(R.id.image_grid)))
+                .check(matches(isDisplayed()));
 
     }
 
