@@ -66,7 +66,7 @@
             android:background="@android:color/transparent"
             android:cursorVisible="false"
             android:hint="@string/change_the_description_of_the_event"
-            android:inputType="textAutoComplete"
+            android:inputType="textMultiLine|textNoSuggestions"
             android:text="@string/no_event_description" />
 
 

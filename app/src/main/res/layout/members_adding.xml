@@ -61,7 +61,7 @@
             android:layout_weight="0.8"
             android:hint="@string/members_adding_hint_invite_new_members"
             android:textColor="@color/primaryTextColor"
-            android:inputType="textNoSuggestions"
+            android:inputType="textEmailAddress"
             android:textSize="20sp" />
 
         <ImageView

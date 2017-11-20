@@ -86,7 +86,7 @@
     <!-- File Management -->
     <string name="file_management_tv_description">Here you can manage see the files of the event and add some new ones !</string>
     <string name="file_management_button_add_file">Add file</string>
-    <string name="file_management_toast_error_file_uri">An error occured when recovering the media</string>
+    <string name="file_management_toast_error_file_uri">An error occurred when recovering the media</string>
     <string name="file_management_toast_error_file_too_big">Sorry, this file is too big (limit is 1MB)</string>
 
     <!--Event Invitation -->
@@ -100,6 +100,9 @@
     <string name="event_invitation_dialog_members">Members in the event : </string>
     <string name="event_invitation_dialog_unknown">Name unknown (this usually mean that this user has not accept the invitation yet)</string>
     <string name="event_listing_extraIndex">eventIndex</string>
+
+    <!-- Full screen file -->
+    <string name="full_screen_file_content_description">Image to be displayed in full screen</string>
 
 </resources>
 
