@@ -236,10 +236,6 @@ public class DatabaseShould {
         Database.setUpEventListener(null);
         Database.update();
 
-        /*
-         This is to ensure that the onDataChange listener had enough time be be called in the
-         background and pass all the asserts.
-          */
         Thread.sleep(2000);
     }
 }
