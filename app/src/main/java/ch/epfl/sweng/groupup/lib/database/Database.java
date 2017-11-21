@@ -20,6 +20,7 @@ import java.util.Set;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
+import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 
 
 public final class Database {
@@ -234,6 +235,7 @@ public final class Database {
                                                 LocalDateTime.parse(event.datetimeEnd),
                                                 event.description,
                                                 members,
+                                                new HashSet<PointOfInterest>(),
                                                 needToUpdateMyself);
 
                     // We add or update the event.

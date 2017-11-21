@@ -104,4 +104,43 @@ public final class PointOfInterest {
     public PointOfInterest withUuid(String uuid) {
         return new PointOfInterest(uuid, name, description, location);
     }
+
+    // TODO: HERE!
+
+    @Override
+    public String toString() {
+        return "PointOfInterest{" +
+               "name='" + name + '\'' +
+               ", description='" + description + '\'' +
+               ", location=" + location +
+               ", uuid='" + uuid + '\'' +
+               '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        PointOfInterest that = (PointOfInterest) o;
+
+        return name.equals(that.name) &&
+               description.equals(that.description) &&
+               location.equals(that.location) &&
+               uuid.equals(that.uuid);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + description.hashCode();
+        result = 31 * result + location.hashCode();
+        result = 31 * result + uuid.hashCode();
+        return result;
+    }
 }
