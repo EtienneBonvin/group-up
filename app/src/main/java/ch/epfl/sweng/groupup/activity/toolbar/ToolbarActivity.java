@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.info.UserInformationActivity;
@@ -12,10 +15,12 @@ import ch.epfl.sweng.groupup.activity.settings.SettingsActivity;
 import ch.epfl.sweng.groupup.lib.geolocation.GeoLocation;
 import ch.epfl.sweng.groupup.lib.geolocation.GeoLocationInterface;
 import ch.epfl.sweng.groupup.lib.geolocation.MockLocation;
+import ch.epfl.sweng.groupup.object.event.Event;
 
 public class ToolbarActivity extends AppCompatActivity {
 
     private static GeoLocationInterface geoLocation;
+    protected static Set<Event> eventsToDisplay = new HashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
