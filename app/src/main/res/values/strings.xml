@@ -102,7 +102,6 @@
     <string name="event_invitation_dialog_description">Description :</string>
     <string name="event_invitation_dialog_members">Members in the event :</string>
     <string name="event_invitation_dialog_unknown">Name unknown (this mean that this user has not accept the invitation yet)</string>
-    <string name="event_listing_extraindex">eventIndex</string>
 
     <!-- Gmail Sender Stuff -->
     <string name="sweng_email">swenggroupup@gmail.com</string>

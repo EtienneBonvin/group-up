@@ -37,7 +37,6 @@ import ch.epfl.sweng.groupup.object.event.Event;
 
 public class FileManagementActivity extends ToolbarActivity implements Watcher {
 
-    private String mCurrentPhotoPath;
     private final int COLUMNS = 3;
     private final int ROWS = 4;
     private int columnWidth;
@@ -244,7 +243,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
+        String mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
