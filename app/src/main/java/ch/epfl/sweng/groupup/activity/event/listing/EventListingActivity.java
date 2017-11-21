@@ -4,9 +4,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -17,6 +21,7 @@ import java.util.TimerTask;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
+import ch.epfl.sweng.groupup.activity.map.MapActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -35,6 +40,8 @@ public class EventListingActivity extends ToolbarActivity {
     private LinearLayout linearLayout;
     private int heightInSp;
     private Timer autoUpdate;
+    private boolean dialogShown;
+
 
     /**
      * Initialization of the private variables of the class and
@@ -59,7 +66,7 @@ public class EventListingActivity extends ToolbarActivity {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         setContentView(R.layout.activity_event_listing);
-                        initializeToolbarActivity();
+                      initializeToolbarActivity();
 
                         initView();
                     }
@@ -71,8 +78,11 @@ public class EventListingActivity extends ToolbarActivity {
 
     @Override
     public void onPause() {
-        autoUpdate.cancel();
-        super.onPause();
+        if (!(autoUpdate == null)) {
+            autoUpdate.cancel();
+            super.onPause();
+        }
+
     }
 
     private void initView() {
@@ -106,41 +116,56 @@ public class EventListingActivity extends ToolbarActivity {
      * Initialization of the event buttons in the linear layout with the
      * name and start to event dates stated
      */
+
     private void initializeEvents(List<Event> events, boolean needAnOffset) {
-        int offset= needAnOffset ? Account.shared.getFutureEvents().size() : 0;
-        for(Event e : events){
-            if (e.getInvitation()){
-                askForInvitation(e);
+        int offset = needAnOffset ? Account.shared.getFutureEvents().size() : 0;
+        for (Event e : events) {
+            if (e.getInvitation()) {
+                Log.d("HASH",""+e.hashCode());
+                eventsToDisplay.add(e);
             }
-            Button eventButton =new Button(this);
+        }
+            askForInvitation();
+        for (Event e : events) {
+            Button eventButton = new Button(this);
             eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
                     MATCH_PARENT, heightInSp));
-            eventButton.setText(String.format(Locale.FRANCE, "%s | %d/%d - %d/%d", e.getEventName(),
+            eventButton.setText(String.format(Locale.getDefault(), "%s | %d/%d - %d/%d", e.getEventName(),
                     e.getStartTime().getDayOfMonth(), e.getStartTime().getMonthOfYear(),
                     e.getEndTime().getDayOfMonth(), e.getEndTime().getMonthOfYear()));
-            final int indexToPass=offset;
+            eventButton.setBackgroundColor(getResources().getColor(R.color.primaryLightColor));
+            eventButton.setCompoundDrawablePadding(2);
+            final int indexToPass = offset;
+
+            eventButton.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
+                    intent.putExtra("eventIndex", indexToPass);
+                    startActivity(intent);
+                    return true;
+                }
+            });
+
             eventButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
-                    intent.putExtra(getString(R.string.event_listing_extraindex), indexToPass);
+                    Intent intent = new Intent(EventListingActivity.this, MapActivity.class);
+                    intent.putExtra(getString(R.string.event_listing_extraIndex), indexToPass);
                     startActivity(intent);
                 }
             });
             offset++;
             linearLayout.addView(eventButton);
         }
-        }
+    }
 
     /**
      * Initialization of the create event button in the linear layout and
      * of the OnClickListener
      */
     private void initializeCreateEvent() {
-        Button createEventButton = new Button(this);
-        createEventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
-                MATCH_PARENT, heightInSp));
-        createEventButton.setText(R.string.create_new_event);
+        FloatingActionButton createEventButton = (FloatingActionButton) this.findViewById(R.id.createEventButton);
         createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,56 +174,61 @@ public class EventListingActivity extends ToolbarActivity {
             }
         });
         //createEventButton.setId(View.generateViewId()); // Assign the ID of the event
-        linearLayout.addView(createEventButton);
     }
 
 
     /**
      * Create a dialog to invite the user to the event
-     * @param eventToDisplay
+     *
+     * @param
      */
-    private void askForInvitation(final Event eventToDisplay) {
-        onPause();
-        AlertDialog.Builder alertDialogBuilder =
-                new AlertDialog.Builder(this);
-        String members=getString(R.string.event_invitation_dialog_members);
-        for(Member member : eventToDisplay.getEventMembers()){
-            members+=member.getDisplayName().getOrElse(getString(R.string.event_invitation_dialog_unknow))+"\n";
+    private void askForInvitation() {
+        for (final Event eventToDisplay : eventsToDisplay) {
+            if (!dialogShown) {
+                dialogShown = true;
+                AlertDialog.Builder alertDialogBuilder =
+                        new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AboutDialog));
+                String members = getString(R.string.event_invitation_dialog_members);
+                for (Member member : eventToDisplay.getEventMembers()) {
+                    members += member.getDisplayName().getOrElse(getString(R.string.event_invitation_dialog_unknown)) + "\n";
+                }
+
+                alertDialogBuilder.setTitle(R.string.event_invitation_title);
+                alertDialogBuilder.setMessage(getString(R.string.event_invitation_dialog_name) + eventToDisplay.getEventName() + "\n"
+                        + getString(R.string.event_invitation_dialog_start) + eventToDisplay.getStartTimeToString() + "\n"
+                        + getString(R.string.event_invitation_dialog_end) + eventToDisplay.getEndTimeToString() + "\n"
+                        + getString(R.string.event_invitation_dialog_description) + eventToDisplay.getDescription() + "\n" + members);
+                alertDialogBuilder
+                        .setPositiveButton(R.string.event_invitation_dialog_accept,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(
+                                            DialogInterface dialogInterface,
+                                            int i) {
+                                        Account.shared.addOrUpdateEvent(eventToDisplay.withInvitation(!
+                                                eventToDisplay.getInvitation()));
+                                        Database.update();
+                                        eventsToDisplay.remove(eventToDisplay);
+                                        dialogShown = false;
+                                        dialogInterface.dismiss();
+                                    }
+                                });
+                alertDialogBuilder
+                        .setNegativeButton(R.string.event_invitation_dialog_decline,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(
+                                            DialogInterface dialogInterface,
+                                            int i) {
+                                        EventDescriptionActivity.removeEvent(eventToDisplay);
+                                        eventsToDisplay.remove(eventToDisplay);
+                                        dialogShown = false;
+                                        dialogInterface.dismiss();
+                                    }
+                                });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
         }
-
-        alertDialogBuilder.setTitle(R.string.event_invitation_title);
-        alertDialogBuilder.setMessage(getString(R.string.event_invitation_dialog_name) + eventToDisplay.getEventName()+"\n"
-        +getString(R.string.event_invitation_dialog_start) + eventToDisplay.getStartTime().toString()+"\n"
-        +getString(R.string.event_invitation_dialog_end) + eventToDisplay.getEndTime().toString()+"\n"
-        +getString(R.string.event_invitation_dialog_description) + eventToDisplay.getDescription()+"\n"+members);
-        alertDialogBuilder
-                .setPositiveButton(R.string.event_invitation_dialog_accept,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(
-                                    DialogInterface dialogInterface,
-                                    int i) {
-                                Account.shared.addOrUpdateEvent(eventToDisplay.withInvitation(!
-                                        eventToDisplay.getInvitation()));
-                                Database.update();
-                                onResume();
-                                dialogInterface.dismiss();
-                            }
-                        });
-        alertDialogBuilder
-                .setNegativeButton(R.string.event_invitation_dialog_decline,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(
-                                    DialogInterface dialogInterface,
-                                    int i) {
-                                EventDescriptionActivity.removeEvent(eventToDisplay);
-                                onResume();
-                                dialogInterface.dismiss();
-                            }
-                        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
     }
-
 }

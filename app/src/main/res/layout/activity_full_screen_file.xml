@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ch.epfl.sweng.groupup.activity.event.files.FullScreenFile"
+    android:id="@+id/container">
+
+    <ImageView
+        android:id="@+id/image_to_display"
+        android:contentDescription="@string/full_screen_file_content_description"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>

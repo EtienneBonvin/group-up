@@ -1,7 +1,10 @@
 package ch.epfl.sweng.groupup.activity.event.description;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -13,6 +16,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.event.files.FileManagementActivity;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
@@ -50,34 +54,77 @@ public class EventDescriptionActivity extends ToolbarActivity {
         initializeField();
         printEvent();
 
-        //Remove and go to the event creation
+        //Remove and go to the event listing
         findViewById(R.id.remove_event_button)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(EventDescriptionActivity.this, EventListingActivity.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                                Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                                Intent.FLAG_ACTIVITY_NEW_TASK);
-                        removeEvent(eventToDisplay);
-                        startActivity(i);
+
+                        final AlertDialog alertDialog = new AlertDialog.Builder(
+                                EventDescriptionActivity.this).create();
+                        alertDialog.setTitle(R.string.alert_dialog_title_delete_event);
+                        alertDialog.setMessage(Html.fromHtml("<font color='#000000'>Would you " +
+                                "like to leave and delete this event?</font>"));
+                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Continue",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent i = new Intent(EventDescriptionActivity.this,
+                                                EventListingActivity.class);
+                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                                Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        removeEvent(eventToDisplay);
+                                        startActivity(i);
+                                    }
+                                });
+
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        alertDialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
                     }
                 });
-        //Save changes
-        findViewById(R.id.event_description_save)
+
+        //Save changes and go to event listing
+        findViewById(R.id.save_event_modification_button)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String name = displayEventName.getText().toString();
+                        String name= displayEventName.getText().toString();
                         String description = displayEventDescription.getText().toString();
-                        if (name.length() > maxName) {
+                        if (name.length()>maxName){
                             displayEventName.setError(getString(R.string.event_creation_toast_event_name_too_long));
-                        } else if (name.length() == 0) {
+                        } else if (name.length() == 0){
                             displayEventName.setError(getString(R.string.event_creation_toast_non_empty_event_name));
+                        } else {
+                            Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name).
+                                    withDescription(description));
+                            Database.update();
+                            eventToDisplay = Account.shared.getEvents().get(eventIndex);
+
+                            Intent i = new Intent(EventDescriptionActivity.this,
+                                    EventListingActivity.class);
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                    Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(i);
                         }
-                        Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name).withDescription(description));
-                        Database.update();
-                        eventToDisplay = Account.shared.getEvents().get(eventIndex);
+                    }
+                });
+
+        // Do we need to store the modifications ?
+        findViewById(R.id.upload_file)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(),
+                                FileManagementActivity.class);
+                        intent.putExtra("EventIndex", eventIndex);
+                        startActivity(intent);
                     }
                 });
     }
@@ -98,8 +145,8 @@ public class EventDescriptionActivity extends ToolbarActivity {
         for (Event fe : futureEventList) {
             Account.shared.addOrUpdateEvent(fe);
         }
-        Database.update();
 
+        Database.update();
     }
 
     /**
@@ -117,8 +164,9 @@ public class EventDescriptionActivity extends ToolbarActivity {
      */
     private void printEvent() {
         displayEventName.setText(eventToDisplay.getEventName());
-        displayEventStartDate.setText(eventToDisplay.getStartTime().toString(null, Locale.FRANCE));
-        displayEventEndDate.setText(eventToDisplay.getEndTime().toString(null, Locale.FRANCE));
+        displayEventStartDate.setText(eventToDisplay.getStartTimeToString());
+        displayEventEndDate.setText(eventToDisplay.getEndTimeToString());
+
         displayEventDescription.setText(eventToDisplay.getDescription());
 
         for (Member member : eventToDisplay.getEventMembers()) {

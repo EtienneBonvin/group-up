@@ -173,7 +173,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
                     }
                 });
 
-        findViewById(R.id.save_button)
+        findViewById(R.id.save_new_event_button)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -264,23 +264,24 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
         }
         eventName.setError(null);
 
-        if(compare_date(LocalDateTime.now(), builder.getStartDate()) < 0){
+        if(builder.getStartDate().isBefore(LocalDateTime.now())){
             AndroidHelper.showToast(getApplicationContext(),
-                                    getString(R.string.event_creation_toast_event_start_before_now),
-                                    Toast.LENGTH_SHORT);
+                    getString(R.string.event_creation_toast_event_start_before_now),
+                    Toast.LENGTH_SHORT);
             return;
         }
 
-        if(compare_date(builder.getStartDate(), builder.getEndDate()) < 0){
+        if(builder.getEndDate().isBefore(builder.getStartDate())){
             AndroidHelper.showToast(getApplicationContext(),
-                                    getString(R.string.event_creation_toast_event_end_before_begin),
-                                    Toast.LENGTH_SHORT);
+                    getString(R.string.event_creation_toast_event_end_before_begin),
+                    Toast.LENGTH_SHORT);
             return;
         }
-        if(compare_date(builder.getStartDate(), builder.getEndDate()) == 0){
+
+        if(builder.getStartDate().isEqual(builder.getEndDate())){
             AndroidHelper.showToast(getApplicationContext(),
-                                    getString(R.string.event_craeation_toast_event_last_1_minute),
-                                    Toast.LENGTH_SHORT);
+                    getString(R.string.event_creation_toast_event_last_1_minute),
+                    Toast.LENGTH_SHORT);
             return;
         }
 
@@ -296,27 +297,6 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
                         Intent.FLAG_ACTIVITY_CLEAR_TASK |
                         Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-    }
-
-    /**
-     * Private method to compare two LocalDateTime to the minute level.
-     * @param start LocalDateTime containing starting time
-     * @param end LocalDateTime containing ending time
-     * @return 1 if start is before end of at least 1 minute, 0 if start and end are the same
-     * to the minute level, -1 otherwise.
-     */
-    private int compare_date(LocalDateTime start, LocalDateTime end){
-        if(start.getYear() > end.getYear()) return -1;
-        if(start.getYear() < end.getYear()) return 1;
-        if(start.getMonthOfYear() > end.getMonthOfYear()) return -1;
-        if(start.getMonthOfYear() < end.getMonthOfYear()) return 1;
-        if(start.getDayOfMonth() > end.getDayOfMonth()) return -1;
-        if(start.getDayOfMonth() < end.getDayOfMonth()) return 1;
-        if(start.getHourOfDay() > end.getHourOfDay()) return -1;
-        if(start.getHourOfDay() < end.getHourOfDay()) return 1;
-        if(start.getMinuteOfHour() > end.getMinuteOfHour()) return -1;
-        if(start.getMinuteOfHour() < end.getMinuteOfHour()) return 1;
-        return 0;
     }
 
     /**
@@ -350,8 +330,10 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
 
         private String eventName = "";
         private String description = "";
-        private LocalDateTime startDate = LocalDateTime.now().plusMinutes(5);
-        private LocalDateTime endDate = LocalDateTime.now().plusMinutes(6);
+        private LocalDateTime startDate = LocalDateTime.now().plusMinutes(5)
+                .withMillisOfSecond(0).withSecondOfMinute(0);
+        private LocalDateTime endDate = LocalDateTime.now().plusMinutes(6)
+                .withMillisOfSecond(0).withSecondOfMinute(0);
         private HashSet<String> members = new HashSet<>();
 
         private EventBuilder(){}

@@ -1,158 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/container">
+    android:layout_height="match_parent">
 
     <include
-        layout="@layout/toolbar"
-        android:id="@+id/toolbar" />
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
-    <!-- User input for the event name -->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/ui_event_name"
-        android:layout_below="@id/toolbar">
+        android:layout_below="@+id/toolbar"
+        android:layout_margin="@dimen/text_margin">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.4"
-            android:text="@string/event_creation_tv_event_name"
-            android:textSize="20sp"
-            android:gravity="center_vertical"
-            android:textColor="@color/white"/>
-        <EditText
-            android:id="@+id/ui_edit_event_name"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.6"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:inputType="text"
-            android:hint="@string/event_creation_hint_event_name"
-            android:background="@color/white"/>
+        <!-- User input for the event name -->
+        <LinearLayout
+            android:id="@+id/ui_event_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="47dp"
+                android:layout_weight="0.4"
+                android:gravity="center_vertical"
+                android:text="@string/event_creation_tv_event_name"/>
 
-    <!-- User input for the starting date and time of the event -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/ui_start_time"
-        android:layout_below="@id/ui_event_name">
+            <EditText
+                android:id="@+id/ui_edit_event_name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:hint="@string/event_creation_hint_event_name"
+                android:cursorVisible="false"
+                android:inputType="text"
+                android:textColor="@color/primaryTextColor"/>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.4"
-            android:text="@string/event_creation_tv_start_time"
-            android:textSize="20sp"
-            android:gravity="center_vertical"
-            android:textColor="@color/white"/>
-        <Button
-            android:id="@+id/button_start_date"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.3"
-            android:text=""/>
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/button_start_time"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.3"
-            android:text=""/>
-
-    </LinearLayout>
-
-    <!-- User input for the ending date and time of the event -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/ui_end_time"
-        android:layout_below="@id/ui_start_time">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.4"
-            android:text="@string/event_creation_tv_end_time"
-            android:textSize="20sp"
-            android:gravity="center_vertical"
-            android:textColor="@color/white"/>
-
-        <Button
-            android:id="@+id/button_end_date"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.3"
-            android:text=""/>
-
-        <Button
-            android:id="@+id/button_end_time"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.3"
-            android:text=""/>
-
-    </LinearLayout>
-
-    <TextView
-        android:labelFor="@+id/edit_text_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/text_view_description"
-        android:text="@string/event_creation_tv_description"
-        android:layout_below="@id/ui_end_time"
-        android:textSize="20sp"
-        android:paddingTop="20sp"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/save_button"
-        android:text="@string/event_creation_button_add_event"
-        android:layout_alignParentBottom="true"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/linear_layout_friends"
-        android:layout_above="@id/save_button">
-
-        <TextView
-            android:id="@+id/number_of_members"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.7"
-            android:textSize="20sp"
-            android:gravity="bottom"/>
-
-        <Button
-            android:id="@+id/button_add_members"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:text="@string/event_creation_button_add_members"/>
-
-    </LinearLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/text_view_description"
-        android:layout_above="@id/linear_layout_friends">
-
-        <EditText
+        <!-- User input for the starting date and time of the event -->
+        <LinearLayout
+            android:id="@+id/ui_start_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textAutoComplete"
-            android:id="@id/edit_text_description"/>
+            android:layout_below="@id/ui_event_name">
 
-    </ScrollView>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:gravity="center_vertical"
+                android:text="@string/event_creation_tv_start_time"/>
 
+            <Button
+                android:id="@+id/button_start_date"
+                style="@style/DateButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:text="" />
 
+            <Button
+                android:id="@+id/button_start_time"
+                style="@style/DateButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:text="" />
+
+        </LinearLayout>
+
+        <!-- User input for the ending date and time of the event -->
+        <LinearLayout
+            android:id="@+id/ui_end_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ui_start_time">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:gravity="center_vertical"
+                android:text="@string/event_creation_tv_end_time"/>
+
+            <Button
+                android:id="@+id/button_end_date"
+                style="@style/DateButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:text="" />
+
+            <Button
+                android:id="@+id/button_end_time"
+                style="@style/DateButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:text="" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_view_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ui_end_time"
+            android:labelFor="@+id/edit_text_description"
+            android:paddingTop="20sp"
+            android:text="@string/event_creation_tv_description"/>
+
+        <Button
+            android:id="@+id/save_new_event_button"
+            style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/event_creation_button_add_event" />
+
+        <LinearLayout
+            android:id="@+id/linear_layout_friends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/save_new_event_button">
+
+            <TextView
+                android:id="@+id/number_of_members"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:gravity="bottom" />
+
+            <Button
+                android:id="@+id/button_add_members"
+                style="@style/ButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text="@string/event_creation_button_add_members" />
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/linear_layout_friends"
+            android:layout_below="@id/text_view_description">
+
+            <EditText
+                android:id="@id/edit_text_description"
+                android:layout_width="match_parent"
+                android:cursorVisible="false"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine|textNoSuggestions"
+                android:textColor="@color/primaryTextColor"/>
+
+        </ScrollView>
+
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -2,7 +2,6 @@ package ch.epfl.sweng.groupup.activity.map;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -45,7 +44,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         // Add a marker in Sydney and move the camera
         if(!Account.shared.getLocation().isEmpty()){
             LatLng sydney = new LatLng(Account.shared.getLocation().get().getLatitude(), Account.shared.getLocation().get().getLongitude());
-            mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+            mMap.addMarker(new MarkerOptions().position(sydney).title(Account.shared.getDisplayName().get()));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         }
     }

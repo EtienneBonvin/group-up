@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ch.epfl.sweng.groupup.activity.event.creation.MembersAddingActivity">
 
-    <include layout="@layout/toolbar"
-        android:id="@+id/toolbar"></include>
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <TextView
         android:id="@+id/greetings"
@@ -25,63 +25,65 @@
         android:text="@string/members_adding_tv_members"
         android:layout_below="@id/greetings"
         android:textSize="20sp"
-        android:paddingTop="20sp"
-        android:textColor="@color/white"/>
+        android:paddingTop="20sp"/>
 
     <Button
-        android:id="@+id/save_button"
+        android:id="@+id/save_added_members_button"
+        style="@style/ButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/members_adding_button_save"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:text="@string/members_adding_button_save" />
 
     <!-- User input for the email address of the invited users -->
     <LinearLayout
         android:id="@+id/layout_add_member"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/save_button"
-        android:textColor="@color/white">
+        android:layout_above="@id/save_added_members_button">
 
         <ImageView
-            android:contentDescription="@string/Logo_QR"
             android:id="@+id/buttonScanQR"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.1"
-            android:src="@drawable/qr_code_logo"/>
+            android:layout_marginStart="10dp"
+            android:layout_weight="0.08"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/Logo_QR"
+            android:cropToPadding="false"
+            android:background="@android:color/transparent"
+            android:src="@drawable/qr_code" />
 
         <EditText
+            android:id="@+id/edit_text_add_member"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
-            android:textSize="20sp"
-            android:id="@+id/edit_text_add_member"
             android:hint="@string/members_adding_hint_invite_new_members"
-            android:inputType="text"
-            android:textColor="@color/black"
-            android:background="@color/white"/>
+            android:textColor="@color/primaryTextColor"
+            android:inputType="textEmailAddress"
+            android:textSize="20sp" />
 
         <ImageView
-            android:contentDescription="@string/plus_sign"
+            android:id="@+id/image_view_add_member"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.1"
-            android:id="@+id/image_view_add_member"
-            android:src="@drawable/plussign"/>
+            android:layout_weight="0.15"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/plus_sign"
+            android:src="@drawable/ic_plus_box" />
 
     </LinearLayout>
 
     <TextView
+        android:id="@+id/text_view_add_members"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/text_view_add_members"
         android:layout_above="@id/layout_add_member"
-        android:text="@string/members_adding_tv_invite_new_members"
-        android:textSize="20sp"
         android:gravity="center"
         android:paddingTop="20sp"
-        android:textColor="@color/white"/>
+        android:text="@string/members_adding_tv_invite_new_members"
+        android:textSize="20sp" />
 
     <!-- Scroll view showing all the already added members
         with the possibility to delete them -->
@@ -96,8 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/members_list"
-            android:orientation="vertical"
-            android:textColor="@color/white">
+            android:orientation="vertical">
         </LinearLayout>
 
     </ScrollView>

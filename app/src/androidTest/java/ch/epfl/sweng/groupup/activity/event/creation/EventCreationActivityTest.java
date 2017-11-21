@@ -2,11 +2,11 @@ package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.location.Location;
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.contrib.BuildConfig;
 import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import org.hamcrest.Matchers;
 import org.joda.time.LocalDateTime;
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -27,9 +28,12 @@ import ch.epfl.sweng.groupup.object.event.Event;
 
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -40,6 +44,9 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 public class EventCreationActivityTest {
+
+    private final String EVENT_NAME = "My event";
+    private final String EVENT_DESCRIPTION = "My description";
 
     @Rule
     // third parameter is set to true which means the activity is started automatically
@@ -62,8 +69,6 @@ public class EventCreationActivityTest {
     @Test
     public void testEventWellGenerated() {
 
-        String eventName = "My event";
-
         Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
                 Optional.<String>empty(), Optional.<String>empty(), Optional.<Location>empty());
         List<Member> expectedMembers = new ArrayList<>();
@@ -75,26 +80,28 @@ public class EventCreationActivityTest {
         expectedMembers.add(emptyMember.withUUID(Member.UNKNOWN_USER + "1").withEmail("swenggroupup@gmail.com"));
         expectedMembers.add(emptyMember.withUUID(Account.shared.getUUID().getOrElse("Default UUID")));
 
-        addEventName(eventName);
+        addEventName(EVENT_NAME);
 
         Espresso.closeSoftKeyboard();
 
-        addDescription("My description");
+        addDescription(EVENT_DESCRIPTION);
 
         Espresso.closeSoftKeyboard();
 
-        LocalDateTime start = LocalDateTime.now().plusHours(1).plusMinutes(5);
-        LocalDateTime end = LocalDateTime.now().plusHours(1).plusMinutes(6);
+        LocalDateTime start = new LocalDateTime(2099, 1, 6, 9,
+                0, 0, 0);
+        LocalDateTime end = start.plusDays(4);
 
         onView(withId(R.id.button_start_date)).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
-                .perform(PickerActions.setDate(start.getYear(), start.getMonthOfYear(), start.getDayOfYear()));
+                .perform(PickerActions.setDate(start.getYear(), start
+                        .getMonthOfYear(), start.getDayOfMonth()));
         onView(withId(android.R.id.button1)).perform(click());
 
         onView(withId(R.id.button_end_date)).perform(click());
-
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
-                .perform(PickerActions.setDate(end.getYear(), end.getMonthOfYear(), end.getDayOfYear()));
+                .perform(PickerActions.setDate(end.getYear(), end
+                        .getMonthOfYear(), end.getDayOfMonth()));
         onView(withId(android.R.id.button1)).perform(click());
 
         onView(withId(R.id.button_start_time)).perform(click());
@@ -109,12 +116,16 @@ public class EventCreationActivityTest {
 
         addMembers();
         Espresso.closeSoftKeyboard();
-        onView(withId(R.id.save_button)).perform(click());
-        Event expected = new Event(eventName, start, end, "My description", expectedMembers,false);
 
-        Event found = findEvent(eventName);
-        if (BuildConfig.DEBUG && !(found.equals(expected))){
-            throw new AssertionError();
+        onView(withId(R.id.save_new_event_button)).perform(click());
+
+
+        Event found = findEvent(EVENT_NAME);
+        Event expected = new Event(found.getUUID(), EVENT_NAME, start, end,
+                                   EVENT_DESCRIPTION, expectedMembers, false);
+
+        if (!(found.equals(expected))){
+            throw new AssertionError("Expected : "+expected+".\nFound : "+found);
         }
         Account.shared.clear();
     }
@@ -124,10 +135,15 @@ public class EventCreationActivityTest {
 
         addEventName("");
         Espresso.closeSoftKeyboard();
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
         onView(withId(R.id.ui_edit_event_name))
                 .check(matches(hasErrorText(
                         getTargetContext().getString(R.string.event_creation_toast_non_empty_event_name))));
+
+        //Remove the error text for further tests
+        addEventName(EVENT_NAME);
+        onView(withId(R.id.save_new_event_button)).perform(click());
+        Account.shared.clear();
     }
 
     @Test
@@ -137,139 +153,74 @@ public class EventCreationActivityTest {
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 4, 5);
         setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
         onView(withId(R.id.ui_edit_event_name))
                 .check(matches(hasErrorText(
                         getTargetContext().getString(R.string.event_creation_toast_event_name_too_long))));
-         }
+
+        //Remove the error text for further tests
+        addEventName(EVENT_NAME);
+        onView(withId(R.id.save_new_event_button)).perform(click());
+        Account.shared.clear();
+    }
 
     @Test
     public void dateWellComparedYear1(){
-        addEventName("My event");
+        addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2099, 5, 5, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
         onView(withText(R.string.event_creation_toast_event_end_before_begin))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
+        try {
+            Thread.sleep(2000);
+        }catch(InterruptedException ie){
+            //The tests are stopped, nothing to do.
+        }
     }
 
     @Test
-    public void dateWellComparedYear2(){
-        addEventName("My event");
-        Espresso.closeSoftKeyboard();
-        setStartDate(2099, 5, 5, 5, 5);
-        setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
-        //intended(hasComponent(EventListingActivity.class.getName()));
-        Account.shared.clear();
-    }
-
-    @Test
-    public void dateWellComparedMonth1(){
-        addEventName("My event");
+    public void noCreationOnstartDateBeforeEndDate(){
+        addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 4, 5, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
         onView(withText(R.string.event_creation_toast_event_end_before_begin))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void dateWellComparedMonth2(){
-        addEventName("My event");
-        Espresso.closeSoftKeyboard();
-        setStartDate(2100, 4, 5, 5, 5);
-        setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
-        //intended(hasComponent(EventListingActivity.class.getName()));
-        Account.shared.clear();
-    }
-
-    @Test
-    public void dateWellComparedDay1(){
-        addEventName("My event");
-        Espresso.closeSoftKeyboard();
-        setStartDate(2100, 5, 5, 5, 5);
-        setEndDate(2100, 5, 4, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
-        onView(withText(R.string.event_creation_toast_event_end_before_begin))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
-                        .getWindow()
-                        .getDecorView()))))
-                .check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void dateWellComparedDay2(){
-        addEventName("My event");
-        Espresso.closeSoftKeyboard();
-        setStartDate(2100, 5, 4, 5, 5);
-        setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
-        //intended(hasComponent(EventListingActivity.class.getName()));
-        Account.shared.clear();
-    }
-
-    @Test
-    public void dateWellComparedHour1(){
-        addEventName("My event");
-        Espresso.closeSoftKeyboard();
-        setStartDate(2100, 5, 5, 5, 5);
-        setEndDate(2100, 5, 5, 4, 5);
-        onView(withId(R.id.save_button)).perform(click());
-        onView(withText(R.string.event_creation_toast_event_end_before_begin))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
-                        .getWindow()
-                        .getDecorView()))))
-                .check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void dateWellComparedHour2(){
-        addEventName("My event");
-        Espresso.closeSoftKeyboard();
-        setStartDate(2100, 5, 5, 4, 5);
-        setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
-        //intended(hasComponent(EventListingActivity.class.getName()));
-        Account.shared.clear();
-    }
-
-    @Test
-    public void dateWellComparedMinute1(){
-        addEventName("My event");
-        Espresso.closeSoftKeyboard();
-        setStartDate(2100, 5, 5, 5, 5);
-        setEndDate(2100, 5, 5, 5, 4);
-        onView(withId(R.id.save_button)).perform(click());
-        onView(withText(R.string.event_creation_toast_event_end_before_begin))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
-                        .getWindow()
-                        .getDecorView()))))
-                .check(matches(isDisplayed()));
+        try {
+            Thread.sleep(2000);
+        }catch(InterruptedException ie){
+            //The tests are stopped, nothing to do.
+        }
     }
 
     @Test
     public void atLeastOneMinuteBetweenStartAndEndDate(){
-        addEventName("My event");
+        addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_button)).perform(click());
-        onView(withText(R.string.event_craeation_toast_event_last_1_minute))
+        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withText(R.string.event_creation_toast_event_last_1_minute))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
-     }
+
+        try {
+            Thread.sleep(2000);
+        }catch(InterruptedException ie){
+            //The tests are stopped, nothing to do.
+        }
+    }
 
     @Test
     public void noEventCreationOnPastStartDate(){
@@ -278,23 +229,30 @@ public class EventCreationActivityTest {
         int month = now.getMonthOfYear();
         int year = now.getYear() - 1;
 
-        addEventName("My event");
+        addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.button_start_date)).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
                 .perform(PickerActions.setDate(year, month, day));
         onView(withId(android.R.id.button1)).perform(click());
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_new_event_button)).perform(click());
         onView(withText(R.string.event_creation_toast_event_start_before_now))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
+        try {
+            Thread.sleep(2000);
+        }catch(InterruptedException ie){
+            //The tests are stopped, nothing to do.
+        }
     }
 
     /**
      * Test QR Scanner
+     * Does not work for Jenkins because he does not have a camera
      */
+    /*
     @Test
     public void stateRestoredAfterCameraOpened(){
         String eventName = "testEventName";
@@ -306,14 +264,14 @@ public class EventCreationActivityTest {
         onView(withId(R.id.button_add_members)).perform(click());
         Espresso.closeSoftKeyboard();
         // Click scan button
-        //onView(withId(R.id.buttonScanQR)).perform(click());
+        onView(withId(R.id.buttonScanQR)).perform(click());
         // Click back
-        //Espresso.pressBack();
-        onView(withId(R.id.save_button)).perform(click());
+        Espresso.pressBack();
+        onView(withId(R.id.save_added_members_button)).perform(click());
         // Check event details
         onView(withId(R.id.ui_edit_event_name)).check(matches(withText(eventName)));
         Account.shared.clear();
-    }
+    }*/
 
     /**
      * Helper functions
@@ -376,14 +334,16 @@ public class EventCreationActivityTest {
         onView(withId(R.id.edit_text_add_member)).perform(typeText("swenggroupup@gmail.com"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.image_view_add_member)).perform(click());
-        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.save_added_members_button)).perform(click());
     }
 
     private void addEventName(String name){
+        onView(withId(R.id.ui_edit_event_name)).perform(clearText());
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
     }
 
     private void addDescription(String description){
+        onView(withId(R.id.edit_text_description)).perform(clearText());
         onView(withId(R.id.edit_text_description)).perform(typeText(description));
     }
 }
