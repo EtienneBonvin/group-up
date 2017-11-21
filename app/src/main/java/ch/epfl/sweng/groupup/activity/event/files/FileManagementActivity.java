@@ -34,6 +34,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
     private int rowHeight;
     private Event event;
     private int eventIndex;
+    private Watcher meAsWatcher;
 
     private int imagesAdded = 0;
 
@@ -57,6 +58,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
             event = Account.shared.getEvents().get(eventIndex);
         }
         event.addWatcher(this);
+        meAsWatcher = this;
 
         // Set onClickListeners to add files
         // TODO adding videos.
@@ -216,6 +218,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
 
                 intent.putExtra(FILE_EXTRA_NAME, data);
                 intent.putExtra(EVENT_INDEX, eventIndex);
+                event.removeWatcher(meAsWatcher);
                 startActivity(intent);
             }
         });
