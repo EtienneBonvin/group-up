@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
@@ -256,7 +257,8 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
     @Override
     public void notifyWatcher() {
         clearImages();
-        for(Bitmap bitmap : event.getPictures()){
+        List<Bitmap> eventPictures = event.getPictures();
+        for(Bitmap bitmap : eventPictures){
             addImageToGrid(bitmap);
         }
     }

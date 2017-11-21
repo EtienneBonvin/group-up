@@ -143,10 +143,8 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
         for(Member member : event.getEventMembers()) {
             memberId = member.getUUID().get();
             final Counter memberCount = memberCounter.get(memberId);
-            final Counter imageCount = new Counter(memberCount.getCount());
             try {
-                imageRef = folderRef.child(memberId+"/"+imageCount.getCount());
-                imageCount.increment();
+                imageRef = folderRef.child(memberId+"/"+memberCount.getCount());
 
                 imageRef.getBytes(Long.MAX_VALUE)
                         .addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -343,8 +341,8 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
             count++;
             if(!success)
                 errorCount++;
-            operating.set(false);
             if(count == timer){
+                operating.set(false);
                 if(errorCount == timer)
                     boom(true);
                 else
@@ -355,12 +353,12 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
         }
 
         private void boom(boolean allFails){
-            if(!killed.get()) {
-                if(allFails) {
-                    while (queuedUploads.size() > 0) {
-                        queuedUploads.poll().execute();
-                    }
+            if(allFails) {
+                while (queuedUploads.size() > 0) {
+                    queuedUploads.poll().execute();
                 }
+            }
+            if(!killed.get()) {
                 createAsyncDownloadTask().execute();
             }
         }
