@@ -40,6 +40,7 @@
         <activity android:name=".activity.event.creation.MembersAddingActivity" />
         <activity android:name=".activity.event.files.FileManagementActivity" />
 
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -56,6 +57,9 @@
             android:name=".activity.map.MapActivity"
             android:label="@string/title_activity_map" />
         <activity android:name=".activity.event.files.FullScreenFile"></activity>
+
+      
+
     </application>
 
 </manifest>
