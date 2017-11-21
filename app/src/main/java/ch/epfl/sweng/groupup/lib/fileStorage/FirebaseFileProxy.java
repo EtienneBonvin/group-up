@@ -1,9 +1,9 @@
 package ch.epfl.sweng.groupup.lib.fileStorage;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -12,15 +12,16 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.ref.WeakReference;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
+import ch.epfl.sweng.groupup.activity.event.files.CompressedBitmap;
 import ch.epfl.sweng.groupup.lib.Watchee;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.account.Member;
@@ -39,7 +40,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
 
     private final Event event;
 
-    private List<Bitmap> recoveredImages;
+    private List<CompressedBitmap> recoveredImages;
     private Map<String, Counter> memberCounter;
     private Set<Watcher> watchers;
     private static Queue<AsyncUploadFileTask> queuedUploads;
@@ -68,7 +69,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
         }
         operating = new SuperBoolean(false);
         allRecovered = new SuperBoolean(false);
-        queuedUploads = new PriorityQueue<>();
+        queuedUploads = new ArrayDeque<>();
         AsyncDownloadFileTask adft = createAsyncDownloadTask();
         adft.execute();
     }
@@ -79,7 +80,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
      * @param bitmap the bitmap to upload.
      */
     @Override
-    public void uploadFile(String uuid, Bitmap bitmap) {
+    public void uploadFile(String uuid, CompressedBitmap bitmap) {
         queuedUploads.offer(new AsyncUploadFileTask(this, uuid, bitmap));
     }
 
@@ -99,17 +100,18 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
         killed.set(true);
     }
 
-    private void effectivelyUploadFile(String uuid, Bitmap bitmap){
+    private void effectivelyUploadFile(String uuid, CompressedBitmap bitmap){
         Counter memberCount = memberCounter.get(uuid);
         StorageReference imageRef = storageRef.child(event.getUUID()+"/"+uuid+"/"+memberCount.getCount());
 
-        Bitmap scaledBitmap = scaleBitmap(bitmap);
+        Bitmap scaledBitmap = scaleBitmap(bitmap.asBitmap());
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
 
         imageRef.putBytes(data);
+        scaledBitmap.recycle();
     }
 
     //TODO this method does nothing for now (the bitmap given is always < 1MB)
@@ -117,7 +119,10 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
     private Bitmap scaleBitmap(Bitmap bitmap){
         Bitmap scaledBitmap = bitmap;
         while(scaledBitmap.getByteCount()/8 > MAX_FILE_SIZE){
-            //scaledBitmap = fastblur(scaledBitmap);
+            Log.e("Alpha", scaledBitmap.getByteCount()+"");
+            Bitmap result = fastblur(scaledBitmap);
+            scaledBitmap = result.copy(result.getConfig(), false);
+            Log.e("Zoulou", scaledBitmap.getByteCount()+"");
         }
         return scaledBitmap;
     }
@@ -127,7 +132,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
      * @return a list of bitmap of the pictures of the event.
      */
     @Override
-    public List<Bitmap> getFromDatabase() {
+    public List<CompressedBitmap> getFromDatabase() {
         return new ArrayList<>(recoveredImages);
     }
 
@@ -157,7 +162,8 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
                         .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                             @Override
                             public void onSuccess(byte[] bytes) {
-                                recoveredImages.add(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                                recoveredImages.add(
+                                        new CompressedBitmap(bytes));
                                 memberCount.increment();
                                 notifyAllWatchers();
                                 ticker.tick(true);
@@ -280,7 +286,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
 
         private final WeakReference<FirebaseFileProxy> wproxy;
         private final String uuid;
-        private final Bitmap image;
+        private final CompressedBitmap image;
 
         /**
          * Constructor for AsyncDownloadFileTask.
@@ -290,7 +296,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
          * @param uuid the user's id.
          * @param image the image to upload.
          */
-        private AsyncUploadFileTask(FirebaseFileProxy proxy, String uuid, Bitmap image){
+        private AsyncUploadFileTask(FirebaseFileProxy proxy, String uuid, CompressedBitmap image){
             wproxy = new WeakReference<>(proxy);
             this.uuid = uuid;
             this.image = image;
@@ -360,7 +366,8 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
     /*
      * Stack Blur Algorithm by Mario Klingemann <mario@quasimondo.com>
      */
-    /*private Bitmap fastblur(Bitmap sentBitmap) {
+    private Bitmap fastblur(Bitmap sentBitmap) {
+        Log.e("Bravo", "");
 
         // Settings of the blurring algorithm.
         int radius = 1;
@@ -564,5 +571,5 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
         bitmap.setPixels(pix, 0, w, 0, 0, w, h);
 
         return (bitmap);
-    }*/
+    }
 }

@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -18,20 +17,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.List;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Helper;
 import ch.epfl.sweng.groupup.lib.Watcher;
-import ch.epfl.sweng.groupup.lib.fileStorage.FirebaseFileProxy;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
 
@@ -107,8 +104,8 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
             @Override
             public void onGlobalLayout() {
                 container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                for (Bitmap bitmap : event.getPictures()) {
-                    addImageToGrid(bitmap);
+                for (CompressedBitmap bitmap : event.getPictures()) {
+                    addImageToGrid(bitmap, false);
                 }
             }
         });
@@ -161,8 +158,8 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            addImageToGrid(imageBitmap);
-            event.addPicture(Account.shared.getUUID().getOrElse("Default ID"), imageBitmap);
+            CompressedBitmap compressedBitmap = new CompressedBitmap(imageBitmap);
+            addImageToGrid(compressedBitmap, true);
         }else if (resultCode == RESULT_OK) {
             Uri targetUri = data.getData();
 
@@ -194,13 +191,13 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
                 return;
             }
 
-            if (bitmap.getByteCount() / 8 > FirebaseFileProxy.MAX_FILE_SIZE) {
+            /*if (bitmap.getByteCount() / 8 > FirebaseFileProxy.MAX_FILE_SIZE) {
                 Helper.showToast(getApplicationContext(),
                         getString(R.string.file_management_toast_error_file_too_big),
                         Toast.LENGTH_SHORT);
-            } else {
-                addImageToGrid(bitmap);
-                event.addPicture(Account.shared.getUUID().getOrElse("Default ID"), bitmap);
+            } else*/ {
+                CompressedBitmap compressedBitmap = new CompressedBitmap(bitmap);
+                addImageToGrid(compressedBitmap, true);
             }
         }
     }
@@ -262,7 +259,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
      *
      * @param bitmap the image to add.
      */
-    private void addImageToGrid(final Bitmap bitmap) {
+    private void addImageToGrid(final CompressedBitmap bitmap, boolean addToDatabase) {
         ImageView image = new ImageView(this);
 
         GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
@@ -270,18 +267,16 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
         layoutParams.height = rowHeight;
         image.setLayoutParams(layoutParams);
 
-        image.setImageBitmap(trimBitmap(bitmap));
+        Bitmap trimed = trimBitmap(bitmap.asBitmap());
+
+        image.setImageBitmap(trimed);
 
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), FullScreenFile.class);
 
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                byte[] data = baos.toByteArray();
-
-                intent.putExtra(FILE_EXTRA_NAME, data);
+                intent.putExtra(FILE_EXTRA_NAME, bitmap.asByteArray());
                 intent.putExtra(EVENT_INDEX, eventIndex);
                 event.removeWatcher(meAsWatcher);
                 startActivity(intent);
@@ -290,6 +285,10 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
 
         ((GridLayout) findViewById(R.id.image_grid))
                 .addView(image, imagesAdded++);
+
+        if(addToDatabase)
+            event.addPicture(Account.shared.getUUID().getOrElse("Default ID"),
+                    new CompressedBitmap(trimed));
     }
 
     /**
@@ -315,8 +314,10 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
         int cutOnSide = (scaled.getWidth() - columnWidth) / 2;
         int cutOnTop = (scaled.getHeight() - rowHeight) / 2;
 
-        return Bitmap.createBitmap(scaled, cutOnSide, cutOnTop,
+        scaled = Bitmap.createBitmap(scaled, cutOnSide, cutOnTop,
                 columnWidth, rowHeight);
+
+        return scaled;
     }
 
     /**
@@ -326,10 +327,9 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
     @Override
     public void notifyWatcher() {
         clearImages();
-        List<Bitmap> eventPictures = event.getPictures();
-        for(Bitmap bitmap : eventPictures){
-
-            addImageToGrid(bitmap);
+        List<CompressedBitmap> eventPictures = event.getPictures();
+        for(CompressedBitmap bitmap : eventPictures){
+            addImageToGrid(bitmap, false);
         }
     }
 }
