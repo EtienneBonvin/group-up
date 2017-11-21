@@ -13,11 +13,8 @@ import android.widget.LinearLayout;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -56,7 +53,6 @@ public class EventListingActivity extends ToolbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_listing);
         super.initializeToolbarActivity();
-        //     autoUpdate = new Timer();
         initView();
     }
 

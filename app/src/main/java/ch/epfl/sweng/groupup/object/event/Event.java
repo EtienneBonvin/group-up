@@ -298,7 +298,7 @@ public final class Event implements Serializable, Watcher, Watchee{
                 ", endDate=" + endTime + '\'' +
                 ", eventStatus=" + getEventStatus() + '\'' +
                 ", eventID= " + UUID +
-                ", invitation= " +invitation+ + '\''+
+                ", invitation= " + invitation +
                 '}';
     }
 

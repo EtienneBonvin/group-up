@@ -86,6 +86,7 @@ public class EventsShould {
                 ", endDate=" + end + '\'' +
                 ", eventStatus=" + eventStatus + '\'' +
                 ", eventID= " + ID +
+                ", invitation= " + ""+event.getInvitation()+
                 '}';
         event = event.withStartTime(start);
         event = event.withEndTime(end);
