@@ -3,7 +3,6 @@ package ch.epfl.sweng.groupup.lib.fileStorage;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -118,12 +117,12 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
     //This can be changed to blur all images that are too big.
     private Bitmap scaleBitmap(Bitmap bitmap){
         Bitmap scaledBitmap = bitmap;
-        while(scaledBitmap.getByteCount()/8 > MAX_FILE_SIZE){
+        /*while(scaledBitmap.getByteCount()/8 > MAX_FILE_SIZE){
             Log.e("Alpha", scaledBitmap.getByteCount()+"");
             Bitmap result = fastblur(scaledBitmap);
             scaledBitmap = result.copy(result.getConfig(), false);
             Log.e("Zoulou", scaledBitmap.getByteCount()+"");
-        }
+        }*/
         return scaledBitmap;
     }
 
@@ -366,7 +365,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
     /*
      * Stack Blur Algorithm by Mario Klingemann <mario@quasimondo.com>
      */
-    private Bitmap fastblur(Bitmap sentBitmap) {
+    /*private Bitmap fastblur(Bitmap sentBitmap) {
         Log.e("Bravo", "");
 
         // Settings of the blurring algorithm.
@@ -571,5 +570,5 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
         bitmap.setPixels(pix, 0, w, 0, 0, w, h);
 
         return (bitmap);
-    }
+    }*/
 }
