@@ -106,7 +106,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
     private Bitmap scaleBitmap(Bitmap bitmap){
         Bitmap scaledBitmap = bitmap;
         while(scaledBitmap.getByteCount()/8 > MAX_FILE_SIZE){
-            scaledBitmap = fastblur(scaledBitmap);
+            //scaledBitmap = fastblur(scaledBitmap);
         }
         return scaledBitmap;
     }
@@ -369,7 +369,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
     /*
      * Stack Blur Algorithm by Mario Klingemann <mario@quasimondo.com>
      */
-    private Bitmap fastblur(Bitmap sentBitmap) {
+    /*private Bitmap fastblur(Bitmap sentBitmap) {
 
         // Settings of the blurring algorithm.
         int radius = 1;
@@ -573,5 +573,5 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
         bitmap.setPixels(pix, 0, w, 0, 0, w, h);
 
         return (bitmap);
-    }
+    }*/
 }
