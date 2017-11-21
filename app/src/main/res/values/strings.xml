@@ -98,5 +98,26 @@
     <string name="event_invitation_dialog_members">Members in the event :</string>
     <string name="event_invitation_dialog_unknow">Name unknown (this mean that this user has not accept the invitation yet)</string>
     <string name="event_listing_extraindex">eventIndex</string>
+    <string name="sweng_email">swenggroupup@gmail.com</string>
+    <string name="sweng_password">swengswengsweng</string>
+    <string name="gmail_protocol_key">mail.transport.protocol</string>
+    <string name="gmail_protocol_value">smtp</string>
+    <string name="gmail_host">smtp.gmail.com</string>
+    <string name="gmail_host_key">mail.host</string>
+    <string name="gmail_auth_key">mail.smtp.auth</string>
+    <string name="gmail_host_value">true</string>
+    <string name="gmail_port_key">mail.smtp.port</string>
+    <string name="gmail_port_value">465</string>
+    <string name="gmail_socketFactory_key">mail.smtp.socketFactory.port</string>
+    <string name="gmail_socketFactory_value">465</string>
+    <string name="gmail_socketFactory_class_key">mail.smtp.socketFactory.class</string>
+    <string name="gmail_socketFactory_class_value">javax.net.ssl.SSLSocketFactory</string>
+    <string name="gmail_socketFactory_fallback_key">mail.smtp.socketFactory.fallback</string>
+    <string name="gmail_socketFactory_fallback_value">false</string>
+    <string name="gmail_quitwait_key">mail.smtp.quitwait</string>
+    <string name="gmail_quitwait_value">false</string>
+    <string name="invitationMail_content">That app rocks!</string>
+    <string name="invitationMail_senderAddress"><![CDATA[GroupUp! <swenggroupup@gmail.com>]]></string>
+    <string name="invitationMail_subject">Hello ✌️</string>
 
 </resources>

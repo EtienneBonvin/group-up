@@ -25,6 +25,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.lib.AndroidHelper;
 
 public class GMailService implements MailService {
@@ -56,7 +57,7 @@ public class GMailService implements MailService {
         protected Void doInBackground(String... receiverEmailAddress) {
             for (String recMail : receiverEmailAddress) {
                 try {
-                    GMailSender sender = new GMailSender();
+                    GMailSender sender = new GMailSender(ctx);
                     sender.sendMail(recMail);
                 } catch (Exception e) {
                     AndroidHelper.showToast(ctx, "Unable to send an email to " + recMail, Toast.LENGTH_SHORT);
@@ -70,30 +71,32 @@ public class GMailService implements MailService {
         private String user;
         private String password;
         private Session session;
+        private Context ctx;
 
         static {
             Security.addProvider(new JSSEProvider());
         }
 
-        public GMailSender() {
-            this.user = "swenggroupup@gmail.com";
-            this.password = "swengswengsweng";
+        public GMailSender(final Context ctx) {
+            this.ctx = ctx;
+            this.user = ctx.getString(R.string.sweng_email);
+            this.password = ctx.getString(R.string.sweng_password);
 
             Properties props = new Properties();
-            props.setProperty("mail.transport.protocol", "smtp");
-            String mailhost = "smtp.gmail.com";
-            props.setProperty("mail.host", mailhost);
-            props.put("mail.smtp.auth", "true");
-            props.put("mail.smtp.port", "465");
-            props.put("mail.smtp.socketFactory.port", "465");
-            props.put("mail.smtp.socketFactory.class",
-                    "javax.net.ssl.SSLSocketFactory");
-            props.put("mail.smtp.socketFactory.fallback", "false");
-            props.setProperty("mail.smtp.quitwait", "false");
+            props.setProperty(ctx.getString(R.string.gmail_protocol_key), ctx.getString(R.string.gmail_protocol_value));
+            String mailhost = ctx.getString(R.string.gmail_host);
+            props.setProperty(ctx.getString(R.string.gmail_host_key), mailhost);
+            props.put(ctx.getString(R.string.gmail_auth_key), ctx.getString(R.string.gmail_host_value));
+            props.put(ctx.getString(R.string.gmail_port_key), ctx.getString(R.string.gmail_port_value));
+            props.put(ctx.getString(R.string.gmail_socketFactory_key), ctx.getString(R.string.gmail_socketFactory_value));
+            props.put(ctx.getString(R.string.gmail_socketFactory_class_key),
+                    ctx.getString(R.string.gmail_socketFactory_class_value));
+            props.put(ctx.getString(R.string.gmail_socketFactory_fallback_key), ctx.getString(R.string.gmail_socketFactory_fallback_value));
+            props.setProperty(ctx.getString(R.string.gmail_quitwait_key), ctx.getString(R.string.gmail_quitwait_value));
 
             session = Session.getInstance(props, new javax.mail.Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication("swenggroupup@gmail.com", "swengswengsweng");
+                    return new PasswordAuthentication(ctx.getString(R.string.sweng_email), ctx.getString(R.string.sweng_password));
                 }
             });
         }
@@ -101,9 +104,9 @@ public class GMailService implements MailService {
         public synchronized void sendMail(String recipients) throws Exception {
             try{
                 MimeMessage message = new MimeMessage(session);
-                DataHandler handler = new DataHandler(new ByteArrayDataSource("That app rocks!".getBytes()));
-                message.setSender(new InternetAddress("GroupUp! <swenggroupup@gmail.com>"));
-                message.setSubject("Hello ✌️");
+                DataHandler handler = new DataHandler(new ByteArrayDataSource(ctx.getString(R.string.invitationMail_content).getBytes()));
+                message.setSender(new InternetAddress(ctx.getString(R.string.invitationMail_senderAddress)));
+                message.setSubject(ctx.getString(R.string.invitationMail_subject));
                 message.setDataHandler(handler);
                 if (recipients.indexOf(',') > 0)
                     message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
@@ -116,13 +119,16 @@ public class GMailService implements MailService {
         }
 
         public class ByteArrayDataSource implements DataSource {
+            private String TYPE = "text/plain";
+            private String CONTENT_TYPE = "application/octet-stream";
+
             private byte[] data;
             private String type;
 
             public ByteArrayDataSource(byte[] data) {
                 super();
                 this.data = data;
-                this.type = "text/plain";
+                this.type = TYPE;
             }
 
             public void setType(String type) {
@@ -131,7 +137,7 @@ public class GMailService implements MailService {
 
             public String getContentType() {
                 if (type == null)
-                    return "application/octet-stream";
+                    return CONTENT_TYPE;
                 else
                     return type;
             }
