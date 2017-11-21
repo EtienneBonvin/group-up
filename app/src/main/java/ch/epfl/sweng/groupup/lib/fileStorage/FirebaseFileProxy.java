@@ -47,6 +47,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
     private final SuperBoolean operating;
     private final TimeBomb ticker;
     private final SuperBoolean killed;
+    private final SuperBoolean allRecovered;
 
     // One MB is the maximum file size while using Firebase Storage.
     public final static  int MAX_FILE_SIZE = 1000*1000;
@@ -65,9 +66,10 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
         for(Member member : event.getEventMembers()){
             memberCounter.put(member.getUUID().getOrElse("Default ID"), new Counter());
         }
-        operating = SuperBoolean.getSuperBooleanInstance();
+        operating = new SuperBoolean(false);
+        allRecovered = new SuperBoolean(false);
         queuedUploads = new PriorityQueue<>();
-        AsyncDownloadFileTask adft = new AsyncDownloadFileTask(this);
+        AsyncDownloadFileTask adft = createAsyncDownloadTask();
         adft.execute();
     }
 
@@ -79,6 +81,15 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
     @Override
     public void uploadFile(String uuid, Bitmap bitmap) {
         queuedUploads.offer(new AsyncUploadFileTask(this, uuid, bitmap));
+    }
+
+    /**
+     * Indicates whether all files have been recovered from the Firebase Storage.
+     * @return true if all files have been recovered, false otherwise.
+     */
+    @Override
+    public boolean isAllRecovered(){
+        return allRecovered.get();
     }
 
     /**
@@ -113,14 +124,10 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
 
     /**
      * Return the last images recovered from the storage.
-     * The proxy refreshes its content asynchronously each time this
-     * method is called.
      * @return a list of bitmap of the pictures of the event.
      */
     @Override
     public List<Bitmap> getFromDatabase() {
-        AsyncDownloadFileTask adft = new AsyncDownloadFileTask(this);
-        adft.execute();
         return new ArrayList<>(recoveredImages);
     }
 
@@ -143,10 +150,8 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
         for(Member member : event.getEventMembers()) {
             memberId = member.getUUID().get();
             final Counter memberCount = memberCounter.get(memberId);
-            final Counter imageCount = new Counter(memberCount.getCount());
             try {
-                imageRef = folderRef.child(memberId+"/"+imageCount.getCount());
-                imageCount.increment();
+                imageRef = folderRef.child(memberId+"/"+memberCount.getCount());
 
                 imageRef.getBytes(Long.MAX_VALUE)
                         .addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -204,15 +209,6 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
         }
 
         /**
-         * Constructor with one argument for the counter.
-         * Initialize the counter to the given value.
-         * @param count the value to initialize the count.
-         */
-        private Counter(int count){
-            this.count = count;
-        }
-
-        /**
          * Increment the counter of one unit.
          */
         private void increment(){
@@ -229,18 +225,10 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
     }
 
     private static class SuperBoolean {
-        private static SuperBoolean instance;
         private boolean value;
 
         private SuperBoolean(boolean initialValue){
             value = initialValue;
-        }
-
-        private static SuperBoolean getSuperBooleanInstance(){
-            if(instance == null){
-                instance = new SuperBoolean(false);
-            }
-            return instance;
         }
 
         private boolean get(){
@@ -343,8 +331,8 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
             count++;
             if(!success)
                 errorCount++;
-            operating.set(false);
             if(count == timer){
+                operating.set(false);
                 if(errorCount == timer)
                     boom(true);
                 else
@@ -355,12 +343,15 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
         }
 
         private void boom(boolean allFails){
-            if(!killed.get()) {
-                if(allFails) {
-                    while (queuedUploads.size() > 0) {
-                        queuedUploads.poll().execute();
-                    }
+            if(allFails) {
+                allRecovered.set(true);
+                if (!queuedUploads.isEmpty()) {
+                    queuedUploads.poll().execute();
                 }
+            }else{
+                allRecovered.set(false);
+            }
+            if(!killed.get()) {
                 createAsyncDownloadTask().execute();
             }
         }

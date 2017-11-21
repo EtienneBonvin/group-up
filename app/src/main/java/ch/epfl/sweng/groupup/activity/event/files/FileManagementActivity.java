@@ -21,6 +21,7 @@ import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,6 +44,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
     private int rowHeight;
     private Event event;
     private int eventIndex;
+    private Watcher meAsWatcher;
 
     private int imagesAdded = 0;
 
@@ -69,6 +71,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
             event = Account.shared.getEvents().get(eventIndex);
         }
         event.addWatcher(this);
+        meAsWatcher = this;
 
         // Set onClickListeners to add files
         // TODO adding videos.
@@ -280,6 +283,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
 
                 intent.putExtra(FILE_EXTRA_NAME, data);
                 intent.putExtra(EVENT_INDEX, eventIndex);
+                event.removeWatcher(meAsWatcher);
                 startActivity(intent);
             }
         });
@@ -322,7 +326,9 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
     @Override
     public void notifyWatcher() {
         clearImages();
-        for (Bitmap bitmap : event.getPictures()) {
+        List<Bitmap> eventPictures = event.getPictures();
+        for(Bitmap bitmap : eventPictures){
+
             addImageToGrid(bitmap);
         }
     }
