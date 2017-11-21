@@ -166,6 +166,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
         displayEventName.setText(eventToDisplay.getEventName());
         displayEventStartDate.setText(eventToDisplay.getStartTimeToString());
         displayEventEndDate.setText(eventToDisplay.getEndTimeToString());
+
         displayEventDescription.setText(eventToDisplay.getDescription());
 
         for (Member member : eventToDisplay.getEventMembers()) {
