@@ -78,11 +78,10 @@ public class EventListingActivity extends ToolbarActivity {
 
     @Override
     public void onPause() {
-        if (!(autoUpdate == null)) {
+        if (autoUpdate != null) {
             autoUpdate.cancel();
-            super.onPause();
         }
-
+        super.onPause();
     }
 
     private void initView() {
