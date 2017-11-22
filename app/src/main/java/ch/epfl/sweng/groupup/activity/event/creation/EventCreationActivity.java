@@ -336,7 +336,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
             this.email = "";
         }
 
-        private MemberRepresentation(String email){
+        MemberRepresentation(String email){
             this.email = email;
             this.displayName = "";
             this.UUID = "";

@@ -59,9 +59,10 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        EditText memberUId = findViewById(R.id.edit_text_add_member);
-                        addNewMember(memberUId.getText().toString());
-                        memberUId.setText("");
+                        EditText memberEmail = findViewById(R.id.edit_text_add_member);
+                        MemberRepresentation newRep = new MemberRepresentation(memberEmail.getText().toString());
+                        addNewMember(newRep);
+                        memberEmail.setText("");
                     }
                 });
 
