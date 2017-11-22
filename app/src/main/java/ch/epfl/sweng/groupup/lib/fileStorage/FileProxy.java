@@ -1,7 +1,5 @@
 package ch.epfl.sweng.groupup.lib.fileStorage;
 
-import android.graphics.Bitmap;
-
 import java.util.List;
 
 import ch.epfl.sweng.groupup.activity.event.files.CompressedBitmap;
