@@ -1,7 +1,5 @@
 package ch.epfl.sweng.groupup.lib.fileStorage;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
@@ -10,17 +8,17 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.ByteArrayOutputStream;
 import java.lang.ref.WeakReference;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
+import ch.epfl.sweng.groupup.activity.event.files.CompressedBitmap;
 import ch.epfl.sweng.groupup.lib.Watchee;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.account.Member;
@@ -39,7 +37,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
 
     private final Event event;
 
-    private List<Bitmap> recoveredImages;
+    private List<CompressedBitmap> recoveredImages;
     private Map<String, Counter> memberCounter;
     private Set<Watcher> watchers;
     private static Queue<AsyncUploadFileTask> queuedUploads;
@@ -48,9 +46,6 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
     private final TimeBomb ticker;
     private final SuperBoolean killed;
     private final SuperBoolean allRecovered;
-
-    // One MB is the maximum file size while using Firebase Storage.
-    public final static  int MAX_FILE_SIZE = 1000*1000;
 
     /**
      * Constructor for FirebaseFileProxy
@@ -68,7 +63,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
         }
         operating = new SuperBoolean(false);
         allRecovered = new SuperBoolean(false);
-        queuedUploads = new PriorityQueue<>();
+        queuedUploads = new ArrayDeque<>();
         AsyncDownloadFileTask adft = createAsyncDownloadTask();
         adft.execute();
     }
@@ -79,7 +74,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
      * @param bitmap the bitmap to upload.
      */
     @Override
-    public void uploadFile(String uuid, Bitmap bitmap) {
+    public void uploadFile(String uuid, CompressedBitmap bitmap) {
         queuedUploads.offer(new AsyncUploadFileTask(this, uuid, bitmap));
     }
 
@@ -99,27 +94,10 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
         killed.set(true);
     }
 
-    private void effectivelyUploadFile(String uuid, Bitmap bitmap){
+    private void effectivelyUploadFile(String uuid, CompressedBitmap bitmap){
         Counter memberCount = memberCounter.get(uuid);
         StorageReference imageRef = storageRef.child(event.getUUID()+"/"+uuid+"/"+memberCount.getCount());
-
-        Bitmap scaledBitmap = scaleBitmap(bitmap);
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-
-        imageRef.putBytes(data);
-    }
-
-    //TODO this method does nothing for now (the bitmap given is always < 1MB)
-    //This can be changed to blur all images that are too big.
-    private Bitmap scaleBitmap(Bitmap bitmap){
-        Bitmap scaledBitmap = bitmap;
-        while(scaledBitmap.getByteCount()/8 > MAX_FILE_SIZE){
-            //scaledBitmap = fastblur(scaledBitmap);
-        }
-        return scaledBitmap;
+        imageRef.putBytes(bitmap.asByteArray());
     }
 
     /**
@@ -127,7 +105,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
      * @return a list of bitmap of the pictures of the event.
      */
     @Override
-    public List<Bitmap> getFromDatabase() {
+    public List<CompressedBitmap> getFromDatabase() {
         return new ArrayList<>(recoveredImages);
     }
 
@@ -157,7 +135,8 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
                         .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                             @Override
                             public void onSuccess(byte[] bytes) {
-                                recoveredImages.add(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                                recoveredImages.add(
+                                        new CompressedBitmap(bytes));
                                 memberCount.increment();
                                 notifyAllWatchers();
                                 ticker.tick(true);
@@ -280,7 +259,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
 
         private final WeakReference<FirebaseFileProxy> wproxy;
         private final String uuid;
-        private final Bitmap image;
+        private final CompressedBitmap image;
 
         /**
          * Constructor for AsyncDownloadFileTask.
@@ -290,7 +269,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
          * @param uuid the user's id.
          * @param image the image to upload.
          */
-        private AsyncUploadFileTask(FirebaseFileProxy proxy, String uuid, Bitmap image){
+        private AsyncUploadFileTask(FirebaseFileProxy proxy, String uuid, CompressedBitmap image){
             wproxy = new WeakReference<>(proxy);
             this.uuid = uuid;
             this.image = image;
@@ -356,213 +335,4 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
             }
         }
     }
-
-    /*
-     * Stack Blur Algorithm by Mario Klingemann <mario@quasimondo.com>
-     */
-    /*private Bitmap fastblur(Bitmap sentBitmap) {
-
-        // Settings of the blurring algorithm.
-        int radius = 1;
-        float scale = 1f;
-
-        int width = Math.round(sentBitmap.getWidth() * scale);
-        int height = Math.round(sentBitmap.getHeight() * scale);
-        sentBitmap = Bitmap.createScaledBitmap(sentBitmap, width, height, false);
-
-        Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
-
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-
-        int[] pix = new int[w * h];
-        bitmap.getPixels(pix, 0, w, 0, 0, w, h);
-
-        int wm = w - 1;
-        int hm = h - 1;
-        int wh = w * h;
-        int div = radius + radius + 1;
-
-        int r[] = new int[wh];
-        int g[] = new int[wh];
-        int b[] = new int[wh];
-        int rsum, gsum, bsum, x, y, i, p, yp, yi, yw;
-        int vmin[] = new int[Math.max(w, h)];
-
-        int divsum = (div + 1) >> 1;
-        divsum *= divsum;
-        int dv[] = new int[256 * divsum];
-        for (i = 0; i < 256 * divsum; i++) {
-            dv[i] = (i / divsum);
-        }
-
-        yw = yi = 0;
-
-        int[][] stack = new int[div][3];
-        int stackpointer;
-        int stackstart;
-        int[] sir;
-        int rbs;
-        int r1 = radius + 1;
-        int routsum, goutsum, boutsum;
-        int rinsum, ginsum, binsum;
-
-        for (y = 0; y < h; y++) {
-            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
-            for (i = -radius; i <= radius; i++) {
-                p = pix[yi + Math.min(wm, Math.max(i, 0))];
-                sir = stack[i + radius];
-                sir[0] = (p & 0xff0000) >> 16;
-                sir[1] = (p & 0x00ff00) >> 8;
-                sir[2] = (p & 0x0000ff);
-                rbs = r1 - Math.abs(i);
-                rsum += sir[0] * rbs;
-                gsum += sir[1] * rbs;
-                bsum += sir[2] * rbs;
-                if (i > 0) {
-                    rinsum += sir[0];
-                    ginsum += sir[1];
-                    binsum += sir[2];
-                } else {
-                    routsum += sir[0];
-                    goutsum += sir[1];
-                    boutsum += sir[2];
-                }
-            }
-            stackpointer = radius;
-
-            for (x = 0; x < w; x++) {
-
-                r[yi] = dv[rsum];
-                g[yi] = dv[gsum];
-                b[yi] = dv[bsum];
-
-                rsum -= routsum;
-                gsum -= goutsum;
-                bsum -= boutsum;
-
-                stackstart = stackpointer - radius + div;
-                sir = stack[stackstart % div];
-
-                routsum -= sir[0];
-                goutsum -= sir[1];
-                boutsum -= sir[2];
-
-                if (y == 0) {
-                    vmin[x] = Math.min(x + radius + 1, wm);
-                }
-                p = pix[yw + vmin[x]];
-
-                sir[0] = (p & 0xff0000) >> 16;
-                sir[1] = (p & 0x00ff00) >> 8;
-                sir[2] = (p & 0x0000ff);
-
-                rinsum += sir[0];
-                ginsum += sir[1];
-                binsum += sir[2];
-
-                rsum += rinsum;
-                gsum += ginsum;
-                bsum += binsum;
-
-                stackpointer = (stackpointer + 1) % div;
-                sir = stack[(stackpointer) % div];
-
-                routsum += sir[0];
-                goutsum += sir[1];
-                boutsum += sir[2];
-
-                rinsum -= sir[0];
-                ginsum -= sir[1];
-                binsum -= sir[2];
-
-                yi++;
-            }
-            yw += w;
-        }
-        for (x = 0; x < w; x++) {
-            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
-            yp = -radius * w;
-            for (i = -radius; i <= radius; i++) {
-                yi = Math.max(0, yp) + x;
-
-                sir = stack[i + radius];
-
-                sir[0] = r[yi];
-                sir[1] = g[yi];
-                sir[2] = b[yi];
-
-                rbs = r1 - Math.abs(i);
-
-                rsum += r[yi] * rbs;
-                gsum += g[yi] * rbs;
-                bsum += b[yi] * rbs;
-
-                if (i > 0) {
-                    rinsum += sir[0];
-                    ginsum += sir[1];
-                    binsum += sir[2];
-                } else {
-                    routsum += sir[0];
-                    goutsum += sir[1];
-                    boutsum += sir[2];
-                }
-
-                if (i < hm) {
-                    yp += w;
-                }
-            }
-            yi = x;
-            stackpointer = radius;
-            for (y = 0; y < h; y++) {
-                // Preserve alpha channel: ( 0xff000000 & pix[yi] )
-                pix[yi] = ( 0xff000000 & pix[yi] ) | ( dv[rsum] << 16 ) | ( dv[gsum] << 8 ) | dv[bsum];
-
-                rsum -= routsum;
-                gsum -= goutsum;
-                bsum -= boutsum;
-
-                stackstart = stackpointer - radius + div;
-                sir = stack[stackstart % div];
-
-                routsum -= sir[0];
-                goutsum -= sir[1];
-                boutsum -= sir[2];
-
-                if (x == 0) {
-                    vmin[y] = Math.min(y + r1, hm) * w;
-                }
-                p = x + vmin[y];
-
-                sir[0] = r[p];
-                sir[1] = g[p];
-                sir[2] = b[p];
-
-                rinsum += sir[0];
-                ginsum += sir[1];
-                binsum += sir[2];
-
-                rsum += rinsum;
-                gsum += ginsum;
-                bsum += binsum;
-
-                stackpointer = (stackpointer + 1) % div;
-                sir = stack[stackpointer];
-
-                routsum += sir[0];
-                goutsum += sir[1];
-                boutsum += sir[2];
-
-                rinsum -= sir[0];
-                ginsum -= sir[1];
-                binsum -= sir[2];
-
-                yi += w;
-            }
-        }
-
-        bitmap.setPixels(pix, 0, w, 0, 0, w, h);
-
-        return (bitmap);
-    }*/
 }

@@ -1,5 +1,6 @@
 package ch.epfl.sweng.groupup.object.map;
 
+import android.annotation.SuppressLint;
 import android.location.Location;
 import android.location.LocationManager;
 
@@ -38,6 +39,7 @@ public class PointsOfInterestShould {
         new PointOfInterest(DEFAULT_NAME, DEFAULT_DESCRIPTION, null);
     }
 
+    @SuppressLint("Assert")
     @Test
     public void haveCorrectGetters(){
         assertEquals(defaultPoint.getName(), DEFAULT_NAME);
@@ -47,6 +49,7 @@ public class PointsOfInterestShould {
 
     }
 
+    @SuppressLint("Assert")
     @Test
     public void haveCorrectSetters(){
         Location testLocation = new Location(defaultLocation);

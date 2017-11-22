@@ -18,9 +18,9 @@ final class DatabaseUser {
      * Class to represent the user object that will be stored in the database.
      */
 
-    public String given_name = EMPTY_FIELD;
-    public String family_name = EMPTY_FIELD;
-    public String display_name = EMPTY_FIELD;
+    public String givenName = EMPTY_FIELD;
+    public String familyName = EMPTY_FIELD;
+    public String displayName = EMPTY_FIELD;
     public String email = EMPTY_FIELD;
     public String uuid = EMPTY_FIELD;
     public String latitude = EMPTY_FIELD;
@@ -30,15 +30,15 @@ final class DatabaseUser {
     public DatabaseUser() {
     }
 
-    DatabaseUser(Optional<String> given_name,
-                        Optional<String> family_name,
-                        Optional<String> display_name,
-                        Optional<String> email,
-                        Optional<String> uuid,
-                        Optional<Location> location) {
-        this.given_name = given_name.getOrElse(EMPTY_FIELD);
-        this.family_name = family_name.getOrElse(EMPTY_FIELD);
-        this.display_name = display_name.getOrElse(EMPTY_FIELD);
+    DatabaseUser(Optional<String> givenName,
+                 Optional<String> familyName,
+                 Optional<String> displayName,
+                 Optional<String> email,
+                 Optional<String> uuid,
+                 Optional<Location> location) {
+        this.givenName = givenName.getOrElse(EMPTY_FIELD);
+        this.familyName = familyName.getOrElse(EMPTY_FIELD);
+        this.displayName = displayName.getOrElse(EMPTY_FIELD);
         this.email = email.getOrElse(EMPTY_FIELD);
         this.uuid = uuid.getOrElse(EMPTY_FIELD);
 
@@ -53,16 +53,16 @@ final class DatabaseUser {
         }
     }
 
-    public String getGiven_name() {
-        return given_name;
+    public String getGivenName() {
+        return givenName;
     }
 
-    public String getFamily_name() {
-        return family_name;
+    public String getFamilyName() {
+        return familyName;
     }
 
-    public String getDisplay_name() {
-        return display_name;
+    public String getDisplayName() {
+        return displayName;
     }
 
     public String getEmail() {
@@ -87,28 +87,28 @@ final class DatabaseUser {
 
     @Exclude
     Optional<String> getOptGivenName() {
-        if (given_name.equals(EMPTY_FIELD)) {
+        if (givenName.equals(EMPTY_FIELD)) {
             return Optional.empty();
         } else {
-            return Optional.from(given_name);
+            return Optional.from(givenName);
         }
     }
 
     @Exclude
     Optional<String> getOptFamilyName() {
-        if (family_name.equals(EMPTY_FIELD)) {
+        if (familyName.equals(EMPTY_FIELD)) {
             return Optional.empty();
         } else {
-            return Optional.from(family_name);
+            return Optional.from(familyName);
         }
     }
 
     @Exclude
     Optional<String> getOptDisplayName() {
-        if (display_name.equals(EMPTY_FIELD)) {
+        if (displayName.equals(EMPTY_FIELD)) {
             return Optional.empty();
         } else {
-            return Optional.from(display_name);
+            return Optional.from(displayName);
         }
     }
 
@@ -122,7 +122,7 @@ final class DatabaseUser {
     }
 
     @Exclude
-    Optional<String> getOptUUID() {
+    Optional<String> getOptUuid() {
         if (uuid.equals(EMPTY_FIELD)) {
             return Optional.empty();
         } else {

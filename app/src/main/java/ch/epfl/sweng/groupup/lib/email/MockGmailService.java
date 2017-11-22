@@ -10,12 +10,7 @@ public class MockGmailService implements MailService {
     @Override
     public void sendInvitationEmail(List<String> addresses) {
         for (String address: addresses) {
-            sendInvitationEmail(address);
+            System.out.println("Sent invitation email to " + address);
         }
-    }
-
-    @Override
-    public void sendInvitationEmail(String address) {
-        System.out.println("Sent invitation email to " + address);
     }
 }

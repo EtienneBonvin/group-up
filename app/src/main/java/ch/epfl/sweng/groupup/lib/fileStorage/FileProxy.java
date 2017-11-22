@@ -1,8 +1,8 @@
 package ch.epfl.sweng.groupup.lib.fileStorage;
 
-import android.graphics.Bitmap;
-
 import java.util.List;
+
+import ch.epfl.sweng.groupup.activity.event.files.CompressedBitmap;
 
 /**
  * FileProxy interface.
@@ -15,13 +15,13 @@ public interface FileProxy {
      * @param uuid the uuid of the user uploading the file.
      * @param bitmap the image to upload.
      */
-    void uploadFile(String uuid, Bitmap bitmap);
+    void uploadFile(String uuid, CompressedBitmap bitmap);
 
     /**
      * Get all the files from the external storage.
      * @return a list of the stored images in the external storage.
      */
-    List<Bitmap> getFromDatabase();
+    List<CompressedBitmap> getFromDatabase();
 
     /**
      * Indicates whether all the files have been recovered.

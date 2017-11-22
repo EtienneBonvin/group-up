@@ -46,7 +46,6 @@ import static org.hamcrest.Matchers.not;
 public class EventCreationActivityTest {
 
     private final String EVENT_NAME = "My event";
-    private final String EVENT_DESCRIPTION = "My description";
 
     @Rule
     // third parameter is set to true which means the activity is started automatically
@@ -84,6 +83,7 @@ public class EventCreationActivityTest {
 
         Espresso.closeSoftKeyboard();
 
+        String EVENT_DESCRIPTION = "My description";
         addDescription(EVENT_DESCRIPTION);
 
         Espresso.closeSoftKeyboard();
@@ -122,7 +122,7 @@ public class EventCreationActivityTest {
 
         Event found = findEvent(EVENT_NAME);
         Event expected = new Event(found.getUUID(), EVENT_NAME, start, end,
-                                   EVENT_DESCRIPTION, expectedMembers, false);
+                EVENT_DESCRIPTION, expectedMembers, false);
 
         if (!(found.equals(expected))){
             throw new AssertionError("Expected : "+expected+".\nFound : "+found);
@@ -214,7 +214,6 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
-
         try {
             Thread.sleep(2000);
         }catch(InterruptedException ie){

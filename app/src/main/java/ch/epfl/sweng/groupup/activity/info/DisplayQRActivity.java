@@ -17,7 +17,7 @@ public class DisplayQRActivity extends AppCompatActivity {
         setContentView(R.layout.activity_display_qr);
 
         Bundle extras = getIntent().getExtras();
-        byte[] byteArray = extras.getByteArray("picture");
+        byte[] byteArray = extras.getByteArray(UserInformationActivity.EXTRA_MESSAGE);
 
         assert byteArray != null;
         Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
