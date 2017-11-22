@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.Watchee;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.lib.fileStorage.FirebaseFileProxy;
@@ -110,8 +111,8 @@ public final class Event implements Serializable, Watcher, Watchee{
 
     public String getStartTimeToString(){
         LocalDateTime date =getStartTime();
-        return String.format(Locale.getDefault(),"%d/%d/%d", date.getDayOfMonth(),
-                date.getMonthOfYear(),date.getYear());
+        return String.format(Locale.getDefault(),"%02d/%02d/%d %d:%02d", date.getDayOfMonth(),
+                date.getMonthOfYear(),date.getYear(), date.getHourOfDay(), date.getMinuteOfHour());
     }
     /**
      * Getter for the end date and time
@@ -123,8 +124,8 @@ public final class Event implements Serializable, Watcher, Watchee{
 
     public String getEndTimeToString(){
         LocalDateTime date =getEndTime();
-        return String.format(Locale.getDefault(),"%d/%d/%d", date.getDayOfMonth(),
-                date.getMonthOfYear(),date.getYear());
+        return String.format(Locale.getDefault(),"%02d/%02d/%d %d:%02d", date.getDayOfMonth(),
+                date.getMonthOfYear(),date.getYear(), date.getHourOfDay(), date.getMinuteOfHour());
     }
 
     /**
@@ -370,5 +371,13 @@ public final class Event implements Serializable, Watcher, Watchee{
         if(proxyImages.size() > eventImages.size())
             eventImages = proxyImages;
         notifyAllWatchers();
+    }
+
+    public boolean overlap(Optional<Event> e){
+
+        if(e.isEmpty()){return false;}
+        return !((this.startTime.compareTo(e.get().startTime)<=0
+                && this.endTime.compareTo(e.get().startTime)<=0)
+                || (e.get().endTime.compareTo(this.startTime)<=0));
     }
 }

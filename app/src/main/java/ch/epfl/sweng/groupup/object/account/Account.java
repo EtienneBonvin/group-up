@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.event.EventStatus;
@@ -117,8 +118,10 @@ public final class Account extends User {
                     newFuture.remove(e);
                     break;
                 case CURRENT:
-                    Account.shared.withCurrentEvent(Optional.from(e));
-                    newFuture.remove(e);
+                   if(Account.shared.currentEvent.isEmpty()){
+                        Account.shared.withCurrentEvent(Optional.from(e));
+                        newFuture.remove(e);
+                    }
                     break;
                 default:
             }
@@ -133,7 +136,7 @@ public final class Account extends User {
         Collections.sort(newPast, new Comparator<Event>() {
             @Override
             public int compare(Event o1, Event o2) {
-                return o1.getStartTime().compareTo(o2.getStartTime());
+                return o2.getStartTime().compareTo(o1.getStartTime());
             }
         });
         Account.shared.withFutureEvents(newFuture);
@@ -261,6 +264,7 @@ public final class Account extends User {
         } else {
             Event e = current.get().withEventName(current.get().getEventName());
             if (current.get().getEventStatus().equals(EventStatus.CURRENT)) {
+                EventDescriptionActivity.removeEvent(Account.shared.currentEvent.get());
                 shared =
                         new Account(UUID,
                                     displayName,

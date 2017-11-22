@@ -12,11 +12,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertNotEquals;
 
 public class EventsShould {
@@ -245,5 +248,17 @@ public class EventsShould {
                 now.getMonthOfYear(),now.getYear())));
         assertEquals(e.getEndTimeToString(), (String.format(Locale.getDefault(),"%d/%d/%d", now.getDayOfMonth(),
                 now.getMonthOfYear(),now.getYear())));
+    }
+
+    @Test
+    public void overlappingEvent(){
+        Event e = new Event("2","inmm", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2),"Pas de travail, toujours pas de travail", new ArrayList<>(Collections.singletonList(member)),false);
+        Event f = new Event("2","inmm", LocalDateTime.now().plusDays(1).plusHours(5), LocalDateTime.now().plusDays(3),"Pas de travail, toujours pas de travail", new ArrayList<>(Collections.singletonList(member)),false);
+        Event g = new Event("2","inmm", LocalDateTime.now().minusDays(1), LocalDateTime.now(),"Pas de travail, toujours pas de travail", new ArrayList<>(Collections.singletonList(member)),false);
+
+        assertTrue(e.overlap(Optional.from(f)));
+        assertTrue(f.overlap(Optional.from(e)));
+        assertFalse(f.overlap(Optional.from(g)));
+        assertFalse(g.overlap(Optional.from(f)));
     }
 }

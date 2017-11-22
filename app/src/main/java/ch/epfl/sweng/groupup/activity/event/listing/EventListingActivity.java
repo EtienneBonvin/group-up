@@ -185,6 +185,8 @@ public class EventListingActivity extends ToolbarActivity {
     private void askForInvitation() {
         for (final Event eventToDisplay : eventsToDisplay) {
             if (!dialogShown) {
+                //need also to check for every future event
+                final boolean overlap= eventToDisplay.overlap(Account.shared.getCurrentEvent());
                 dialogShown = true;
                 AlertDialog.Builder alertDialogBuilder =
                         new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AboutDialog));
@@ -192,8 +194,11 @@ public class EventListingActivity extends ToolbarActivity {
                 for (Member member : eventToDisplay.getEventMembers()) {
                     members += member.getDisplayName().getOrElse(getString(R.string.event_invitation_dialog_unknown)) + "\n";
                 }
-
+                String message;
                 alertDialogBuilder.setTitle(R.string.event_invitation_title);
+                if(overlap){
+                    message = R.string.overlapping_events;
+                }
                 alertDialogBuilder.setMessage(getString(R.string.event_invitation_dialog_name) + eventToDisplay.getEventName() + "\n"
                         + getString(R.string.event_invitation_dialog_start) + eventToDisplay.getStartTimeToString() + "\n"
                         + getString(R.string.event_invitation_dialog_end) + eventToDisplay.getEndTimeToString() + "\n"
