@@ -1,5 +1,6 @@
 package ch.epfl.sweng.groupup.lib;
 
+import android.os.Build;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.Toast;
@@ -18,9 +19,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-public class HelperShould {
+public class AndroidHelperShould {
     @Rule
     public final ActivityTestRule<MainActivity> mActivityRule =
             new ActivityTestRule<>(MainActivity.class);
@@ -34,10 +36,12 @@ public class HelperShould {
         mActivityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Helper.showAlert(mActivityRule.getActivity().getWindow().getContext(),
-                                 alertTitle,
-                                 alertMessage,
-                                 alertButtonText);
+                AndroidHelper.showAlert(mActivityRule.getActivity()
+                                                .getWindow()
+                                                .getContext(),
+                                        alertTitle,
+                                        alertMessage,
+                                        alertButtonText);
             }
         });
         onView(withText(alertTitle))
@@ -54,9 +58,10 @@ public class HelperShould {
         mActivityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Helper.showToast(mActivityRule.getActivity().getApplicationContext(),
-                                 toastString,
-                                 Toast.LENGTH_SHORT);
+                AndroidHelper.showToast(mActivityRule.getActivity()
+                                                .getApplicationContext(),
+                                        toastString,
+                                        Toast.LENGTH_SHORT);
             }
         });
         onView(withText(toastString))
@@ -64,5 +69,20 @@ public class HelperShould {
                                                      .getWindow()
                                                      .getDecorView()))))
                 .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void beAbleToTestIfEmulator() throws Exception {
+        boolean isEmulator = Build.FINGERPRINT.startsWith("generic") ||
+                             Build.FINGERPRINT.startsWith("unknown") ||
+                             Build.MODEL.contains("google_sdk") ||
+                             Build.MODEL.contains("Emulator") ||
+                             Build.MODEL.contains("Android SDK built for x86") ||
+                             Build.MANUFACTURER.contains("Genymotion") ||
+                             (Build.BRAND.startsWith("generic") &&
+                              Build.DEVICE.startsWith("generic")) ||
+                             "google_sdk".equals(Build.PRODUCT);
+
+        assertTrue(isEmulator == AndroidHelper.isEmulator());
     }
 }

@@ -189,7 +189,7 @@ public class DatabaseShould {
 
                             List<Member> members = new ArrayList<>();
                             for (DatabaseUser user : event.members.values()) {
-                                members.add(new Member(user.getOptUUID(),
+                                members.add(new Member(user.getOptUuid(),
                                                        user.getOptDisplayName(),
                                                        user.getOptGivenName(),
                                                        user.getOptFamilyName(),
@@ -200,8 +200,8 @@ public class DatabaseShould {
                             Event tempEvent = new Event(
                                     event.uuid,
                                     event.name,
-                                    LocalDateTime.parse(event.datetime_start),
-                                    LocalDateTime.parse(event.datetime_end),
+                                    LocalDateTime.parse(event.datetimeStart),
+                                    LocalDateTime.parse(event.datetimeEnd),
                                     event.description, members ,false);
 
                             switch (event.uuid) {

@@ -27,14 +27,13 @@ import java.util.Locale;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
-import ch.epfl.sweng.groupup.lib.Helper;
+import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
 
 public class FileManagementActivity extends ToolbarActivity implements Watcher {
 
-    private String mCurrentPhotoPath;
     private final int COLUMNS = 3;
     private final int ROWS = 4;
     private int columnWidth;
@@ -164,7 +163,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
             Uri targetUri = data.getData();
 
             if (targetUri == null) {
-                Helper.showToast(getApplicationContext(),
+                AndroidHelper.showToast(getApplicationContext(),
                         getString(R.string.file_management_toast_error_file_uri),
                         Toast.LENGTH_SHORT);
                 return;
@@ -185,12 +184,12 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
                 bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
 
             } catch (FileNotFoundException e) {
-                Helper.showToast(getApplicationContext(),
+                AndroidHelper.showToast(getApplicationContext(),
                         getString(R.string.file_management_toast_error_file_uri),
                         Toast.LENGTH_SHORT);
                 return;
             }
-
+            
             /*if (bitmap.getByteCount() / 8 > FirebaseFileProxy.MAX_FILE_SIZE) {
                 Helper.showToast(getApplicationContext(),
                         getString(R.string.file_management_toast_error_file_too_big),
@@ -217,7 +216,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
                     try {
                         photo = createImageFile();
                     } catch (IOException e) {
-                        Helper.showToast(getApplicationContext(),
+                        AndroidHelper.showToast(getApplicationContext(),
                                 getString(R.string.file_management_toast_error_file_not_created),
                                 Toast.LENGTH_SHORT);
                     }
@@ -241,7 +240,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
+        String mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 

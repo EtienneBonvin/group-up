@@ -38,7 +38,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
         viewsWithOCL = new HashMap<>();
         uIdsWithOCL = new HashMap<>();
 
-        builder = (EventBuilder)getIntent().getSerializableExtra("Builder");
+        builder = (EventBuilder)getIntent().getSerializableExtra(EventCreationActivity.EXTRA_MESSAGE);
         if(builder == null){
             throw new MissingResourceException(
                     "The builder has not been given in the Extra.",
@@ -201,7 +201,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
         builder.setMembersTo(uIdsWithOCL.values());
 
         Intent intent = new Intent(this, EventCreationActivity.class);
-        intent.putExtra("Builder", builder);
+        intent.putExtra(EventCreationActivity.EXTRA_MESSAGE, builder);
         startActivity(intent);
     }
 }

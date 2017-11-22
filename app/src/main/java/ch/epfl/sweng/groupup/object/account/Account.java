@@ -372,7 +372,7 @@ public final class Account extends User {
 
     /**
      * Add a future event list of the shared account or updates it if is already exists
-     * This guarentees that the event are sorted
+     * This guarantees that the event are sorted
      *
      * @param future event to add
      * @return the modified shared account, so that it is easier to call in chain
