@@ -385,10 +385,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
                     Optional.<String>empty(), Optional.<String>empty(),
                     Optional.<String>empty(), Optional.<Location>empty());
 
-            return emptyMember
-                    .withDisplayName(displayName)
-                    .withEmail(email)
-                    .withUUID(UUID);
+            return email.length()==0 ? emptyMember.withDisplayName(displayName).withUUID(UUID) : emptyMember.withEmail(email);
         }
     }
 
@@ -567,12 +564,12 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
                 if(emailCheck(s.getEmail())){
                     finalMembers.add(emptyMember
                             .withUUID(Member.UNKNOWN_USER + (++nb_unknown))
-                            .withEmail(s.getEmail()));
+                            .withEmail(s.toString()));
                     mailsToSend.add(s.getEmail());
                 }else{
                     finalMembers.add(emptyMember
                             .withUUID(s.getUUID())
-                            .withDisplayName(s.getDisplayName()));
+                            .withDisplayName(s.toString()));
                 }
             }
 

@@ -115,6 +115,9 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
 
         // contains UUID and displayName seperated by ","
         String[] decoded = rawResult.getText().split(",");
+        if (decoded.length != 2 || decoded[0].length() == 0){
+                throw new IllegalArgumentException("Decoded information not proper.");
+        }
         MemberRepresentation newRep = new MemberRepresentation(decoded[0], decoded[1]);
         addNewMember(newRep);
     }
