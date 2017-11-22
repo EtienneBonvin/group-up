@@ -1,6 +1,8 @@
 package ch.epfl.sweng.groupup.lib.database;
 
 
+import android.util.Log;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -222,7 +224,7 @@ public final class Database {
                         // We add all the members.
                         members.add(memberToAdd);
                     }
-
+                    Log.d("test", event.name);
                     // We create the event that we want to store in the account.
                     Event tempEvent = new Event(event.uuid,
                                                 event.name,
