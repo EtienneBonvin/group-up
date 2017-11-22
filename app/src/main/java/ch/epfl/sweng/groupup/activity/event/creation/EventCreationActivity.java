@@ -48,6 +48,8 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
     private transient TimePickerDialog timePickerDialog;
     private transient boolean set_start_date, set_end_date, set_start_time, set_end_time;
 
+    public static final String EXTRA_MESSAGE = "Builder";
+
     private EventBuilder builder;
 
     /**
@@ -72,7 +74,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
     private void initFields(){
 
         try {
-            builder = (EventBuilder)getIntent().getSerializableExtra("Builder");
+            builder = (EventBuilder)getIntent().getSerializableExtra(EXTRA_MESSAGE);
         }catch(Exception e){
             builder = new EventBuilder();
         }
@@ -192,7 +194,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
                                 ((EditText)findViewById(R.id.edit_text_description))
                                 .getText().toString());
                         Intent intent = new Intent(getApplicationContext(), MembersAddingActivity.class);
-                        intent.putExtra("Builder", builder);
+                        intent.putExtra(EXTRA_MESSAGE, builder);
                         startActivity(intent);
                     }
                 });

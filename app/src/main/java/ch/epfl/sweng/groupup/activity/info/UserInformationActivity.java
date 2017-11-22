@@ -43,6 +43,8 @@ public class UserInformationActivity extends LoginActivityInterface {
 
     private GoogleAuthenticationService authService;
 
+    public static final String EXTRA_MESSAGE = "picture";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +132,7 @@ public class UserInformationActivity extends LoginActivityInterface {
 
     private void switchToDisplayQR(byte[] byteArray) {
         Intent intent = new Intent(this, DisplayQRActivity.class);
-        intent.putExtra("picture", byteArray);
+        intent.putExtra(EXTRA_MESSAGE, byteArray);
         startActivity(intent);
     }
 
