@@ -314,6 +314,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
         int cutOnSide = (scaled.getWidth() - columnWidth) / 2;
         int cutOnTop = (scaled.getHeight() - rowHeight) / 2;
 
+        if(cutOnSide > 0 || cutOnTop > 0)
         scaled = Bitmap.createBitmap(scaled, cutOnSide, cutOnTop,
                 columnWidth, rowHeight);
 
