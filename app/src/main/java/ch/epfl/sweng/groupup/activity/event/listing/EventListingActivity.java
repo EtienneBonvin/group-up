@@ -134,7 +134,6 @@ public class EventListingActivity extends ToolbarActivity {
                     e.getEndTime().getDayOfMonth(), e.getEndTime().getMonthOfYear()));
             eventButton.setBackgroundColor(getResources().getColor(R.color.primaryLightColor));
             eventButton.setCompoundDrawablePadding(2);
-            eventButton.setTag(e.getUUID());
             final int indexToPass = offset;
 
             eventButton.setOnLongClickListener(new View.OnLongClickListener() {

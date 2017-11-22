@@ -41,23 +41,6 @@ public class EventListingActivityTest {
     public ActivityTestRule<EventListingActivity> mEventListingActivityActivityTestRule =
             new ActivityTestRule<>(EventListingActivity.class);
 
-    /*@Before
-    public void setup(){
-        Database.setUpDatabase();
-    }*/
-
-    @Before
-    public void setup() {
-        Database.setUpDatabase();
-
-        LocalDateTime startDate = LocalDateTime.now().plusDays(1);
-        LocalDateTime endDate = LocalDateTime.now().plusDays(2);
-        List<Member> eventMembers = new ArrayList<>();
-        event = new Event("Name", startDate, endDate, "Description", eventMembers, false);
-        Account.shared.addOrUpdateEvent(event);
-
-    }
-
     @Test
     public void ensureCreateNewEventWork()  {
 
@@ -74,30 +57,4 @@ public class EventListingActivityTest {
             // The ui_edit_event_name is not displayed in the view.
         }
     }
-
-    @Test
-    public void ensureMapShownOnShortClick()  {
-        // Create an event, is it necessary to perform all
-        // the steps or does it exist a predefined setup with a function?
-
-        // Short click on the newly created event
-
-        // Check that the map is shown
-
-        // In order to test the other else clause,
-        // update the position and show the map again
-        // and see that the position is the same as changed to
-
-        Log.d("myTag", event.getUUID());
-
-        onView(ViewMatchers.withTagValue(is((Object) event.getUUID())))
-                .perform(click());
-
-        /*onView(withText(String.format(Locale.getDefault(), "%s | %d/%d - %d/%d", event.getEventName(),
-                event.getStartTime().getDayOfMonth(), event.getStartTime().getMonthOfYear(),
-                event.getEndTime().getDayOfMonth(), event.getEndTime().getMonthOfYear()))).perform(click());*/
-
-        /*onView(withContentDescription("Google Map")).perform(click());*/
-    }
-
 }
