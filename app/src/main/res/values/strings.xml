@@ -87,7 +87,6 @@
     <string name="file_management_tv_description">Here you can see the files of the event and add some new ones !</string>
     <string name="file_management_button_add_file">Add file</string>
     <string name="file_management_toast_error_file_uri">An error occurred when recovering the media</string>
-    <string name="file_management_toast_error_file_too_big">Sorry, this file is too big (limit is 1MB)</string>
     <string name="file_management_toast_error_file_not_created">"Error While creating the file"</string>
 
 
