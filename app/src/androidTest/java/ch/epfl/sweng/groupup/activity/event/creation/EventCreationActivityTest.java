@@ -214,7 +214,6 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
-
         try {
             Thread.sleep(2000);
         }catch(InterruptedException ie){

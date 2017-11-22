@@ -2,6 +2,7 @@ package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -289,7 +290,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
 
         builder.setDescription(((EditText)findViewById(R.id.edit_text_description)).getText().toString());
 
-        Account.shared.addOrUpdateEvent(builder.build());
+        Account.shared.addOrUpdateEvent(builder.build(getApplicationContext()));
         Database.update();
 
         Intent intent = new Intent(this, EventListingActivity.class);
@@ -477,9 +478,9 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
          * Note : the user who is creating the event is automatically added to the list of the members.
          * @return an event containing all the properties set until now.
          */
-        private Event build(){
+        private Event build(Context context){
 
-            GMailService gms = new GMailService(getApplicationContext());
+            GMailService gms = new GMailService(context);
 
             members.add(Account.shared.getUUID().getOrElse("Default UUID"));
             List<Member> finalMembers = new ArrayList<>();
