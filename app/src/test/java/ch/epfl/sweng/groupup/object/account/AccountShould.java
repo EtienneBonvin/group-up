@@ -186,13 +186,13 @@ public class AccountShould {
         shared.withPastEvents(Collections.singletonList(new Event("PastEvent3", LocalDateTime.now().minusDays(5),
                 LocalDateTime.now().minusDays(1), "Description", new ArrayList<Member>(), false)));
 
-        int amoutPastEvents=0;
+        int amountPastEvents=0;
         for (Event e : Account.shared.getEvents()){
             if (e.getEventStatus().equals(EventStatus.PAST)){
-                amoutPastEvents++;
+                amountPastEvents++;
             }
         }
-        assertEquals(Account.shared.getPastEvents().size(),amoutPastEvents);
+        assertEquals(Account.shared.getPastEvents().size(),amountPastEvents);
         shared.clear();
     }
 

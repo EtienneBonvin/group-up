@@ -12,10 +12,4 @@ public interface MailService {
      * @param addresses the list of addresses to send the mail to
      */
     void sendInvitationEmail(List<String> addresses);
-
-    /**
-     * Sends a predefined invitation email to the given address
-     * @param address the address to send the mail to
-     */
-    void sendInvitationEmail(String address);
 }

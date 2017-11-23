@@ -2,6 +2,7 @@ package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -27,7 +28,7 @@ import java.util.regex.Pattern;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
-import ch.epfl.sweng.groupup.lib.Helper;
+import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.lib.email.GMailService;
@@ -47,6 +48,8 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
     private transient DatePickerDialog datePickerDialog;
     private transient TimePickerDialog timePickerDialog;
     private transient boolean set_start_date, set_end_date, set_start_time, set_end_time;
+
+    public static final String EXTRA_MESSAGE = "Builder";
 
     private EventBuilder builder;
 
@@ -72,7 +75,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
     private void initFields(){
 
         try {
-            builder = (EventBuilder)getIntent().getSerializableExtra("Builder");
+            builder = (EventBuilder)getIntent().getSerializableExtra(EXTRA_MESSAGE);
         }catch(Exception e){
             builder = new EventBuilder();
         }
@@ -192,7 +195,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
                                 ((EditText)findViewById(R.id.edit_text_description))
                                 .getText().toString());
                         Intent intent = new Intent(getApplicationContext(), MembersAddingActivity.class);
-                        intent.putExtra("Builder", builder);
+                        intent.putExtra(EXTRA_MESSAGE, builder);
                         startActivity(intent);
                     }
                 });
@@ -264,23 +267,22 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
         }
         eventName.setError(null);
 
-
         if(builder.getStartDate().isBefore(LocalDateTime.now())){
-            Helper.showToast(getApplicationContext(),
+            AndroidHelper.showToast(getApplicationContext(),
                     getString(R.string.event_creation_toast_event_start_before_now),
                     Toast.LENGTH_SHORT);
             return;
         }
 
         if(builder.getEndDate().isBefore(builder.getStartDate())){
-            Helper.showToast(getApplicationContext(),
+            AndroidHelper.showToast(getApplicationContext(),
                     getString(R.string.event_creation_toast_event_end_before_begin),
                     Toast.LENGTH_SHORT);
             return;
         }
 
         if(builder.getStartDate().isEqual(builder.getEndDate())){
-            Helper.showToast(getApplicationContext(),
+            AndroidHelper.showToast(getApplicationContext(),
                     getString(R.string.event_creation_toast_event_last_1_minute),
                     Toast.LENGTH_SHORT);
             return;
@@ -290,7 +292,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
 
         builder.setDescription(((EditText)findViewById(R.id.edit_text_description)).getText().toString());
 
-        Account.shared.addOrUpdateEvent(builder.build());
+        Account.shared.addOrUpdateEvent(builder.build(getApplicationContext()));
         Database.update();
 
         Intent intent = new Intent(this, EventListingActivity.class);
@@ -543,9 +545,9 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
          * Note : the user who is creating the event is automatically added to the list of the members.
          * @return an event containing all the properties set until now.
          */
-        private Event build(){
+        private Event build(Context context){
 
-            GMailService gms = new GMailService();
+            GMailService gms = new GMailService(context);
 
             MemberRepresentation newMember = new MemberRepresentation(
                     Account.shared.getUUID().getOrElse("Default UUID"),

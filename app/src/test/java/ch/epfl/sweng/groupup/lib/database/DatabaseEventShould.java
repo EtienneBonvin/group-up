@@ -14,8 +14,8 @@ public class DatabaseEventShould {
 
         assertEquals(Database.EMPTY_FIELD, databaseEvent.name);
         assertEquals(Database.EMPTY_FIELD, databaseEvent.description);
-        assertEquals(Database.EMPTY_FIELD, databaseEvent.datetime_start);
-        assertEquals(Database.EMPTY_FIELD, databaseEvent.datetime_end);
+        assertEquals(Database.EMPTY_FIELD, databaseEvent.datetimeStart);
+        assertEquals(Database.EMPTY_FIELD, databaseEvent.datetimeEnd);
         assertEquals(Database.EMPTY_FIELD, databaseEvent.uuid);
         assertEquals(new HashMap<String, DatabaseUser>(), databaseEvent.members);
     }
@@ -38,8 +38,8 @@ public class DatabaseEventShould {
 
         assertEquals(name, databaseEvent.name);
         assertEquals(description, databaseEvent.description);
-        assertEquals(datetime_start, databaseEvent.datetime_start);
-        assertEquals(datetime_end, databaseEvent.datetime_end);
+        assertEquals(datetime_start, databaseEvent.datetimeStart);
+        assertEquals(datetime_end, databaseEvent.datetimeEnd);
         assertEquals(uuid, databaseEvent.uuid);
         assertEquals(members, databaseEvent.members);
     }

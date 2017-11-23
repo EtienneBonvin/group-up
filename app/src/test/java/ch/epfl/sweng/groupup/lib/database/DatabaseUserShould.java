@@ -14,9 +14,9 @@ public class DatabaseUserShould {
     public void overrideDefaultConstructorAndHaveDefaultValuesAssigned() throws Exception {
         DatabaseUser databaseUser = new DatabaseUser();
 
-        assertEquals(Database.EMPTY_FIELD, databaseUser.given_name);
-        assertEquals(Database.EMPTY_FIELD, databaseUser.family_name);
-        assertEquals(Database.EMPTY_FIELD, databaseUser.display_name);
+        assertEquals(Database.EMPTY_FIELD, databaseUser.givenName);
+        assertEquals(Database.EMPTY_FIELD, databaseUser.familyName);
+        assertEquals(Database.EMPTY_FIELD, databaseUser.displayName);
         assertEquals(Database.EMPTY_FIELD, databaseUser.email);
         assertEquals(Database.EMPTY_FIELD, databaseUser.uuid);
     }
@@ -36,9 +36,9 @@ public class DatabaseUserShould {
                                                       Optional.from(uuid),
                                                       Optional.<Location>empty());
 
-        assertEquals(givenName, databaseUser.given_name);
-        assertEquals(familyName, databaseUser.family_name);
-        assertEquals(displayName, databaseUser.display_name);
+        assertEquals(givenName, databaseUser.givenName);
+        assertEquals(familyName, databaseUser.familyName);
+        assertEquals(displayName, databaseUser.displayName);
         assertEquals(email, databaseUser.email);
         assertEquals(uuid, databaseUser.uuid);
         assertTrue(databaseUser.getOptLocation().isEmpty());
@@ -137,7 +137,7 @@ public class DatabaseUserShould {
                                                      Optional.<String>empty(),
                                                      Optional.<Location>empty());
 
-        assertTrue(databaseUser.getOptUUID().isEmpty());
+        assertTrue(databaseUser.getOptUuid().isEmpty());
 
         databaseUser = new DatabaseUser(Optional.<String>empty(),
                                         Optional.<String>empty(),
@@ -146,7 +146,7 @@ public class DatabaseUserShould {
                                         Optional.from("NOT_EMPTY"),
                                         Optional.<Location>empty());
 
-        assertTrue(!databaseUser.getOptUUID().isEmpty());
+        assertTrue(!databaseUser.getOptUuid().isEmpty());
     }
 
     @Test

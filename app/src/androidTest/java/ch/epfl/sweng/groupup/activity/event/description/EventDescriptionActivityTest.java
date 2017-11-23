@@ -31,7 +31,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class EventDescriptionActivityTest {
-    private final String name = "My beautiful event";
 
     @Rule
     public final ActivityTestRule<EventCreationActivity> mActivityRule =
@@ -121,6 +120,7 @@ public class EventDescriptionActivityTest {
     @Test
     public void CreateAndDisplayAlertOnDeleteEvent() {
         Database.setUpDatabase();
+        String name = "My beautiful event";
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
 
         onView(withId(R.id.save_new_event_button)).perform(click());
