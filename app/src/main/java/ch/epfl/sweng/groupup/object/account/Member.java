@@ -1,6 +1,7 @@
 package ch.epfl.sweng.groupup.object.account;
 
 import android.location.Location;
+import android.util.Log;
 
 import ch.epfl.sweng.groupup.lib.Optional;
 
@@ -118,9 +119,6 @@ public final class Member extends User {
                 email,
                 Optional.from(location));
 
-        if (User.observer != null && location != null) {
-            User.observer.updateMemberMarkers(updatedMember, location);
-        }
         return updatedMember;
     }
 }

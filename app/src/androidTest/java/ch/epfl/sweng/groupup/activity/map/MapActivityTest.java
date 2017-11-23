@@ -30,13 +30,6 @@ public class MapActivityTest {
         Database.setUpDatabase();
     }
 
-    /*@Test
-    public void launchedWithoutErrors(){
-        if (BuildConfig.DEBUG){
-            throw new AssertionError();
-        }
-    }*/
-
     @Test
     public void ensureMapShownOnShortClick()  {
         String name="maptest";

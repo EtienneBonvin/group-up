@@ -71,7 +71,6 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
     }
 
     public void updateMemberMarkers(User user, Location location) {
-        //LatLng pos = new LatLng(location.getLatitude() - 5, location.getLongitude() - 5);
         LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
 
         if (!mMemberMarkers.containsKey(user.getUUID().get())) {
