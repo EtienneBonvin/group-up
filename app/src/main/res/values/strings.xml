@@ -129,6 +129,14 @@
 
     <!-- Full screen file -->
     <string name="full_screen_file_content_description">Image to be displayed in full screen</string>
+    <string name="poi_title_hint">title</string>
+    <string name="poi_description_hint">description</string>
+    <string name="poi_dialog_title">Add a Point Of Interest</string>
+    <string name="poi_remove_title">Do you really want to remove this PoI?</string>
+    <string name="poi_remove_positive">Yes</string>
+    <string name="poi_remove_negative">No</string>
+    <string name="poi_add_positive">Add</string>
+    <string name="poi_add_negative">Cancel</string>
 
 </resources>
 

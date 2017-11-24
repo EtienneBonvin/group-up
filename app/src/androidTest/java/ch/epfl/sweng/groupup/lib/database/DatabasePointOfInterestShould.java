@@ -36,6 +36,7 @@ public class DatabasePointOfInterestShould {
 
     @Test
     public void correctlyCreatePointOfInterest() throws Exception {
+        String uuid = "uuidVeryComplex";
         String name = "My PoI";
         String description = "This is a PoI.";
         Location location = new Location(LocationManager.GPS_PROVIDER);
@@ -45,8 +46,9 @@ public class DatabasePointOfInterestShould {
         location.setLongitude(longitude);
 
         DatabasePointOfInterest databasePointOfInterest =
-                new DatabasePointOfInterest(name, description, location);
+                new DatabasePointOfInterest(uuid, name, description, location);
 
+        Assert.assertEquals(uuid, databasePointOfInterest.getUuid());
         Assert.assertEquals(name, databasePointOfInterest.getName());
         Assert.assertEquals(description,
                             databasePointOfInterest.getDescription());

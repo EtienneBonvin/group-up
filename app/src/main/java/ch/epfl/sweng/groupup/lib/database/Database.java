@@ -120,17 +120,23 @@ public final class Database {
             }
         }
 
+        HashMap<String, DatabasePointOfInterest> uuidToPoIMap = new HashMap<>();
+        for (PointOfInterest poiToStore : event.getPointsOfInterest()) {
+            uuidToPoIMap.put(poiToStore.getUuid(),
+                             new DatabasePointOfInterest(poiToStore.getUuid(),
+                                                         poiToStore.getName(),
+                                                         poiToStore.getDescription(),
+                                                         poiToStore.getLocation()));
+        }
+
         DatabaseEvent eventToStore =
                 new DatabaseEvent(event.getEventName(),
                                   event.getDescription(),
-                                  event.getStartTime()
-                                          .toString(),
-                                  event.getEndTime()
-                                          .toString(),
+                                  event.getStartTime().toString(),
+                                  event.getEndTime().toString(),
                                   event.getUUID(),
-                                  uuidToUserMap, // TODO: change
-                                  new HashMap<String, DatabasePointOfInterest>
-                                          ());
+                                  uuidToUserMap,
+                                  uuidToPoIMap);
 
         storeEvent(eventToStore);
     }
@@ -228,6 +234,19 @@ public final class Database {
                         members.add(memberToAdd);
                     }
 
+                    /*
+                    We transform every DatabasePointOfInterest to a
+                    PointOfInterest
+                     */
+                    Set<PointOfInterest> pointsOfInterest = new HashSet<>();
+                    for (DatabasePointOfInterest poi : event.pointsOfInterest
+                            .values()) {
+                        pointsOfInterest.add(new PointOfInterest(poi.uuid,
+                                                                 poi.description,
+                                                                 poi.description,
+                                                                 poi.getLocation()));
+                    }
+
                     // We create the event that we want to store in the account.
                     Event tempEvent = new Event(event.uuid,
                                                 event.name,
@@ -235,7 +254,7 @@ public final class Database {
                                                 LocalDateTime.parse(event.datetimeEnd),
                                                 event.description,
                                                 members,
-                                                new HashSet<PointOfInterest>(),
+                                                pointsOfInterest,
                                                 needToUpdateMyself);
 
                     // We add or update the event.
@@ -243,12 +262,6 @@ public final class Database {
                 }
             }
         }
-
-        /*
-        If we updated our information in one of the events we have to update it in the
-        database as well.
-         */
-
     }
 
     /**

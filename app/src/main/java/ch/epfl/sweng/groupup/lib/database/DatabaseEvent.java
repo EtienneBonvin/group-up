@@ -19,8 +19,8 @@ final class DatabaseEvent {
     public String datetimeEnd = Database.EMPTY_FIELD;
     public String uuid = Database.EMPTY_FIELD;
     public Map<String, DatabaseUser> members = new HashMap<>();
-    public Map<String, DatabasePointOfInterest> pointsOfInterest = new
-            HashMap<>();
+    public Map<String, DatabasePointOfInterest>
+            pointsOfInterest = new HashMap<>();
 
     public DatabaseEvent() {
     }

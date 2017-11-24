@@ -17,6 +17,7 @@ final class DatabasePointOfInterest {
      * database.
      */
 
+    public String uuid = EMPTY_FIELD;
     public String name = EMPTY_FIELD;
     public String description = EMPTY_FIELD;
     public String latitude = EMPTY_FIELD;
@@ -26,14 +27,20 @@ final class DatabasePointOfInterest {
     public DatabasePointOfInterest() {
     }
 
-    DatabasePointOfInterest(String name,
+    DatabasePointOfInterest(String uuid,
+                            String name,
                             String description,
                             Location location) {
+        this.uuid = uuid;
         this.name = name;
         this.description = description;
         this.latitude = "" + location.getLatitude();
         this.longitude = "" + location.getLongitude();
         this.provider = LocationManager.GPS_PROVIDER;
+    }
+
+    public String getUuid() {
+        return uuid;
     }
 
     public String getName() {

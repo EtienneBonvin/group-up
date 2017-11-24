@@ -105,8 +105,6 @@ public final class PointOfInterest {
         return new PointOfInterest(uuid, name, description, location);
     }
 
-    // TODO: HERE!
-
     @Override
     public String toString() {
         return "PointOfInterest{" +
@@ -130,16 +128,13 @@ public final class PointOfInterest {
 
         return name.equals(that.name) &&
                description.equals(that.description) &&
-               location.equals(that.location) &&
                uuid.equals(that.uuid);
-
     }
 
     @Override
     public int hashCode() {
         int result = name.hashCode();
         result = 31 * result + description.hashCode();
-        result = 31 * result + location.hashCode();
         result = 31 * result + uuid.hashCode();
         return result;
     }

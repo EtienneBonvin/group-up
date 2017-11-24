@@ -240,12 +240,12 @@ public final class Event implements Serializable, Watcher, Watchee{
      * @return the modified event
      */
     public Event withPointOfInterest(PointOfInterest pointOfInterest){
-        Set<PointOfInterest> newPointsOfInterest =
-                new HashSet<>(pointsOfInterest);
+        Set<PointOfInterest> newPointsOfInterest = new HashSet<>();
+
+        newPointsOfInterest.addAll(pointsOfInterest);
         newPointsOfInterest.add(pointOfInterest);
 
-        return new Event(UUID, eventName, startTime, endTime, description,
-                         eventMembers,newPointsOfInterest, invitation);
+        return withPointsOfInterest(newPointsOfInterest);
     }
 
     /**
