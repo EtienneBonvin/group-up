@@ -93,23 +93,31 @@
             android:layout_below="@id/text_view_email_info"
             android:layout_marginBottom="@dimen/default_gap"/>
 
-        <!-- Currently ignoring lint issue about overlapping button and textView -->
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/logout_button_layout"
+        android:layout_below="@+id/user_infos">
+        
         <Button
             android:id="@+id/button_sign_out"
             style="@style/ButtonStyle"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:text="@string/button_sign_out_text"
-            tools:ignore="RelativeOverlap" />
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/button_sign_out_text"/>
 
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/user_infos"
+        android:layout_below="@id/logout_button_layout"
+        android:id="@+id/QR_code_layout"
         android:layout_alignParentBottom="true">
 
         <ImageView
