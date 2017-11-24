@@ -13,6 +13,10 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
@@ -39,8 +43,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.FileNotFoundException;
-
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
@@ -56,6 +58,17 @@ public class MediaSharingTests {
     @Before
     public void goToFileManagement(){
         Database.setUpDatabase();
+        Database.setUpEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //Do nothing
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //Do nothing
+            }
+        });
         createEvent();
         onView(withParent(withId(R.id.linear_layout_event_list)))
                 .perform(longClick());

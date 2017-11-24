@@ -61,7 +61,7 @@ public class MockLocationTestSuite {
 
     @Test
     public void canHandleOnLocationChanged() throws Exception {
-        MockLocation myTestLocation = new MockLocation();
+        final MockLocation myTestLocation = new MockLocation();
 
         Database.setUpDatabase();
         Database.setUpEventListener(new ValueEventListener() {
@@ -76,6 +76,11 @@ public class MockLocationTestSuite {
             }
         });
 
-        myTestLocation.onLocationChanged(new Location(LocationManager.GPS_PROVIDER));
+        mActivityRule.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                myTestLocation.onLocationChanged(new Location(LocationManager.GPS_PROVIDER));
+            }
+        });
     }
 }
