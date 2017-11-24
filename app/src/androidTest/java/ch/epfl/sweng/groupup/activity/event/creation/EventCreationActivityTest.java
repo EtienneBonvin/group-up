@@ -248,6 +248,11 @@ public class EventCreationActivityTest {
         }
     }
 
+    @Test
+    public void noEventCreationOnOverlappingEvent(){
+        // TODO
+    }
+
     /**
      * Test QR Scanner
      * Does not work for Jenkins because he does not have a camera

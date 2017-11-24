@@ -106,7 +106,8 @@
 
     <!-- Full screen file -->
     <string name="full_screen_file_content_description">Image to be displayed in full screen</string>
-    <string name="overlapping_events">This Event overlap with another, if you accept it you will be removed from your current event</string>
+    <string name="overlapping_events">This event overlap with another, if you accept it you will be removed from the other event \n The overlapping events are : </string>
+    <string name="toast_overlapping_event">The event you are trying to create overlap another, you have to leave to other event first before creating an event at this time</string>
 
 </resources>
 

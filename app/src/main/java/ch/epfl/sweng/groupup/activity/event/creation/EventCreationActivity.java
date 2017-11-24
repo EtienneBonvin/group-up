@@ -286,6 +286,15 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
             return;
         }
 
+        for (Event e : Account.shared.getEvents()) {
+            if (!((builder.getStartDate().compareTo(e.getStartTime()) <= 0
+                    && builder.getEndDate().compareTo(e.getStartTime()) <= 0)
+                    || (e.getEndTime().compareTo(builder.getStartDate()) <= 0))) {
+                Helper.showToast(getApplicationContext(), getString(R.string.toast_overlapping_event),
+                        Toast.LENGTH_LONG);
+            return;
+            }
+        }
         builder.setEventName(((EditText)findViewById(R.id.ui_edit_event_name)).getText().toString());
 
         builder.setDescription(((EditText)findViewById(R.id.edit_text_description)).getText().toString());
@@ -506,6 +515,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
             gms.sendInvitationEmail(mailsToSend);
 
             return new Event(eventName, startDate, endDate, description, finalMembers,false);
+            }
         }
 
         /**
@@ -519,4 +529,3 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
             return m.matches();
         }
     }
-}

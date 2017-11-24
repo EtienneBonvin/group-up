@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -23,6 +24,7 @@ import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.activity.map.MapActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
+import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
@@ -125,7 +127,7 @@ public class EventListingActivity extends ToolbarActivity {
                 eventsToDisplay.add(e);
             }
         }
-            askForInvitation();
+           askForInvitation();
         for (Event e : events) {
             Button eventButton = new Button(this);
             eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
@@ -183,26 +185,38 @@ public class EventListingActivity extends ToolbarActivity {
      * @param
      */
     private void askForInvitation() {
+        final List<Event> eventsToRemove=new ArrayList<>();
         for (final Event eventToDisplay : eventsToDisplay) {
             if (!dialogShown) {
-                //need also to check for every future event
-                final boolean overlap= eventToDisplay.overlap(Account.shared.getCurrentEvent());
                 dialogShown = true;
-                AlertDialog.Builder alertDialogBuilder =
-                        new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AboutDialog));
+
+                String message="";
+                String names="";
+
+                for(Event e : Account.shared.getFutureEvents()){
+                    if (e.overlap(Optional.from(eventToDisplay))){
+                        eventsToRemove.add(e);
+                        names+= e.getEventName()+", ";
+                    }
+                }
+                if (eventToDisplay.overlap(Account.shared.getCurrentEvent())){
+                    eventsToRemove.add(Account.shared.getCurrentEvent().get());
+                }
                 String members = getString(R.string.event_invitation_dialog_members);
                 for (Member member : eventToDisplay.getEventMembers()) {
                     members += member.getDisplayName().getOrElse(getString(R.string.event_invitation_dialog_unknown)) + "\n";
                 }
-                String message;
+                AlertDialog.Builder alertDialogBuilder =
+                        new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AboutDialog));
                 alertDialogBuilder.setTitle(R.string.event_invitation_title);
-                if(overlap){
-                    message = R.string.overlapping_events;
+                if(!eventsToRemove.isEmpty()){
+                    message = getString(R.string.overlapping_events) + names;
                 }
-                alertDialogBuilder.setMessage(getString(R.string.event_invitation_dialog_name) + eventToDisplay.getEventName() + "\n"
+                message= message + R.string.event_invitation_dialog_name + eventToDisplay.getEventName() + "\n"
                         + getString(R.string.event_invitation_dialog_start) + eventToDisplay.getStartTimeToString() + "\n"
                         + getString(R.string.event_invitation_dialog_end) + eventToDisplay.getEndTimeToString() + "\n"
-                        + getString(R.string.event_invitation_dialog_description) + eventToDisplay.getDescription() + "\n" + members);
+                        + getString(R.string.event_invitation_dialog_description) + eventToDisplay.getDescription() + "\n" + members;
+                alertDialogBuilder.setMessage(message);
                 alertDialogBuilder
                         .setPositiveButton(R.string.event_invitation_dialog_accept,
                                 new DialogInterface.OnClickListener() {
@@ -210,6 +224,9 @@ public class EventListingActivity extends ToolbarActivity {
                                     public void onClick(
                                             DialogInterface dialogInterface,
                                             int i) {
+                                        for (Event e : eventsToRemove){
+                                            EventDescriptionActivity.removeEvent(e);
+                                        }
                                         Account.shared.addOrUpdateEvent(eventToDisplay.withInvitation(!
                                                 eventToDisplay.getInvitation()));
                                         Database.update();
@@ -235,5 +252,6 @@ public class EventListingActivity extends ToolbarActivity {
                 alertDialog.show();
             }
         }
+        recreate();
     }
 }

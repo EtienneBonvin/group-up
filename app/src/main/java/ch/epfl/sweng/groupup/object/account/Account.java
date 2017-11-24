@@ -264,7 +264,6 @@ public final class Account extends User {
         } else {
             Event e = current.get().withEventName(current.get().getEventName());
             if (current.get().getEventStatus().equals(EventStatus.CURRENT)) {
-                EventDescriptionActivity.removeEvent(Account.shared.currentEvent.get());
                 shared =
                         new Account(UUID,
                                     displayName,
