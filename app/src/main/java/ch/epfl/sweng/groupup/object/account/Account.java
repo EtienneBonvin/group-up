@@ -340,7 +340,7 @@ public final class Account extends User {
         List<Member> allMembersInEvent = event.getEventMembers();
 
         for(Member m : allMembersInEvent) {
-            if (User.observer != null && location != null && !m.equals(Account.shared.toMember())) {
+            if (User.observer != null && !location.isEmpty() && !m.equals(Account.shared.toMember())) {
                 User.observer.updateMemberMarkers(m, m.getLocation().get());
             }
         }
