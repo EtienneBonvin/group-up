@@ -65,18 +65,17 @@ public class EventCreationActivityTest {
      * Tests if an event is well generated when the user enters specified inputs.
      * Important ! The test could fail because of the start and end date and time.
      */
-    /**
     @Test
     public void testEventWellGenerated() {
 
         Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
                 Optional.<String>empty(), Optional.<String>empty(), Optional.<Location>empty());
         List<Member> expectedMembers = new ArrayList<>();
-        expectedMembers.add(emptyMember.withUUID("0"));
+        /*expectedMembers.add(emptyMember.withUUID("0"));
         expectedMembers.add(emptyMember.withUUID("1"));
         expectedMembers.add(emptyMember.withUUID("2"));
         expectedMembers.add(emptyMember.withUUID("3"));
-        expectedMembers.add(emptyMember.withUUID("4"));
+        expectedMembers.add(emptyMember.withUUID("4"));*/
         expectedMembers.add(emptyMember.withUUID(Member.UNKNOWN_USER + "1").withEmail("swenggroupup@gmail.com"));
         expectedMembers.add(emptyMember.withUUID(Account.shared.getUUID().getOrElse("Default UUID")));
 
@@ -135,7 +134,7 @@ public class EventCreationActivityTest {
             throw new AssertionError("Expected : "+expected+".\nFound : "+found);
         }
         Account.shared.clear();
-    }*/
+    }
 
     @Test
     public void noEventCreatedOnEmptyEventName(){
@@ -322,7 +321,7 @@ public class EventCreationActivityTest {
     private void addMembers(){
         onView(withId(R.id.button_add_members)).perform(click());
         Espresso.closeSoftKeyboard();
-        onView(withId(R.id.edit_text_add_member)).perform(typeText("0"));
+        /*onView(withId(R.id.edit_text_add_member)).perform(typeText("0"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.image_view_add_member)).perform(click());
         onView(withId(R.id.edit_text_add_member)).perform(typeText("1"));
@@ -336,7 +335,7 @@ public class EventCreationActivityTest {
         onView(withId(R.id.image_view_add_member)).perform(click());
         onView(withId(R.id.edit_text_add_member)).perform(typeText("4"));
         Espresso.closeSoftKeyboard();
-        onView(withId(R.id.image_view_add_member)).perform(click());
+        onView(withId(R.id.image_view_add_member)).perform(click());*/
         onView(withId(R.id.edit_text_add_member)).perform(typeText("swenggroupup@gmail.com"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.image_view_add_member)).perform(click());

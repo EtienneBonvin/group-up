@@ -556,22 +556,21 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
             List<Member> finalMembers = new ArrayList<>();
             Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(),
                     Optional.<String>empty(), Optional.<String>empty(),
-                                            Optional.<String>empty(), Optional.<Location>empty());
+                    Optional.<String>empty(), Optional.<Location>empty());
 
             int nb_unknown = 0;
 
             List<String> mailsToSend = new ArrayList<>();
 
             for(MemberRepresentation s : members){
-                if(emailCheck(s.getEmail())){
+                if(emailCheck(s.toString()) && s.getEmail().length() != 0){
                     finalMembers.add(emptyMember
                             .withUUID(Member.UNKNOWN_USER + (++nb_unknown))
                             .withEmail(s.toString()));
                     mailsToSend.add(s.getEmail());
                 }else{
                     finalMembers.add(emptyMember
-                            .withUUID(s.getUUID())
-                            .withDisplayName(s.toString()));
+                            .withUUID(s.getUUID()));
                 }
             }
 

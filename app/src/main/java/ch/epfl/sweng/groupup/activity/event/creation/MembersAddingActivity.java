@@ -7,18 +7,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import java.util.HashMap;
 import java.util.MissingResourceException;
 
 import ch.epfl.sweng.groupup.R;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class MembersAddingActivity extends EventCreationActivity implements ZXingScannerView.ResultHandler{
+public class MembersAddingActivity extends EventCreationActivity implements ZXingScannerView.ResultHandler {
 
-    private HashMap<View.OnClickListener, View> viewsWithOCL;
-    private HashMap<View.OnClickListener, MemberRepresentation> uIdsWithOCL;
-    private ZXingScannerView mScannerView;
+    private transient HashMap<View.OnClickListener, View> viewsWithOCL;
+    private transient HashMap<View.OnClickListener, MemberRepresentation> uIdsWithOCL;
+    private transient ZXingScannerView mScannerView;
 
     private EventBuilder builder;
 
