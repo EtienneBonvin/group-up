@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -131,6 +132,7 @@ public class EventDescriptionActivity extends ToolbarActivity {
 
     /**
      * Remove the user from the Event
+     * TODO change the place of this method, it doesn't make much sense to have it here
      */
     public static void removeEvent(Event eventToRemove) {
         List<Member> futureMembers = new ArrayList<>(eventToRemove.getEventMembers());
@@ -141,11 +143,12 @@ public class EventDescriptionActivity extends ToolbarActivity {
         List<Event> futureEventList = new ArrayList<>(Account.shared.getEvents());
         Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>
                 ()).withCurrentEvent(Optional.<Event>empty());
+        Log.d("FUTUREEVENTBEFORE",futureEventList.toString());
         futureEventList.remove(eventToRemove);
+        Log.d("FUTUREEVENTAFETERREMOVE",futureEventList.toString());
         for (Event fe : futureEventList) {
             Account.shared.addOrUpdateEvent(fe);
         }
-
         Database.update();
     }
 

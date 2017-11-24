@@ -118,10 +118,8 @@ public final class Account extends User {
                     newFuture.remove(e);
                     break;
                 case CURRENT:
-                   if(Account.shared.currentEvent.isEmpty()){
                         Account.shared.withCurrentEvent(Optional.from(e));
                         newFuture.remove(e);
-                    }
                     break;
                 default:
             }

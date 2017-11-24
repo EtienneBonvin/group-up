@@ -52,6 +52,7 @@ public class EventListingActivity extends ToolbarActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("RECREATE", "Asfafasd");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_listing);
         super.initializeToolbarActivity();
@@ -122,8 +123,8 @@ public class EventListingActivity extends ToolbarActivity {
     private void initializeEvents(List<Event> events, boolean needAnOffset) {
         int offset = needAnOffset ? Account.shared.getFutureEvents().size() : 0;
         for (Event e : events) {
+            Log.d("NAME + MEMBER",e.getEventName()+e.getEventMembers().toString());
             if (e.getInvitation()) {
-                Log.d("HASH",""+e.hashCode());
                 eventsToDisplay.add(e);
             }
         }
@@ -185,8 +186,9 @@ public class EventListingActivity extends ToolbarActivity {
      * @param
      */
     private void askForInvitation() {
-        final List<Event> eventsToRemove=new ArrayList<>();
         for (final Event eventToDisplay : eventsToDisplay) {
+            onPause();
+            List<Event> eventsToRemove=new ArrayList<>();
             if (!dialogShown) {
                 dialogShown = true;
 
@@ -194,25 +196,26 @@ public class EventListingActivity extends ToolbarActivity {
                 String names="";
 
                 for(Event e : Account.shared.getFutureEvents()){
-                    if (e.overlap(Optional.from(eventToDisplay))){
+                    if (e.overlap(Optional.from(eventToDisplay)) && !e.getUUID().equals(eventToDisplay.getUUID())){
                         eventsToRemove.add(e);
-                        names+= e.getEventName()+", ";
+                        names+= e.getEventName()+" ";
                     }
                 }
                 if (eventToDisplay.overlap(Account.shared.getCurrentEvent())){
                     eventsToRemove.add(Account.shared.getCurrentEvent().get());
                 }
+                final List<Event> eventsToRemoveFinal= Collections.unmodifiableList(eventsToRemove);
                 String members = getString(R.string.event_invitation_dialog_members);
                 for (Member member : eventToDisplay.getEventMembers()) {
                     members += member.getDisplayName().getOrElse(getString(R.string.event_invitation_dialog_unknown)) + "\n";
                 }
                 AlertDialog.Builder alertDialogBuilder =
-                        new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AboutDialog));
+                        new AlertDialog.Builder(new ContextThemeWrapper(EventListingActivity.this, R.style.AboutDialog));
                 alertDialogBuilder.setTitle(R.string.event_invitation_title);
                 if(!eventsToRemove.isEmpty()){
-                    message = getString(R.string.overlapping_events) + names;
+                    message = getString(R.string.overlapping_events) + names + "\n";
                 }
-                message= message + R.string.event_invitation_dialog_name + eventToDisplay.getEventName() + "\n"
+                message= message + getString(R.string.event_invitation_dialog_name) + eventToDisplay.getEventName() + "\n"
                         + getString(R.string.event_invitation_dialog_start) + eventToDisplay.getStartTimeToString() + "\n"
                         + getString(R.string.event_invitation_dialog_end) + eventToDisplay.getEndTimeToString() + "\n"
                         + getString(R.string.event_invitation_dialog_description) + eventToDisplay.getDescription() + "\n" + members;
@@ -224,17 +227,19 @@ public class EventListingActivity extends ToolbarActivity {
                                     public void onClick(
                                             DialogInterface dialogInterface,
                                             int i) {
-                                        for (Event e : eventsToRemove){
+                                        Account.shared.addOrUpdateEvent(eventToDisplay.withInvitation(
+                                                !eventToDisplay.getInvitation()));
+                                        eventsToDisplay.remove(eventToDisplay);
+                                        for (Event e : eventsToRemoveFinal){
                                             EventDescriptionActivity.removeEvent(e);
                                         }
-                                        Account.shared.addOrUpdateEvent(eventToDisplay.withInvitation(!
-                                                eventToDisplay.getInvitation()));
-                                        Database.update();
-                                        eventsToDisplay.remove(eventToDisplay);
                                         dialogShown = false;
                                         dialogInterface.dismiss();
+                                        Database.update();
+                                        recreate();
                                     }
                                 });
+
                 alertDialogBuilder
                         .setNegativeButton(R.string.event_invitation_dialog_decline,
                                 new DialogInterface.OnClickListener() {
@@ -246,12 +251,12 @@ public class EventListingActivity extends ToolbarActivity {
                                         eventsToDisplay.remove(eventToDisplay);
                                         dialogShown = false;
                                         dialogInterface.dismiss();
+                                        recreate();
                                     }
                                 });
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
             }
         }
-        recreate();
     }
 }

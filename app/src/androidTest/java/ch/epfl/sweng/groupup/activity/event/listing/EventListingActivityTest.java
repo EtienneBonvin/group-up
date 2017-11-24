@@ -81,6 +81,7 @@ public class EventListingActivityTest {
         if(BuildConfig.DEBUG&& !(Account.shared.getEvents().size()==2)){
             throw new AssertionError();
         }
+        Account.shared.clear();
     }
     @Test
     public void invitationIsDeclinedAndDeleted(){
@@ -100,6 +101,7 @@ public class EventListingActivityTest {
         if(BuildConfig.DEBUG&& !(Account.shared.getEvents().size()==1)){
             throw new AssertionError();
         }
+        Account.shared.clear();
     }
 
     @Test
@@ -123,6 +125,7 @@ public class EventListingActivityTest {
         if(BuildConfig.DEBUG && !(Account.shared.getCurrentEvent().get().getEventName().equals(newEventName))){
             throw new AssertionError();
         }
+        Account.shared.clear();
     }
 }
 
