@@ -18,7 +18,7 @@ import java.io.ByteArrayOutputStream;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
-import ch.epfl.sweng.groupup.lib.Helper;
+import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.login.FirebaseAuthentication;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService.Status;
@@ -42,6 +42,8 @@ public class UserInformationActivity extends LoginActivityInterface {
     private TextView emailTextView;
 
     private GoogleAuthenticationService authService;
+
+    public static final String EXTRA_MESSAGE = "picture";
 
 
     @Override
@@ -118,9 +120,9 @@ public class UserInformationActivity extends LoginActivityInterface {
             }
         } else {
             // TODO: 19.10.2017  after pausing app, email always empty?
-            Helper.showToast(getApplicationContext(),
-                             getString(R.string.toast_unable_to_generate_qr),
-                             Toast.LENGTH_SHORT);
+            AndroidHelper.showToast(getApplicationContext(),
+                                    getString(R.string.toast_unable_to_generate_qr),
+                                    Toast.LENGTH_SHORT);
         }
     }
 
@@ -130,7 +132,7 @@ public class UserInformationActivity extends LoginActivityInterface {
 
     private void switchToDisplayQR(byte[] byteArray) {
         Intent intent = new Intent(this, DisplayQRActivity.class);
-        intent.putExtra("picture", byteArray);
+        intent.putExtra(EXTRA_MESSAGE, byteArray);
         startActivity(intent);
     }
 
@@ -166,9 +168,9 @@ public class UserInformationActivity extends LoginActivityInterface {
 
     @Override
     public void onFail() {
-        Helper.showToast(getApplicationContext(),
-                         getString(R.string.toast_unable_to_sign_out),
-                         Toast.LENGTH_SHORT);
+        AndroidHelper.showToast(getApplicationContext(),
+                                getString(R.string.toast_unable_to_sign_out),
+                                Toast.LENGTH_SHORT);
     }
 
     @Override

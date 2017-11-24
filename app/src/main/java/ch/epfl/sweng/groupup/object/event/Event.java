@@ -1,7 +1,5 @@
 package ch.epfl.sweng.groupup.object.event;
 
-import android.graphics.Bitmap;
-
 import org.joda.time.LocalDateTime;
 
 import java.io.Serializable;
@@ -9,8 +7,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
+import ch.epfl.sweng.groupup.activity.event.files.CompressedBitmap;
 import ch.epfl.sweng.groupup.lib.Watchee;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.lib.fileStorage.FirebaseFileProxy;
@@ -26,9 +26,10 @@ public final class Event implements Serializable, Watcher, Watchee{
     private final LocalDateTime endTime;
     private final String description;
     private final List<Member> eventMembers;
-    private List<Bitmap> eventImages;
+    private List<CompressedBitmap> eventImages;
     private FirebaseFileProxy proxy;
     private Set<Watcher> watchers;
+
 
 
     //The invitation is designed only for the user linked to the Account. This state is set to true
@@ -74,7 +75,7 @@ public final class Event implements Serializable, Watcher, Watchee{
      * method is called.
      * @return the list of Bitmap of the pictures of the event.
      */
-    public List<Bitmap> getPictures(){
+    public List<CompressedBitmap> getPictures(){
         verifyProxyInstantiated();
         return new ArrayList<>(eventImages);
     }
@@ -84,7 +85,7 @@ public final class Event implements Serializable, Watcher, Watchee{
      * @param uuid the id of the uploader.
      * @param bitmap the Bitmap to upload
      */
-    public void addPicture(String uuid, Bitmap bitmap){
+    public void addPicture(String uuid, CompressedBitmap bitmap){
         verifyProxyInstantiated();
         eventImages.add(bitmap);
         proxy.uploadFile(uuid, bitmap);
@@ -106,12 +107,23 @@ public final class Event implements Serializable, Watcher, Watchee{
         return startTime;
     }
 
+    public String getStartTimeToString(){
+        LocalDateTime date =getStartTime();
+        return String.format(Locale.getDefault(),"%d/%d/%d", date.getDayOfMonth(),
+                date.getMonthOfYear(),date.getYear());
+    }
     /**
      * Getter for the end date and time
      * @return LocalDateTime ending time
      */
     public LocalDateTime getEndTime() {
         return endTime;
+    }
+
+    public String getEndTimeToString(){
+        LocalDateTime date =getEndTime();
+        return String.format(Locale.getDefault(),"%d/%d/%d", date.getDayOfMonth(),
+                date.getMonthOfYear(),date.getYear());
     }
 
     /**
@@ -241,6 +253,17 @@ public final class Event implements Serializable, Watcher, Watchee{
     }
 
     /**
+     * Return an hash comparing only what needed to differentiate two invitation.
+     * @return
+     */
+    public int hashCode() {
+        int result = UUID.hashCode();
+        result = 31 * result + startTime.hashCode();
+        result = 31 * result + endTime.hashCode();
+        return result;
+    }
+
+    /**
      * Override the equals method.
      * @param o the object to be compared with.
      * @return true if the object o and this are equals, false otherwise.
@@ -274,6 +297,7 @@ public final class Event implements Serializable, Watcher, Watchee{
                 ", endDate=" + endTime + '\'' +
                 ", eventStatus=" + getEventStatus() + '\'' +
                 ", eventID= " + UUID +
+                ", invitation= " + invitation +
                 '}';
     }
 
@@ -341,7 +365,7 @@ public final class Event implements Serializable, Watcher, Watchee{
     @Override
     public void notifyWatcher() {
         verifyProxyInstantiated();
-        List<Bitmap> proxyImages = proxy.getFromDatabase();
+        List<CompressedBitmap> proxyImages = proxy.getFromDatabase();
         if(proxyImages.size() > eventImages.size())
             eventImages = proxyImages;
         notifyAllWatchers();

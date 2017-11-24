@@ -8,6 +8,7 @@
 
     <ImageView
         android:id="@+id/image_to_display"
+        android:contentDescription="@string/full_screen_file_content_description"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

@@ -84,7 +84,7 @@ public final class Database {
     }
 
     /**
-     * Helper function to store the events.
+     * AndroidHelper function to store the events.
      *
      * @param event - the real "Event" object
      */
@@ -131,7 +131,7 @@ public final class Database {
     }
 
     /**
-     * Helper function to store the events.
+     * AndroidHelper function to store the events.
      *
      * @param databaseEvent - the "DatabaseEvent" object
      */
@@ -196,7 +196,7 @@ public final class Database {
                     // We transform every DatabaseUser to a Member.
                     List<Member> members = new ArrayList<>();
                     for (DatabaseUser user : event.members.values()) {
-                        Member memberToAdd = new Member(user.getOptUUID(),
+                        Member memberToAdd = new Member(user.getOptUuid(),
                                                         user.getOptDisplayName(),
                                                         user.getOptGivenName(),
                                                         user.getOptFamilyName(),
@@ -226,8 +226,8 @@ public final class Database {
                     // We create the event that we want to store in the account.
                     Event tempEvent = new Event(event.uuid,
                                                 event.name,
-                                                LocalDateTime.parse(event.datetime_start),
-                                                LocalDateTime.parse(event.datetime_end),
+                                                LocalDateTime.parse(event.datetimeStart),
+                                                LocalDateTime.parse(event.datetimeEnd),
                                                 event.description, members, needToUpdateMyself);
 
                     // We add or update the event.

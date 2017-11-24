@@ -59,9 +59,6 @@ public class ToolbarActivityTest {
         mActivityRule.launchActivity(new Intent());
 
         onView(withId(R.id.icon_access_group_list)).perform(click());
-        /* times(2) is there because the Activity will match two times : 1 times before
-        * the click on the icon and another time after.
-         */
         intended(hasComponent(EventListingActivity.class.getName()));
 
     }

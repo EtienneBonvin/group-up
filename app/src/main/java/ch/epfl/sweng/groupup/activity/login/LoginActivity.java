@@ -16,7 +16,7 @@ import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService.Status;
 import ch.epfl.sweng.groupup.lib.login.LoginActivityInterface;
 import ch.epfl.sweng.groupup.lib.login.MockAuth;
 
-import static ch.epfl.sweng.groupup.lib.Helper.showAlert;
+import static ch.epfl.sweng.groupup.lib.AndroidHelper.showAlert;
 
 /**
  * Activity to handle the sign up / login process of the user. It either asks the user to sign up /
