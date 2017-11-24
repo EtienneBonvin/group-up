@@ -2,9 +2,11 @@ package ch.epfl.sweng.groupup.activity.info;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +66,7 @@ public class UserInformationActivity extends LoginActivityInterface {
 
         initializeFields();
         updateUI(Status.CONNECTED);
+        displayQR();
 
         findViewById(R.id.button_sign_out)
                 .setOnClickListener(new View.OnClickListener() {
@@ -73,15 +76,20 @@ public class UserInformationActivity extends LoginActivityInterface {
                     }
                 });
 
-        findViewById(R.id.buttonDisplayQR)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        displayQR();
-                    }
-                });
     }
 
+    // TODO
+    /*
+    Bundle extras = getIntent().getExtras();
+        byte[] byteArray = extras.getByteArray(UserInformationActivity.EXTRA_MESSAGE);
+
+        assert byteArray != null;
+        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        ImageView image = findViewById(R.id.qrImageView);
+
+        image.setImageBitmap(bmp);
+
+     */
     private void displayQR() {
         if (!shared.getUUID().isEmpty()) {
             String text = shared.getUUID().get() + ","+ shared.getDisplayName().getOrElse("Unknown User");
@@ -93,27 +101,23 @@ public class UserInformationActivity extends LoginActivityInterface {
                 int width = bitMatrix.getWidth();
                 int height = bitMatrix.getHeight();
                 Bitmap
-                        bmp =
+                        bitmap =
                         Bitmap.createBitmap(width,
                                             height,
                                             Bitmap.Config.RGB_565);
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
-                        bmp.setPixel(x,
+                        bitmap.setPixel(x,
                                      y,
                                      bitMatrix.get(x, y) ?
                                      Color.BLACK :
-                                     Color.WHITE);
+                                     getResources().getColor(R.color.background));
                     }
                 }
 
-                // pass bitmap to Byte Array
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-
-                // open QR code in new activity
-                switchToDisplayQR(byteArray);
+                // display QR code
+                ImageView image = findViewById(R.id.qrImageView);
+                image.setImageBitmap(bitmap);
 
             } catch (WriterException e) {
                 e.printStackTrace();
@@ -129,12 +133,6 @@ public class UserInformationActivity extends LoginActivityInterface {
     /**
      * Method used to initialize all the fields of the activity.
      */
-
-    private void switchToDisplayQR(byte[] byteArray) {
-        Intent intent = new Intent(this, DisplayQRActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, byteArray);
-        startActivity(intent);
-    }
 
     private void initializeFields() {
         displayNameTextView = findViewById(R.id.text_view_display_name_text);

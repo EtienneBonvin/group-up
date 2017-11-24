@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -92,27 +93,34 @@
             android:layout_below="@id/text_view_email_info"
             android:layout_marginBottom="@dimen/default_gap"/>
 
+        <Button
+            android:id="@+id/button_sign_out"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/button_sign_out_text" />
+
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/user_infos"
+        android:layout_alignParentBottom="true">
 
+        <ImageView
+            android:contentDescription="@string/QR_code"
+            android:id="@+id/qrImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:padding="@dimen/default_gap"
+            app:srcCompat="@color/transparent" />
 
-    <Button
-        android:id="@+id/button_sign_out"
-        style="@style/ButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/button_sign_out_text"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/user_infos"/>
+    </RelativeLayout>
 
-    <Button
-        android:id="@+id/buttonDisplayQR"
-        style="@style/ButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Display_QR"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/button_sign_out"/>
 
 </RelativeLayout>
