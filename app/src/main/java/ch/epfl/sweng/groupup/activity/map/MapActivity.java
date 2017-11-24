@@ -1,6 +1,9 @@
 package ch.epfl.sweng.groupup.activity.map;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -25,7 +28,7 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private Marker mDefault;
-    private Map<String,Marker> mMemberMarkers;
+    private Map<String, Marker> mMemberMarkers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,25 +41,20 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
 
         User.observer = this;
-        mMemberMarkers = new HashMap<String,Marker>();
+        mMemberMarkers = new HashMap<String, Marker>();
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+            mMap.setMyLocationEnabled(false);
+            super.initializeToolbarActivity();
+        }
 
         if(!Account.shared.getLocation().isEmpty()){
             updateDefaultMarker(Account.shared.getLocation().get());
+
         }
     }
 
@@ -70,13 +68,15 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
         mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
     }
 
-    public void updateMemberMarkers(User user, Location location) {
+    public void updateMemberMarkers(String UUID, String displayName, Location location) {
         LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
-
-        if (!mMemberMarkers.containsKey(user.getUUID().get())) {
-            mMemberMarkers.put(user.getUUID().get(), mMap.addMarker(new MarkerOptions().position(pos).title(user.getDisplayName().get()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))));
-        } else {
-            mMemberMarkers.get(user.getUUID().get()).setPosition(pos);
+        if(!Account.shared.getUUID().isEmpty() && !UUID.equals(Account.shared.getUUID().get())) {
+            if (!mMemberMarkers.containsKey(UUID)) {
+                mMemberMarkers.put(UUID, mMap.addMarker(new MarkerOptions().position(pos).title(displayName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))));
+            } else {
+                mMemberMarkers.get(UUID).setPosition(pos);
+            }
         }
     }
+
 }

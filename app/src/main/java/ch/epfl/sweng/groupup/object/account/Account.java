@@ -337,14 +337,6 @@ public final class Account extends User {
      * @return the modified shared account, so that it is easier to call in chain
      */
     public Account addOrUpdateEvent(Event event) {
-        List<Member> allMembersInEvent = event.getEventMembers();
-
-        for(Member m : allMembersInEvent) {
-            if (User.observer != null && !location.isEmpty() && !m.equals(Account.shared.toMember())) {
-                User.observer.updateMemberMarkers(m, m.getLocation().get());
-            }
-        }
-
         switch (event.getEventStatus()) {
             case FUTURE:
                 return addOrUpdateFutureEvent(event);
