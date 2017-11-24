@@ -7,8 +7,8 @@
     tools:context="ch.epfl.sweng.groupup.activity.info.UserInformationActivity">
 
     <include
-        layout="@layout/toolbar"
-        android:id="@+id/toolbar"/>
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
 
         <TextView
             android:id="@+id/text_view_display_name_info"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/EventCategories"
             android:gravity="start"
@@ -29,7 +29,7 @@
 
         <TextView
             android:id="@+id/text_view_display_name_text"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/EventFields"
             android:text="@string/text_view_display_name_text"
@@ -38,7 +38,7 @@
 
         <TextView
             android:id="@+id/text_view_family_name_info"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/EventCategories"
             android:gravity="start"
@@ -48,7 +48,7 @@
 
         <TextView
             android:id="@+id/text_view_family_name_text"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/EventFields"
             android:text="@string/text_view_family_name_text"
@@ -57,7 +57,7 @@
 
         <TextView
             android:id="@+id/text_view_given_name_info"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/EventCategories"
             android:gravity="start"
@@ -76,7 +76,7 @@
 
         <TextView
             android:id="@+id/text_view_email_info"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/EventCategories"
             android:gravity="start"
@@ -93,6 +93,7 @@
             android:layout_below="@id/text_view_email_info"
             android:layout_marginBottom="@dimen/default_gap"/>
 
+        <!-- Currently ignoring lint issue about overlapping button and textView -->
         <Button
             android:id="@+id/button_sign_out"
             style="@style/ButtonStyle"
@@ -100,7 +101,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:text="@string/button_sign_out_text" />
+            android:text="@string/button_sign_out_text"
+            tools:ignore="RelativeOverlap" />
 
     </RelativeLayout>
 

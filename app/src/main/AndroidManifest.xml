@@ -56,7 +56,7 @@
         <activity
             android:name=".activity.map.MapActivity"
             android:label="@string/title_activity_map" />
-        <activity android:name=".activity.event.files.FullScreenFile"></activity>
+        <activity android:name=".activity.event.files.FullScreenFile" />
 
       
 

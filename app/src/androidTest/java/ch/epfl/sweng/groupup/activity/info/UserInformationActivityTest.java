@@ -78,6 +78,7 @@ public class UserInformationActivityTest {
                                                                    .getString(R.string.text_view_email_info)))));
     }
 
+    /* IMPLEMENTATION CHANGED, THIS IS NOW USELESS
     @Test
     public void displayErrorToastOnQrButtonClick() throws Exception {
         Account.shared.clear();
@@ -89,7 +90,7 @@ public class UserInformationActivityTest {
                 .check(matches(isDisplayed()));
         onView(withId(R.id.buttonDisplayQR)).perform(click());
         Account.shared.clear();
-    }
+    }*/
 
     /* IMPLEMENTATION CHANGED, THIS IS NOW USELESS
     @Test
