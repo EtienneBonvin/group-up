@@ -53,7 +53,6 @@ public class EventsShould {
         String testDescription = "Test Description";
         Event newEvent = event.withDescription(testDescription);
         assertEquals(newEvent.getDescription(),testDescription);
-
     }
 
     @Test
@@ -70,9 +69,8 @@ public class EventsShould {
         Event newEvent = event.withPointsOfInterest(pointsOfInterest);
         newEvent = newEvent.withPointOfInterest(defaultPointOfInterest.withName("newName04"));
 
-        pointsOfInterest.add(defaultPointOfInterest.withName("newName03"));
+        pointsOfInterest.add(defaultPointOfInterest.withName("newName04"));
         assertEquals(newEvent.getPointsOfInterest(), pointsOfInterest);
-
     }
 
     @Test
