@@ -33,8 +33,7 @@
             android:layout_height="wrap_content"
             style="@style/EventFields"
             android:text="@string/text_view_display_name_text"
-            android:layout_below="@id/text_view_display_name_info"
-            android:layout_marginBottom="@dimen/default_gap"/>
+            android:layout_below="@id/text_view_display_name_info" />
 
         <TextView
             android:id="@+id/text_view_family_name_info"
@@ -52,8 +51,7 @@
             android:layout_height="wrap_content"
             style="@style/EventFields"
             android:text="@string/text_view_family_name_text"
-            android:layout_below="@id/text_view_family_name_info"
-            android:layout_marginBottom="@dimen/default_gap"/>
+            android:layout_below="@id/text_view_family_name_info" />
 
         <TextView
             android:id="@+id/text_view_given_name_info"
@@ -71,8 +69,7 @@
             android:layout_height="wrap_content"
             style="@style/EventFields"
             android:text="@string/text_view_given_name_text"
-            android:layout_below="@id/text_view_given_name_info"
-            android:layout_marginBottom="@dimen/default_gap"/>
+            android:layout_below="@id/text_view_given_name_info" />
 
         <TextView
             android:id="@+id/text_view_email_info"
@@ -90,8 +87,7 @@
             android:layout_height="wrap_content"
             style="@style/EventFields"
             android:text="@string/text_view_email_text"
-            android:layout_below="@id/text_view_email_info"
-            android:layout_marginBottom="@dimen/default_gap"/>
+            android:layout_below="@id/text_view_email_info" />
 
 
 

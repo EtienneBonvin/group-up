@@ -41,6 +41,7 @@
 
     <style name="EventFields" parent="Base.TextAppearance.AppCompat.Subhead">
         <item name="android:textColor">@color/middle_grey</item>
+        <item name="android:layout_marginBottom">@dimen/default_gap</item>
     </style>
 
 
