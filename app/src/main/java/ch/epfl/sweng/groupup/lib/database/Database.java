@@ -237,7 +237,7 @@ public final class Database {
                     Set<PointOfInterest> pointsOfInterest = new HashSet<>();
                     for (DatabasePointOfInterest poi : event.pointsOfInterest.values()) {
                         pointsOfInterest.add(new PointOfInterest(poi.uuid,
-                                                                 poi.description,
+                                                                 poi.name,
                                                                  poi.description,
                                                                  poi.getLocation()));
                     }

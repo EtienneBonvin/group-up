@@ -40,10 +40,8 @@ import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 
 public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
 
-    //private final float DEFAULT_ZOOM = 13f;
     private GoogleMap mMap;
     private Event currentEvent;
-    private Marker mDefault;
     private Map<Marker, String> mPoiMarkers;
 
 
@@ -94,27 +92,9 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
             currentEvent = event;
 
             mMap.clear();
-            if (!Account.shared.getLocation().isEmpty()) {
-                updateDefaultMarker(Account.shared.getLocation().get());
-            }
             updateMemberMarkers();
             updatePoiMarkers();
         }
-    }
-
-
-    public void updateDefaultMarker(Location location) {
-        LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
-
-        if (mDefault == null) {
-            mDefault = mMap.addMarker(new MarkerOptions().position(pos).title("You"));
-        } else {
-            mDefault.setPosition(pos);
-        }
-
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, DEFAULT_ZOOM));
-
-        super.provideGeoLocation();
     }
 
 
@@ -256,7 +236,12 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                // Ignore
+                /*
+                This needs to be done because of a "bug" of the Google Maps, when you start dragging a marker it gets
+                 automatically deviated a little bit.
+                 */
+                marker.remove();
+                updatePoiMarkers();
             }
         };
     }

@@ -322,10 +322,6 @@ public final class Account extends User {
                              pastEvents,
                              futureEvents,
                              Optional.from(location));
-
-        if (User.observer != null && location != null) {
-            User.observer.updateDefaultMarker(location);
-        }
         return shared;
     }
 
