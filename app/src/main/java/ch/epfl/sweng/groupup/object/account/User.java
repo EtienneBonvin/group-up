@@ -10,6 +10,8 @@ import ch.epfl.sweng.groupup.lib.Optional;
  * to give them access to common first name, last name and email.
  */
 public abstract class User {
+    public static MapActivity observer = null;
+
     final Optional<String> displayName;
     final Optional<String> givenName;
     final Optional<String> familyName;
@@ -154,6 +156,4 @@ public abstract class User {
             return Optional.from(locationCopy);
         }
     }
-
-    public static MapActivity observer = null;
 }

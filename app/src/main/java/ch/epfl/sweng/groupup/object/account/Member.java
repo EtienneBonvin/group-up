@@ -18,9 +18,6 @@ public final class Member extends User {
                   String email,
                   Location location) {
         super(displayName, givenName, familyName, email, UUID, location);
-        if(User.observer != null) {
-            User.observer.updateMemberMarkers(UUID, displayName, location);
-        }
     }
 
     public Member(Optional<String> UUID,
@@ -30,9 +27,6 @@ public final class Member extends User {
                   Optional<String> email,
                   Optional<Location> location) {
         super(displayName, givenName, familyName, email, UUID, location);
-        if(User.observer != null && !UUID.isEmpty() && !displayName.isEmpty() && !location.isEmpty()){
-            User.observer.updateMemberMarkers(UUID.get(), displayName.get(), location.get());
-        }
     }
 
     /**
