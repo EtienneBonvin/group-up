@@ -68,8 +68,7 @@ public class EventsShould {
         pointsOfInterest.add(defaultPointOfInterest.withName("newName03"));
 
         Event newEvent = event.withPointsOfInterest(pointsOfInterest);
-        newEvent =
-                event.withPointOfInterest(defaultPointOfInterest.withName("newName04"));
+        newEvent = newEvent.withPointOfInterest(defaultPointOfInterest.withName("newName04"));
 
         pointsOfInterest.add(defaultPointOfInterest.withName("newName03"));
         assertEquals(newEvent.getPointsOfInterest(), pointsOfInterest);

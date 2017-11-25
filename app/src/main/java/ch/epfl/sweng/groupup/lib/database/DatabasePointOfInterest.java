@@ -9,6 +9,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 import static ch.epfl.sweng.groupup.lib.database.Database.EMPTY_FIELD;
 
+
 @IgnoreExtraProperties
 final class DatabasePointOfInterest {
 
@@ -16,7 +17,6 @@ final class DatabasePointOfInterest {
      * Class to represent a point of interest that will be stored in the
      * database.
      */
-
     public String uuid = EMPTY_FIELD;
     public String name = EMPTY_FIELD;
     public String description = EMPTY_FIELD;
@@ -24,13 +24,12 @@ final class DatabasePointOfInterest {
     public String longitude = EMPTY_FIELD;
     public String provider = EMPTY_FIELD;
 
+
     public DatabasePointOfInterest() {
     }
 
-    DatabasePointOfInterest(String uuid,
-                            String name,
-                            String description,
-                            Location location) {
+
+    DatabasePointOfInterest(String uuid, String name, String description, Location location) {
         this.uuid = uuid;
         this.name = name;
         this.description = description;
@@ -39,29 +38,36 @@ final class DatabasePointOfInterest {
         this.provider = LocationManager.GPS_PROVIDER;
     }
 
+
     public String getUuid() {
         return uuid;
     }
+
 
     public String getName() {
         return name;
     }
 
+
     public String getDescription() {
         return description;
     }
+
 
     public String getLatitude() {
         return latitude;
     }
 
+
     public String getLongitude() {
         return longitude;
     }
 
+
     public String getProvider() {
         return provider;
     }
+
 
     @Exclude
     Location getLocation() {

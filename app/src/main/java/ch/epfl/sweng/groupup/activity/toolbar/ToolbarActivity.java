@@ -35,7 +35,11 @@ public class ToolbarActivity extends AppCompatActivity {
         initializeToolbar();
     }
 
-    private void initializeGeoLocation() {
+    public void initializeGeoLocation() {
+        if (geoLocation != null) {
+            geoLocation.pauseLocationUpdates();
+        }
+
         geoLocation = new GeoLocation(this, this);
         geoLocation.requestLocationUpdates();
     }

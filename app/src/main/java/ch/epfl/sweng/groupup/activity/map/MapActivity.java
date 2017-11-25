@@ -36,12 +36,15 @@ import ch.epfl.sweng.groupup.object.account.User;
 import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 
+
 public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
 
+    private final float DEFAULT_ZOOM = 13f;
     private GoogleMap mMap;
-    private Event currentEvent;
     private Marker mDefault;
     private Map<String, Marker> mMemberMarkers;
+    private Event currentEvent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,97 +53,85 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
         super.initializeToolbarActivity();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        Intent intent = getIntent();
-        int
-                eventIndex =
-                intent.getIntExtra(getString(R.string.event_listing_extraIndex),
-                                   -1);
-        if (eventIndex != -1) {
-            currentEvent = Account.shared.getEvents().get(eventIndex);
-        } else {
-            throw new Error("no event was passed down the the map " +
-                            "activity");
-        }
 
         User.observer = this;
         mMemberMarkers = new HashMap<>();
+
+        Intent intent = getIntent();
+        int eventIndex = intent.getIntExtra(getString(R.string.event_listing_extraIndex), -1);
+        if (eventIndex != -1) {
+            currentEvent = Account.shared.getEvents().get(eventIndex);
+        } else {
+            throw new Error("no event was passed down the the map activity");
+        }
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if (!(ActivityCompat.checkSelfPermission(this,
-                                                 Manifest.permission.ACCESS_FINE_LOCATION) !=
-              PackageManager.PERMISSION_GRANTED &&
-              ActivityCompat.checkSelfPermission(this,
-                                                 Manifest.permission.ACCESS_COARSE_LOCATION) !=
-              PackageManager.PERMISSION_GRANTED)) {
-            mMap.setMyLocationEnabled(false);
-            super.initializeToolbarActivity();
+        mMap.setOnMapLongClickListener(getMapLongClickListener());
+        mMap.setOnMarkerDragListener(getMarkerDragListener());
+
+        if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+              PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                                                                                      Manifest.permission
+                                                                                              .ACCESS_COARSE_LOCATION) !=
+                                                   PackageManager.PERMISSION_GRANTED)) {
+            mMap.setMyLocationEnabled(true);
         }
 
         if (!Account.shared.getLocation().isEmpty()) {
             updateDefaultMarker(Account.shared.getLocation().get());
-
         }
+
+        super.initializeGeoLocation();
     }
 
+
     public void updateDefaultMarker(Location location) {
-        LatLng
-                pos =
-                new LatLng(location.getLatitude(), location.getLongitude());
+        LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+
         if (mDefault == null) {
-            mDefault =
-                    mMap.addMarker(new MarkerOptions().position(pos)
-                                           .title("You"));
+            mDefault = mMap.addMarker(new MarkerOptions().position(pos).title("You"));
         } else {
             mDefault.setPosition(pos);
         }
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, DEFAULT_ZOOM));
+
+        super.initializeGeoLocation();
     }
 
-    public void updateMemberMarkers(String UUID,
-                                    String displayName,
-                                    Location location) {
-        LatLng
-                pos =
-                new LatLng(location.getLatitude(), location.getLongitude());
-        if (!Account.shared.getUUID().isEmpty() &&
-            !UUID.equals(Account.shared.getUUID().get())) {
+
+    public void updateMemberMarkers(String UUID, String displayName, Location location) {
+        LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+        if (!Account.shared.getUUID().isEmpty() && !UUID.equals(Account.shared.getUUID().get())) {
             if (!mMemberMarkers.containsKey(UUID)) {
                 mMemberMarkers.put(UUID,
-                                   mMap.addMarker(new MarkerOptions().position(
-                                           pos)
-                                                          .title(displayName)
-                                                          .icon(BitmapDescriptorFactory
-                                                                        .defaultMarker(
-                                                                                BitmapDescriptorFactory.HUE_ORANGE))));
+                                   mMap.addMarker(new MarkerOptions().position(pos)
+                                                                     .title(displayName)
+                                                                     .icon(BitmapDescriptorFactory.defaultMarker(
+                                                                             BitmapDescriptorFactory.HUE_ORANGE))));
             } else {
                 mMemberMarkers.get(UUID).setPosition(pos);
             }
         }
 
-        mMap.setOnMapLongClickListener(getMapLongClickListener());
-        mMap.setOnMarkerDragListener(getMarkerDragListener());
-
         for (PointOfInterest poi : currentEvent.getPointsOfInterest()) {
-            LatLng latLng = new LatLng(poi.getLocation().getLatitude(),
-                                       poi.getLocation().getLongitude());
+            LatLng latLng = new LatLng(poi.getLocation().getLatitude(), poi.getLocation().getLongitude());
 
             mMap.addMarker(new MarkerOptions().position(latLng)
-                                   .title(poi.getName())
-                                   .snippet(poi.getDescription())
-                                   .draggable(true)
-                                   .icon(BitmapDescriptorFactory
-                                                 .defaultMarker(
-                                                         BitmapDescriptorFactory.HUE_GREEN)));
+                                              .title(poi.getName())
+                                              .snippet(poi.getDescription())
+                                              .draggable(true)
+                                              .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory
+                                                                                                  .HUE_GREEN)));
         }
     }
+
 
     private GoogleMap.OnMapLongClickListener getMapLongClickListener() {
         return new GoogleMap.OnMapLongClickListener() {
@@ -149,9 +140,7 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
                 Context context = MapActivity.this;
 
                 // Dialog Builder
-                final AlertDialog.Builder
-                        builder =
-                        new AlertDialog.Builder(context);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle(R.string.poi_dialog_title);
 
                 // Container + Child Views to enable input from the user.
@@ -170,18 +159,14 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
 
                 builder.setView(container);
 
-                builder.setPositiveButton("Add",
-                                          getCreatePositiveListener(latLng,
-                                                                    titleEditText,
-                                                                    descriptionEditText));
-
-                builder.setNegativeButton("Cancel",
-                                          getNegativeListener());
+                builder.setPositiveButton("Add", getCreatePositiveListener(latLng, titleEditText, descriptionEditText));
+                builder.setNegativeButton("Cancel", getNegativeListener());
 
                 builder.create().show();
             }
         };
     }
+
 
     private DialogInterface.OnClickListener getCreatePositiveListener(final LatLng latLng,
                                                                       final EditText titleEditText,
@@ -192,22 +177,18 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
                 String title = titleEditText.getText().toString();
                 String description = descriptionEditText.getText().toString();
 
-                Location location = new
-                        Location(LocationManager.GPS_PROVIDER);
+                Location location = new Location(LocationManager.GPS_PROVIDER);
                 location.setLatitude(latLng.latitude);
                 location.setLongitude(latLng.longitude);
 
-                MarkerOptions markerOptions = new MarkerOptions()
-                        .position(latLng)
-                        .title(title)
-                        .snippet(description)
-                        .icon(BitmapDescriptorFactory
-                                      .defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                MarkerOptions markerOptions = new MarkerOptions().position(latLng)
+                                                                 .title(title)
+                                                                 .snippet(description)
+                                                                 .icon(BitmapDescriptorFactory.defaultMarker(
+                                                                         BitmapDescriptorFactory.HUE_GREEN));
                 mMap.addMarker(markerOptions);
 
-                PointOfInterest poi = new PointOfInterest(title,
-                                                          description,
-                                                          location);
+                PointOfInterest poi = new PointOfInterest(title, description, location);
 
                 Event newEvent = currentEvent.withPointOfInterest(poi);
 
@@ -218,6 +199,7 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
         };
     }
 
+
     private DialogInterface.OnClickListener getNegativeListener() {
         return new DialogInterface.OnClickListener() {
             @Override
@@ -227,6 +209,7 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
         };
     }
 
+
     private GoogleMap.OnMarkerDragListener getMarkerDragListener() {
         return new GoogleMap.OnMarkerDragListener() {
             @Override
@@ -234,24 +217,22 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
                 Context context = MapActivity.this;
 
                 // Dialog Builder
-                final AlertDialog.Builder
-                        builder =
-                        new AlertDialog.Builder(context);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle(R.string.poi_remove_title);
 
-                builder.setPositiveButton(R.string.poi_remove_positive,
-                                          getRemovePositiveListener(marker));
+                builder.setPositiveButton(R.string.poi_remove_positive, getRemovePositiveListener(marker));
 
-                builder.setNegativeButton(R.string.poi_remove_negative,
-                                          getNegativeListener());
+                builder.setNegativeButton(R.string.poi_remove_negative, getNegativeListener());
 
                 builder.create().show();
             }
+
 
             @Override
             public void onMarkerDrag(Marker marker) {
                 // Ignore
             }
+
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
@@ -260,12 +241,12 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
         };
     }
 
+
     private DialogInterface.OnClickListener getRemovePositiveListener(final Marker marker) {
         return new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Location markersLocation =
-                        new Location(LocationManager.GPS_PROVIDER);
+                Location markersLocation = new Location(LocationManager.GPS_PROVIDER);
                 markersLocation.setLatitude(marker.getPosition().latitude);
                 markersLocation.setLongitude(marker.getPosition().longitude);
 
@@ -287,9 +268,7 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
                     }
                 }
 
-                Event
-                        newEvent =
-                        currentEvent.withPointsOfInterest(newPointsOfInterest);
+                Event newEvent = currentEvent.withPointsOfInterest(newPointsOfInterest);
 
                 Account.shared.addOrUpdateEvent(newEvent);
                 currentEvent = newEvent;
@@ -299,5 +278,4 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
             }
         };
     }
-
 }

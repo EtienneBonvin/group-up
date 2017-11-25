@@ -1,7 +1,6 @@
 package ch.epfl.sweng.groupup.object.account;
 
 import android.location.Location;
-import android.util.Log;
 
 import ch.epfl.sweng.groupup.lib.Optional;
 
@@ -10,7 +9,7 @@ import ch.epfl.sweng.groupup.lib.Optional;
  */
 public final class Member extends User {
 
-    public static final String UNKNOWN_USER = "UNKNOWN_USER_";
+    public static final String UNKNOWN_USER_ = "UNKNOWN_USER_";
 
     public Member(String UUID,
                   String displayName,
@@ -31,8 +30,9 @@ public final class Member extends User {
                   Optional<String> email,
                   Optional<Location> location) {
         super(displayName, givenName, familyName, email, UUID, location);
-        if(User.observer != null && !UUID.isEmpty() && !displayName.isEmpty() && !location.isEmpty())
-        User.observer.updateMemberMarkers(UUID.get(), displayName.get(), location.get());
+        if(User.observer != null && !UUID.isEmpty() && !displayName.isEmpty() && !location.isEmpty()){
+            User.observer.updateMemberMarkers(UUID.get(), displayName.get(), location.get());
+        }
     }
 
     /**

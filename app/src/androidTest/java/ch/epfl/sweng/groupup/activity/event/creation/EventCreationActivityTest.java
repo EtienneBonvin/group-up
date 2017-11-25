@@ -74,7 +74,7 @@ public class EventCreationActivityTest {
         expectedMembers.add(emptyMember.withUUID("2"));
         expectedMembers.add(emptyMember.withUUID("3"));
         expectedMembers.add(emptyMember.withUUID("4"));*/
-        expectedMembers.add(emptyMember.withUUID(Member.UNKNOWN_USER + "1").withEmail("swenggroupup@gmail.com"));
+        expectedMembers.add(emptyMember.withUUID(Member.UNKNOWN_USER_ + "1").withEmail("swenggroupup@gmail.com"));
         expectedMembers.add(emptyMember.withUUID(Account.shared.getUUID().getOrElse("Default UUID")));
 
         addEventName(EVENT_NAME);
