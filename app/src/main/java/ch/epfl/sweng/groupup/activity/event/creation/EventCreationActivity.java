@@ -326,6 +326,71 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
                 String.format(Locale.getDefault(), "%02d", minutes);
     }
 
+    protected class MemberRepresentation implements Serializable{
+
+        private String UUID;
+        private String email;
+        private String displayName;
+
+        protected MemberRepresentation(String UUID, String displayName){
+            this.UUID = UUID;
+            this.displayName = displayName;
+            this.email = "";
+        }
+
+        MemberRepresentation(String email){
+            this.email = email;
+            this.displayName = "";
+            this.UUID = "";
+        }
+
+        /**
+         * Getter for the member email address.
+         * @return the member email address.
+         */
+        private String getEmail(){
+            return email;
+        }
+
+        /**
+         * Getter for the member UUID.
+         * @return the member UUDI.
+         */
+        private String getUUID(){
+            return UUID;
+        }
+
+        /**
+         * Getter for the member display name.
+         * @return the member display name.
+         */
+        private String getDisplayName(){
+            return displayName;
+        }
+
+        /**
+         * If member constructed with email, return the member email
+         * If member constructed with UUID and display name, return display name
+         * @return email or display name of member
+         */
+        @Override
+        public String toString() {
+            return email.length()==0 ? displayName : email;
+        }
+
+        /**
+         * Create Member out of the MemberRepresentation
+         * @return member with name, UUID and email of MemberRepresentation
+         */
+        protected Member toMember(){
+            Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(),
+                    Optional.<String>empty(), Optional.<String>empty(),
+                    Optional.<String>empty(), Optional.<Location>empty());
+
+            return email.length()==0 ? emptyMember.withDisplayName(displayName).withUUID(UUID) : emptyMember.withEmail(email);
+        }
+    }
+
     /**
      * Event builder. Follows the Design Pattern of a builder.
      */
@@ -337,7 +402,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
                 .withMillisOfSecond(0).withSecondOfMinute(0);
         private LocalDateTime endDate = LocalDateTime.now().plusMinutes(6)
                 .withMillisOfSecond(0).withSecondOfMinute(0);
-        private HashSet<String> members = new HashSet<>();
+        private HashSet<MemberRepresentation> members = new HashSet<>();
 
         private EventBuilder(){}
 
@@ -441,7 +506,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
          * The member can be given under the form of its UID or its email address.
          * @param newMember the new member to add.
          */
-        private void addMember(String newMember){
+        private void addMember(MemberRepresentation newMember){
             members.add(newMember);
         }
 
@@ -458,9 +523,9 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
          * @param members the set of the representative strings of the members
          */
         @SuppressWarnings("WeakerAccess")
-        protected void setMembersTo(Collection<String> members){
+        protected void setMembersTo(Collection<MemberRepresentation> members){
             cleanMembers();
-            for(String s : members){
+            for(MemberRepresentation s : members){
                 addMember(s);
             }
         }
@@ -469,8 +534,8 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
          * Returns a List of all the members added until now to the event.
          * @return a List containing all the event members.
          */
-        protected List<String> getMembers(){
-            List<String> membersList = new ArrayList<>();
+        protected List<MemberRepresentation> getMembers(){
+            List<MemberRepresentation> membersList = new ArrayList<>();
             membersList.addAll(members);
             return membersList;
         }
@@ -484,24 +549,28 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
 
             GMailService gms = new GMailService(context);
 
-            members.add(Account.shared.getUUID().getOrElse("Default UUID"));
+            MemberRepresentation newMember = new MemberRepresentation(
+                    Account.shared.getUUID().getOrElse("Default UUID"),
+                    Account.shared.getDisplayName().getOrElse("Default Name"));
+            members.add(newMember);
             List<Member> finalMembers = new ArrayList<>();
             Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(),
                     Optional.<String>empty(), Optional.<String>empty(),
-                                            Optional.<String>empty(), Optional.<Location>empty());
+                    Optional.<String>empty(), Optional.<Location>empty());
 
             int nb_unknown = 0;
 
             List<String> mailsToSend = new ArrayList<>();
 
-            for(String s : members){
-                if(emailCheck(s)){
+            for(MemberRepresentation s : members){
+                if(emailCheck(s.toString()) && s.getEmail().length() != 0){
                     finalMembers.add(emptyMember
                             .withUUID(Member.UNKNOWN_USER + (++nb_unknown))
-                            .withEmail(s));
-                    mailsToSend.add(s);
+                            .withEmail(s.toString()));
+                    mailsToSend.add(s.getEmail());
                 }else{
-                    finalMembers.add(emptyMember.withUUID(s));
+                    finalMembers.add(emptyMember
+                            .withUUID(s.getUUID()));
                 }
             }
 

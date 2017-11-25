@@ -84,7 +84,7 @@ public class UserInformationActivity extends LoginActivityInterface {
 
     private void displayQR() {
         if (!shared.getUUID().isEmpty()) {
-            String text = shared.getUUID().get();
+            String text = shared.getUUID().get() + ","+ shared.getDisplayName().getOrElse("Unknown User");
             QRCodeWriter writer = new QRCodeWriter();
             try {
                 BitMatrix

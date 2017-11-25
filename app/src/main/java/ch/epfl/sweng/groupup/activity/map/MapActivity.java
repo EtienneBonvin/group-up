@@ -1,13 +1,15 @@
 package ch.epfl.sweng.groupup.activity.map;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.ActivityCompat;
 import android.text.InputType;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -21,59 +23,106 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
+import ch.epfl.sweng.groupup.object.account.User;
 import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private Event currentEvent;
+    private Marker mDefault;
+    private Map<String, Marker> mMemberMarkers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        super.initializeToolbarActivity();
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         Intent intent = getIntent();
-        int eventIndex = intent.getIntExtra(getString(R.string.event_listing_extraIndex),
-                                            -1);
+        int
+                eventIndex =
+                intent.getIntExtra(getString(R.string.event_listing_extraIndex),
+                                   -1);
         if (eventIndex != -1) {
             currentEvent = Account.shared.getEvents().get(eventIndex);
         } else {
             throw new Error("no event was passed down the the map " +
-                                "activity");
+                            "activity");
         }
+
+        User.observer = this;
+        mMemberMarkers = new HashMap<>();
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        if (!(ActivityCompat.checkSelfPermission(this,
+                                                 Manifest.permission.ACCESS_FINE_LOCATION) !=
+              PackageManager.PERMISSION_GRANTED &&
+              ActivityCompat.checkSelfPermission(this,
+                                                 Manifest.permission.ACCESS_COARSE_LOCATION) !=
+              PackageManager.PERMISSION_GRANTED)) {
+            mMap.setMyLocationEnabled(false);
+            super.initializeToolbarActivity();
+        }
 
-        // Add a marker in Sydney and move the camera
-        if(!Account.shared.getLocation().isEmpty()){
-            LatLng sydney = new LatLng(Account.shared.getLocation().get().getLatitude(), Account.shared.getLocation().get().getLongitude());
-            mMap.addMarker(new MarkerOptions().position(sydney).title(Account.shared.getDisplayName().get()));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        if (!Account.shared.getLocation().isEmpty()) {
+            updateDefaultMarker(Account.shared.getLocation().get());
+
+        }
+    }
+
+    public void updateDefaultMarker(Location location) {
+        LatLng
+                pos =
+                new LatLng(location.getLatitude(), location.getLongitude());
+        if (mDefault == null) {
+            mDefault =
+                    mMap.addMarker(new MarkerOptions().position(pos)
+                                           .title("You"));
+        } else {
+            mDefault.setPosition(pos);
+        }
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+    }
+
+    public void updateMemberMarkers(String UUID,
+                                    String displayName,
+                                    Location location) {
+        LatLng
+                pos =
+                new LatLng(location.getLatitude(), location.getLongitude());
+        if (!Account.shared.getUUID().isEmpty() &&
+            !UUID.equals(Account.shared.getUUID().get())) {
+            if (!mMemberMarkers.containsKey(UUID)) {
+                mMemberMarkers.put(UUID,
+                                   mMap.addMarker(new MarkerOptions().position(
+                                           pos)
+                                                          .title(displayName)
+                                                          .icon(BitmapDescriptorFactory
+                                                                        .defaultMarker(
+                                                                                BitmapDescriptorFactory.HUE_ORANGE))));
+            } else {
+                mMemberMarkers.get(UUID).setPosition(pos);
+            }
         }
 
         mMap.setOnMapLongClickListener(getMapLongClickListener());
@@ -88,7 +137,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                                    .snippet(poi.getDescription())
                                    .draggable(true)
                                    .icon(BitmapDescriptorFactory
-                                                 .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                                                 .defaultMarker(
+                                                         BitmapDescriptorFactory.HUE_GREEN)));
         }
     }
 
@@ -99,7 +149,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 Context context = MapActivity.this;
 
                 // Dialog Builder
-                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                final AlertDialog.Builder
+                        builder =
+                        new AlertDialog.Builder(context);
                 builder.setTitle(R.string.poi_dialog_title);
 
                 // Container + Child Views to enable input from the user.
@@ -146,11 +198,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 location.setLongitude(latLng.longitude);
 
                 MarkerOptions markerOptions = new MarkerOptions()
-                                                .position(latLng)
-                                                .title(title)
-                                                .snippet(description)
-                                                .icon(BitmapDescriptorFactory
-                                                    .defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                        .position(latLng)
+                        .title(title)
+                        .snippet(description)
+                        .icon(BitmapDescriptorFactory
+                                      .defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 mMap.addMarker(markerOptions);
 
                 PointOfInterest poi = new PointOfInterest(title,
@@ -182,7 +234,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 Context context = MapActivity.this;
 
                 // Dialog Builder
-                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                final AlertDialog.Builder
+                        builder =
+                        new AlertDialog.Builder(context);
                 builder.setTitle(R.string.poi_remove_title);
 
                 builder.setPositiveButton(R.string.poi_remove_positive,
@@ -233,7 +287,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     }
                 }
 
-                Event newEvent = currentEvent.withPointsOfInterest(newPointsOfInterest);
+                Event
+                        newEvent =
+                        currentEvent.withPointsOfInterest(newPointsOfInterest);
 
                 Account.shared.addOrUpdateEvent(newEvent);
                 currentEvent = newEvent;
@@ -243,4 +299,5 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             }
         };
     }
+
 }

@@ -1,6 +1,5 @@
 package ch.epfl.sweng.groupup.lib.database;
 
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
