@@ -87,6 +87,11 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
     }
 
 
+    public void requestLocation() {
+        super.provideGeoLocation();
+    }
+
+
     public void updateEventIfNeeded(Event event) {
         if (mMap != null && event.getUUID().equals(currentEvent.getUUID())) {
             currentEvent = event;
