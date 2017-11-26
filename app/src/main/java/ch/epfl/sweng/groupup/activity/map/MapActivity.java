@@ -40,7 +40,7 @@ public class MapActivity extends ToolbarActivity implements OnMapReadyCallback {
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        User.observer = this;
+        //User.observer = this;
         mMemberMarkers = new HashMap<String, Marker>();
     }
 

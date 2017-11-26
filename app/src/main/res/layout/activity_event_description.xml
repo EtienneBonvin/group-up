@@ -1,82 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<ViewFlipper
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity">
+    android:layout_width="match_parent"
+    android:id="@+id/view_flipper">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
-
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_height"
+        android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        tools:context="ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity">
 
-        <android.support.design.widget.CollapsingToolbarLayout
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar"
+
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/app_bar_height"
+            android:fitsSystemWindows="true"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:fitsSystemWindows="true"
+                app:contentScrim="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:toolbarId="@+id/toolbar_description">
+
+                <include
+                    android:id="@+id/toolbar"
+                    layout="@layout/toolbar" />
+
+                <EditText
+                    android:id="@+id/event_description_name"
+                    android:labelFor="@+id/event_description_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="@dimen/text_margin"
+                    android:background="@android:color/transparent"
+                    android:cursorVisible="false"
+                    android:selectAllOnFocus="false"
+                    android:text="@string/no_event_name"
+                    android:gravity="center"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="@dimen/large_header_size"
+                    android:inputType="text" />
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <include
+            android:id="@+id/event_description"
+            layout="@layout/content_event_description"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/remove_event_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            app:fabSize="mini"
+            app:layout_anchor="@+id/app_bar"
+            app:layout_anchorGravity="right|bottom"
+            app:srcCompat="@drawable/ic_delete" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/save_event_modification_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="65dp"
+            app:fabSize="mini"
+            app:layout_anchor="@+id/remove_event_button"
+            app:layout_anchorGravity="center|left"
+            app:srcCompat="@drawable/ic_save" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/upload_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="115dp"
+            app:fabSize="mini"
+            app:layout_anchor="@+id/save_event_modification_button"
+            app:layout_anchorGravity="center|left"
+            app:srcCompat="@drawable/ic_plus" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/go_to_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_anchor="@id/event_description"
+            app:layout_anchorGravity="bottom|left"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_plus" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context="ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity">
+
+        <include
+            layout="@layout/toolbar"
+            android:id="@+id/toolbar" />
+
+        <fragment
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:toolbarId="@+id/toolbar_description">
+            android:id="@+id/map"
+            android:layout_below="@+id/toolbar"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
 
-            <include
-                android:id="@+id/toolbar"
-                layout="@layout/toolbar" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/go_to_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_anchor="@id/map"
+            app:layout_anchorGravity="bottom|right"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_plus" />
 
-            <EditText
-                android:id="@+id/event_description_name"
-                android:labelFor="@+id/event_description_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="@dimen/text_margin"
-                android:background="@android:color/transparent"
-                android:cursorVisible="false"
-                android:selectAllOnFocus="false"
-                android:text="@string/no_event_name"
-                android:gravity="center"
-                android:textColor="@color/primaryTextColor"
-                android:textSize="@dimen/large_header_size"
-                android:inputType="text" />
+    </android.support.design.widget.CoordinatorLayout>
 
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
-
-    <include layout="@layout/content_event_description"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/remove_event_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:fabSize="mini"
-        app:layout_anchor="@+id/app_bar"
-        app:layout_anchorGravity="right|bottom"
-        app:srcCompat="@drawable/ic_delete" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/save_event_modification_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="65dp"
-        app:fabSize="mini"
-        app:layout_anchor="@+id/remove_event_button"
-        app:layout_anchorGravity="center|left"
-        app:srcCompat="@drawable/ic_save" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/upload_file"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="115dp"
-        app:fabSize="mini"
-        app:layout_anchor="@+id/save_event_modification_button"
-        app:layout_anchorGravity="center|left"
-        app:srcCompat="@drawable/ic_plus" />
-</android.support.design.widget.CoordinatorLayout>
-
+</ViewFlipper>

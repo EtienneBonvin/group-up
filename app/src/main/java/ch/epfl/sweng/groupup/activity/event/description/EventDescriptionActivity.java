@@ -1,19 +1,35 @@
 package ch.epfl.sweng.groupup.activity.event.description;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.text.Html;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.files.FileManagementActivity;
@@ -23,21 +39,32 @@ import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
+import ch.epfl.sweng.groupup.object.account.User;
 import ch.epfl.sweng.groupup.object.event.Event;
 
-/**
- * Created by alix on 10/26/17.
- */
+public class EventDescriptionActivity extends ToolbarActivity implements OnMapReadyCallback {
 
-public class EventDescriptionActivity extends ToolbarActivity {
+    // Event description attributes
     private EditText displayEventName;
     private TextView displayEventStartDate;
     private TextView displayEventEndDate;
     private EditText displayEventDescription;
     private Event eventToDisplay;
 
+    // Map attributes
+    private GoogleMap mMap;
+    private Marker mDefault;
+    private Map<String, Marker> mMemberMarkers;
+
+    // Switch view attributes
+    private float x1,x2;
+    private static final int MIN_DISTANCE = 150;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // Initialize event description fields
         final int maxName = 50;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_description);
@@ -127,7 +154,37 @@ public class EventDescriptionActivity extends ToolbarActivity {
                         startActivity(intent);
                     }
                 });
+
+        // Initialize map
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        User.observer = this;
+        mMemberMarkers = new HashMap<String, Marker>();
+
+        // View Switcher
+        findViewById(R.id.go_to_map)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((ViewFlipper) findViewById( R.id.view_flipper ))
+                                .showNext();
+                    }
+                });
+
+        findViewById(R.id.go_to_description)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((ViewFlipper) findViewById( R.id.view_flipper ))
+                                .showNext();
+                    }
+                });
     }
+
+    // Event description methods.
 
     /**
      * Remove the user from the Event
@@ -174,6 +231,43 @@ public class EventDescriptionActivity extends ToolbarActivity {
             memberName.setText(member.getDisplayName().getOrElse("NO_NAME"));
             LinearLayout linear = findViewById(R.id.event_description_linear_scroll_members);
             linear.addView(memberName);
+        }
+    }
+
+    // Map methods
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+            mMap.setMyLocationEnabled(false);
+            super.initializeToolbarActivity();
+        }
+
+        if(!Account.shared.getLocation().isEmpty()){
+            updateDefaultMarker(Account.shared.getLocation().get());
+
+        }
+    }
+
+    public void updateDefaultMarker(Location location) {
+        LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+        if (mDefault == null) {
+            mDefault = mMap.addMarker(new MarkerOptions().position(pos).title("You"));
+        } else {
+            mDefault.setPosition(pos);
+        }
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+    }
+
+    public void updateMemberMarkers(String UUID, String displayName, Location location) {
+        LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+        if(!Account.shared.getUUID().isEmpty() && !UUID.equals(Account.shared.getUUID().get())) {
+            if (!mMemberMarkers.containsKey(UUID)) {
+                mMemberMarkers.put(UUID, mMap.addMarker(new MarkerOptions().position(pos).title(displayName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))));
+            } else {
+                mMemberMarkers.get(UUID).setPosition(pos);
+            }
         }
     }
 }
