@@ -78,18 +78,6 @@ public class UserInformationActivity extends LoginActivityInterface {
 
     }
 
-    // TODO
-    /*
-    Bundle extras = getIntent().getExtras();
-        byte[] byteArray = extras.getByteArray(UserInformationActivity.EXTRA_MESSAGE);
-
-        assert byteArray != null;
-        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-        ImageView image = findViewById(R.id.qrImageView);
-
-        image.setImageBitmap(bmp);
-
-     */
     private void displayQR() {
         if (!shared.getUUID().isEmpty()) {
             String text = shared.getUUID().get() + ","+ shared.getDisplayName().getOrElse("Unknown User");
@@ -122,12 +110,11 @@ public class UserInformationActivity extends LoginActivityInterface {
             } catch (WriterException e) {
                 e.printStackTrace();
             }
-        } else {
-            // TODO: 19.10.2017  after pausing app, email always empty?
+        }/* else {
             AndroidHelper.showToast(getApplicationContext(),
                                     getString(R.string.toast_unable_to_generate_qr),
                                     Toast.LENGTH_SHORT);
-        }
+        }*/
     }
 
     /**

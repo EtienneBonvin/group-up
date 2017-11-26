@@ -35,8 +35,8 @@ public class UserInformationActivityTest {
     @Test
     public void displayRightAccountFields() throws Exception {
         Account a = Account.shared.clear();
-        Thread.sleep(1000);
-        
+        Thread.sleep(5000);
+
         onView(withId(R.id.text_view_display_name_info))
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
