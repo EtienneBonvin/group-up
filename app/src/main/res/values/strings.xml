@@ -82,6 +82,7 @@
     <string name="alert_dialog_yes">Yes</string>
     <string name="alert_dialog_no">No</string>
     <string name="title_activity_map">Map</string>
+    <string name="geo_location_google_map_description">Google map</string>
 
 
     <!-- File Management -->

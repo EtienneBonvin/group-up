@@ -71,7 +71,7 @@ public class MediaSharingTests {
         });
         createEvent();
         onView(withParent(withId(R.id.linear_layout_event_list)))
-                .perform(longClick());
+                .perform(click());
         onView(withId(R.id.upload_file))
                 .perform(click());
     }

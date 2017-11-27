@@ -15,9 +15,12 @@ import ch.epfl.sweng.groupup.lib.database.Database;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
+import static android.support.test.espresso.action.ViewActions.swipeLeft;
+import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withResourceName;
 
 public class MapActivityTest {
 
@@ -31,7 +34,7 @@ public class MapActivityTest {
     }
 
     @Test
-    public void ensureMapShownOnShortClick()  {
+    public void ensureMapShownOnSwipe()  {
         String name="maptest";
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
         Espresso.closeSoftKeyboard();
@@ -40,7 +43,11 @@ public class MapActivityTest {
 
         onView(withId(R.id.linear_layout_event_list)).perform(click());
 
-        onView(withContentDescription("Google Map")).perform(click());
+        onView(withId(R.id.swipe_bar)).perform(swipeLeft());
+
+        onView(withContentDescription("Google map")).perform(click());
+
+        onView(withId(R.id.swipe_bar)).perform(swipeRight());
     }
 
 }
