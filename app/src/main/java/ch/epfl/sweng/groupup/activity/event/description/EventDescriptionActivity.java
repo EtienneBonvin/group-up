@@ -1,6 +1,7 @@
 package ch.epfl.sweng.groupup.activity.event.description;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -22,13 +23,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.event.files.FileManager;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.User;
+import ch.epfl.sweng.groupup.object.event.Event;
 
 public class EventDescriptionActivity extends ToolbarActivity implements OnMapReadyCallback {
 
     private EventDescription eventDescription;
+    private FileManager fileManager;
 
     private GoogleMap mMap;
     private Marker mDefault;
@@ -47,7 +51,17 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
 
         x1 = -1;
 
-        eventDescription = new EventDescription(this);
+        Event event = null;
+
+        Intent i = getIntent();
+        final int eventIndex = i.getIntExtra(getString(R.string.event_listing_extraIndex), -1);
+        if (eventIndex > -1) {
+            //!!!Order the events !!!
+            event = Account.shared.getEvents().get(eventIndex);
+        }
+
+        eventDescription = new EventDescription(this, event);
+        fileManager = new FileManager(this, event);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -72,8 +86,13 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                                 if(x1 != -1) {
                                     x2 = event.getX();
                                     if (Math.abs(x2 - x1) > MIN_DISTANCE) {
-                                        ((ViewFlipper) findViewById(R.id.view_flipper))
-                                                .showNext();
+                                        if(x2 > x1) {
+                                            ((ViewFlipper) findViewById(R.id.view_flipper))
+                                                    .showNext();
+                                        }else{
+                                            ((ViewFlipper) findViewById(R.id.view_flipper))
+                                                    .showPrevious();
+                                        }
                                     }else{
                                         //Handle click for further uses.
                                         findViewById(R.id.swipe_bar)
@@ -86,6 +105,51 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                         return true;
                     }
                 });
+    }
+
+    /**
+     * Override onPause method, remove the activity from the watchers of the event to avoid
+     * exceptions.
+     **/
+    @Override
+    protected void onPause() {
+        super.onPause();
+        fileManager.close();
+    }
+
+    /**
+     * Override onStop method, remove the activity from the watchers of the event to avoid
+     * exceptions.
+     **/
+    @Override
+    public void onStop() {
+        super.onStop();
+        fileManager.close();
+    }
+
+    /**
+     * Override onDestroy method, remove the activity from the watchers of the event to avoid
+     * exceptions.
+     **/
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        fileManager.close();
+    }
+
+    /**
+     * Override of onActivityResult method.
+     * Define the behavior when the user finished selecting the picture he wants to add.
+     *
+     * @param requestCode unused.
+     * @param resultCode  indicate if the operation succeeded.
+     * @param data        the data returned by the previous activity.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        fileManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -103,6 +167,9 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     }
 
     public void updateDefaultMarker(Location location) {
+        if(mMap == null){
+            return;
+        }
         LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
         if (mDefault == null) {
             mDefault = mMap.addMarker(new MarkerOptions().position(pos).title("You"));
@@ -113,6 +180,9 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     }
 
     public void updateMemberMarkers(String UUID, String displayName, Location location) {
+        if(mMap == null){
+            return;
+        }
         LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
         if(!Account.shared.getUUID().isEmpty() && !UUID.equals(Account.shared.getUUID().get())) {
             if (!mMemberMarkers.containsKey(UUID)) {

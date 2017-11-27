@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.event.files.FileManagementActivity;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
@@ -33,18 +32,13 @@ public class EventDescription {
     private EditText displayEventDescription;
     private Event eventToDisplay;
 
-    public EventDescription(final EventDescriptionActivity activity){
+    public EventDescription(final EventDescriptionActivity activity, final Event event){
 
         this.activity = activity;
+        eventToDisplay = event;
 
         // Initialize event description fields
         final int maxName = 50;
-        Intent i = activity.getIntent();
-        final int eventIndex = i.getIntExtra("eventIndex", -1);
-        if (eventIndex > -1) {
-            //!!!Order the events !!!
-            eventToDisplay = Account.shared.getEvents().get(eventIndex);
-        }
         activity.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
@@ -103,7 +97,7 @@ public class EventDescription {
                             Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name).
                                     withDescription(description));
                             Database.update();
-                            eventToDisplay = Account.shared.getEvents().get(eventIndex);
+                            eventToDisplay = event;
 
                             Intent i = new Intent(activity.getApplicationContext(),
                                     EventListingActivity.class);
@@ -112,18 +106,6 @@ public class EventDescription {
                                     Intent.FLAG_ACTIVITY_NEW_TASK);
                             activity.startActivity(i);
                         }
-                    }
-                });
-
-        // Do we need to store the modifications ?
-        activity.findViewById(R.id.upload_file)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(activity.getApplicationContext(),
-                                FileManagementActivity.class);
-                        intent.putExtra("EventIndex", eventIndex);
-                        activity.startActivity(intent);
                     }
                 });
     }

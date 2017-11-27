@@ -94,16 +94,6 @@
                 app:layout_anchorGravity="center|left"
                 app:srcCompat="@drawable/ic_save" />
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/upload_file"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="115dp"
-                app:fabSize="mini"
-                app:layout_anchor="@+id/save_event_modification_button"
-                app:layout_anchorGravity="center|left"
-                app:srcCompat="@drawable/ic_plus" />
-
         </android.support.design.widget.CoordinatorLayout>
 
         <android.support.design.widget.CoordinatorLayout
@@ -128,6 +118,9 @@
                 android:name="com.google.android.gms.maps.SupportMapFragment" />
 
         </android.support.design.widget.CoordinatorLayout>
+
+        <include
+            layout="@layout/activity_file_management"/>
 
     </ViewFlipper>
 

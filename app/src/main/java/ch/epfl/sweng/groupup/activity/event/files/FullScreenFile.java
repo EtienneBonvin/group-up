@@ -1,14 +1,13 @@
 package ch.epfl.sweng.groupup.activity.event.files;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
 
 /**
  * FullScreenFile class.
@@ -26,16 +25,16 @@ public class FullScreenFile extends AppCompatActivity {
 
         Intent intent = getIntent();
         CompressedBitmap fileToShow =
-                new CompressedBitmap(intent.getByteArrayExtra(FileManagementActivity.FILE_EXTRA_NAME));
+                new CompressedBitmap(intent.getByteArrayExtra(FileManager.FILE_EXTRA_NAME));
 
-        final int eventIndex = intent.getIntExtra(FileManagementActivity.EVENT_INDEX, -1);
+        final int eventIndex = intent.getIntExtra(getString(R.string.event_listing_extraIndex), -1);
 
         findViewById(R.id.container)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent back = new Intent(getApplicationContext(), FileManagementActivity.class);
-                        back.putExtra(FileManagementActivity.EVENT_INDEX, eventIndex);
+                        Intent back = new Intent(getApplicationContext(), EventDescriptionActivity.class);
+                        back.putExtra(getString(R.string.event_listing_extraIndex), eventIndex);
                         startActivity(back);
                     }
                 });
