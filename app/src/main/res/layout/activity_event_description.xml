@@ -5,10 +5,11 @@
     android:layout_width="match_parent">
 
     <TextView
+        style="@style/ButtonStyle"
         android:id="@+id/swipe_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="35sp"
+        android:textSize="20sp"
         android:text="@string/event_description_swipe_hint"
         android:gravity="center"
         android:layout_alignParentBottom="true"/>
