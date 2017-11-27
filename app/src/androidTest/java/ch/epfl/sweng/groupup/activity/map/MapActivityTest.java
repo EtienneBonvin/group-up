@@ -38,6 +38,10 @@ import static org.hamcrest.Matchers.is;
 
 public class MapActivityTest {
 
+    private final String EVENT_NAME = "Map test";
+    private final String MARKER_NAME = "Marker test";
+    private final String MARKER_DESCRIPTION = "Marker description";
+
     @Rule
     public ActivityTestRule<EventCreationActivity> mActivityRule = new ActivityTestRule<>(
             EventCreationActivity.class);
@@ -49,13 +53,7 @@ public class MapActivityTest {
 
     @Test
     public void ensureMapShownOnShortClick()  {
-        String name="maptest1";
-        onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
-        Espresso.closeSoftKeyboard();
-
-        onView(withId(R.id.save_new_event_button)).perform(click());
-
-        onView(withId(R.id.linear_layout_event_list)).perform(click());
+        createEvent();
 
         onView(withContentDescription("Google Map")).perform(click());
 
@@ -63,26 +61,18 @@ public class MapActivityTest {
     }
 
     @Test
-    public void testAddMarker()  {
-        String name = "maptest2";
-        String nameMarker = "markertest2";
-        String markeDescription = "markerdescription2";
-        onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
-        Espresso.closeSoftKeyboard();
-
-        onView(withId(R.id.save_new_event_button)).perform(click());
-
-        onView(withId(R.id.linear_layout_event_list)).perform(click());
+    public void testAddMarker() {
+        createEvent();
 
         onView(withContentDescription("Google Map")).perform(longClick());
 
-        onView(withHint(R.string.poi_title_hint)).perform(typeText(nameMarker));
-        onView(withHint(R.string.poi_description_hint)).perform(typeText(markeDescription));
+        onView(withHint(R.string.poi_title_hint)).perform(typeText(MARKER_NAME));
+        onView(withHint(R.string.poi_description_hint)).perform(typeText(MARKER_DESCRIPTION));
 
         onView(withText(R.string.poi_create_add)).perform(click());
 
         UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
-        UiObject mMarker1 = uiDevice.findObject(new UiSelector().descriptionContains(nameMarker));
+        UiObject mMarker1 = uiDevice.findObject(new UiSelector().descriptionContains(MARKER_NAME));
         try {
             mMarker1.click();
             deleteEvent();
@@ -95,26 +85,18 @@ public class MapActivityTest {
     }
 
     @Test
-    public void testNotAddMarker()  {
-        String name = "maptest3";
-        String nameMarker = "markertest3";
-        String markeDescription = "markerdescription3";
-        onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
-        Espresso.closeSoftKeyboard();
-
-        onView(withId(R.id.save_new_event_button)).perform(click());
-
-        onView(withId(R.id.linear_layout_event_list)).perform(click());
+    public void testNotAddMarker() {
+        createEvent();
 
         onView(withContentDescription("Google Map")).perform(longClick());
 
-        onView(withHint(R.string.poi_title_hint)).perform(typeText(nameMarker));
-        onView(withHint(R.string.poi_description_hint)).perform(typeText(markeDescription));
+        onView(withHint(R.string.poi_title_hint)).perform(typeText(MARKER_NAME));
+        onView(withHint(R.string.poi_description_hint)).perform(typeText(MARKER_DESCRIPTION));
 
         onView(withText(R.string.poi_create_cancel)).perform(click());
 
         UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
-        UiObject mMarker1 = uiDevice.findObject(new UiSelector().descriptionContains(nameMarker));
+        UiObject mMarker1 = uiDevice.findObject(new UiSelector().descriptionContains(MARKER_NAME));
         try {
             mMarker1.click();
         } catch (UiObjectNotFoundException e) {
@@ -126,26 +108,18 @@ public class MapActivityTest {
     }
 
     @Test
-    public void testAddAndRemoveMarker()  {
-        String name = "maptest4";
-        String nameMarker = "markertest4";
-        String markeDescription = "markerdescription4";
-        onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
-        Espresso.closeSoftKeyboard();
-
-        onView(withId(R.id.save_new_event_button)).perform(click());
-
-        onView(withId(R.id.linear_layout_event_list)).perform(click());
+    public void testAddAndRemoveMarker() {
+        createEvent();
 
         onView(withContentDescription("Google Map")).perform(longClick());
 
-        onView(withHint(R.string.poi_title_hint)).perform(typeText(nameMarker));
-        onView(withHint(R.string.poi_description_hint)).perform(typeText(markeDescription));
+        onView(withHint(R.string.poi_title_hint)).perform(typeText(MARKER_NAME));
+        onView(withHint(R.string.poi_description_hint)).perform(typeText(MARKER_DESCRIPTION));
 
         onView(withText(R.string.poi_create_add)).perform(click());
 
         UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
-        UiObject mMarker1 = uiDevice.findObject(new UiSelector().descriptionContains(nameMarker));
+        UiObject mMarker1 = uiDevice.findObject(new UiSelector().descriptionContains(MARKER_NAME));
         try {
             mMarker1.dragTo(mMarker1,1);
             onView(withText(R.string.poi_remove_positive)).perform(click());
@@ -159,26 +133,18 @@ public class MapActivityTest {
     }
 
     @Test
-    public void testAddAndNotRemoveMarker()  {
-        String name = "maptest5";
-        String nameMarker = "markertest5";
-        String markeDescription = "markerdescription5";
-        onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
-        Espresso.closeSoftKeyboard();
-
-        onView(withId(R.id.save_new_event_button)).perform(click());
-
-        onView(withId(R.id.linear_layout_event_list)).perform(click());
+    public void testAddAndNotRemoveMarker() {
+        createEvent();
 
         onView(withContentDescription("Google Map")).perform(longClick());
 
-        onView(withHint(R.string.poi_title_hint)).perform(typeText(nameMarker));
-        onView(withHint(R.string.poi_description_hint)).perform(typeText(markeDescription));
+        onView(withHint(R.string.poi_title_hint)).perform(typeText(MARKER_NAME));
+        onView(withHint(R.string.poi_description_hint)).perform(typeText(MARKER_DESCRIPTION));
 
         onView(withText(R.string.poi_create_add)).perform(click());
 
         UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
-        UiObject mMarker1 = uiDevice.findObject(new UiSelector().descriptionContains(nameMarker));
+        UiObject mMarker1 = uiDevice.findObject(new UiSelector().descriptionContains(MARKER_NAME));
         try {
             mMarker1.dragTo(mMarker1,1);
             onView(withText(R.string.poi_remove_negative)).perform(click());
@@ -188,6 +154,13 @@ public class MapActivityTest {
         }
         assertEquals(1,1);
         deleteEvent();
+    }
+
+    private void createEvent() {
+        onView(withId(R.id.ui_edit_event_name)).perform(typeText(EVENT_NAME));
+        Espresso.closeSoftKeyboard();
+        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.linear_layout_event_list)).perform(click());
     }
 
     private void deleteEvent() {
