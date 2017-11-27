@@ -20,6 +20,7 @@ import java.util.TimerTask;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
+import ch.epfl.sweng.groupup.activity.event.description.EventDescription;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
@@ -208,7 +209,7 @@ public class EventListingActivity extends ToolbarActivity {
                                     public void onClick(
                                             DialogInterface dialogInterface,
                                             int i) {
-                                        EventDescriptionActivity.removeEvent(eventToDisplay);
+                                        EventDescription.removeEvent(eventToDisplay);
                                         eventsToDisplay.remove(eventToDisplay);
                                         dialogShown = false;
                                         dialogInterface.dismiss();
