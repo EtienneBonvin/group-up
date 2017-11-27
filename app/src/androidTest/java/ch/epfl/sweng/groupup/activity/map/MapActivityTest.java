@@ -1,5 +1,6 @@
 package ch.epfl.sweng.groupup.activity.map;
 
+import android.app.Activity;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.contrib.BuildConfig;
 import android.support.test.rule.ActivityTestRule;
@@ -18,10 +19,13 @@ import ch.epfl.sweng.groupup.lib.database.Database;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
+import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
@@ -54,6 +58,8 @@ public class MapActivityTest {
         onView(withId(R.id.linear_layout_event_list)).perform(click());
 
         onView(withContentDescription("Google Map")).perform(click());
+
+        deleteEvent();
     }
 
     @Test
@@ -79,6 +85,7 @@ public class MapActivityTest {
         UiObject mMarker1 = uiDevice.findObject(new UiSelector().descriptionContains(nameMarker));
         try {
             mMarker1.click();
+            deleteEvent();
         } catch (UiObjectNotFoundException e) {
             assertEquals(0,1);
         }
@@ -112,6 +119,7 @@ public class MapActivityTest {
             mMarker1.click();
         } catch (UiObjectNotFoundException e) {
             assertEquals(1,1);
+            deleteEvent();
             return;
         }
         assertEquals(0,1);
@@ -144,6 +152,7 @@ public class MapActivityTest {
             mMarker1.click();
         } catch (UiObjectNotFoundException e) {
             assertEquals(1,1);
+            deleteEvent();
             return;
         }
         assertEquals(0,1);
@@ -178,5 +187,13 @@ public class MapActivityTest {
             assertEquals(0,1);
         }
         assertEquals(1,1);
+        deleteEvent();
+    }
+
+    private void deleteEvent() {
+        pressBack();
+        onView(withId(R.id.linear_layout_event_list)).perform(longClick());
+        onView(withId(R.id.remove_event_button)).perform(click());
+        onView(withText("Continue")).perform(click());
     }
 }
