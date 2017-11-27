@@ -59,8 +59,8 @@ public class MapActivityTest {
     @Test
     public void testAddMarker()  {
         String name = "maptest2";
-        String nameMarker = "markertest";
-        String markeDescription = "markerdescription";
+        String nameMarker = "markertest2";
+        String markeDescription = "markerdescription2";
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
         Espresso.closeSoftKeyboard();
 
@@ -88,10 +88,40 @@ public class MapActivityTest {
     }
 
     @Test
-    public void testAddAndRemoveMarker()  {
+    public void testNotAddMarker()  {
         String name = "maptest3";
-        String nameMarker = "markertest";
-        String markeDescription = "markerdescription";
+        String nameMarker = "markertest3";
+        String markeDescription = "markerdescription3";
+        onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
+        Espresso.closeSoftKeyboard();
+
+        onView(withId(R.id.save_new_event_button)).perform(click());
+
+        onView(withId(R.id.linear_layout_event_list)).perform(click());
+
+        onView(withContentDescription("Google Map")).perform(longClick());
+
+        onView(withHint(R.string.poi_title_hint)).perform(typeText(nameMarker));
+        onView(withHint(R.string.poi_description_hint)).perform(typeText(markeDescription));
+
+        onView(withText(R.string.poi_create_cancel)).perform(click());
+
+        UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
+        UiObject mMarker1 = uiDevice.findObject(new UiSelector().descriptionContains(nameMarker));
+        try {
+            mMarker1.click();
+        } catch (UiObjectNotFoundException e) {
+            assertEquals(1,1);
+            return;
+        }
+        assertEquals(0,1);
+    }
+
+    @Test
+    public void testAddAndRemoveMarker()  {
+        String name = "maptest4";
+        String nameMarker = "markertest4";
+        String markeDescription = "markerdescription4";
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
         Espresso.closeSoftKeyboard();
 
@@ -119,10 +149,34 @@ public class MapActivityTest {
         assertEquals(0,1);
     }
 
-    // One add test
+    @Test
+    public void testAddAndNotRemoveMarker()  {
+        String name = "maptest5";
+        String nameMarker = "markertest5";
+        String markeDescription = "markerdescription5";
+        onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
+        Espresso.closeSoftKeyboard();
 
-    // One add and remove test
+        onView(withId(R.id.save_new_event_button)).perform(click());
 
-    // One add but not remove test
+        onView(withId(R.id.linear_layout_event_list)).perform(click());
 
+        onView(withContentDescription("Google Map")).perform(longClick());
+
+        onView(withHint(R.string.poi_title_hint)).perform(typeText(nameMarker));
+        onView(withHint(R.string.poi_description_hint)).perform(typeText(markeDescription));
+
+        onView(withText(R.string.poi_create_add)).perform(click());
+
+        UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
+        UiObject mMarker1 = uiDevice.findObject(new UiSelector().descriptionContains(nameMarker));
+        try {
+            mMarker1.dragTo(mMarker1,1);
+            onView(withText(R.string.poi_remove_negative)).perform(click());
+            mMarker1.click();
+        } catch (UiObjectNotFoundException e) {
+            assertEquals(0,1);
+        }
+        assertEquals(1,1);
+    }
 }
