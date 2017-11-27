@@ -27,7 +27,6 @@ import ch.epfl.sweng.groupup.activity.event.files.FileManager;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.User;
-import ch.epfl.sweng.groupup.object.event.Event;
 
 public class EventDescriptionActivity extends ToolbarActivity implements OnMapReadyCallback {
 
@@ -51,17 +50,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
 
         x1 = -1;
 
-        Event event = null;
-
-        Intent i = getIntent();
-        final int eventIndex = i.getIntExtra(getString(R.string.event_listing_extraIndex), -1);
-        if (eventIndex > -1) {
-            //!!!Order the events !!!
-            event = Account.shared.getEvents().get(eventIndex);
-        }
-
-        eventDescription = new EventDescription(this, event);
-        fileManager = new FileManager(this, event);
+        eventDescription = new EventDescription(this);
+        fileManager = new FileManager(this);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

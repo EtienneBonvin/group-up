@@ -32,10 +32,19 @@ public class EventDescription {
     private EditText displayEventDescription;
     private Event eventToDisplay;
 
-    public EventDescription(final EventDescriptionActivity activity, final Event event){
+    @SuppressWarnings("WeakerAccess")
+    public EventDescription(final EventDescriptionActivity activity){
 
         this.activity = activity;
-        eventToDisplay = event;
+
+        Intent i = activity.getIntent();
+        final int eventIndex = i.getIntExtra(activity.getString(R.string.event_listing_extraIndex), -1);
+        if (eventIndex > -1) {
+            //!!!Order the events !!!
+            eventToDisplay = Account.shared.getEvents().get(eventIndex);
+        }else{
+            eventToDisplay = null;
+        }
 
         // Initialize event description fields
         final int maxName = 50;
@@ -97,7 +106,6 @@ public class EventDescription {
                             Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name).
                                     withDescription(description));
                             Database.update();
-                            eventToDisplay = event;
 
                             Intent i = new Intent(activity.getApplicationContext(),
                                     EventListingActivity.class);

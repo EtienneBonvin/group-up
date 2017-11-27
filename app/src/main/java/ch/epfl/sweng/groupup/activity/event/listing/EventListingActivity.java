@@ -168,8 +168,6 @@ public class EventListingActivity extends ToolbarActivity {
 
     /**
      * Create a dialog to invite the user to the event
-     *
-     * @param
      */
     private void askForInvitation() {
         for (final Event eventToDisplay : eventsToDisplay) {

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -27,14 +28,13 @@ import java.util.List;
 import java.util.Locale;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
-import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
 
+@SuppressWarnings("WeakerAccess")
 public class FileManager implements Watcher {
 
     private EventDescriptionActivity activity;
@@ -43,21 +43,32 @@ public class FileManager implements Watcher {
     private final int ROWS = 4;
     private int columnWidth;
     private int rowHeight;
-    private Event event;
+    private final Event event;
     private int eventIndex;
     private Watcher meAsWatcher;
 
     private int imagesAdded = 0;
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final String FILE_EXTRA_NAME = "File";
 
-    public FileManager(final EventDescriptionActivity activity, final Event event){
+    public FileManager(final EventDescriptionActivity activity){
         this.activity = activity;
 
         initializeTakePicture();
-        this.event = event;
-        event.addWatcher(this);
+
+        Intent i = activity.getIntent();
+        eventIndex = i.getIntExtra(activity.getString(R.string.event_listing_extraIndex), -1);
+        if (eventIndex > -1) {
+            //!!!Order the events !!!
+            event = Account.shared.getEvents().get(eventIndex);
+        }else{
+            event = null;
+        }
+
+        if(event != null)
+            event.addWatcher(this);
+
         meAsWatcher = this;
 
         // Set onClickListeners to add files
@@ -94,8 +105,10 @@ public class FileManager implements Watcher {
             @Override
             public void onGlobalLayout() {
                 container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                for (CompressedBitmap bitmap : event.getPictures()) {
-                    addImageToGrid(bitmap, false);
+                if(event != null) {
+                    for (CompressedBitmap bitmap : event.getPictures()) {
+                        addImageToGrid(bitmap, false);
+                    }
                 }
             }
         });
@@ -117,10 +130,14 @@ public class FileManager implements Watcher {
         event.addWatcher(this);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            CompressedBitmap compressedBitmap = new CompressedBitmap(imageBitmap);
-            addImageToGrid(compressedBitmap, true);
+            try {
+                Bundle extras = data.getExtras();
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                CompressedBitmap compressedBitmap = new CompressedBitmap(imageBitmap);
+                addImageToGrid(compressedBitmap, true);
+            }catch(NullPointerException e){
+                AndroidHelper.showToast(activity, "Unable to recover the image", Toast.LENGTH_SHORT);
+            }
         }else if (resultCode == Activity.RESULT_OK) {
             Uri targetUri = data.getData();
 
@@ -168,7 +185,6 @@ public class FileManager implements Watcher {
      */
     private void initializeTakePicture() {
         Button takePicture = activity.findViewById(R.id.take_picture);
-        final Context thisContext = activity;
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
