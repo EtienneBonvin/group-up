@@ -41,42 +41,42 @@ public class UserInformationActivityTest {
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
-                                                                   .getString(R.string.text_view_display_name_info)))));
+                                                                   .getString(R.string.text_view_display_name_info)).toString())));
         onView(withId(R.id.text_view_display_name_text))
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
-                                                                   .getString(R.string.text_view_display_name_text)))));
+                                                                   .getString(R.string.text_view_display_name_text)).toString())));
         onView(withId(R.id.text_view_family_name_text))
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
-                                                                   .getString(R.string.text_view_family_name_text)))));
+                                                                   .getString(R.string.text_view_family_name_text)).toString())));
         onView(withId(R.id.text_view_family_name_info))
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
-                                                                   .getString(R.string.text_view_family_name_info)))));
+                                                                   .getString(R.string.text_view_family_name_info)).toString())));
         onView(withId(R.id.text_view_given_name_text))
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
-                                                                   .getString(R.string.text_view_given_name_text)))));
+                                                                   .getString(R.string.text_view_given_name_text)).toString())));
         onView(withId(R.id.text_view_given_name_info))
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
-                                                                   .getString(R.string.text_view_given_name_info)))));
+                                                                   .getString(R.string.text_view_given_name_info)).toString())));
         onView(withId(R.id.text_view_email_text))
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
-                                                                   .getString(R.string.text_view_email_text)))));
+                                                                   .getString(R.string.text_view_email_text)).toString())));
         onView(withId(R.id.text_view_email_info))
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
-                                                                   .getString(R.string.text_view_email_info)))));
+                                                                   .getString(R.string.text_view_email_info)).toString())));
     }
 
     /* IMPLEMENTATION CHANGED, THIS IS NOW USELESS
