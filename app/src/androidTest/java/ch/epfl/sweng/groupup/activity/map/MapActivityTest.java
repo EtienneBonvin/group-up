@@ -69,6 +69,7 @@ public class MapActivityTest {
         try {
             mMarker.click();
         } catch (UiObjectNotFoundException e) {
+            deleteEvent();
             assertEquals(0,1);
         }
         deleteEvent();
@@ -86,8 +87,8 @@ public class MapActivityTest {
             deleteEvent();
             return;
         }
-        assertEquals(0,1);
         deleteEvent();
+        assertEquals(0,1);
     }
 
     @Test
@@ -104,8 +105,8 @@ public class MapActivityTest {
             deleteEvent();
             return;
         }
-        assertEquals(0,1);
         deleteEvent();
+        assertEquals(0,1);
     }
 
     @Test
@@ -119,6 +120,7 @@ public class MapActivityTest {
             onView(withText(R.string.poi_remove_negative)).perform(click());
             mMarker.click();
         } catch (UiObjectNotFoundException e) {
+            deleteEvent();
             assertEquals(0,1);
         }
         deleteEvent();
