@@ -69,7 +69,7 @@ public class EventListingActivity extends ToolbarActivity {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         setContentView(R.layout.activity_event_listing);
-                      initializeToolbarActivity();
+                        initializeToolbarActivity();
 
                         initView();
                     }

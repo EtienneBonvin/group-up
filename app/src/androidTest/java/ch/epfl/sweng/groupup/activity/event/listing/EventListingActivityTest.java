@@ -109,12 +109,13 @@ public class EventListingActivityTest {
         Database.setUpDatabase();
         String newEventName= "New Event";
         onView(ViewMatchers.withId(R.id.createEventButton)).perform(click());
-        onView(withId(R.id.ui_edit_event_name)).perform(typeText("CurrentEvent"));
+        onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventBefore"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
-
-        //Generate directly the event with a conflict with the current event
-        Event eventInvitation= new Event("New one", LocalDateTime.now(),
+        Event previousEvent=Account.shared.getEvents().get(0);
+        //Generate directly the event with a conflict with the current event,
+        // can't create the event from the event creation as this will be blocked
+        Event eventInvitation= new Event(newEventName , LocalDateTime.now(),
                 LocalDateTime.now().plusDays(1),"This is the event to test the invitation process",
                 new ArrayList<>(Collections.singletonList(Account.shared.toMember())),true);
         Account.shared.addOrUpdateEvent(eventInvitation);
@@ -122,11 +123,11 @@ public class EventListingActivityTest {
         onView(withId(R.id.icon_access_group_list)).perform(click());
         onView(withText("Accept")).perform(click());
 
-        if(BuildConfig.DEBUG && !(Account.shared.getEvents().contains(newEventName))){
+        if(BuildConfig.DEBUG && !(Account.shared.getEvents().contains(eventInvitation) && !(Account.shared.getEvents().contains(previousEvent)))){
             throw new AssertionError();
         }
         onView(withId(R.id.icon_access_group_list)).perform(click());
-        onView(withId(R.id.linear_layout_event_list)).perform(click());
+
         Account.shared.clear();
     }
 }

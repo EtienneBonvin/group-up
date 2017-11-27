@@ -250,7 +250,6 @@ public class EventCreationActivityTest {
 
     @Test
     public void noEventCreationOnOverlappingEvent(){
-        Database.setUpDatabase();
         addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
