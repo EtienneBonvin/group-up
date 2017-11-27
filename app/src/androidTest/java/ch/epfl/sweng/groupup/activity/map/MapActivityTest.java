@@ -43,11 +43,11 @@ public class MapActivityTest {
 
         onView(withId(R.id.linear_layout_event_list)).perform(click());
 
-        onView(withId(R.id.swipe_bar)).perform(swipeLeft());
+        onView(withId(R.id.swipe_bar)).perform(swipeRight());
 
         onView(withContentDescription("Google map")).perform(click());
 
-        onView(withId(R.id.swipe_bar)).perform(swipeRight());
+        onView(withId(R.id.swipe_bar)).perform(swipeLeft());
     }
 
 }
