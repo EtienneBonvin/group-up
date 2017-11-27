@@ -122,9 +122,11 @@ public class EventListingActivityTest {
         onView(withId(R.id.icon_access_group_list)).perform(click());
         onView(withText("Accept")).perform(click());
 
-        if(BuildConfig.DEBUG && !(Account.shared.getCurrentEvent().get().getEventName().equals(newEventName))){
+        if(BuildConfig.DEBUG && !(Account.shared.getEvents().contains(newEventName))){
             throw new AssertionError();
         }
+        onView(withId(R.id.icon_access_group_list)).perform(click());
+        onView(withId(R.id.linear_layout_event_list)).perform(click());
         Account.shared.clear();
     }
 }

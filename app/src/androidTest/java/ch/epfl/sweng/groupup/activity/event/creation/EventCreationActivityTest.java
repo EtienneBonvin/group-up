@@ -250,8 +250,29 @@ public class EventCreationActivityTest {
 
     @Test
     public void noEventCreationOnOverlappingEvent(){
-        // TODO
+        Database.setUpDatabase();
+        addEventName(EVENT_NAME);
+        Espresso.closeSoftKeyboard();
+        onView(withId(R.id.save_new_event_button)).perform(click());
+
+        onView(withId(R.id.createEventButton)).perform(click());
+
+        addEventName(EVENT_NAME+"2");
+        Espresso.closeSoftKeyboard();
+        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withText(R.string.toast_overlapping_event))
+                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
+                        .getWindow()
+                        .getDecorView()))))
+                .check(matches(isDisplayed()));
+        try {
+            Thread.sleep(2000);
+        }catch(InterruptedException ie){
+            //The tests are stopped, nothing to do.
+        }
+        Account.shared.clear();
     }
+
 
     /**
      * Test QR Scanner
