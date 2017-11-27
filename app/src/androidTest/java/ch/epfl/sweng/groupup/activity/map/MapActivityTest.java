@@ -64,72 +64,63 @@ public class MapActivityTest {
     public void testAddMarker() {
         createEvent();
 
-        addMarker(R.string.poi_create_add);
+        UiObject mMarker = addMarker(R.string.poi_create_add);
 
-        UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
-        UiObject mMarker1 = uiDevice.findObject(new UiSelector().descriptionContains(MARKER_NAME));
         try {
-            mMarker1.click();
-            deleteEvent();
+            mMarker.click();
         } catch (UiObjectNotFoundException e) {
             assertEquals(0,1);
         }
+        deleteEvent();
     }
 
     @Test
     public void testNotAddMarker() {
         createEvent();
 
-        addMarker(R.string.poi_create_cancel);
+        UiObject mMarker = addMarker(R.string.poi_create_cancel);
 
-        UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
-        UiObject mMarker1 = uiDevice.findObject(new UiSelector().descriptionContains(MARKER_NAME));
         try {
-            mMarker1.click();
+            mMarker.click();
         } catch (UiObjectNotFoundException e) {
-            assertEquals(1,1);
             deleteEvent();
             return;
         }
         assertEquals(0,1);
+        deleteEvent();
     }
 
     @Test
     public void testAddAndRemoveMarker() {
         createEvent();
 
-        addMarker(R.string.poi_create_add);
+        UiObject mMarker = addMarker(R.string.poi_create_add);
 
-        UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
-        UiObject mMarker1 = uiDevice.findObject(new UiSelector().descriptionContains(MARKER_NAME));
         try {
-            mMarker1.dragTo(mMarker1,1);
+            mMarker.dragTo(mMarker,1);
             onView(withText(R.string.poi_remove_positive)).perform(click());
-            mMarker1.click();
+            mMarker.click();
         } catch (UiObjectNotFoundException e) {
-            assertEquals(1,1);
             deleteEvent();
             return;
         }
         assertEquals(0,1);
+        deleteEvent();
     }
 
     @Test
     public void testAddAndNotRemoveMarker() {
         createEvent();
 
-        addMarker(R.string.poi_create_add);
+        UiObject mMarker = addMarker(R.string.poi_create_add);
 
-        UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
-        UiObject mMarker1 = uiDevice.findObject(new UiSelector().descriptionContains(MARKER_NAME));
         try {
-            mMarker1.dragTo(mMarker1,1);
+            mMarker.dragTo(mMarker,1);
             onView(withText(R.string.poi_remove_negative)).perform(click());
-            mMarker1.click();
+            mMarker.click();
         } catch (UiObjectNotFoundException e) {
             assertEquals(0,1);
         }
-        assertEquals(1,1);
         deleteEvent();
     }
 
@@ -147,12 +138,16 @@ public class MapActivityTest {
         onView(withText("Continue")).perform(click());
     }
 
-    private void addMarker(int buttonToPush) {
+    private UiObject addMarker(int buttonToPush) {
         onView(withContentDescription("Google Map")).perform(longClick());
 
         onView(withHint(R.string.poi_title_hint)).perform(typeText(MARKER_NAME));
         onView(withHint(R.string.poi_description_hint)).perform(typeText(MARKER_DESCRIPTION));
 
         onView(withText(buttonToPush)).perform(click());
+
+        UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
+
+        return uiDevice.findObject(new UiSelector().descriptionContains(MARKER_NAME));
     }
 }
