@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -47,6 +48,8 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final String FILE_EXTRA_NAME = "File";
     public static final String EVENT_INDEX = "EventIndex";
+
+    private String mCurrentPhotoPath;
 
     /**
      * Override onCreate method of ToolbarActivity.
@@ -155,11 +158,13 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
         event.addWatcher(this);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
+            galleryAddPic();
+            /*Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             CompressedBitmap compressedBitmap = new CompressedBitmap(imageBitmap);
-            addImageToGrid(compressedBitmap, true);
-        }else if (resultCode == RESULT_OK) {
+            addImageToGrid(compressedBitmap, true);*/
+        }
+        else if (resultCode == RESULT_OK) {
             Uri targetUri = data.getData();
 
             if (targetUri == null) {
@@ -221,6 +226,8 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
                                 Toast.LENGTH_SHORT);
                     }
                     if (photo != null) {
+                        Uri photoUri= FileProvider.getUriForFile(thisContext,"com.example.android.fileprovider",photo);
+                        //takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,photoUri);
                         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                     }
                 }
@@ -240,9 +247,21 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        String mCurrentPhotoPath = image.getAbsolutePath();
+        mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
+
+    /**
+     * Add the photos to the gallery on the phone
+     */
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+    }
+
 
     /**
      * Helper method to clear all the images of the grid.
@@ -332,4 +351,5 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
             addImageToGrid(bitmap, false);
         }
     }
+
 }
