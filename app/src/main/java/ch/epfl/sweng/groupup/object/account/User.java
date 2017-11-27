@@ -3,7 +3,6 @@ package ch.epfl.sweng.groupup.object.account;
 import android.location.Location;
 
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
-import ch.epfl.sweng.groupup.activity.map.MapActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 
 /**

@@ -9,6 +9,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.text.Html;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -63,6 +64,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        x1 = -1;
 
         // Initialize event description fields
         final int maxName = 50;
@@ -165,21 +168,33 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         mMemberMarkers = new HashMap<String, Marker>();
 
         // View Switcher
-        findViewById(R.id.go_to_map)
-                .setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.swipe_bar)
+                .setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onClick(View v) {
-                        ((ViewFlipper) findViewById( R.id.view_flipper ))
-                                .showNext();
-                    }
-                });
+                    public boolean onTouch(View v, MotionEvent event) {
+                        switch(event.getAction())
+                        {
+                            case MotionEvent.ACTION_DOWN:
+                                if(x1 == -1)
+                                    x1 = event.getX();
+                                break;
 
-        findViewById(R.id.go_to_description)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ((ViewFlipper) findViewById( R.id.view_flipper ))
-                                .showNext();
+                            case MotionEvent.ACTION_UP:
+                                if(x1 != -1) {
+                                    x2 = event.getX();
+                                    if (Math.abs(x2 - x1) > MIN_DISTANCE) {
+                                        ((ViewFlipper) findViewById(R.id.view_flipper))
+                                                .showNext();
+                                    }else{
+                                        //Handle click for further uses.
+                                        findViewById(R.id.swipe_bar)
+                                                .performClick();
+                                    }
+                                    x1 = -1;
+                                }
+                                break;
+                        }
+                        return true;
                     }
                 });
     }
