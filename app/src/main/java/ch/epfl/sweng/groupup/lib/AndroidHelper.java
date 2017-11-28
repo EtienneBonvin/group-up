@@ -6,11 +6,25 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.widget.Toast;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Class containing some useful methods to help the programmer out.
  */
 
 public final class AndroidHelper {
+
+    /**
+     * Check that the passed email is an "acceptable" form (not the icann official definition)
+     * @param email the email to check
+     * @return true if email ok else false
+     */
+    public static boolean emailCheck(String email){
+        Pattern p = Pattern.compile("\\b[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,13}\\b",Pattern.CASE_INSENSITIVE);
+        Matcher m=p.matcher(email);
+        return m.matches();
+    }
 
     private static Toast lastShowedToast = null;
 

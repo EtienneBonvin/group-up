@@ -27,57 +27,51 @@ public class UserInformationActivityTest {
     public final ActivityTestRule<UserInformationActivity> mActivityRule =
             new ActivityTestRule<>(UserInformationActivity.class);
 
-    @Before
-    public void before() {
-        Account.shared.clear();
-    }
-
+    
     @Test
     public void displayRightAccountFields() throws Exception {
         Account a = Account.shared;
 
+        // compare titles
         onView(withId(R.id.text_view_display_name_info))
-                .check(matches(withText(a.getDisplayName()
-                                                .getOrElse(mActivityRule
-                                                                   .getActivity()
-                                                                   .getString(R.string.text_view_display_name_info)))));
+                .check(matches(withText(R.string.text_view_display_name_info)));
+
+        onView(withId(R.id.text_view_family_name_info))
+                .check(matches(withText(R.string.text_view_family_name_info)));
+
+        onView(withId(R.id.text_view_given_name_info))
+                .check(matches(withText(R.string.text_view_given_name_info)));
+
+        onView(withId(R.id.text_view_email_info))
+                .check(matches(withText(R.string.text_view_email_info)));
+
+
         onView(withId(R.id.text_view_display_name_text))
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
                                                                    .getString(R.string.text_view_display_name_text)))));
+
         onView(withId(R.id.text_view_family_name_text))
-                .check(matches(withText(a.getDisplayName()
+                .check(matches(withText(a.getFamilyName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
                                                                    .getString(R.string.text_view_family_name_text)))));
-        onView(withId(R.id.text_view_family_name_info))
-                .check(matches(withText(a.getDisplayName()
-                                                .getOrElse(mActivityRule
-                                                                   .getActivity()
-                                                                   .getString(R.string.text_view_family_name_info)))));
+
         onView(withId(R.id.text_view_given_name_text))
-                .check(matches(withText(a.getDisplayName()
+                .check(matches(withText(a.getGivenName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
                                                                    .getString(R.string.text_view_given_name_text)))));
-        onView(withId(R.id.text_view_given_name_info))
-                .check(matches(withText(a.getDisplayName()
-                                                .getOrElse(mActivityRule
-                                                                   .getActivity()
-                                                                   .getString(R.string.text_view_given_name_info)))));
+
         onView(withId(R.id.text_view_email_text))
-                .check(matches(withText(a.getDisplayName()
+                .check(matches(withText(a.getEmail()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
                                                                    .getString(R.string.text_view_email_text)))));
-        onView(withId(R.id.text_view_email_info))
-                .check(matches(withText(a.getDisplayName()
-                                                .getOrElse(mActivityRule
-                                                                   .getActivity()
-                                                                   .getString(R.string.text_view_email_info)))));
     }
 
+    /* IMPLEMENTATION CHANGED, THIS IS NOW USELESS
     @Test
     public void displayErrorToastOnQrButtonClick() throws Exception {
         Account.shared.clear();
@@ -89,7 +83,7 @@ public class UserInformationActivityTest {
                 .check(matches(isDisplayed()));
         onView(withId(R.id.buttonDisplayQR)).perform(click());
         Account.shared.clear();
-    }
+    }*/
 
     /* IMPLEMENTATION CHANGED, THIS IS NOW USELESS
     @Test
