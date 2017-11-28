@@ -2,6 +2,7 @@ package ch.epfl.sweng.groupup.activity.info;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.widget.EditText;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,12 +38,12 @@ public class UserInformationActivityTest {
         Account a = Account.shared;
         Thread.sleep(2000);
 
-        onView(withId(R.id.text_view_display_name_info))
+         onView(withId(R.id.text_view_display_name_info))
                 .check(matches(withText(R.string.text_view_display_name_info)));
 
         onView(withId(R.id.text_view_display_name_text))
                 .check(matches(withText(a.getDisplayName()
-                                                .getOrElse(String.valueOf(R.string.text_view_display_name_text)))));
+                                                .getOrElse(String.valueOf(R.string.text_view_display_name_text)).toString())));
 
         onView(withId(R.id.text_view_family_name_text))
                 .check(matches(withText(a.getFamilyName()
