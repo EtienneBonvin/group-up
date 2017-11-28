@@ -42,7 +42,6 @@ public class DatabaseShould {
     public void exposeSetUpListenerForDefaultAndOwnListener() throws Exception {
         Database.setUpDatabase();
 
-        Database.setUpEventListener(null);
         Database.setUpEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

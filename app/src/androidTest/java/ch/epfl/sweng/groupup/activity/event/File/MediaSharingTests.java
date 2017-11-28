@@ -106,9 +106,6 @@ public class MediaSharingTests {
         onView(withId(R.id.show_image))
                 .perform(click());
 
-        onView(withId(R.id.swipe_bar))
-                .perform(swipeLeft());
-
         onView(withParent(withId(R.id.image_grid)))
                 .check(matches(isDisplayed()));
 

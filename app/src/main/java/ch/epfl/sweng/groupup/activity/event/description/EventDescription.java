@@ -67,7 +67,7 @@ public class EventDescription {
                     public void onClick(View v) {
 
                         final AlertDialog alertDialog = new AlertDialog.Builder(
-                                activity.getApplicationContext()).create();
+                                activity).create();
                         alertDialog.setTitle(R.string.alert_dialog_title_delete_event);
                         alertDialog.setMessage(Html.fromHtml("<font color='#000000'>Would you " +
                                 "like to leave and delete this event?</font>"));
