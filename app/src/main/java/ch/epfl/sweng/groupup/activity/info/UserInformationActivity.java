@@ -110,11 +110,11 @@ public class UserInformationActivity extends LoginActivityInterface {
             } catch (WriterException e) {
                 e.printStackTrace();
             }
-        }/* else {
+        } else {
             AndroidHelper.showToast(getApplicationContext(),
                                     getString(R.string.toast_unable_to_generate_qr),
                                     Toast.LENGTH_SHORT);
-        }*/
+        }
     }
 
     /**

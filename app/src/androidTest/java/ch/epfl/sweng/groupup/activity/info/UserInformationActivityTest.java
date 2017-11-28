@@ -27,6 +27,7 @@ public class UserInformationActivityTest {
     public final ActivityTestRule<UserInformationActivity> mActivityRule =
             new ActivityTestRule<>(UserInformationActivity.class);
 
+    
     @Test
     public void displayRightAccountFields() throws Exception {
         Account a = Account.shared;
