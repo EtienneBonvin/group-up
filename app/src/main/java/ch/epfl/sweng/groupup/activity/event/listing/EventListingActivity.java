@@ -25,6 +25,7 @@ import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity
 import ch.epfl.sweng.groupup.activity.map.MapActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
+import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
@@ -37,11 +38,10 @@ import ch.epfl.sweng.groupup.object.event.Event;
  * It is linked to the layout activity_event_listing.xml
  */
 
-public class EventListingActivity extends ToolbarActivity {
+public class EventListingActivity extends ToolbarActivity implements Watcher {
 
     private LinearLayout linearLayout;
     private int heightInSp;
-    private Timer autoUpdate;
     private boolean dialogShown;
 
 
@@ -57,35 +57,7 @@ public class EventListingActivity extends ToolbarActivity {
         setContentView(R.layout.activity_event_listing);
         super.initializeToolbarActivity();
         initView();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        autoUpdate = new Timer();
-        autoUpdate.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        setContentView(R.layout.activity_event_listing);
-                        initializeToolbarActivity();
-
-                        initView();
-                    }
-                });
-            }
-        }, 0, 5000); // updates each 5 secs
-    }
-
-
-    @Override
-    public void onPause() {
-        if (!(autoUpdate == null)) {
-            autoUpdate.cancel();
-            super.onPause();
-        }
-
+        Account.shared.addWatcher(this);
     }
 
     private void initView() {
@@ -260,5 +232,12 @@ public class EventListingActivity extends ToolbarActivity {
                 alertDialog.show();
             }
         }
+    }
+
+    @Override
+    public void notifyWatcher() {
+        setContentView(R.layout.activity_event_listing);
+        initializeToolbarActivity();
+        initView();
     }
 }

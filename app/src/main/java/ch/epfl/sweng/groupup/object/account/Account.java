@@ -11,12 +11,14 @@ import java.util.regex.Pattern;
 
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
+import ch.epfl.sweng.groupup.lib.Watchee;
+import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.event.EventStatus;
 
-public final class Account extends User {
+public final class Account extends User implements Watchee {
 
-    public static volatile Account shared = new Account(Optional.<String>empty(),
+    public static Account shared = new Account(Optional.<String>empty(),
                                                Optional.<String>empty(),
                                                Optional.<String>empty(),
                                                Optional.<String>empty(),
@@ -25,6 +27,8 @@ public final class Account extends User {
                                                new ArrayList<Event>(),
                                                new ArrayList<Event>(),
                                                Optional.<Location>empty());
+
+    private static List<Watcher> watchers = new ArrayList<>();
 
     private final Optional<Event> currentEvent;
     private final List<Event> pastEvents;
@@ -157,6 +161,7 @@ public final class Account extends User {
                              pastEvents,
                              futureEvents,
                              location);
+        notifyAllWatchers();
         return shared;
     }
 
@@ -176,6 +181,7 @@ public final class Account extends User {
                              pastEvents,
                              futureEvents,
                              location);
+        notifyAllWatchers();
         return shared;
     }
 
@@ -195,6 +201,7 @@ public final class Account extends User {
                              pastEvents,
                              futureEvents,
                              location);
+        notifyAllWatchers();
         return shared;
     }
 
@@ -214,6 +221,7 @@ public final class Account extends User {
                              pastEvents,
                              futureEvents,
                              location);
+        notifyAllWatchers();
         return shared;
     }
 
@@ -234,6 +242,7 @@ public final class Account extends User {
                                  pastEvents,
                                  futureEvents,
                                  location);
+            notifyAllWatchers();
             return shared;
         } else {
             throw new IllegalArgumentException(
@@ -280,6 +289,7 @@ public final class Account extends User {
                                                    EventStatus.CURRENT.toString());
             }
         }
+        notifyAllWatchers();
         return shared;
     }
 
@@ -292,6 +302,7 @@ public final class Account extends User {
     public Account withPastEvents(List<Event> past) {
         shared = new Account(UUID, displayName, givenName, familyName, email,
                              currentEvent, past, futureEvents, location);
+        notifyAllWatchers();
         return shared;
     }
 
@@ -304,6 +315,7 @@ public final class Account extends User {
     public Account withFutureEvents(List<Event> future) {
         shared = new Account(UUID, displayName, givenName, familyName, email,
                              currentEvent, pastEvents, future, location);
+        notifyAllWatchers();
         return shared;
     }
 
@@ -323,6 +335,7 @@ public final class Account extends User {
                              pastEvents,
                              futureEvents,
                              Optional.from(location));
+        notifyAllWatchers();
         return shared;
     }
 
@@ -332,7 +345,7 @@ public final class Account extends User {
      * @param event the event to add
      * @return the modified shared account, so that it is easier to call in chain
      */
-    public synchronized Account addOrUpdateEvent(Event event) {
+    public Account addOrUpdateEvent(Event event) {
         switch (event.getEventStatus()) {
             case FUTURE:
                 return addOrUpdateFutureEvent(event);
@@ -415,6 +428,7 @@ public final class Account extends User {
                              new ArrayList<Event>(),
                              new ArrayList<Event>(),
                              Optional.<Location>empty());
+        notifyAllWatchers();
         return shared;
     }
 
@@ -480,5 +494,22 @@ public final class Account extends User {
     public Member toMember() {
         return new Member(UUID, displayName, givenName, familyName, email,
                           location);
+    }
+
+    @Override
+    public void notifyAllWatchers() {
+        for(Watcher w: Account.watchers){
+            w.notifyWatcher();
+        }
+    }
+
+    @Override
+    public void addWatcher(Watcher newWatcher) {
+        Account.watchers.add(newWatcher);
+    }
+
+    @Override
+    public void removeWatcher(Watcher watcher) {
+        Account.watchers.remove(watcher);
     }
 }
