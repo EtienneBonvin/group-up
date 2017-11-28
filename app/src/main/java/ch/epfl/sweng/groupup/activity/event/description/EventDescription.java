@@ -21,17 +21,24 @@ import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
 
+/**
+ * EventDescription class.
+ * Contains all the methods and attributes relative to the description of a particular event.
+ */
 public class EventDescription {
 
     private final EventDescriptionActivity activity;
 
-    // Event description attributes
     private EditText displayEventName;
     private TextView displayEventStartDate;
     private TextView displayEventEndDate;
     private EditText displayEventDescription;
     private Event eventToDisplay;
 
+    /**
+     * Constructs an EventDescription for the EventDescriptionActivity given as parameter.
+     * @param activity the activity this EventDescription is linked to.
+     */
     @SuppressWarnings("WeakerAccess")
     public EventDescription(final EventDescriptionActivity activity){
 
@@ -46,7 +53,6 @@ public class EventDescription {
             eventToDisplay = null;
         }
 
-        // Initialize event description fields
         final int maxName = 50;
         activity.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -118,10 +124,9 @@ public class EventDescription {
                 });
     }
 
-    // Event description methods.
-
     /**
      * Remove the user from the Event
+     * @param eventToRemove the event to be removed from.
      */
     public static void removeEvent(Event eventToRemove) {
         List<Member> futureMembers = new ArrayList<>(eventToRemove.getEventMembers());
@@ -141,7 +146,7 @@ public class EventDescription {
     }
 
     /**
-     * Intilize the different TextView and EditText
+     * Initialize the different TextView and EditText
      */
     private void initializeField() {
         displayEventName = activity.findViewById(R.id.event_description_name);

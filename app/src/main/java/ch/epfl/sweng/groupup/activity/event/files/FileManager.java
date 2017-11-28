@@ -1,7 +1,6 @@
 package ch.epfl.sweng.groupup.activity.event.files;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -34,6 +32,10 @@ import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
 
+/**
+ * FileManager class.
+ * Contains all methods and attributes relative to the file management of an event.
+ */
 @SuppressWarnings("WeakerAccess")
 public class FileManager implements Watcher {
 
@@ -44,21 +46,21 @@ public class FileManager implements Watcher {
     private int columnWidth;
     private int rowHeight;
     private final Event event;
-    private int eventIndex;
-    private Watcher meAsWatcher;
-
     private int imagesAdded = 0;
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-    public static final String FILE_EXTRA_NAME = "File";
 
+    /**
+     * Creates a FileManager for a particular EventDescription activity.
+     * @param activity the activity this FileManager is linked to.
+     */
     public FileManager(final EventDescriptionActivity activity){
         this.activity = activity;
 
         initializeTakePicture();
 
         Intent i = activity.getIntent();
-        eventIndex = i.getIntExtra(activity.getString(R.string.event_listing_extraIndex), -1);
+        int eventIndex = i.getIntExtra(activity.getString(R.string.event_listing_extraIndex), -1);
         if (eventIndex > -1) {
             //!!!Order the events !!!
             event = Account.shared.getEvents().get(eventIndex);
@@ -68,8 +70,6 @@ public class FileManager implements Watcher {
 
         if(event != null)
             event.addWatcher(this);
-
-        meAsWatcher = this;
 
         // Set onClickListeners to add files
         // TODO adding videos.
@@ -114,13 +114,19 @@ public class FileManager implements Watcher {
         });
     }
 
+    /**
+     * Closes the FileManager.
+     * This method should be called when the activity using the FileManager is paused or destroyed
+     * to avoid unnecessary network communications.
+     */
     public void close(){
         event.removeWatcher(this);
     }
 
     /**
      * Override of onActivityResult method.
-     * Define the behavior when the user finished selecting the picture he wants to add.
+     * Define the behavior when the user finished selecting the picture he wants to add or
+     * taking a picture.
      *
      * @param requestCode unused.
      * @param resultCode  indicate if the operation succeeded.
@@ -132,6 +138,8 @@ public class FileManager implements Watcher {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             try {
                 Bundle extras = data.getExtras();
+                if(extras == null)
+                    return;
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
                 CompressedBitmap compressedBitmap = new CompressedBitmap(imageBitmap);
                 addImageToGrid(compressedBitmap, true);
@@ -168,15 +176,8 @@ public class FileManager implements Watcher {
                         Toast.LENGTH_SHORT);
                 return;
             }
-            
-            /*if (bitmap.getByteCount() / 8 > FirebaseFileProxy.MAX_FILE_SIZE) {
-                Helper.showToast(getApplicationContext(),
-                        getString(R.string.file_management_toast_error_file_too_big),
-                        Toast.LENGTH_SHORT);
-            } else*/ {
-                CompressedBitmap compressedBitmap = new CompressedBitmap(bitmap);
-                addImageToGrid(compressedBitmap, true);
-            }
+            CompressedBitmap compressedBitmap = new CompressedBitmap(bitmap);
+            addImageToGrid(compressedBitmap, true);
         }
     }
 

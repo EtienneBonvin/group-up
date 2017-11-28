@@ -28,9 +28,12 @@ import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.User;
 
+/**
+ * EventDescriptionActivity.
+ * This activity gathers the description of an event, its map and its file management.
+ */
 public class EventDescriptionActivity extends ToolbarActivity implements OnMapReadyCallback {
 
-    private EventDescription eventDescription;
     private FileManager fileManager;
 
     private GoogleMap mMap;
@@ -50,7 +53,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
 
         x1 = -1;
 
-        eventDescription = new EventDescription(this);
+        new EventDescription(this);
         fileManager = new FileManager(this);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -129,7 +132,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
 
     /**
      * Override of onActivityResult method.
-     * Define the behavior when the user finished selecting the picture he wants to add.
+     * Define the behavior when the user finished selecting the picture he wants to add or taking
+     * a picture.
      *
      * @param requestCode unused.
      * @param resultCode  indicate if the operation succeeded.
@@ -142,6 +146,10 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         fileManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * Defines the behavior of the activity when the Google map is ready.
+     * @param googleMap the Google map.
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
