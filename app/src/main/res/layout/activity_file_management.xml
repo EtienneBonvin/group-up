@@ -68,4 +68,12 @@
 
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/show_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/description"
+        android:layout_above="@id/linear_layout"
+        android:visibility="invisible"/>
+
 </RelativeLayout>

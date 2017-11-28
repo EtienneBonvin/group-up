@@ -251,12 +251,27 @@ public class FileManager implements Watcher {
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity.getApplicationContext(), FullScreenFile.class);
 
-                intent.putExtra(FILE_EXTRA_NAME, bitmap.asByteArray());
-                intent.putExtra(activity.getString(R.string.event_listing_extraIndex), eventIndex);
-                event.removeWatcher(meAsWatcher);
-                activity.startActivity(intent);
+                ((ImageView)activity.findViewById(R.id.show_image))
+                        .setImageBitmap(bitmap.asBitmap());
+
+                activity.findViewById(R.id.image_grid)
+                        .setVisibility(View.INVISIBLE);
+
+                activity.findViewById(R.id.show_image)
+                        .setVisibility(View.VISIBLE);
+
+                activity.findViewById(R.id.show_image)
+                        .setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                activity.findViewById(R.id.show_image)
+                                        .setVisibility(View.INVISIBLE);
+
+                                activity.findViewById(R.id.image_grid)
+                                        .setVisibility(View.VISIBLE);
+                            }
+                        });
             }
         });
 
