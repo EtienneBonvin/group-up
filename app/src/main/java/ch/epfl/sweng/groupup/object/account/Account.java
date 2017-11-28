@@ -16,7 +16,7 @@ import ch.epfl.sweng.groupup.object.event.EventStatus;
 
 public final class Account extends User {
 
-    public static Account shared = new Account(Optional.<String>empty(),
+    public static volatile Account shared = new Account(Optional.<String>empty(),
                                                Optional.<String>empty(),
                                                Optional.<String>empty(),
                                                Optional.<String>empty(),
@@ -332,7 +332,7 @@ public final class Account extends User {
      * @param event the event to add
      * @return the modified shared account, so that it is easier to call in chain
      */
-    public Account addOrUpdateEvent(Event event) {
+    public synchronized Account addOrUpdateEvent(Event event) {
         switch (event.getEventStatus()) {
             case FUTURE:
                 return addOrUpdateFutureEvent(event);

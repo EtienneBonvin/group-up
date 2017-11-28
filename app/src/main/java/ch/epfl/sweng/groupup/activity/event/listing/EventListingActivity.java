@@ -92,7 +92,7 @@ public class EventListingActivity extends ToolbarActivity {
         initializeVariables();
         initializeEvents(Account.shared.getFutureEvents(), false);
         initializeCreateEvent();
-        List<Event> belowCreateButton = Account.shared.getPastEvents();
+        /*List<Event> belowCreateButton = Account.shared.getPastEvents();
         if (!Account.shared.getCurrentEvent().isEmpty()) {
             belowCreateButton.add(Account.shared.getCurrentEvent().get());
         }
@@ -103,7 +103,7 @@ public class EventListingActivity extends ToolbarActivity {
             }
         });
         initializeEvents(belowCreateButton, true);
-    }
+    */}
 
 
     /**
@@ -121,7 +121,9 @@ public class EventListingActivity extends ToolbarActivity {
      */
 
     private void initializeEvents(List<Event> events, boolean needAnOffset) {
-        int offset = needAnOffset ? Account.shared.getFutureEvents().size() : 0;
+        Log.d("REFERENCE IN INIT EVENT", Integer.toHexString(System.identityHashCode(Account.shared)));
+       // int offset = needAnOffset ? Account.shared.getFutureEvents().size() : 0;
+        int offset=0;
         for (Event e : events) {
             Log.d("NAME + MEMBER",e.getEventName()+e.getEventMembers().toString());
             if (e.getInvitation()) {
@@ -161,6 +163,7 @@ public class EventListingActivity extends ToolbarActivity {
             offset++;
             linearLayout.addView(eventButton);
         }
+        Database.update();
     }
 
     /**
@@ -187,7 +190,6 @@ public class EventListingActivity extends ToolbarActivity {
      */
     private void askForInvitation() {
         for (final Event eventToDisplay : eventsToDisplay) {
-            onPause();
             List<Event> eventsToRemove=new ArrayList<>();
             if (!dialogShown) {
                 dialogShown = true;
@@ -228,14 +230,14 @@ public class EventListingActivity extends ToolbarActivity {
                                             DialogInterface dialogInterface,
                                             int i) {
                                         Account.shared.addOrUpdateEvent(eventToDisplay.withInvitation(
-                                                !eventToDisplay.getInvitation()));
+                                               !eventToDisplay.getInvitation()));
                                         eventsToDisplay.remove(eventToDisplay);
                                         for (Event e : eventsToRemoveFinal){
                                             EventDescriptionActivity.removeEvent(e);
                                         }
+                                        Log.d("REFERENCE IN DIALOG", Integer.toHexString(System.identityHashCode(Account.shared)));
                                         dialogShown = false;
                                         dialogInterface.dismiss();
-                                        Database.update();
                                         recreate();
                                     }
                                 });
