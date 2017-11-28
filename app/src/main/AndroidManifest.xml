@@ -34,7 +34,6 @@
         <activity android:name=".activity.info.UserInformationActivity" />
         <activity android:name=".activity.event.listing.EventListingActivity" />
         <activity android:name=".activity.event.creation.EventCreationActivity" />
-        <activity android:name=".activity.info.DisplayQRActivity" />
         <activity android:name=".activity.settings.SettingsActivity" />
         <activity android:name=".activity.toolbar.ToolbarActivity" />
         <activity android:name=".activity.event.description.EventDescriptionActivity" />
@@ -57,7 +56,7 @@
         <activity
             android:name=".activity.map.MapActivity"
             android:label="@string/title_activity_map" />
-        <activity android:name=".activity.event.files.FullScreenFile"></activity>
+        <activity android:name=".activity.event.files.FullScreenFile" />
 
       
 

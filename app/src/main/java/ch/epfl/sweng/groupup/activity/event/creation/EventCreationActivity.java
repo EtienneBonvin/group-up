@@ -36,6 +36,8 @@ import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
 
+import static ch.epfl.sweng.groupup.lib.AndroidHelper.emailCheck;
+
 
 /**
  * EventCreationActivity class
@@ -579,15 +581,5 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
             return new Event(eventName, startDate, endDate, description, finalMembers,false);
         }
 
-        /**
-         * Check that the passed email is an "acceptable" form (not the icann official definition)
-         * @param email the email to check
-         * @return true if email ok else false
-         */
-        private boolean emailCheck(String email){
-            Pattern p = Pattern.compile("\\b[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,13}\\b",Pattern.CASE_INSENSITIVE);
-            Matcher m=p.matcher(email);
-            return m.matches();
-        }
     }
 }
