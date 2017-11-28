@@ -14,11 +14,16 @@
         android:gravity="center"
         android:layout_alignParentBottom="true"/>
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
     <ViewFlipper
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_above="@id/swipe_bar"
+        android:layout_below="@id/toolbar"
         android:id="@+id/view_flipper">
 
         <android.support.design.widget.CoordinatorLayout
@@ -46,10 +51,6 @@
                     app:contentScrim="?attr/colorPrimary"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed"
                     app:toolbarId="@+id/toolbar_description">
-
-                    <include
-                        android:id="@+id/toolbar"
-                        layout="@layout/toolbar" />
 
                     <EditText
                         android:id="@+id/event_description_name"
