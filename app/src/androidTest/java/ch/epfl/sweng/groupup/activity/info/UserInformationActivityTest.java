@@ -34,49 +34,49 @@ public class UserInformationActivityTest {
 
     @Test
     public void displayRightAccountFields() throws Exception {
-        Account a = Account.shared.clear();
+        Account a = Account.shared;
         Thread.sleep(5000);
 
         onView(withId(R.id.text_view_display_name_info))
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
-                                                                   .getString(R.string.text_view_display_name_info)).toString())));
+                                                                   .getString(R.string.text_view_display_name_info)))));
         onView(withId(R.id.text_view_display_name_text))
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
-                                                                   .getString(R.string.text_view_display_name_text)).toString())));
+                                                                   .getString(R.string.text_view_display_name_text)))));
         onView(withId(R.id.text_view_family_name_text))
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
-                                                                   .getString(R.string.text_view_family_name_text)).toString())));
+                                                                   .getString(R.string.text_view_family_name_text)))));
         onView(withId(R.id.text_view_family_name_info))
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
-                                                                   .getString(R.string.text_view_family_name_info)).toString())));
+                                                                   .getString(R.string.text_view_family_name_info)))));
         onView(withId(R.id.text_view_given_name_text))
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
-                                                                   .getString(R.string.text_view_given_name_text)).toString())));
+                                                                   .getString(R.string.text_view_given_name_text)))));
         onView(withId(R.id.text_view_given_name_info))
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
-                                                                   .getString(R.string.text_view_given_name_info)).toString())));
+                                                                   .getString(R.string.text_view_given_name_info)))));
         onView(withId(R.id.text_view_email_text))
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
-                                                                   .getString(R.string.text_view_email_text)).toString())));
+                                                                   .getString(R.string.text_view_email_text)))));
         onView(withId(R.id.text_view_email_info))
                 .check(matches(withText(a.getDisplayName()
                                                 .getOrElse(mActivityRule
                                                                    .getActivity()
-                                                                   .getString(R.string.text_view_email_info)).toString())));
+                                                                   .getString(R.string.text_view_email_info)))));
     }
 
     /* IMPLEMENTATION CHANGED, THIS IS NOW USELESS
