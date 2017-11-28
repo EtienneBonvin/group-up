@@ -35,17 +35,15 @@ public class UserInformationActivityTest {
     @Test
     public void displayRightAccountFields() throws Exception {
         Account a = Account.shared;
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
         onView(withId(R.id.text_view_display_name_info))
                 .check(matches(withText(R.string.text_view_display_name_info)));
 
         onView(withId(R.id.text_view_display_name_text))
                 .check(matches(withText(a.getDisplayName()
-                                                .getOrElse(mActivityRule
-                                                                   .getActivity()
-                                                                   .getString(R.string.text_view_display_name_text)))));
-        
+                                                .getOrElse(String.valueOf(R.string.text_view_display_name_text)))));
+
         onView(withId(R.id.text_view_family_name_text))
                 .check(matches(withText(a.getFamilyName()
                                                 .getOrElse(mActivityRule
