@@ -52,31 +52,15 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("RECREATE", "Asfafasd");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_listing);
         super.initializeToolbarActivity();
-        initView();
+
         Account.shared.addWatcher(this);
-    }
-
-    private void initView() {
         initializeVariables();
-        initializeEvents(Account.shared.getFutureEvents(), false);
+        updateEvents();
         initializeCreateEvent();
-        /*List<Event> belowCreateButton = Account.shared.getPastEvents();
-        if (!Account.shared.getCurrentEvent().isEmpty()) {
-            belowCreateButton.add(Account.shared.getCurrentEvent().get());
-        }
-        Collections.sort(belowCreateButton, new Comparator<Event>() {
-            @Override
-            public int compare(Event o1, Event o2) {
-                return o1.getStartTime().compareTo(o2.getStartTime());
-            }
-        });
-        initializeEvents(belowCreateButton, true);
-    */}
-
+    }
 
     /**
      * Initialization of the private variables of the class
@@ -91,18 +75,18 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
      * Initialization of the event buttons in the linear layout with the
      * name and start to event dates stated
      */
+    private void updateEvents() {
+        List<Event> events = Account.shared.getEvents();
 
-    private void initializeEvents(List<Event> events, boolean needAnOffset) {
-        Log.d("REFERENCE IN INIT EVENT", Integer.toHexString(System.identityHashCode(Account.shared)));
-       // int offset = needAnOffset ? Account.shared.getFutureEvents().size() : 0;
-        int offset=0;
+        int index = 0;
         for (Event e : events) {
-            Log.d("NAME + MEMBER",e.getEventName()+e.getEventMembers().toString());
             if (e.getInvitation()) {
                 eventsToDisplay.add(e);
             }
         }
-           askForInvitation();
+
+        askForInvitation();
+
         for (Event e : events) {
             Button eventButton = new Button(this);
             eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
@@ -112,13 +96,13 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
                     e.getEndTime().getDayOfMonth(), e.getEndTime().getMonthOfYear()));
             eventButton.setBackgroundColor(getResources().getColor(R.color.primaryLightColor));
             eventButton.setCompoundDrawablePadding(2);
-            final int indexToPass = offset;
 
+            final int i = index;
             eventButton.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
-                    intent.putExtra("eventIndex", indexToPass);
+                    intent.putExtra("eventIndex", i);
                     startActivity(intent);
                     return true;
                 }
@@ -128,14 +112,13 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(EventListingActivity.this, MapActivity.class);
-                    intent.putExtra(getString(R.string.event_listing_extraIndex), indexToPass);
+                    intent.putExtra(getString(R.string.event_listing_extraIndex), i);
                     startActivity(intent);
                 }
             });
-            offset++;
+            index++;
             linearLayout.addView(eventButton);
         }
-        Database.update();
     }
 
     /**
@@ -151,41 +134,43 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
                 startActivity(i);
             }
         });
-        //createEventButton.setId(View.generateViewId()); // Assign the ID of the event
     }
 
 
     /**
      * Create a dialog to invite the user to the event
-     *
-     * @param
      */
     private void askForInvitation() {
         for (final Event eventToDisplay : eventsToDisplay) {
-            List<Event> eventsToRemove=new ArrayList<>();
+            List<Event> eventsToRemove = new ArrayList<>();
             if (!dialogShown) {
                 dialogShown = true;
 
-                String message="";
-                String names="";
+                String message = "";
+                String names = "";
 
                 for(Event e : Account.shared.getFutureEvents()){
                     if (e.overlap(Optional.from(eventToDisplay)) && !e.getUUID().equals(eventToDisplay.getUUID())){
                         eventsToRemove.add(e);
-                        names+= e.getEventName()+" ";
+                        names += e.getEventName()+" ";
                     }
                 }
+
                 if (eventToDisplay.overlap(Account.shared.getCurrentEvent())){
                     eventsToRemove.add(Account.shared.getCurrentEvent().get());
                 }
-                final List<Event> eventsToRemoveFinal= Collections.unmodifiableList(eventsToRemove);
+
+                final List<Event> eventsToRemoveFinal = Collections.unmodifiableList(eventsToRemove);
+
                 String members = getString(R.string.event_invitation_dialog_members);
                 for (Member member : eventToDisplay.getEventMembers()) {
                     members += member.getDisplayName().getOrElse(getString(R.string.event_invitation_dialog_unknown)) + "\n";
                 }
+
                 AlertDialog.Builder alertDialogBuilder =
                         new AlertDialog.Builder(new ContextThemeWrapper(EventListingActivity.this, R.style.AboutDialog));
                 alertDialogBuilder.setTitle(R.string.event_invitation_title);
+
                 if(!eventsToRemove.isEmpty()){
                     message = getString(R.string.overlapping_events) + names + "\n";
                 }
@@ -194,6 +179,7 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
                         + getString(R.string.event_invitation_dialog_end) + eventToDisplay.getEndTimeToString() + "\n"
                         + getString(R.string.event_invitation_dialog_description) + eventToDisplay.getDescription() + "\n" + members;
                 alertDialogBuilder.setMessage(message);
+
                 alertDialogBuilder
                         .setPositiveButton(R.string.event_invitation_dialog_accept,
                                 new DialogInterface.OnClickListener() {
@@ -207,7 +193,6 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
                                         for (Event e : eventsToRemoveFinal){
                                             EventDescriptionActivity.removeEvent(e);
                                         }
-                                        Log.d("REFERENCE IN DIALOG", Integer.toHexString(System.identityHashCode(Account.shared)));
                                         dialogShown = false;
                                         dialogInterface.dismiss();
                                         recreate();
@@ -236,8 +221,6 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
 
     @Override
     public void notifyWatcher() {
-        setContentView(R.layout.activity_event_listing);
-        initializeToolbarActivity();
-        initView();
+        updateEvents();
     }
 }

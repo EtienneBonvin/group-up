@@ -161,7 +161,6 @@ public final class Account extends User implements Watchee {
                              pastEvents,
                              futureEvents,
                              location);
-        notifyAllWatchers();
         return shared;
     }
 
@@ -181,7 +180,6 @@ public final class Account extends User implements Watchee {
                              pastEvents,
                              futureEvents,
                              location);
-        notifyAllWatchers();
         return shared;
     }
 
@@ -201,7 +199,6 @@ public final class Account extends User implements Watchee {
                              pastEvents,
                              futureEvents,
                              location);
-        notifyAllWatchers();
         return shared;
     }
 
@@ -221,7 +218,6 @@ public final class Account extends User implements Watchee {
                              pastEvents,
                              futureEvents,
                              location);
-        notifyAllWatchers();
         return shared;
     }
 
@@ -242,7 +238,6 @@ public final class Account extends User implements Watchee {
                                  pastEvents,
                                  futureEvents,
                                  location);
-            notifyAllWatchers();
             return shared;
         } else {
             throw new IllegalArgumentException(
@@ -302,7 +297,6 @@ public final class Account extends User implements Watchee {
     public Account withPastEvents(List<Event> past) {
         shared = new Account(UUID, displayName, givenName, familyName, email,
                              currentEvent, past, futureEvents, location);
-        notifyAllWatchers();
         return shared;
     }
 
@@ -315,7 +309,6 @@ public final class Account extends User implements Watchee {
     public Account withFutureEvents(List<Event> future) {
         shared = new Account(UUID, displayName, givenName, familyName, email,
                              currentEvent, pastEvents, future, location);
-        notifyAllWatchers();
         return shared;
     }
 
@@ -335,7 +328,6 @@ public final class Account extends User implements Watchee {
                              pastEvents,
                              futureEvents,
                              Optional.from(location));
-        notifyAllWatchers();
         return shared;
     }
 
@@ -379,6 +371,7 @@ public final class Account extends User implements Watchee {
                     return o1.getStartTime().compareTo(o2.getStartTime());
                 }
             });
+            notifyAllWatchers();
             return Account.shared.withPastEvents(newPast);
         }
         throw new IllegalArgumentException("This is not a past event");
@@ -408,6 +401,7 @@ public final class Account extends User implements Watchee {
                     return o2.getStartTime().compareTo(o1.getStartTime());
                 }
             });
+            notifyAllWatchers();
             return Account.shared.withFutureEvents(newFuture);
         }
         throw new IllegalArgumentException("This is not a future event");
@@ -428,7 +422,6 @@ public final class Account extends User implements Watchee {
                              new ArrayList<Event>(),
                              new ArrayList<Event>(),
                              Optional.<Location>empty());
-        notifyAllWatchers();
         return shared;
     }
 
