@@ -244,10 +244,11 @@ public class EventsShould {
     public void getCorrectDateString(){
         LocalDateTime now= LocalDateTime.now();
         Event e= new Event("1",now,now,"", new ArrayList<>(Collections.singletonList(member)),false);
-        assertEquals(e.getStartTimeToString(), (String.format(Locale.getDefault(),"%d/%d/%d", now.getDayOfMonth(),
-                now.getMonthOfYear(),now.getYear())));
-        assertEquals(e.getEndTimeToString(), (String.format(Locale.getDefault(),"%d/%d/%d", now.getDayOfMonth(),
-                now.getMonthOfYear(),now.getYear())));
+        assertEquals(e.getStartTimeToString(), String.format(Locale.getDefault(),"%02d/%02d/%d %d:%02d", now.getDayOfMonth(),
+                now.getMonthOfYear(),now.getYear(), now.getHourOfDay(), now.getMinuteOfHour()));
+        assertEquals(e.getEndTimeToString(),String.format(Locale.getDefault(),"%02d/%02d/%d %d:%02d", now.getDayOfMonth(),
+                now.getMonthOfYear(),now.getYear(), now.getHourOfDay(), now.getMinuteOfHour()));
+
     }
 
     @Test
