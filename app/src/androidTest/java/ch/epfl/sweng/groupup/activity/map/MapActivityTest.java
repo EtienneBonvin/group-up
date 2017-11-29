@@ -60,7 +60,7 @@ public class MapActivityTest {
 
         deleteEvent();
     }
-    /*
+
     @Test
     public void testAddMarker() {
         createEvent();
@@ -125,7 +125,7 @@ public class MapActivityTest {
             assertEquals(0,1);
         }
         deleteEvent();
-    }*/
+    }
 
     private void createEvent() {
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(EVENT_NAME));
