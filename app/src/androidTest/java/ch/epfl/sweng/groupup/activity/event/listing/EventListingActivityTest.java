@@ -1,15 +1,10 @@
 package ch.epfl.sweng.groupup.activity.event.listing;
 
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.action.TypeTextAction;
 import android.support.test.espresso.contrib.BuildConfig;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v7.app.AlertDialog;
-import android.util.Config;
-
-import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 
 import org.joda.time.LocalDateTime;
@@ -18,20 +13,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
-import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
-import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -40,6 +30,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class EventListingActivityTest {
+
+    private Event event;
 
     @Rule
     public ActivityTestRule<EventListingActivity> mEventListingActivityActivityTestRule =

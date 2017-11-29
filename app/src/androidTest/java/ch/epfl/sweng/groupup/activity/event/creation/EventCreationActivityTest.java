@@ -46,7 +46,6 @@ import static org.hamcrest.Matchers.not;
 public class EventCreationActivityTest {
 
     private final String EVENT_NAME = "My event";
-    private final String EVENT_DESCRIPTION = "My description";
 
     @Rule
     // third parameter is set to true which means the activity is started automatically
@@ -72,11 +71,11 @@ public class EventCreationActivityTest {
         Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
                 Optional.<String>empty(), Optional.<String>empty(), Optional.<Location>empty());
         List<Member> expectedMembers = new ArrayList<>();
-        expectedMembers.add(emptyMember.withUUID("0"));
+        /*expectedMembers.add(emptyMember.withUUID("0"));
         expectedMembers.add(emptyMember.withUUID("1"));
         expectedMembers.add(emptyMember.withUUID("2"));
         expectedMembers.add(emptyMember.withUUID("3"));
-        expectedMembers.add(emptyMember.withUUID("4"));
+        expectedMembers.add(emptyMember.withUUID("4"));*/
         expectedMembers.add(emptyMember.withUUID(Member.UNKNOWN_USER + "1").withEmail("swenggroupup@gmail.com"));
         expectedMembers.add(emptyMember.withUUID(Account.shared.getUUID().getOrElse("Default UUID")));
 
@@ -84,6 +83,7 @@ public class EventCreationActivityTest {
 
         Espresso.closeSoftKeyboard();
 
+        String EVENT_DESCRIPTION = "My description";
         addDescription(EVENT_DESCRIPTION);
 
         Espresso.closeSoftKeyboard();
@@ -117,12 +117,18 @@ public class EventCreationActivityTest {
         addMembers();
         Espresso.closeSoftKeyboard();
 
+        try {
+            Thread.sleep(2000);
+        }catch(InterruptedException ie){
+            //The tests are stopped, nothing to do.
+        }
+
         onView(withId(R.id.save_new_event_button)).perform(click());
 
 
         Event found = findEvent(EVENT_NAME);
         Event expected = new Event(found.getUUID(), EVENT_NAME, start, end,
-                                   EVENT_DESCRIPTION, expectedMembers, false);
+                EVENT_DESCRIPTION, expectedMembers, false);
 
         if (!(found.equals(expected))){
             throw new AssertionError("Expected : "+expected+".\nFound : "+found);
@@ -214,7 +220,6 @@ public class EventCreationActivityTest {
                         .getWindow()
                         .getDecorView()))))
                 .check(matches(isDisplayed()));
-
         try {
             Thread.sleep(2000);
         }catch(InterruptedException ie){
@@ -341,7 +346,7 @@ public class EventCreationActivityTest {
     private void addMembers(){
         onView(withId(R.id.button_add_members)).perform(click());
         Espresso.closeSoftKeyboard();
-        onView(withId(R.id.edit_text_add_member)).perform(typeText("0"));
+        /*onView(withId(R.id.edit_text_add_member)).perform(typeText("0"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.image_view_add_member)).perform(click());
         onView(withId(R.id.edit_text_add_member)).perform(typeText("1"));
@@ -355,7 +360,7 @@ public class EventCreationActivityTest {
         onView(withId(R.id.image_view_add_member)).perform(click());
         onView(withId(R.id.edit_text_add_member)).perform(typeText("4"));
         Espresso.closeSoftKeyboard();
-        onView(withId(R.id.image_view_add_member)).perform(click());
+        onView(withId(R.id.image_view_add_member)).perform(click());*/
         onView(withId(R.id.edit_text_add_member)).perform(typeText("swenggroupup@gmail.com"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.image_view_add_member)).perform(click());

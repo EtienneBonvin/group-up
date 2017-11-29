@@ -46,13 +46,7 @@ public class ToolbarActivity extends AppCompatActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent =
-                                new Intent(getApplicationContext(),
-                                           EventListingActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                                        Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+                        setUpListener(EventListingActivity.class);
                     }
                 });
 
@@ -60,13 +54,7 @@ public class ToolbarActivity extends AppCompatActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent =
-                                new Intent(getApplicationContext(),
-                                           SettingsActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                                        Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+                        setUpListener(SettingsActivity.class);
                     }
                 });
 
@@ -74,13 +62,7 @@ public class ToolbarActivity extends AppCompatActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent =
-                                new Intent(getApplicationContext(),
-                                           UserInformationActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                                        Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+                        setUpListener(UserInformationActivity.class);
                     }
                 });
     }
@@ -92,5 +74,18 @@ public class ToolbarActivity extends AppCompatActivity {
     public void mock() {
         geoLocation = new MockLocation();
         geoLocation.requestLocationUpdates();
+    }
+
+    /**
+     * Sets up a listener to the given class
+     * @param intentClass the class of the activity to be started
+     */
+    private void setUpListener(Class intentClass){
+        Intent intent = new Intent(getApplicationContext(), intentClass);
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

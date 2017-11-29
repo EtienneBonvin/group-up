@@ -6,18 +6,32 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.widget.Toast;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Class containing some useful methods to help the programmer out.
  */
 
-public final class Helper {
+public final class AndroidHelper {
+
+    /**
+     * Check that the passed email is an "acceptable" form (not the icann official definition)
+     * @param email the email to check
+     * @return true if email ok else false
+     */
+    public static boolean emailCheck(String email){
+        Pattern p = Pattern.compile("\\b[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,13}\\b",Pattern.CASE_INSENSITIVE);
+        Matcher m=p.matcher(email);
+        return m.matches();
+    }
 
     private static Toast lastShowedToast = null;
 
     /**
      * Private constructor, we don't want to instantiate this class.
      */
-    private Helper() {
+    private AndroidHelper() {
         // Not instantiable.
     }
 
@@ -92,10 +106,8 @@ public final class Helper {
                Build.MODEL.contains("Emulator") ||
                Build.MODEL.contains("Android SDK built for x86") ||
                Build.MANUFACTURER.contains("Genymotion") ||
-               (Build.BRAND
-                        .startsWith("generic") &&
-                Build.DEVICE
-                        .startsWith("generic")) ||
+               (Build.BRAND.startsWith("generic") &&
+                Build.DEVICE.startsWith("generic")) ||
                "google_sdk".equals(Build.PRODUCT);
     }
 }

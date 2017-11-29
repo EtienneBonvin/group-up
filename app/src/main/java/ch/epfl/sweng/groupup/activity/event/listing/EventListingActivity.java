@@ -126,7 +126,7 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
      * of the OnClickListener
      */
     private void initializeCreateEvent() {
-        FloatingActionButton createEventButton = (FloatingActionButton) this.findViewById(R.id.createEventButton);
+        FloatingActionButton createEventButton = this.findViewById(R.id.createEventButton);
         createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

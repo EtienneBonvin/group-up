@@ -1,24 +1,26 @@
 package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import java.util.HashMap;
 import java.util.MissingResourceException;
 
 import ch.epfl.sweng.groupup.R;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class MembersAddingActivity extends EventCreationActivity implements ZXingScannerView.ResultHandler{
+import static ch.epfl.sweng.groupup.lib.AndroidHelper.emailCheck;
 
-    private HashMap<View.OnClickListener, View> viewsWithOCL;
-    private HashMap<View.OnClickListener, String> uIdsWithOCL;
-    private ZXingScannerView mScannerView;
+public class MembersAddingActivity extends EventCreationActivity implements ZXingScannerView.ResultHandler {
+
+    private transient HashMap<View.OnClickListener, View> viewsWithOCL;
+    private transient HashMap<View.OnClickListener, MemberRepresentation> uIdsWithOCL;
+    private transient ZXingScannerView mScannerView;
 
     private EventBuilder builder;
 
@@ -38,7 +40,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
         viewsWithOCL = new HashMap<>();
         uIdsWithOCL = new HashMap<>();
 
-        builder = (EventBuilder)getIntent().getSerializableExtra("Builder");
+        builder = (EventBuilder)getIntent().getSerializableExtra(EventCreationActivity.EXTRA_MESSAGE);
         if(builder == null){
             throw new MissingResourceException(
                     "The builder has not been given in the Extra.",
@@ -46,7 +48,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                     "Builder");
         }
 
-        for(String member : builder.getMembers()){
+        for(MemberRepresentation member : builder.getMembers()){
             addNewMember(member);
         }
     }
@@ -59,9 +61,14 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        EditText memberUId = findViewById(R.id.edit_text_add_member);
-                        addNewMember(memberUId.getText().toString());
-                        memberUId.setText("");
+                        EditText memberEmail = findViewById(R.id.edit_text_add_member);
+                        if (!emailCheck(memberEmail.getText().toString())){
+                            memberEmail.setError(getString(R.string.members_adding_invalid_email));
+                        } else {
+                            MemberRepresentation newRep = new MemberRepresentation(memberEmail.getText().toString());
+                            addNewMember(newRep);
+                            memberEmail.setText("");
+                        }
                     }
                 });
 
@@ -95,7 +102,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
      * Restores the already added members
      */
     private void restoreState() {
-        for (String member : builder.getMembers()) {
+        for (MemberRepresentation member : builder.getMembers()) {
             addNewMember(member);
         }
     }
@@ -111,7 +118,14 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
         setContentView(R.layout.members_adding);
         initListeners();
         restoreState();
-        addNewMember(rawResult.getText());
+
+        // contains UUID and displayName seperated by ","
+        String[] decoded = rawResult.getText().split(",");
+        if (decoded.length != 2 || decoded[0].length() == 0){
+                throw new IllegalArgumentException("Decoded information not proper.");
+        }
+        MemberRepresentation newRep = new MemberRepresentation(decoded[0], decoded[1]);
+        addNewMember(newRep);
     }
 
     /**
@@ -142,10 +156,10 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
     }
 
     /**
-     * Adds a line in the member list on the UI with the user ID address specified by the user
-     * @param memberUId the identificator of the member (UUID or email)
+     * Adds a line in the member list on the UI with either email or UUDI specified by the user
+     * @param memberInfo the MemberRepresentation of the member that will be added
      */
-    private void addNewMember(String memberUId) {
+    private void addNewMember(MemberRepresentation memberInfo) {
 
         LinearLayout newMember = new LinearLayout(this);
         newMember.setLayoutParams(new LinearLayout.LayoutParams(
@@ -159,7 +173,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 0.9f));
-        textView.setText(memberUId);
+        textView.setText(memberInfo.toString());
         textView.setTextColor(getResources().getColor(R.color.primaryTextColor));
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -191,7 +205,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
 
         minus.setOnClickListener(ocl);
         viewsWithOCL.put(ocl, newMember);
-        uIdsWithOCL.put(ocl, memberUId);
+        uIdsWithOCL.put(ocl, memberInfo);
     }
 
     /**
@@ -201,7 +215,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
         builder.setMembersTo(uIdsWithOCL.values());
 
         Intent intent = new Intent(this, EventCreationActivity.class);
-        intent.putExtra("Builder", builder);
+        intent.putExtra(EventCreationActivity.EXTRA_MESSAGE, builder);
         startActivity(intent);
     }
 }

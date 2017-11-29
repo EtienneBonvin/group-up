@@ -25,8 +25,8 @@ public class FullScreenFile extends AppCompatActivity {
         setContentView(R.layout.activity_full_screen_file);
 
         Intent intent = getIntent();
-        byte[] data = intent.getByteArrayExtra(FileManagementActivity.FILE_EXTRA_NAME);
-        Bitmap fileToShow = BitmapFactory.decodeByteArray(data, 0, data.length);
+        CompressedBitmap fileToShow =
+                new CompressedBitmap(intent.getByteArrayExtra(FileManagementActivity.FILE_EXTRA_NAME));
 
         final int eventIndex = intent.getIntExtra(FileManagementActivity.EVENT_INDEX, -1);
 
@@ -41,6 +41,6 @@ public class FullScreenFile extends AppCompatActivity {
                 });
 
         ((ImageView)findViewById(R.id.image_to_display))
-                .setImageBitmap(fileToShow);
+                .setImageBitmap(fileToShow.asBitmap());
     }
 }

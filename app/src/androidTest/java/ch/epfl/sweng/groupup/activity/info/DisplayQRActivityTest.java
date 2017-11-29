@@ -24,15 +24,14 @@ public class DisplayQRActivityTest {
     public void qrButtonIsClickable() throws Exception {
         mActivityRule.getActivity().mock(true, true);
         login();
-        clickQRButton();
+        showQRCode();
     }
 
     private void login() {
         onView(withId(R.id.sign_in_button_google)).perform(click());
     }
 
-    private void clickQRButton() {
+    private void showQRCode() {
         onView(withId(R.id.icon_access_user_profile)).perform(click());
-        onView(withId(R.id.buttonDisplayQR)).perform(click());
     }
 }

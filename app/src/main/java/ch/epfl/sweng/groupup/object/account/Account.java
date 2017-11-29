@@ -1,6 +1,7 @@
 package ch.epfl.sweng.groupup.object.account;
 
 import android.location.Location;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -328,6 +329,10 @@ public final class Account extends User implements Watchee {
                              pastEvents,
                              futureEvents,
                              Optional.from(location));
+
+        if (User.observer != null && location != null) {
+            User.observer.updateDefaultMarker(location);
+        }
         return shared;
     }
 
@@ -379,7 +384,7 @@ public final class Account extends User implements Watchee {
 
     /**
      * Add a future event list of the shared account or updates it if is already exists
-     * This guarentees that the event are sorted
+     * This guarantees that the event are sorted
      *
      * @param future event to add
      * @return the modified shared account, so that it is easier to call in chain

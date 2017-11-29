@@ -36,10 +36,12 @@
     <!-- Theme of category and fields used in settings, description and user profile -->
     <style name="EventCategories" parent="Base.TextAppearance.AppCompat.Subhead">
         <item name="android:textColor">@color/black</item>
+        <item name="android:background">@color/transparent</item>
     </style>
 
     <style name="EventFields" parent="Base.TextAppearance.AppCompat.Subhead">
         <item name="android:textColor">@color/middle_grey</item>
+        <item name="android:layout_marginBottom">@dimen/default_gap</item>
     </style>
 
 

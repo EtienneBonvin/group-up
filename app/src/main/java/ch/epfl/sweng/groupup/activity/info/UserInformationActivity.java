@@ -2,9 +2,11 @@ package ch.epfl.sweng.groupup.activity.info;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +20,7 @@ import java.io.ByteArrayOutputStream;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
-import ch.epfl.sweng.groupup.lib.Helper;
+import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.login.FirebaseAuthentication;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService.Status;
@@ -43,6 +45,8 @@ public class UserInformationActivity extends LoginActivityInterface {
 
     private GoogleAuthenticationService authService;
 
+    public static final String EXTRA_MESSAGE = "picture";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +66,7 @@ public class UserInformationActivity extends LoginActivityInterface {
 
         initializeFields();
         updateUI(Status.CONNECTED);
+        displayQR();
 
         findViewById(R.id.button_sign_out)
                 .setOnClickListener(new View.OnClickListener() {
@@ -71,18 +76,11 @@ public class UserInformationActivity extends LoginActivityInterface {
                     }
                 });
 
-        findViewById(R.id.buttonDisplayQR)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        displayQR();
-                    }
-                });
     }
 
     private void displayQR() {
         if (!shared.getUUID().isEmpty()) {
-            String text = shared.getUUID().get();
+            String text = shared.getUUID().get() + ","+ shared.getDisplayName().getOrElse("Unknown User");
             QRCodeWriter writer = new QRCodeWriter();
             try {
                 BitMatrix
@@ -91,48 +89,37 @@ public class UserInformationActivity extends LoginActivityInterface {
                 int width = bitMatrix.getWidth();
                 int height = bitMatrix.getHeight();
                 Bitmap
-                        bmp =
+                        bitmap =
                         Bitmap.createBitmap(width,
                                             height,
                                             Bitmap.Config.RGB_565);
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
-                        bmp.setPixel(x,
+                        bitmap.setPixel(x,
                                      y,
                                      bitMatrix.get(x, y) ?
                                      Color.BLACK :
-                                     Color.WHITE);
+                                     getResources().getColor(R.color.background));
                     }
                 }
 
-                // pass bitmap to Byte Array
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-
-                // open QR code in new activity
-                switchToDisplayQR(byteArray);
+                // display QR code
+                ImageView image = findViewById(R.id.qrImageView);
+                image.setImageBitmap(bitmap);
 
             } catch (WriterException e) {
                 e.printStackTrace();
             }
         } else {
-            // TODO: 19.10.2017  after pausing app, email always empty?
-            Helper.showToast(getApplicationContext(),
-                             getString(R.string.toast_unable_to_generate_qr),
-                             Toast.LENGTH_SHORT);
+            AndroidHelper.showToast(getApplicationContext(),
+                                    getString(R.string.toast_unable_to_generate_qr),
+                                    Toast.LENGTH_SHORT);
         }
     }
 
     /**
      * Method used to initialize all the fields of the activity.
      */
-
-    private void switchToDisplayQR(byte[] byteArray) {
-        Intent intent = new Intent(this, DisplayQRActivity.class);
-        intent.putExtra("picture", byteArray);
-        startActivity(intent);
-    }
 
     private void initializeFields() {
         displayNameTextView = findViewById(R.id.text_view_display_name_text);
@@ -166,9 +153,9 @@ public class UserInformationActivity extends LoginActivityInterface {
 
     @Override
     public void onFail() {
-        Helper.showToast(getApplicationContext(),
-                         getString(R.string.toast_unable_to_sign_out),
-                         Toast.LENGTH_SHORT);
+        AndroidHelper.showToast(getApplicationContext(),
+                                getString(R.string.toast_unable_to_sign_out),
+                                Toast.LENGTH_SHORT);
     }
 
     @Override

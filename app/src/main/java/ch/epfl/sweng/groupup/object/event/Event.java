@@ -1,7 +1,5 @@
 package ch.epfl.sweng.groupup.object.event;
 
-import android.graphics.Bitmap;
-
 import org.joda.time.LocalDateTime;
 
 import java.io.Serializable;
@@ -12,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import ch.epfl.sweng.groupup.activity.event.files.CompressedBitmap;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.Watchee;
 import ch.epfl.sweng.groupup.lib.Watcher;
@@ -28,7 +27,7 @@ public final class Event implements Serializable, Watcher, Watchee{
     private final LocalDateTime endTime;
     private final String description;
     private final List<Member> eventMembers;
-    private List<Bitmap> eventImages;
+    private List<CompressedBitmap> eventImages;
     private FirebaseFileProxy proxy;
     private Set<Watcher> watchers;
 
@@ -77,7 +76,7 @@ public final class Event implements Serializable, Watcher, Watchee{
      * method is called.
      * @return the list of Bitmap of the pictures of the event.
      */
-    public List<Bitmap> getPictures(){
+    public List<CompressedBitmap> getPictures(){
         verifyProxyInstantiated();
         return new ArrayList<>(eventImages);
     }
@@ -87,7 +86,7 @@ public final class Event implements Serializable, Watcher, Watchee{
      * @param uuid the id of the uploader.
      * @param bitmap the Bitmap to upload
      */
-    public void addPicture(String uuid, Bitmap bitmap){
+    public void addPicture(String uuid, CompressedBitmap bitmap){
         verifyProxyInstantiated();
         eventImages.add(bitmap);
         proxy.uploadFile(uuid, bitmap);
@@ -367,7 +366,7 @@ public final class Event implements Serializable, Watcher, Watchee{
     @Override
     public void notifyWatcher() {
         verifyProxyInstantiated();
-        List<Bitmap> proxyImages = proxy.getFromDatabase();
+        List<CompressedBitmap> proxyImages = proxy.getFromDatabase();
         if(proxyImages.size() > eventImages.size())
             eventImages = proxyImages;
         notifyAllWatchers();
