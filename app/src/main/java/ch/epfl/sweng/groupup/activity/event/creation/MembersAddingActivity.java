@@ -1,7 +1,6 @@
 package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;

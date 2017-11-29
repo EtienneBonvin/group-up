@@ -391,6 +391,18 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
 
             return email.length()==0 ? emptyMember.withDisplayName(displayName).withUUID(UUID) : emptyMember.withEmail(email);
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            MemberRepresentation that = (MemberRepresentation) o;
+
+            if (UUID != null ? !UUID.equals(that.UUID) : that.UUID != null) return false;
+            if (email != null ? !email.equals(that.email) : that.email != null) return false;
+            return displayName != null ? displayName.equals(that.displayName) : that.displayName == null;
+        }
     }
 
     /**
