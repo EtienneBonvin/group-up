@@ -97,6 +97,11 @@ public final class Event implements Serializable, Watcher, Watchee{
         proxy.uploadFile(uuid, bitmap);
     }
 
+    public void removeImagesFrom(String uuid){
+        verifyProxyInstantiated();
+        proxy.removeImageFromUser(uuid);
+    }
+
     /**
      * Getter for the event name
      * @return String event name
