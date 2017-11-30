@@ -42,8 +42,6 @@ public class SlideshowActivity extends ToolbarActivity {
             event = Account.shared.getEvents().get(eventIndex);
         }
 
-        Log.d("event: ", event.toString());
-
         initImageSwitcher();
         while (true) {
             System.out.println("Loading");
@@ -68,8 +66,6 @@ public class SlideshowActivity extends ToolbarActivity {
     }
 
     private void loadImages() {
-        System.out.println("loading images");
-        System.out.printf(loadedImages.toString());
         imageSwitcher.postDelayed(new Runnable() {
             int i = 0;
             public void run() {
