@@ -7,6 +7,10 @@ import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiSelector;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -41,7 +45,18 @@ public class MapActivityTest {
 
     @Before
     public void setup() {
+        Account.shared.clear();
         Database.setUpDatabase();
+        Database.setUpEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
         mActivityRule.getActivity().mockMap();
     }
 

@@ -303,7 +303,6 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 Event newEvent = currentEvent.withPointOfInterest(poi);
 
                 Account.shared.addOrUpdateEvent(newEvent);
-                currentEvent = newEvent;
                 Database.update();
             }
         };
