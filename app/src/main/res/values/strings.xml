@@ -47,13 +47,13 @@
     You can add a friend who does not have the application yet by entering his email address !</string>
     <string name="members_adding_button_save">Save members</string>
     <string name="members_adding_tv_members">Members : </string>
+    <string name="members_adding_invalid_email">Invalid email address !</string>
     <string name="members_adding_tv_invite_new_members">Invite new members</string>
     <string name="members_adding_hint_invite_new_members">Email of new member</string>
     <string name="Logo_QR">Logo of the QR code</string>
     <string name="plus_sign">Plus sign</string>
 
     <!-- Event Listing UI -->
-    <string name="Display_QR">Display QR Code</string>
 
     <!-- SettingsActivity -->
     <string name="settings_tv_top">Settings page</string>
@@ -72,6 +72,7 @@
     <string name="no_event_start_date">NO_EVENT_START_DATE</string>
     <string name="change_the_description_of_the_event">Add description of the event</string>
     <string name="alert_dialog_title_delete_event">Deleting Event</string>
+    <string name="event_description_swipe_hint">\u003C\u003C\u003C Swipe \u003E\u003E\u003E</string>
 
     <!-- Geo Location -->
     <string name="alert_dialog_ask_enable_provider_title">Please Grant Permission</string>
@@ -129,6 +130,14 @@
 
     <!-- Full screen file -->
     <string name="full_screen_file_content_description">Image to be displayed in full screen</string>
+    <string name="poi_title_hint">title</string>
+    <string name="poi_description_hint">description</string>
+    <string name="poi_dialog_title">Add a Point Of Interest</string>
+    <string name="poi_remove_title">Do you really want to remove this PoI?</string>
+    <string name="poi_remove_positive">Yes</string>
+    <string name="poi_remove_negative">No</string>
+    <string name="poi_create_cancel">Cancel</string>
+    <string name="poi_create_add">Add</string>
 
 </resources>
 

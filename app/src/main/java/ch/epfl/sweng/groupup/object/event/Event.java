@@ -16,6 +16,7 @@ import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.lib.fileStorage.FirebaseFileProxy;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
+import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 
 @SuppressWarnings("SimplifiableIfStatement")
 public final class Event implements Serializable, Watcher, Watchee{
@@ -27,6 +28,7 @@ public final class Event implements Serializable, Watcher, Watchee{
     private final String description;
     private final List<Member> eventMembers;
     private List<CompressedBitmap> eventImages;
+    private final Set<PointOfInterest> pointsOfInterest;
     private FirebaseFileProxy proxy;
     private Set<Watcher> watchers;
 
@@ -46,10 +48,12 @@ public final class Event implements Serializable, Watcher, Watchee{
         eventImages = new ArrayList<>();
         watchers = new HashSet<>();
         this.invitation=invitation;
+        this.pointsOfInterest = new HashSet<>();
     }
 
     public Event(String uuid, String eventName, LocalDateTime startTime, LocalDateTime endTime, String
-            description, List<Member> eventMembers, boolean invitation) {
+            description, List<Member> eventMembers, Set<PointOfInterest> pointsOfInterest,
+                 boolean invitation) {
         this.UUID = uuid;
         this.eventName = eventName;
         this.startTime = startTime;
@@ -59,6 +63,8 @@ public final class Event implements Serializable, Watcher, Watchee{
         this.invitation = invitation;
         eventImages = new ArrayList<>();
         watchers = new HashSet<>();
+        this.pointsOfInterest = Collections.unmodifiableSet(
+                new HashSet<>(pointsOfInterest));
     }
 
     /**
@@ -135,6 +141,14 @@ public final class Event implements Serializable, Watcher, Watchee{
     }
 
     /**
+     * Getter for the set of points of interest.
+     * @return the set of points of interest
+     */
+    public Set<PointOfInterest> getPointsOfInterest() {
+        return Collections.unmodifiableSet(new HashSet<>(pointsOfInterest));
+    }
+
+    /**
      * get if this event need to display an invitation to the user
      * @return boolean invitation
      */
@@ -162,7 +176,8 @@ public final class Event implements Serializable, Watcher, Watchee{
      * @return
      */
     public Event withInvitation(boolean invitation){
-        return new Event(UUID,eventName,startTime,endTime,description,eventMembers,invitation);
+        return new Event(UUID,eventName,startTime,endTime,description,
+                         eventMembers, pointsOfInterest,invitation);
     }
     /**
      * Change the name of an event
@@ -170,7 +185,8 @@ public final class Event implements Serializable, Watcher, Watchee{
      * @return the modified event
      */
     public Event withEventName(String eventName){
-        return new Event(UUID, eventName, startTime, endTime, description, eventMembers, invitation);
+        return new Event(UUID, eventName, startTime, endTime, description,
+                         eventMembers, pointsOfInterest, invitation);
     }
 
     /**
@@ -179,7 +195,7 @@ public final class Event implements Serializable, Watcher, Watchee{
      * @return the modified event
      */
     public Event withStartTime(LocalDateTime startTime){
-        return new Event(UUID, eventName, startTime, endTime, description, eventMembers, invitation);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers,pointsOfInterest, invitation);
     }
 
     /**
@@ -188,7 +204,7 @@ public final class Event implements Serializable, Watcher, Watchee{
      * @return the modified event
      */
     public Event withEndTime(LocalDateTime endTime){
-        return new Event(UUID, eventName, startTime, endTime, description, eventMembers, invitation);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers,pointsOfInterest, invitation);
     }
 
     /**
@@ -197,7 +213,7 @@ public final class Event implements Serializable, Watcher, Watchee{
      * @return the modified event
      */
     public Event withDescription(String description) {
-        return new Event(UUID, eventName, startTime, endTime, description, eventMembers, invitation);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers,pointsOfInterest, invitation);
     }
 
     /**
@@ -206,7 +222,30 @@ public final class Event implements Serializable, Watcher, Watchee{
      * @return the modified event
      */
     public Event withEventMembers(List<Member> eventMembers){
-        return new Event(UUID, eventName, startTime, endTime, description, eventMembers, invitation);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers,pointsOfInterest, invitation);
+    }
+
+    /**
+     * Change the set of points of interest of an event
+     * @param pointsOfInterest set of points of interest
+     * @return the modified event
+     */
+    public Event withPointsOfInterest(Set<PointOfInterest> pointsOfInterest){
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers,pointsOfInterest, invitation);
+    }
+
+    /**
+     * Adds the point of interest to an event
+     * @param pointOfInterest the point of interest to add
+     * @return the modified event
+     */
+    public Event withPointOfInterest(PointOfInterest pointOfInterest){
+        Set<PointOfInterest> newPointsOfInterest = new HashSet<>();
+
+        newPointsOfInterest.addAll(pointsOfInterest);
+        newPointsOfInterest.add(pointOfInterest);
+
+        return withPointsOfInterest(newPointsOfInterest);
     }
 
     /**

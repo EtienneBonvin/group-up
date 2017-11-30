@@ -20,6 +20,8 @@ import com.google.firebase.database.ValueEventListener;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
+import static android.support.test.espresso.action.ViewActions.swipeLeft;
+import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -71,9 +73,9 @@ public class MediaSharingTests {
         });
         createEvent();
         onView(withParent(withId(R.id.linear_layout_event_list)))
-                .perform(longClick());
-        onView(withId(R.id.upload_file))
                 .perform(click());
+        onView(withId(R.id.swipe_bar))
+                .perform(swipeLeft());
     }
 
     @After
@@ -98,10 +100,10 @@ public class MediaSharingTests {
         onView(withParent(withId(R.id.image_grid)))
                 .perform(click());
 
-        onView(withId(R.id.image_to_display))
+        onView(withId(R.id.show_image))
                 .check(matches(isDisplayed()));
 
-        onView(withId(R.id.image_to_display))
+        onView(withId(R.id.show_image))
                 .perform(click());
 
         onView(withParent(withId(R.id.image_grid)))

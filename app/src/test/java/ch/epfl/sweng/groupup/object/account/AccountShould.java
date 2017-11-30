@@ -5,12 +5,14 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.event.EventStatus;
+import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 
 import static ch.epfl.sweng.groupup.lib.Optional.from;
 import static ch.epfl.sweng.groupup.object.account.Account.shared;
@@ -265,10 +267,11 @@ public class AccountShould {
     public void updateEventsCorrectly(){
         // Test for past event
         shared.addOrUpdatePastEvent(new Event("UUID", "Test", new LocalDateTime().minusDays(2),
-                new LocalDateTime().minusDays(1), "", new ArrayList<Member>(),false));
+                                              new LocalDateTime().minusDays(1), "", new ArrayList<Member>()
+                , new HashSet<PointOfInterest>(), false));
         int c1 = shared.getPastEvents().size();
         shared.addOrUpdatePastEvent(new Event("UUID", "Test2", new LocalDateTime().minusDays(2),
-                new LocalDateTime().minusDays(1), "", new ArrayList<Member>(),false));
+                new LocalDateTime().minusDays(1), "", new ArrayList<Member>(),new HashSet<PointOfInterest>(), false));
 
         assertEquals(c1, shared.getPastEvents().size());
         assertEquals(shared.getPastEvents().get(c1-1).getEventName(), "Test2");
@@ -276,10 +279,10 @@ public class AccountShould {
 
         // Test for future event
         shared.addOrUpdateFutureEvent(new Event("UUID", "Test", new LocalDateTime().plusDays(1),
-                new LocalDateTime().plusDays(2), "", new ArrayList<Member>(),false));
+                new LocalDateTime().plusDays(2), "", new ArrayList<Member>(),new HashSet<PointOfInterest>(), false));
         int c2 = shared.getPastEvents().size();
         shared.addOrUpdateFutureEvent(new Event("UUID", "Test3", new LocalDateTime().plusDays(1),
-                new LocalDateTime().plusDays(2), "", new ArrayList<Member>(),false));
+                new LocalDateTime().plusDays(2), "", new ArrayList<Member>(),new HashSet<PointOfInterest>(), false));
 
         assertEquals(c2, shared.getFutureEvents().size());
         assertEquals(shared.getFutureEvents().get(c2-1).getEventName(), "Test3");
@@ -287,9 +290,10 @@ public class AccountShould {
 
         // Test for current event
         shared.withCurrentEvent(from(new Event("UUID", "Test", new LocalDateTime().minusDays(1),
-                new LocalDateTime().plusDays(1), "", new ArrayList<Member>(),false)));
+                new LocalDateTime().plusDays(1), "", new ArrayList<Member>(),new HashSet<PointOfInterest>(), false)));
         shared.withCurrentEvent(from(new Event("UUID", "Test4", new LocalDateTime().minusDays(1),
-                new LocalDateTime().plusDays(1), "", new ArrayList<Member>(),false)));
+                new LocalDateTime().plusDays(1), "", new ArrayList<Member>(), new HashSet<PointOfInterest>()
+                , false)));
         assertEquals(shared.getCurrentEvent().get().getEventName(), "Test4");
         assertEquals(shared.getCurrentEvent().get().getEventStatus(),EventStatus.CURRENT);
         shared.clear();
@@ -328,7 +332,7 @@ public class AccountShould {
         shared.clear();
         shared.withCurrentEvent(Optional.from(new Event("1","inm", LocalDateTime.now().minusDays(1),
                 LocalDateTime.now().plusDays(2),"Du travail, toujours du travail",
-                new ArrayList<Member>(),false)));
+                new ArrayList<Member>(),new HashSet<PointOfInterest>(), false)));
         String expected="Account{" +
              "givenName='" + shared.getGivenName() + '\'' +
              ", familyName='" + shared.getFamilyName() + '\'' +
@@ -343,7 +347,7 @@ public class AccountShould {
         shared.clear();
         Event e = new Event("1","inm", LocalDateTime.now().minusDays(1),
                 LocalDateTime.now().plusDays(2),"Du travail, toujours du travail",
-                new ArrayList<Member>(),false);
+                new ArrayList<Member>(),new HashSet<PointOfInterest>(), false);
         shared.withCurrentEvent(Optional.from(e));
         String expected = "Account{" +
                 "UUID='" + shared.getUUID() + '\'' +
@@ -365,11 +369,11 @@ public class AccountShould {
                 "test@test.test").withGivenName("tester").withCurrentEvent(from(
                 new Event("1","inm", LocalDateTime.now().minusDays(1),
                         LocalDateTime.now().plusDays(2),"Du travail, toujours du travail",
-                        new ArrayList<Member>(),false))).
+                        new ArrayList<Member>(),new HashSet<PointOfInterest>(), false))).
                 addOrUpdateFutureEvent(new Event("UUID", "Test", new LocalDateTime().plusDays(1),
-                        new LocalDateTime().plusDays(2), "", new ArrayList<Member>(),false)).
+                        new LocalDateTime().plusDays(2), "", new ArrayList<Member>(),new HashSet<PointOfInterest>(), false)).
                 addOrUpdatePastEvent(new Event("UUID", "Test", new LocalDateTime().minusDays(2),
-                        new LocalDateTime().minusDays(1), "", new ArrayList<Member>(),false));
+                        new LocalDateTime().minusDays(1), "", new ArrayList<Member>(),new HashSet<PointOfInterest>(), false));
         shared.clear();
         assertEquals(shared.getUUID(),Optional.<String>empty());
         assertEquals(shared.getFamilyName(),Optional.<String>empty());
