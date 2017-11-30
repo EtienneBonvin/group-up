@@ -1,6 +1,7 @@
 package ch.epfl.sweng.groupup.activity.event.files;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -32,6 +35,9 @@ import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
 
+import static android.app.Activity.RESULT_OK;
+import static android.content.Context.CONTEXT_IGNORE_SECURITY;
+
 /**
  * FileManager class.
  * Contains all methods and attributes relative to the file management of an event.
@@ -49,6 +55,8 @@ public class FileManager implements Watcher {
     private int imagesAdded = 0;
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private String mCurrentPhotoPath;
 
     /**
      * Creates a FileManager for a particular EventDescription activity.
@@ -147,18 +155,12 @@ public class FileManager implements Watcher {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         event.addWatcher(this);
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            try {
-                Bundle extras = data.getExtras();
-                if(extras == null)
-                    return;
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
-                CompressedBitmap compressedBitmap = new CompressedBitmap(imageBitmap);
-                addImageToGrid(compressedBitmap, true);
-            }catch(NullPointerException e){
-                AndroidHelper.showToast(activity, "Unable to recover the image", Toast.LENGTH_SHORT);
-            }
-        }else if (resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            galleryAddPic();
+            Bitmap imageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+            CompressedBitmap compressedBitmap = new CompressedBitmap(imageBitmap);
+            addImageToGrid(compressedBitmap, true);
+        } else if (resultCode == RESULT_OK) {
             Uri targetUri = data.getData();
 
             if (targetUri == null) {
@@ -198,6 +200,7 @@ public class FileManager implements Watcher {
      */
     private void initializeTakePicture() {
         Button takePicture = activity.findViewById(R.id.take_picture);
+        final Context thisContext= activity.getApplicationContext();
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -212,6 +215,8 @@ public class FileManager implements Watcher {
                                 Toast.LENGTH_SHORT);
                     }
                     if (photo != null) {
+                        Uri photoUri= FileProvider.getUriForFile(thisContext,"com.example.android.fileprovider",photo);
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,photoUri);
                         activity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                     }
                 }
@@ -231,9 +236,21 @@ public class FileManager implements Watcher {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        String mCurrentPhotoPath = image.getAbsolutePath();
+        mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
+
+    /**
+     * Add the photos to the gallery on the phone
+     */
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        activity.sendBroadcast(mediaScanIntent);
+    }
+
 
     /**
      * Helper method to clear all the images of the grid.
@@ -338,4 +355,5 @@ public class FileManager implements Watcher {
             addImageToGrid(bitmap, false);
         }
     }
+
 }

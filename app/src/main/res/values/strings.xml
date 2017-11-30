@@ -41,6 +41,7 @@
     <string name="event_creation_toast_event_start_before_now">Are you planning to go back to the past ?</string>
     <string name="event_creation_toast_event_end_before_begin">Your event ends before it begins.</string>
     <string name="event_creation_toast_event_last_1_minute">Your event should last for at least 1 minute.</string>
+    <string name="event_cration_error_cant_add_yourself">You\'ll be automatically added to the event.</string>
 
     <!-- Members Adding UI -->
     <string name="members_adding_tv_greet_user">Let us add some friends to your event !\n\n

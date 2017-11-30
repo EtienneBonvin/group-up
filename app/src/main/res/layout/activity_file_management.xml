@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ch.epfl.sweng.groupup.activity.event.files.FileManager">
+    tools:context="ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity">
 
     <TextView
         android:id="@+id/description"
@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         android:text="@string/file_management_tv_description"
         android:textSize="20sp"
-        android:gravity="center"
-        android:layout_below="@id/toolbar"/>
+        android:gravity="center"/>
 
     <RelativeLayout
         android:id="@+id/linear_layout"
