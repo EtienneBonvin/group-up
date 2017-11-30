@@ -6,7 +6,6 @@ import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import org.hamcrest.Matchers;
 import org.joda.time.LocalDateTime;
@@ -16,15 +15,16 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
+import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
@@ -32,8 +32,6 @@ import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -71,12 +69,8 @@ public class EventCreationActivityTest {
         Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
                 Optional.<String>empty(), Optional.<String>empty(), Optional.<Location>empty());
         List<Member> expectedMembers = new ArrayList<>();
-        /*expectedMembers.add(emptyMember.withUUID("0"));
-        expectedMembers.add(emptyMember.withUUID("1"));
-        expectedMembers.add(emptyMember.withUUID("2"));
-        expectedMembers.add(emptyMember.withUUID("3"));
-        expectedMembers.add(emptyMember.withUUID("4"));*/
-        expectedMembers.add(emptyMember.withUUID(Member.UNKNOWN_USER + "1").withEmail("swenggroupup@gmail.com"));
+        expectedMembers.add(emptyMember.withUUID(Member.UNKNOWN_USER_ + "1").withEmail("swenggroupup@gmail.com"));
+
         expectedMembers.add(emptyMember.withUUID(Account.shared.getUUID().getOrElse("Default UUID")));
 
         addEventName(EVENT_NAME);
@@ -128,7 +122,8 @@ public class EventCreationActivityTest {
 
         Event found = findEvent(EVENT_NAME);
         Event expected = new Event(found.getUUID(), EVENT_NAME, start, end,
-                EVENT_DESCRIPTION, expectedMembers, false);
+                EVENT_DESCRIPTION, expectedMembers, new HashSet<PointOfInterest>(),
+                                   false);
 
         if (!(found.equals(expected))){
             throw new AssertionError("Expected : "+expected+".\nFound : "+found);
@@ -346,21 +341,6 @@ public class EventCreationActivityTest {
     private void addMembers(){
         onView(withId(R.id.button_add_members)).perform(click());
         Espresso.closeSoftKeyboard();
-        /*onView(withId(R.id.edit_text_add_member)).perform(typeText("0"));
-        Espresso.closeSoftKeyboard();
-        onView(withId(R.id.image_view_add_member)).perform(click());
-        onView(withId(R.id.edit_text_add_member)).perform(typeText("1"));
-        Espresso.closeSoftKeyboard();
-        onView(withId(R.id.image_view_add_member)).perform(click());
-        onView(withId(R.id.edit_text_add_member)).perform(typeText("2"));
-        Espresso.closeSoftKeyboard();
-        onView(withId(R.id.image_view_add_member)).perform(click());
-        onView(withId(R.id.edit_text_add_member)).perform(typeText("3"));
-        Espresso.closeSoftKeyboard();
-        onView(withId(R.id.image_view_add_member)).perform(click());
-        onView(withId(R.id.edit_text_add_member)).perform(typeText("4"));
-        Espresso.closeSoftKeyboard();
-        onView(withId(R.id.image_view_add_member)).perform(click());*/
         onView(withId(R.id.edit_text_add_member)).perform(typeText("swenggroupup@gmail.com"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.image_view_add_member)).perform(click());

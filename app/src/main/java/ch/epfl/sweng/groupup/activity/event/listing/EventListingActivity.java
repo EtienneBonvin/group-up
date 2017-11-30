@@ -21,8 +21,8 @@ import java.util.TimerTask;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
+import ch.epfl.sweng.groupup.activity.event.description.EventDescription;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
-import ch.epfl.sweng.groupup.activity.map.MapActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.Watcher;
@@ -76,6 +76,7 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
      * name and start to event dates stated
      */
     private void updateEvents() {
+        linearLayout.removeAllViews();
         List<Event> events = Account.shared.getEvents();
 
         int index = 0;
@@ -98,21 +99,12 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
             eventButton.setCompoundDrawablePadding(2);
 
             final int i = index;
-            eventButton.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
-                    intent.putExtra("eventIndex", i);
-                    startActivity(intent);
-                    return true;
-                }
-            });
-
             eventButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(EventListingActivity.this, MapActivity.class);
+                    Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
                     intent.putExtra(getString(R.string.event_listing_extraIndex), i);
+
                     startActivity(intent);
                 }
             });
@@ -206,7 +198,7 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
                                     public void onClick(
                                             DialogInterface dialogInterface,
                                             int i) {
-                                        EventDescriptionActivity.removeEvent(eventToDisplay);
+                                        EventDescription.removeEvent(eventToDisplay);
                                         eventsToDisplay.remove(eventToDisplay);
                                         dialogShown = false;
                                         dialogInterface.dismiss();

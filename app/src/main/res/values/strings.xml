@@ -72,6 +72,7 @@
     <string name="no_event_start_date">NO_EVENT_START_DATE</string>
     <string name="change_the_description_of_the_event">Add description of the event</string>
     <string name="alert_dialog_title_delete_event">Deleting Event</string>
+    <string name="event_description_swipe_hint">\u003C\u003C\u003C Swipe \u003E\u003E\u003E</string>
 
     <!-- Geo Location -->
     <string name="alert_dialog_ask_enable_provider_title">Please Grant Permission</string>
@@ -129,8 +130,20 @@
 
     <!-- Full screen file -->
     <string name="full_screen_file_content_description">Image to be displayed in full screen</string>
+
+    <!-- Overlapping events -->
     <string name="overlapping_events">This event overlap with another, if you accept it you will be removed from the other event \n The overlapping events are : </string>
     <string name="toast_overlapping_event">The event you are trying to create overlap another, you have to leave to other event first before creating an event at this time</string>
+
+    <!-- Points of Interest -->
+    <string name="poi_title_hint">title</string>
+    <string name="poi_description_hint">description</string>
+    <string name="poi_dialog_title">Add a Point Of Interest</string>
+    <string name="poi_remove_title">Do you really want to remove this PoI?</string>
+    <string name="poi_remove_positive">Yes</string>
+    <string name="poi_remove_negative">No</string>
+    <string name="poi_create_cancel">Cancel</string>
+    <string name="poi_create_add">Add</string>
 
 </resources>
 

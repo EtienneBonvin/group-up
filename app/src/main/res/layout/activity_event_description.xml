@@ -1,82 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
     tools:context="ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
-
+    <TextView
+        style="@style/ButtonStyle"
+        android:id="@+id/swipe_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_height"
-        android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="@string/event_description_swipe_hint"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"/>
 
-        <android.support.design.widget.CollapsingToolbarLayout
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <ViewFlipper
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_above="@id/swipe_bar"
+        android:layout_below="@id/toolbar"
+        android:id="@+id/view_flipper">
+
+        <android.support.design.widget.CoordinatorLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:toolbarId="@+id/toolbar_description">
+            android:fitsSystemWindows="true">
+
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/app_bar"
+
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/app_bar_height"
+                android:fitsSystemWindows="true"
+                android:theme="@style/AppTheme.AppBarOverlay">
+
+                <android.support.design.widget.CollapsingToolbarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:fitsSystemWindows="true"
+                    app:contentScrim="?attr/colorPrimary"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                    app:toolbarId="@+id/toolbar_description">
+
+                    <EditText
+                        android:id="@+id/event_description_name"
+                        android:labelFor="@+id/event_description_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="@dimen/text_margin"
+                        android:background="@android:color/transparent"
+                        android:cursorVisible="false"
+                        android:selectAllOnFocus="false"
+                        android:text="@string/no_event_name"
+                        android:gravity="center"
+                        android:textColor="@color/primaryTextColor"
+                        android:textSize="@dimen/large_header_size"
+                        android:inputType="text" />
+
+                </android.support.design.widget.CollapsingToolbarLayout>
+            </android.support.design.widget.AppBarLayout>
 
             <include
-                android:id="@+id/toolbar"
-                layout="@layout/toolbar" />
+                android:id="@+id/event_description"
+                layout="@layout/content_event_description"/>
 
-            <EditText
-                android:id="@+id/event_description_name"
-                android:labelFor="@+id/event_description_name"
-                android:layout_width="match_parent"
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/remove_event_button"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="@dimen/text_margin"
-                android:background="@android:color/transparent"
-                android:cursorVisible="false"
-                android:selectAllOnFocus="false"
-                android:text="@string/no_event_name"
-                android:gravity="center"
-                android:textColor="@color/primaryTextColor"
-                android:textSize="@dimen/large_header_size"
-                android:inputType="text" />
+                android:layout_margin="@dimen/fab_margin"
+                app:fabSize="mini"
+                app:layout_anchor="@+id/app_bar"
+                app:layout_anchorGravity="right|bottom"
+                app:srcCompat="@drawable/ic_delete" />
 
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/save_event_modification_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="65dp"
+                app:fabSize="mini"
+                app:layout_anchor="@+id/remove_event_button"
+                app:layout_anchorGravity="center|left"
+                app:srcCompat="@drawable/ic_save" />
 
-    <include layout="@layout/content_event_description"/>
+        </android.support.design.widget.CoordinatorLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/remove_event_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:fabSize="mini"
-        app:layout_anchor="@+id/app_bar"
-        app:layout_anchorGravity="right|bottom"
-        app:srcCompat="@drawable/ic_delete" />
+        <android.support.design.widget.CoordinatorLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/save_event_modification_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="65dp"
-        app:fabSize="mini"
-        app:layout_anchor="@+id/remove_event_button"
-        app:layout_anchorGravity="center|left"
-        app:srcCompat="@drawable/ic_save" />
+            <fragment
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/upload_file"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="115dp"
-        app:fabSize="mini"
-        app:layout_anchor="@+id/save_event_modification_button"
-        app:layout_anchorGravity="center|left"
-        app:srcCompat="@drawable/ic_plus" />
-</android.support.design.widget.CoordinatorLayout>
+        </android.support.design.widget.CoordinatorLayout>
 
+        <include
+            layout="@layout/activity_file_management"/>
+
+    </ViewFlipper>
+
+</RelativeLayout>

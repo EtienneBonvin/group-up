@@ -11,13 +11,13 @@ import ch.epfl.sweng.groupup.lib.Optional;
 
 import static ch.epfl.sweng.groupup.lib.database.Database.EMPTY_FIELD;
 
+
 @IgnoreExtraProperties
 final class DatabaseUser {
 
     /**
      * Class to represent the user object that will be stored in the database.
      */
-
     public String givenName = EMPTY_FIELD;
     public String familyName = EMPTY_FIELD;
     public String displayName = EMPTY_FIELD;
@@ -27,8 +27,10 @@ final class DatabaseUser {
     public String longitude = EMPTY_FIELD;
     public String provider = EMPTY_FIELD;
 
+
     public DatabaseUser() {
     }
+
 
     DatabaseUser(Optional<String> givenName,
                  Optional<String> familyName,
@@ -53,37 +55,46 @@ final class DatabaseUser {
         }
     }
 
+
     public String getGivenName() {
         return givenName;
     }
+
 
     public String getFamilyName() {
         return familyName;
     }
 
+
     public String getDisplayName() {
         return displayName;
     }
+
 
     public String getEmail() {
         return email;
     }
 
+
     public String getUuid() {
         return uuid;
     }
+
 
     public String getLatitude() {
         return latitude;
     }
 
+
     public String getLongitude() {
         return longitude;
     }
 
+
     public String getProvider() {
         return provider;
     }
+
 
     @Exclude
     Optional<String> getOptGivenName() {
@@ -94,6 +105,7 @@ final class DatabaseUser {
         }
     }
 
+
     @Exclude
     Optional<String> getOptFamilyName() {
         if (familyName.equals(EMPTY_FIELD)) {
@@ -102,6 +114,7 @@ final class DatabaseUser {
             return Optional.from(familyName);
         }
     }
+
 
     @Exclude
     Optional<String> getOptDisplayName() {
@@ -112,6 +125,7 @@ final class DatabaseUser {
         }
     }
 
+
     @Exclude
     Optional<String> getOptEmail() {
         if (email.equals(EMPTY_FIELD)) {
@@ -121,6 +135,7 @@ final class DatabaseUser {
         }
     }
 
+
     @Exclude
     Optional<String> getOptUuid() {
         if (uuid.equals(EMPTY_FIELD)) {
@@ -129,6 +144,7 @@ final class DatabaseUser {
             return Optional.from(uuid);
         }
     }
+
 
     @Exclude
     Optional<Location> getOptLocation() {
@@ -143,6 +159,7 @@ final class DatabaseUser {
                 return Optional.empty();
         }
     }
+
 
     @Exclude
     private Optional<Location> createOptLocation() {

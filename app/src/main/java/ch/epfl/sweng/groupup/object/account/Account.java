@@ -1,7 +1,6 @@
 package ch.epfl.sweng.groupup.object.account;
 
 import android.location.Location;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -329,9 +328,8 @@ public final class Account extends User implements Watchee {
                              pastEvents,
                              futureEvents,
                              Optional.from(location));
-
-        if (User.observer != null && location != null) {
-            User.observer.updateDefaultMarker(location);
+        if (User.observer != null) {
+            User.observer.requestLocation();
         }
         return shared;
     }
@@ -343,15 +341,22 @@ public final class Account extends User implements Watchee {
      * @return the modified shared account, so that it is easier to call in chain
      */
     public Account addOrUpdateEvent(Event event) {
+        if (observer != null) {
+            observer.updateEventIfNeeded(event);
+        }
+
         switch (event.getEventStatus()) {
             case FUTURE:
-                return addOrUpdateFutureEvent(event);
+                addOrUpdateFutureEvent(event);
+                break;
             case PAST:
-                return addOrUpdatePastEvent(event);
+                addOrUpdatePastEvent(event);
+                break;
             default:
-                return withCurrentEvent(Optional.from(event));
-
+                withCurrentEvent(Optional.from(event));
         }
+        notifyAllWatchers();
+        return shared;
     }
 
     /**
@@ -376,7 +381,6 @@ public final class Account extends User implements Watchee {
                     return o1.getStartTime().compareTo(o2.getStartTime());
                 }
             });
-            notifyAllWatchers();
             return Account.shared.withPastEvents(newPast);
         }
         throw new IllegalArgumentException("This is not a past event");
@@ -406,7 +410,6 @@ public final class Account extends User implements Watchee {
                     return o2.getStartTime().compareTo(o1.getStartTime());
                 }
             });
-            notifyAllWatchers();
             return Account.shared.withFutureEvents(newFuture);
         }
         throw new IllegalArgumentException("This is not a future event");

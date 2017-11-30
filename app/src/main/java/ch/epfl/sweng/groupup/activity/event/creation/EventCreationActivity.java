@@ -576,7 +576,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
             for(MemberRepresentation s : members){
                 if(emailCheck(s.toString()) && s.getEmail().length() != 0){
                     finalMembers.add(emptyMember
-                            .withUUID(Member.UNKNOWN_USER + (++nb_unknown))
+                            .withUUID(Member.UNKNOWN_USER_ + (++nb_unknown))
                             .withEmail(s.toString()));
                     mailsToSend.add(s.getEmail());
                 }else{

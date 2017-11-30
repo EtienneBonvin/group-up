@@ -17,11 +17,13 @@ import ch.epfl.sweng.groupup.lib.geolocation.GeoLocationInterface;
 import ch.epfl.sweng.groupup.lib.geolocation.MockLocation;
 import ch.epfl.sweng.groupup.object.event.Event;
 
+
 public class ToolbarActivity extends AppCompatActivity {
 
     private static GeoLocationInterface geoLocation;
     //Event with invitation need to be stored outside the listing activity
     protected static Set<Event> eventsToDisplay = new HashSet<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,41 +33,46 @@ public class ToolbarActivity extends AppCompatActivity {
         initializeToolbarActivity();
     }
 
+
     protected void initializeToolbarActivity() {
-        initializeGeoLocation();
+        provideGeoLocation();
         initializeToolbar();
     }
 
-    private void initializeGeoLocation() {
+
+    public void provideGeoLocation() {
+        if (geoLocation != null) {
+            geoLocation.pauseLocationUpdates();
+        }
+
         geoLocation = new GeoLocation(this, this);
         geoLocation.requestLocationUpdates();
     }
 
+
     private void initializeToolbar() {
-        findViewById(R.id.icon_access_group_list)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setUpListener(EventListingActivity.class);
-                    }
-                });
+        findViewById(R.id.icon_access_group_list).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(EventListingActivity.class);
+            }
+        });
 
-        findViewById(R.id.icon_access_settings)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setUpListener(SettingsActivity.class);
-                    }
-                });
+        findViewById(R.id.icon_access_settings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(SettingsActivity.class);
+            }
+        });
 
-        findViewById(R.id.icon_access_user_profile)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setUpListener(UserInformationActivity.class);
-                    }
-                });
+        findViewById(R.id.icon_access_user_profile).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(UserInformationActivity.class);
+            }
+        });
     }
+
 
     /**
      * Permits the tester to mock the location correctly when performing some
@@ -76,16 +83,18 @@ public class ToolbarActivity extends AppCompatActivity {
         geoLocation.requestLocationUpdates();
     }
 
+
     /**
      * Sets up a listener to the given class
+     *
      * @param intentClass the class of the activity to be started
      */
-    private void setUpListener(Class intentClass){
+    private void setUpListener(Class intentClass) {
         Intent intent = new Intent(getApplicationContext(), intentClass);
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                Intent.FLAG_ACTIVITY_NEW_TASK);
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                        Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }

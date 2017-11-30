@@ -61,7 +61,6 @@ public class EventListingActivityTest {
         onView(withId(R.id.ui_edit_event_name)).perform(typeText("CurrentEvent"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
-
         //Generate directly a new event with an invitation
         Event eventInvitation= new Event("event invitation", LocalDateTime.now().plusHours(1),
                 LocalDateTime.now().plusDays(1),"This is the event to test the invitation process",
