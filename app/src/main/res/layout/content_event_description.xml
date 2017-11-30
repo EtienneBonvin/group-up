@@ -35,8 +35,7 @@
                 style="@style/EventFields"
                 android:layout_marginTop="@dimen/normal_header_size"
                 android:text="@string/no_event_start_date"
-                android:id="@+id/event_description_start_date"
-                android:layout_toEndOf="@id/event_description_tv_start_date"/>
+                android:id="@+id/event_description_start_date"/>
 
         </LinearLayout>
 
