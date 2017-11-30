@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Html;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -66,10 +67,10 @@ public class EventDescription {
                     @Override
                     public void onClick(View v) {
 
-                        final AlertDialog alertDialog = new AlertDialog.Builder(
-                                activity).create();
+                        final AlertDialog alertDialog =
+                                new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AboutDialog)).create();
                         alertDialog.setTitle(R.string.alert_dialog_title_delete_event);
-                        alertDialog.setMessage(Html.fromHtml("<font color='#000000'>Would you " +
+                        alertDialog.setMessage(Html.fromHtml("<font color='#ffffff'>Would you " +
                                 "like to leave and delete this event?</font>"));
                         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Continue",
                                 new DialogInterface.OnClickListener() {
