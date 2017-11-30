@@ -34,7 +34,6 @@ public class SlideshowActivity extends ToolbarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aftermovie);
-        super.initializeToolbarActivity();
 
         Intent intent = getIntent();
         eventIndex = intent.getIntExtra(getString(R.string.event_listing_extraIndex), -1);
