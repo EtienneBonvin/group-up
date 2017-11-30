@@ -42,6 +42,7 @@ public class MapActivityTest {
     @Before
     public void setup() {
         Database.setUpDatabase();
+        mActivityRule.getActivity().mockMap();
     }
 
 

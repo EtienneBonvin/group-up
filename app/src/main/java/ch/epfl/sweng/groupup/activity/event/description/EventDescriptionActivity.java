@@ -57,7 +57,6 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     private float x1,x2;
     private static final int MIN_DISTANCE = 150;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,6 +165,11 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        if (isMapMockWanted()) {
+            mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
+        }
+
         mMap.setOnMapLongClickListener(getMapLongClickListener());
         mMap.setOnMarkerDragListener(getMarkerDragListener());
 
