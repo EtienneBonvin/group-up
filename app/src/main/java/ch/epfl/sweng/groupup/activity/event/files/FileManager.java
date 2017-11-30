@@ -148,20 +148,7 @@ public class FileManager implements Watcher {
             Bitmap imageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
             CompressedBitmap compressedBitmap = new CompressedBitmap(imageBitmap);
             addImageToGrid(compressedBitmap, true);
-        }
-        else if (resultCode == RESULT_OK) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            try {
-                Bundle extras = data.getExtras();
-                if(extras == null)
-                    return;
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
-                CompressedBitmap compressedBitmap = new CompressedBitmap(imageBitmap);
-                addImageToGrid(compressedBitmap, true);
-            }catch(NullPointerException e){
-                AndroidHelper.showToast(activity, "Unable to recover the image", Toast.LENGTH_SHORT);
-            }
-        }else if (resultCode == RESULT_OK) {
+        } else if (resultCode == RESULT_OK) {
             Uri targetUri = data.getData();
 
             if (targetUri == null) {
@@ -194,7 +181,6 @@ public class FileManager implements Watcher {
             CompressedBitmap compressedBitmap = new CompressedBitmap(bitmap);
             addImageToGrid(compressedBitmap, true);
         }
-    }
     }
 
     /**
