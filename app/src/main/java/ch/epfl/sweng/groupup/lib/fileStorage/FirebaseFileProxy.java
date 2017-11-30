@@ -88,6 +88,30 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
     }
 
     /**
+     * Removes all images a member uploaded on the database.
+     * @param uuid the uuid of the member.
+     */
+    public void removeImageFromUser(String uuid){
+        removeOneImageFromUser(uuid, 0);
+    }
+
+    /**
+     * Remove the index-th image uploaded by the user.
+     * @param uuid the uuid of the member.
+     * @param index the index of the image to remove.
+     */
+    private void removeOneImageFromUser(final String uuid, final int index){
+        StorageReference imageRef = storageRef.child(event.getUUID()+"/"+uuid+"/"+index);
+
+        imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                removeOneImageFromUser(uuid, index + 1);
+            }
+        });
+    }
+
+    /**
      * Kill the proxy, no other operations will be emitted from it.
      */
     public void kill(){
