@@ -86,7 +86,7 @@ public class FileManager implements Watcher {
         activity.findViewById(R.id.create_aftermovie).setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View arg0) {
-                Intent i = new Intent(activity, Aftermovie.class);
+                Intent i = new Intent(activity, SlideshowActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                         Intent.FLAG_ACTIVITY_CLEAR_TASK |
                         Intent.FLAG_ACTIVITY_NEW_TASK);

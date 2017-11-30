@@ -41,7 +41,7 @@
         <activity android:name=".activity.event.description.EventDescriptionActivity"
             android:label="@string/title_activity_map"/>
         <activity android:name=".activity.event.creation.MembersAddingActivity" />
-        <activity android:name=".activity.event.files.Aftermovie"/>
+        <activity android:name=".activity.event.files.SlideshowActivity"/>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

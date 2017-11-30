@@ -76,6 +76,15 @@ public final class Event implements Serializable, Watcher, Watchee{
     }
 
     /**
+     * Returns true if all
+     * @return
+     */
+    public boolean isAllRecovered(){
+        initializeProxy();
+        return proxy.isAllRecovered();
+    }
+
+    /**
      * Returns the pictures of the event.
      * The pictures list synchronizes itself with the database when the
      * method is called.

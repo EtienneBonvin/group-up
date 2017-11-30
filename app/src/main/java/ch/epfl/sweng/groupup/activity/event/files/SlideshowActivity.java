@@ -11,6 +11,8 @@ import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
 
+import java.util.List;
+
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -21,11 +23,12 @@ import ch.epfl.sweng.groupup.object.event.Event;
  * Created by Besitzer on 21.11.2017.
  */
 
-public class Aftermovie extends ToolbarActivity {
+public class SlideshowActivity extends ToolbarActivity {
 
     private Event event;
     private int eventIndex;
     private ImageSwitcher imageSwitcher;
+    private List<CompressedBitmap> loadedImages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,15 @@ public class Aftermovie extends ToolbarActivity {
         Log.d("event: ", event.toString());
 
         initImageSwitcher();
+        while (true) {
+            System.out.println("Loading");
+            if (event.isAllRecovered()){
+                System.out.println("DONE");
+                loadedImages = event.getPictures();
+                break;
+            }
+        }
+        System.out.println("LOADED: "+loadedImages.toString());
         loadImages();
     }
 
@@ -56,14 +68,16 @@ public class Aftermovie extends ToolbarActivity {
     }
 
     private void loadImages() {
+        System.out.println("loading images");
+        System.out.printf(loadedImages.toString());
         imageSwitcher.postDelayed(new Runnable() {
             int i = 0;
             public void run() {
                 imageSwitcher.setImageDrawable(
-                        new BitmapDrawable(getResources(), event.getPictures().get(i).asBitmap())
+                        new BitmapDrawable(getResources(), loadedImages.get(i).asBitmap())
                 );
                 i++;
-                if (event.getPictures().size() < i + 1) i = 0;
+                if (loadedImages.size() < i + 1) i = 0;
 
                 imageSwitcher.postDelayed(this, 3000);
             }
@@ -71,6 +85,7 @@ public class Aftermovie extends ToolbarActivity {
     }
 
     private void initImageSwitcher() {
+        System.out.println("Initiating switcher");
         imageSwitcher = (ImageSwitcher)findViewById(R.id.imageSwitcher);
 
         // implement ViewFactory interface
