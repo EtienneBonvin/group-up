@@ -98,6 +98,15 @@ public final class Event implements Serializable, Watcher, Watchee{
     }
 
     /**
+     * Remove of the file storage all the images of a particular member.
+     * @param uuid the uuid of the member.
+     */
+    public void removeImagesFrom(String uuid){
+        verifyProxyInstantiated();
+        proxy.removeImageFromUser(uuid);
+    }
+
+    /**
      * Getter for the event name
      * @return String event name
      */
