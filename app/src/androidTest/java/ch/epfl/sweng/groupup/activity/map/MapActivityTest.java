@@ -83,13 +83,14 @@ public class MapActivityTest {
         createEvent();
 
         UiObject mMarker = addMarker(R.string.poi_create_cancel);
-        deleteEvent();
+
         try {
             mMarker.click();
-        } catch (UiObjectNotFoundException e) {
+        } catch (Exception e) {
             deleteEvent();
             return;
         }
+
         deleteEvent();
         assertEquals(0, 1);
     }
@@ -142,7 +143,6 @@ public class MapActivityTest {
 
 
     private void deleteEvent() {
-        onView(withId(R.id.swipe_bar)).perform(click());
         onView(withId(R.id.swipe_bar)).perform(swipeLeft());
         onView(withId(R.id.remove_event_button)).perform(click());
         onView(withText("Continue")).perform(click());
@@ -159,6 +159,6 @@ public class MapActivityTest {
 
         UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
 
-        return uiDevice.findObject(new UiSelector().descriptionContains(""));
+        return uiDevice.findObject(new UiSelector().descriptionContains(MARKER_DESCRIPTION));
     }
 }
