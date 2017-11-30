@@ -15,9 +15,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -34,7 +34,6 @@ import java.util.Set;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.files.FileManager;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
-import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -70,8 +69,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         new EventDescription(this);
         fileManager = new FileManager(this);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         User.observer = this;
@@ -166,8 +164,6 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        AndroidHelper.showToast(this, "Map is ready!", Toast.LENGTH_SHORT);
-
         mMap = googleMap;
 
         if (isMapMockWanted()) {
@@ -240,6 +236,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                     .draggable(true)
                     .icon(BitmapDescriptorFactory.defaultMarker(
                             BitmapDescriptorFactory.HUE_GREEN)));
+            marker.setVisible(true);
 
             mPoiMarkers.put(marker, poi.getUuid());
         }
@@ -295,19 +292,10 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 location.setLatitude(latLng.latitude);
                 location.setLongitude(latLng.longitude);
 
-                MarkerOptions markerOptions = new MarkerOptions().position(latLng)
-                        .title(title)
-                        .snippet(description)
-                        .icon(BitmapDescriptorFactory.defaultMarker(
-                                BitmapDescriptorFactory.HUE_GREEN));
-                mMap.addMarker(markerOptions);
-
-                PointOfInterest poi = new PointOfInterest(title, description, location);
-
-                Event newEvent = currentEvent.withPointOfInterest(poi);
-
-                Account.shared.addOrUpdateEvent(newEvent);
+                Account.shared.addOrUpdateEvent(currentEvent.withPointOfInterest(new PointOfInterest(title, description, location)));
                 Database.update();
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         };
     }
@@ -363,7 +351,6 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         return new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
                 String uuidToDelete = mPoiMarkers.get(marker);
                 if (uuidToDelete == null) {
                     return;
@@ -376,10 +363,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                     }
                 }
 
-                Event newEvent = currentEvent.withPointsOfInterest(newPointsOfInterest);
-
-                Account.shared.addOrUpdateEvent(newEvent);
-                currentEvent = newEvent;
+                Account.shared.addOrUpdateEvent(currentEvent.withPointsOfInterest(newPointsOfInterest));
                 marker.remove();
 
                 Database.update();
