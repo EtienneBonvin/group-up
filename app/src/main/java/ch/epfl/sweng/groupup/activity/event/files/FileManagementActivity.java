@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -159,10 +160,10 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             galleryAddPic();
-            /*Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            Log.d("PHOTOPATH", mCurrentPhotoPath);
+            Bitmap imageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
             CompressedBitmap compressedBitmap = new CompressedBitmap(imageBitmap);
-            addImageToGrid(compressedBitmap, true);*/
+            addImageToGrid(compressedBitmap, true);
         }
         else if (resultCode == RESULT_OK) {
             Uri targetUri = data.getData();
@@ -227,7 +228,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
                     }
                     if (photo != null) {
                         Uri photoUri= FileProvider.getUriForFile(thisContext,"com.example.android.fileprovider",photo);
-                        //takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,photoUri);
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,photoUri);
                         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                     }
                 }
