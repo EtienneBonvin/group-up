@@ -1,19 +1,23 @@
 package ch.epfl.sweng.groupup.object.event;
 
+import android.location.Location;
+import android.location.LocationManager;
+
 import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.HashSet;
+import java.util.Set;
 
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
+import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -49,7 +53,24 @@ public class EventsShould {
         String testDescription = "Test Description";
         Event newEvent = event.withDescription(testDescription);
         assertEquals(newEvent.getDescription(),testDescription);
+    }
 
+    @Test
+    public void setEventByPointsOfInterest(){
+        Set<PointOfInterest> pointsOfInterest = new HashSet<>();
+        PointOfInterest defaultPointOfInterest =
+                new PointOfInterest("Name", "Description", new Location(
+                LocationManager.GPS_PROVIDER));
+
+        pointsOfInterest.add(defaultPointOfInterest.withName("newName01"));
+        pointsOfInterest.add(defaultPointOfInterest.withName("newName02"));
+        pointsOfInterest.add(defaultPointOfInterest.withName("newName03"));
+
+        Event newEvent = event.withPointsOfInterest(pointsOfInterest);
+        newEvent = newEvent.withPointOfInterest(defaultPointOfInterest.withName("newName04"));
+
+        pointsOfInterest.add(defaultPointOfInterest.withName("newName04"));
+        assertEquals(newEvent.getPointsOfInterest(), pointsOfInterest);
     }
 
     @Test
@@ -223,8 +244,11 @@ public class EventsShould {
         List<Member> members =  new ArrayList<>(Arrays.asList(new Member("1","Javier","Pavier",
                 "Xantet","yolo@yolo.com", null), new Member("2","asdf","Médric","Caire",
                 "yolo1@yolo.yolo", null)));
-        Event e = new Event("1","inm", start, end,"Du travail, toujours du travail", members,false);
-        Event f = new Event("1","inm", start, end,"Du travail, toujours du travail", members,false);
+        Event e = new Event("1","inm", start, end,"Du travail, toujours du " +
+                                                  "travail", members,
+                            new HashSet<PointOfInterest>(), false);
+        Event f = new Event("1","inm", start, end,"Du travail, toujours du travail", members,
+                            new HashSet<PointOfInterest>(), false);
         assertEquals(e,f);
     }
     @Test
@@ -232,8 +256,10 @@ public class EventsShould {
         LocalDateTime start = LocalDateTime.now().plusDays(1);
         LocalDateTime end = LocalDateTime.now().plusDays(2);
         List<Member> members =  new ArrayList<>(Arrays.asList(new Member("1","Javier","Pavier","Xantet","yolo@yolo.com", null), new Member("2","asdf","Médric","Caire","yolo1@yolo.yolo", null)));
-        Event e = new Event("2","inmm", start.minusDays(3), end.minusDays(1),"Pas de travail, toujours pas de travail", members,false);
-        Event f = new Event("1","inm", start, end,"Du travail, toujours du travail", members,false);
+        Event e = new Event("2","inmm", start.minusDays(3), end.minusDays(1),"Pas de travail, toujours pas de travail",
+                            members,new HashSet<PointOfInterest>(), false);
+        Event f = new Event("1","inm", start, end,"Du travail, toujours du travail",
+                            members,new HashSet<PointOfInterest>(), false);
         assertNotEquals(e,f);
         assertNotEquals(e,null);
     }

@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class DatabaseEventShould {
     @Test
@@ -17,15 +17,16 @@ public class DatabaseEventShould {
         assertEquals(Database.EMPTY_FIELD, databaseEvent.datetimeStart);
         assertEquals(Database.EMPTY_FIELD, databaseEvent.datetimeEnd);
         assertEquals(Database.EMPTY_FIELD, databaseEvent.uuid);
-        assertEquals(new HashMap<String, DatabaseUser>(), databaseEvent.members);
+        assertEquals(new HashMap<String, DatabaseUser>(),
+                     databaseEvent.members);
     }
 
     @Test
     public void assignEachPropertyCorrectlyUsingPreciseConstructor() throws Exception {
         String name = "GroupUp Event";
         String description = "This is going to be fun.";
-        String datetime_start = DateTime.now().toString();
-        String datetime_end = DateTime.now().plusDays(1).toString();
+        String datetimeStart = DateTime.now().toString();
+        String datetimeEnd = DateTime.now().plusDays(1).toString();
         String uuid = "myEventUuidIsReallyComplex";
 
         HashMap<String, DatabaseUser> members = new HashMap<>();
@@ -33,14 +34,24 @@ public class DatabaseEventShould {
         members.put("userUuid02", new DatabaseUser());
         members.put("userUuid03", new DatabaseUser());
 
-        DatabaseEvent databaseEvent = new DatabaseEvent(name, description, datetime_start,
-                                                        datetime_end, uuid, members);
+        HashMap<String, DatabasePointOfInterest> pointsOfInterest = new
+                HashMap<>();
+        pointsOfInterest.put("poiUuid01", new DatabasePointOfInterest());
+        pointsOfInterest.put("poiUuid02", new DatabasePointOfInterest());
+        pointsOfInterest.put("poiUuid03", new DatabasePointOfInterest());
 
-        assertEquals(name, databaseEvent.name);
-        assertEquals(description, databaseEvent.description);
-        assertEquals(datetime_start, databaseEvent.datetimeStart);
-        assertEquals(datetime_end, databaseEvent.datetimeEnd);
-        assertEquals(uuid, databaseEvent.uuid);
-        assertEquals(members, databaseEvent.members);
+        DatabaseEvent databaseEvent =
+                new DatabaseEvent(name, description, datetimeStart,
+                                  datetimeEnd, uuid,
+                                  members,
+                                  pointsOfInterest);
+
+        assertEquals(name, databaseEvent.getName());
+        assertEquals(description, databaseEvent.getDescription());
+        assertEquals(datetimeStart, databaseEvent.getDatetimeStart());
+        assertEquals(datetimeEnd, databaseEvent.getDatetimeEnd());
+        assertEquals(uuid, databaseEvent.getUuid());
+        assertEquals(members, databaseEvent.getMembers());
+        assertEquals(pointsOfInterest, databaseEvent.getPointsOfInterest());
     }
 }

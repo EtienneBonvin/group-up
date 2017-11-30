@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ch.epfl.sweng.groupup.activity.info.UserInformationActivity">
 
     <include
-        layout="@layout/toolbar"
-        android:id="@+id/toolbar"/>
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,7 +20,7 @@
 
         <TextView
             android:id="@+id/text_view_display_name_info"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/EventCategories"
             android:gravity="start"
@@ -28,16 +29,15 @@
 
         <TextView
             android:id="@+id/text_view_display_name_text"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/EventFields"
             android:text="@string/text_view_display_name_text"
-            android:layout_below="@id/text_view_display_name_info"
-            android:layout_marginBottom="@dimen/default_gap"/>
+            android:layout_below="@id/text_view_display_name_info" />
 
         <TextView
             android:id="@+id/text_view_family_name_info"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/EventCategories"
             android:gravity="start"
@@ -47,16 +47,15 @@
 
         <TextView
             android:id="@+id/text_view_family_name_text"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/EventFields"
             android:text="@string/text_view_family_name_text"
-            android:layout_below="@id/text_view_family_name_info"
-            android:layout_marginBottom="@dimen/default_gap"/>
+            android:layout_below="@id/text_view_family_name_info" />
 
         <TextView
             android:id="@+id/text_view_given_name_info"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/EventCategories"
             android:gravity="start"
@@ -70,12 +69,11 @@
             android:layout_height="wrap_content"
             style="@style/EventFields"
             android:text="@string/text_view_given_name_text"
-            android:layout_below="@id/text_view_given_name_info"
-            android:layout_marginBottom="@dimen/default_gap"/>
+            android:layout_below="@id/text_view_given_name_info" />
 
         <TextView
             android:id="@+id/text_view_email_info"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/EventCategories"
             android:gravity="start"
@@ -89,30 +87,46 @@
             android:layout_height="wrap_content"
             style="@style/EventFields"
             android:text="@string/text_view_email_text"
-            android:layout_below="@id/text_view_email_info"
-            android:layout_marginBottom="@dimen/default_gap"/>
+            android:layout_below="@id/text_view_email_info" />
+
+
 
     </RelativeLayout>
 
-
-
-    <Button
-        android:id="@+id/button_sign_out"
-        style="@style/ButtonStyle"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/button_sign_out_text"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/user_infos"/>
+        android:id="@+id/logout_button_layout"
+        android:layout_below="@+id/user_infos">
+        
+        <Button
+            android:id="@+id/button_sign_out"
+            style="@style/ButtonStyle"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/button_sign_out_text"/>
 
-    <Button
-        android:id="@+id/buttonDisplayQR"
-        style="@style/ButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Display_QR"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/button_sign_out"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/logout_button_layout"
+        android:id="@+id/QR_code_layout"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:contentDescription="@string/QR_code"
+            android:id="@+id/qrImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:padding="@dimen/default_gap"
+            app:srcCompat="@color/transparent" />
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

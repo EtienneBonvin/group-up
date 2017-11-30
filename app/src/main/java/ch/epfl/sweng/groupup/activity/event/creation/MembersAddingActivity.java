@@ -1,6 +1,7 @@
 package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -12,6 +13,8 @@ import java.util.MissingResourceException;
 
 import ch.epfl.sweng.groupup.R;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
+
+import static ch.epfl.sweng.groupup.lib.AndroidHelper.emailCheck;
 
 public class MembersAddingActivity extends EventCreationActivity implements ZXingScannerView.ResultHandler {
 
@@ -59,9 +62,13 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                     @Override
                     public void onClick(View v) {
                         EditText memberEmail = findViewById(R.id.edit_text_add_member);
-                        MemberRepresentation newRep = new MemberRepresentation(memberEmail.getText().toString());
-                        addNewMember(newRep);
-                        memberEmail.setText("");
+                        if (!emailCheck(memberEmail.getText().toString())){
+                            memberEmail.setError(getString(R.string.members_adding_invalid_email));
+                        } else {
+                            MemberRepresentation newRep = new MemberRepresentation(memberEmail.getText().toString());
+                            addNewMember(newRep);
+                            memberEmail.setText("");
+                        }
                     }
                 });
 

@@ -1,5 +1,6 @@
 package ch.epfl.sweng.groupup.activity.event.files;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -28,65 +29,70 @@ import java.util.List;
 import java.util.Locale;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
+import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
 
-public class FileManagementActivity extends ToolbarActivity implements Watcher {
+import static android.app.Activity.RESULT_OK;
+import static android.content.Context.CONTEXT_IGNORE_SECURITY;
+
+/**
+ * FileManager class.
+ * Contains all methods and attributes relative to the file management of an event.
+ */
+@SuppressWarnings("WeakerAccess")
+public class FileManager implements Watcher {
+
+    private EventDescriptionActivity activity;
 
     private final int COLUMNS = 3;
     private final int ROWS = 4;
     private int columnWidth;
     private int rowHeight;
-    private Event event;
-    private int eventIndex;
-    private Watcher meAsWatcher;
-
+    private final Event event;
     private int imagesAdded = 0;
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    public static final String FILE_EXTRA_NAME = "File";
-    public static final String EVENT_INDEX = "EventIndex";
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private String mCurrentPhotoPath;
 
     /**
-     * Override onCreate method of ToolbarActivity.
-     *
-     * @param savedInstanceState unused
+     * Creates a FileManager for a particular EventDescription activity.
+     * @param activity the activity this FileManager is linked to.
      */
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_file_management);
-        super.initializeToolbarActivity();
+    public FileManager(final EventDescriptionActivity activity){
+        this.activity = activity;
 
         initializeTakePicture();
-        //Recover event and add ourselves as listeners.
-        Intent intent = getIntent();
-        eventIndex = intent.getIntExtra(EVENT_INDEX, -1);
+
+        Intent i = activity.getIntent();
+        int eventIndex = i.getIntExtra(activity.getString(R.string.event_listing_extraIndex), -1);
         if (eventIndex > -1) {
+            //!!!Order the events !!!
             event = Account.shared.getEvents().get(eventIndex);
+        }else{
+            event = null;
         }
-        event.addWatcher(this);
-        meAsWatcher = this;
+
+        if(event != null)
+            event.addWatcher(this);
 
         // Set onClickListeners to add files
         // TODO adding videos.
-        findViewById(R.id.add_files).setOnClickListener(new Button.OnClickListener() {
+        activity.findViewById(R.id.add_files).setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 Intent intent = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 0);
+                activity.startActivityForResult(intent, 0);
             }
         });
 
         // Set the GridLayout and initially get the height and width of the rows and columns.
-        final GridLayout grid = findViewById(R.id.image_grid);
-        final RelativeLayout container = findViewById(R.id.scroll_view_container);
+        final GridLayout grid = activity.findViewById(R.id.image_grid);
+        final RelativeLayout container = activity.findViewById(R.id.scroll_view_container);
         ViewTreeObserver vto = container.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -107,129 +113,113 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
             @Override
             public void onGlobalLayout() {
                 container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                for (CompressedBitmap bitmap : event.getPictures()) {
-                    addImageToGrid(bitmap, false);
+                if(event != null) {
+                    for (CompressedBitmap bitmap : event.getPictures()) {
+                        addImageToGrid(bitmap, false);
+                    }
                 }
             }
         });
     }
 
-
     /**
-     * Override onPause method, remove the activity from the watchers of the event to avoid
-     * exceptions.
-     **/
-    @Override
-    protected void onPause() {
-        super.onPause();
-        event.removeWatcher(this);
-    }
-
-    /**
-     * Override onStop method, remove the activity from the watchers of the event to avoid
-     * exceptions.
-     **/
-    @Override
-    public void onStop() {
-        super.onStop();
-        event.removeWatcher(this);
-    }
-
-    /**
-     * Override onDestroy method, remove the activity from the watchers of the event to avoid
-     * exceptions.
-     **/
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+     * Closes the FileManager.
+     * This method should be called when the activity using the FileManager is paused or destroyed
+     * to avoid unnecessary network communications.
+     */
+    public void close(){
         event.removeWatcher(this);
     }
 
     /**
      * Override of onActivityResult method.
-     * Define the behavior when the user finished selecting the picture he wants to add.
+     * Define the behavior when the user finished selecting the picture he wants to add or
+     * taking a picture.
      *
      * @param requestCode unused.
      * @param resultCode  indicate if the operation succeeded.
      * @param data        the data returned by the previous activity.
      */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         event.addWatcher(this);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             galleryAddPic();
-            Log.d("PHOTOPATH", mCurrentPhotoPath);
             Bitmap imageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
             CompressedBitmap compressedBitmap = new CompressedBitmap(imageBitmap);
             addImageToGrid(compressedBitmap, true);
         }
         else if (resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            try {
+                Bundle extras = data.getExtras();
+                if(extras == null)
+                    return;
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                CompressedBitmap compressedBitmap = new CompressedBitmap(imageBitmap);
+                addImageToGrid(compressedBitmap, true);
+            }catch(NullPointerException e){
+                AndroidHelper.showToast(activity, "Unable to recover the image", Toast.LENGTH_SHORT);
+            }
+        }else if (resultCode == RESULT_OK) {
             Uri targetUri = data.getData();
 
             if (targetUri == null) {
-                AndroidHelper.showToast(getApplicationContext(),
-                        getString(R.string.file_management_toast_error_file_uri),
+                AndroidHelper.showToast(activity.getApplicationContext(),
+                        activity.getString(R.string.file_management_toast_error_file_uri),
                         Toast.LENGTH_SHORT);
                 return;
             }
 
             if (imagesAdded % COLUMNS == 0) {
-                ((GridLayout) findViewById(R.id.image_grid))
+                ((GridLayout) activity.findViewById(R.id.image_grid))
                         .setRowCount(imagesAdded / ROWS + 1);
-                ViewGroup.LayoutParams params = findViewById(R.id.image_grid).getLayoutParams();
+                ViewGroup.LayoutParams params = activity.findViewById(R.id.image_grid).getLayoutParams();
                 params.height = Math.round(rowHeight * (imagesAdded / ROWS + 1));
-                findViewById(R.id.image_grid)
+                activity.findViewById(R.id.image_grid)
                         .setLayoutParams(params);
             }
 
             Bitmap bitmap;
             try {
 
-                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
+                bitmap = BitmapFactory.decodeStream(activity.getContentResolver().openInputStream(targetUri));
 
             } catch (FileNotFoundException e) {
-                AndroidHelper.showToast(getApplicationContext(),
-                        getString(R.string.file_management_toast_error_file_uri),
+                AndroidHelper.showToast(activity.getApplicationContext(),
+                        activity.getString(R.string.file_management_toast_error_file_uri),
                         Toast.LENGTH_SHORT);
                 return;
             }
-            
-            /*if (bitmap.getByteCount() / 8 > FirebaseFileProxy.MAX_FILE_SIZE) {
-                Helper.showToast(getApplicationContext(),
-                        getString(R.string.file_management_toast_error_file_too_big),
-                        Toast.LENGTH_SHORT);
-            } else*/ {
-                CompressedBitmap compressedBitmap = new CompressedBitmap(bitmap);
-                addImageToGrid(compressedBitmap, true);
-            }
+            CompressedBitmap compressedBitmap = new CompressedBitmap(bitmap);
+            addImageToGrid(compressedBitmap, true);
         }
+    }
     }
 
     /**
      * Initialize the camera button and open the camera
      */
     private void initializeTakePicture() {
-        Button takePicture = findViewById(R.id.take_picture);
-        final Context thisContext = this;
+        Button takePicture = activity.findViewById(R.id.take_picture);
+        final Context thisContext= activity.getApplicationContext();
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
                     File photo = null;
                     try {
                         photo = createImageFile();
                     } catch (IOException e) {
-                        AndroidHelper.showToast(getApplicationContext(),
-                                getString(R.string.file_management_toast_error_file_not_created),
+                        AndroidHelper.showToast(activity.getApplicationContext(),
+                                activity.getString(R.string.file_management_toast_error_file_not_created),
                                 Toast.LENGTH_SHORT);
                     }
                     if (photo != null) {
                         Uri photoUri= FileProvider.getUriForFile(thisContext,"com.example.android.fileprovider",photo);
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,photoUri);
-                        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                        activity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                     }
                 }
             }
@@ -240,7 +230,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
@@ -260,7 +250,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
         File f = new File(mCurrentPhotoPath);
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
+        activity.sendBroadcast(mediaScanIntent);
     }
 
 
@@ -268,7 +258,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
      * Helper method to clear all the images of the grid.
      */
     private void clearImages() {
-        ((GridLayout) findViewById(R.id.image_grid))
+        ((GridLayout) activity.findViewById(R.id.image_grid))
                 .removeAllViews();
         imagesAdded = 0;
     }
@@ -279,7 +269,7 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
      * @param bitmap the image to add.
      */
     private void addImageToGrid(final CompressedBitmap bitmap, boolean addToDatabase) {
-        ImageView image = new ImageView(this);
+        ImageView image = new ImageView(activity);
 
         GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
         layoutParams.width = columnWidth;
@@ -293,16 +283,31 @@ public class FileManagementActivity extends ToolbarActivity implements Watcher {
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), FullScreenFile.class);
 
-                intent.putExtra(FILE_EXTRA_NAME, bitmap.asByteArray());
-                intent.putExtra(EVENT_INDEX, eventIndex);
-                event.removeWatcher(meAsWatcher);
-                startActivity(intent);
+                ((ImageView)activity.findViewById(R.id.show_image))
+                        .setImageBitmap(bitmap.asBitmap());
+
+                activity.findViewById(R.id.image_grid)
+                        .setVisibility(View.INVISIBLE);
+
+                activity.findViewById(R.id.show_image)
+                        .setVisibility(View.VISIBLE);
+
+                activity.findViewById(R.id.show_image)
+                        .setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                activity.findViewById(R.id.show_image)
+                                        .setVisibility(View.INVISIBLE);
+
+                                activity.findViewById(R.id.image_grid)
+                                        .setVisibility(View.VISIBLE);
+                            }
+                        });
             }
         });
 
-        ((GridLayout) findViewById(R.id.image_grid))
+        ((GridLayout) activity.findViewById(R.id.image_grid))
                 .addView(image, imagesAdded++);
 
         if(addToDatabase)

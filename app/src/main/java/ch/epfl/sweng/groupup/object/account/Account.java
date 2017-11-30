@@ -1,7 +1,6 @@
 package ch.epfl.sweng.groupup.object.account;
 
 import android.location.Location;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -323,9 +322,8 @@ public final class Account extends User {
                              pastEvents,
                              futureEvents,
                              Optional.from(location));
-
-        if (User.observer != null && location != null) {
-            User.observer.updateDefaultMarker(location);
+        if (User.observer != null) {
+            User.observer.requestLocation();
         }
         return shared;
     }
@@ -337,6 +335,10 @@ public final class Account extends User {
      * @return the modified shared account, so that it is easier to call in chain
      */
     public Account addOrUpdateEvent(Event event) {
+        if (observer != null) {
+            observer.updateEventIfNeeded(event);
+        }
+
         switch (event.getEventStatus()) {
             case FUTURE:
                 return addOrUpdateFutureEvent(event);
