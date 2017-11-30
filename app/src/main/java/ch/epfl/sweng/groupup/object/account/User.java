@@ -2,7 +2,7 @@ package ch.epfl.sweng.groupup.object.account;
 
 import android.location.Location;
 
-import ch.epfl.sweng.groupup.activity.map.MapActivity;
+import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 
 /**
@@ -10,7 +10,8 @@ import ch.epfl.sweng.groupup.lib.Optional;
  * to give them access to common first name, last name and email.
  */
 public abstract class User {
-    public static MapActivity observer = null;
+
+    public static EventDescriptionActivity observer = null;
 
     final Optional<String> displayName;
     final Optional<String> givenName;
