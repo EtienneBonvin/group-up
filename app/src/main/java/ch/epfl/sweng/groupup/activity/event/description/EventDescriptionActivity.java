@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -33,6 +34,7 @@ import java.util.Set;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.files.FileManager;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
+import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -164,6 +166,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        AndroidHelper.showToast(this, "Map is ready!", Toast.LENGTH_SHORT);
+
         mMap = googleMap;
 
         if (isMapMockWanted()) {
