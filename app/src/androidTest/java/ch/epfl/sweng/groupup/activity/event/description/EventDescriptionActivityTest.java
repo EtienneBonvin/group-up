@@ -126,6 +126,8 @@ public class EventDescriptionActivityTest {
         onView(withId(R.id.remove_event_button)).perform(click());
 
         onView(withText(R.string.alert_dialog_title_delete_event)).check(matches(isDisplayed()));
+        onView(withText("Continue")).perform(click());
+        Account.shared.clear();
 
     }
 }
