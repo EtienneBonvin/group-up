@@ -87,8 +87,6 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
             }
         }
 
-        Log.d("##", Integer.toHexString(System.identityHashCode(eventsToDisplay)));
-
         askForInvitation();
 
         for (Event e : events) {

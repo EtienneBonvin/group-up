@@ -5,6 +5,8 @@ import android.support.test.espresso.contrib.BuildConfig;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.Log;
+
 import junit.framework.AssertionFailedError;
 
 import org.joda.time.LocalDateTime;
@@ -67,7 +69,7 @@ public class EventListingActivityTest {
                 new ArrayList<>(Collections.singletonList(Account.shared.toMember())),true);
         Account.shared.addOrUpdateEvent(eventInvitation);
 
-        onView(withId(R.id.icon_access_group_list)).perform(click());
+        //onView(withId(R.id.icon_access_group_list)).perform(click());
         onView(withText("Accept")).perform(click());
         if(BuildConfig.DEBUG&& !(Account.shared.getEvents().size()==2)){
             throw new AssertionError();
@@ -87,7 +89,7 @@ public class EventListingActivityTest {
                 new ArrayList<>(Collections.singletonList(Account.shared.toMember())),true);
         Account.shared.addOrUpdateEvent(eventInvitation);
 
-        //onView(withId(R.id.icon_access_group_list)).perform(click());
+        onView(withId(R.id.icon_access_group_list)).perform(click());
         onView(withText("Decline")).perform(click());
         if(BuildConfig.DEBUG&& !(Account.shared.getEvents().size()==1)){
             throw new AssertionError();
