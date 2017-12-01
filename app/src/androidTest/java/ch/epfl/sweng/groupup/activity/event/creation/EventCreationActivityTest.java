@@ -267,7 +267,8 @@ public class EventCreationActivityTest {
         try {
             Thread.sleep(2000);
         }catch(InterruptedException ie){
-            //The tests are stopped, nothing to do.
+            //The tests are stopped, nothing to do.            //The tests are stopped, nothing to do.
+
         }
     }
 

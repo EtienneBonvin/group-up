@@ -293,7 +293,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
                     && builder.getEndDate().compareTo(e.getStartTime()) <= 0)
                     || (e.getEndTime().compareTo(builder.getStartDate()) <= 0))) {
                 AndroidHelper.showToast(getApplicationContext(), getString(R.string.event_creation_toast_overlapping_event),
-                        Toast.LENGTH_LONG);
+                        Toast.LENGTH_SHORT);
             return;
             }
         }
