@@ -114,7 +114,7 @@ public class EventDescriptionActivityTest {
     }*/
 
     @Test
-    public void CreateAndDisplayAlertOnDeleteEvent() {
+    public void createAndDisplayAlertOnDeleteEvent() {
         Database.setUpDatabase();
         String name = "My beautiful event";
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
