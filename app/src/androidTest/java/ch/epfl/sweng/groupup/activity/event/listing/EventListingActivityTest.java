@@ -1,6 +1,7 @@
 package ch.epfl.sweng.groupup.activity.event.listing;
 
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.contrib.BuildConfig;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
@@ -60,6 +61,11 @@ public class EventListingActivityTest {
     public void invitationIsAccepted(){
         Database.setUpDatabase();
         onView(ViewMatchers.withId(R.id.createEventButton)).perform(click());
+        try{
+            onView(withId(R.id.edit_text_add_member)).check(matches(isDisplayed()));
+            onView(withId(R.id.save_added_members_button)).perform(click());
+        }
+        catch (NoMatchingViewException e){}
         onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
@@ -80,6 +86,11 @@ public class EventListingActivityTest {
     public void invitationIsDeclinedAndDeleted(){
         Database.setUpDatabase();
         onView(ViewMatchers.withId(R.id.createEventButton)).perform(click());
+        try{
+            onView(withId(R.id.edit_text_add_member)).check(matches(isDisplayed()));
+            onView(withId(R.id.save_added_members_button)).perform(click());
+        }
+        catch (NoMatchingViewException e){}
         onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
@@ -101,6 +112,11 @@ public class EventListingActivityTest {
     public void alertWhenOverlappingEvent(){
         Database.setUpDatabase();
         onView(ViewMatchers.withId(R.id.createEventButton)).perform(click());
+        try{
+            onView(withId(R.id.edit_text_add_member)).check(matches(isDisplayed()));
+            onView(withId(R.id.save_added_members_button)).perform(click());
+        }
+        catch (NoMatchingViewException e){}
         onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());

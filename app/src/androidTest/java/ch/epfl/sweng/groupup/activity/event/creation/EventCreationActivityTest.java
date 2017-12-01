@@ -2,6 +2,7 @@ package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.location.Location;
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.DatePicker;
@@ -255,7 +256,11 @@ public class EventCreationActivityTest {
         onView(withId(R.id.save_new_event_button)).perform(click());
 
         onView(withId(R.id.createEventButton)).perform(click());
-
+        try{
+            onView(withId(R.id.edit_text_add_member)).check(matches(isDisplayed()));
+            onView(withId(R.id.save_added_members_button)).perform(click());
+        }
+        catch (NoMatchingViewException e){}
         addEventName("OVERLAP2");
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
@@ -271,6 +276,7 @@ public class EventCreationActivityTest {
 
         }
     }
+
 
 
     /**
