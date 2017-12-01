@@ -55,7 +55,10 @@
     <string name="plus_sign">Plus sign</string>
 
     <!-- Event Listing UI -->
-
+    <string name="event_listing_overlap_title">Overlapping Event</string>
+    <string name="event_listing_overlap_text">You have some overlapping event (marked with !!!!), if you don\'t remove them now, they will replace the current event when they will start</string>
+    <string name="event_listing_gotit">Got it !</string>
+    
     <!-- SettingsActivity -->
     <string name="settings_tv_top">Settings page</string>
 
@@ -145,6 +148,7 @@
     <string name="poi_remove_negative">No</string>
     <string name="poi_create_cancel">Cancel</string>
     <string name="poi_create_add">Add</string>
+
 
 </resources>
 

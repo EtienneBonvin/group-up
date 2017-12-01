@@ -60,7 +60,7 @@ public class EventListingActivityTest {
     public void invitationIsAccepted(){
         Database.setUpDatabase();
         onView(ViewMatchers.withId(R.id.createEventButton)).perform(click());
-        onView(withId(R.id.ui_edit_event_name)).perform(typeText("CurrentEvent"));
+        onView(withId(R.id.ui_edit_event_name)).perform(typeText("Event"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
         //Generate directly a new event with an invitation
@@ -69,7 +69,7 @@ public class EventListingActivityTest {
                 new ArrayList<>(Collections.singletonList(Account.shared.toMember())),true);
         Account.shared.addOrUpdateEvent(eventInvitation);
 
-        //onView(withId(R.id.icon_access_group_list)).perform(click());
+        onView(withId(R.id.icon_access_group_list)).perform(click());
         onView(withText("Accept")).perform(click());
         if(BuildConfig.DEBUG&& !(Account.shared.getEvents().size()==2)){
             throw new AssertionError();
@@ -80,7 +80,7 @@ public class EventListingActivityTest {
     public void invitationIsDeclinedAndDeleted(){
         Database.setUpDatabase();
         onView(ViewMatchers.withId(R.id.createEventButton)).perform(click());
-        onView(withId(R.id.ui_edit_event_name)).perform(typeText("CurrentEvent"));
+        onView(withId(R.id.ui_edit_event_name)).perform(typeText("Event"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
 
@@ -98,30 +98,23 @@ public class EventListingActivityTest {
     }
 
     @Test
-    public void invitationWithConflictOnAccept(){
+    public void alertWhenOverlappingEvent(){
         Database.setUpDatabase();
-        String newEventName= "New Event";
         onView(ViewMatchers.withId(R.id.createEventButton)).perform(click());
-        onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventBefore"));
+        onView(withId(R.id.ui_edit_event_name)).perform(typeText("Event"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
-        Event previousEvent=Account.shared.getEvents().get(0);
-        //Generate directly the event with a conflict with the current event,
-        // can't create the event from the event creation as this will be blocked
-        Event eventInvitation= new Event(newEventName , LocalDateTime.now(),
+
+        Event eventInvitationAndOverlap= new Event("event invitation", LocalDateTime.now(),
                 LocalDateTime.now().plusDays(1),"This is the event to test the invitation process",
                 new ArrayList<>(Collections.singletonList(Account.shared.toMember())),true);
-        Account.shared.addOrUpdateEvent(eventInvitation);
+        Account.shared.addOrUpdateEvent(eventInvitationAndOverlap);
 
         onView(withId(R.id.icon_access_group_list)).perform(click());
-        onView(withText("Accept")).perform(click());
-
-        if(BuildConfig.DEBUG && !(Account.shared.getEvents().contains(eventInvitation) && !(Account.shared.getEvents().contains(previousEvent)))){
-            throw new AssertionError();
-        }
-        onView(withId(R.id.icon_access_group_list)).perform(click());
-
+        onView(withText(R.string.event_listing_gotit)).perform(click());
+        onView(withText("Decline")).perform(click());
         Account.shared.clear();
+
     }
 }
 

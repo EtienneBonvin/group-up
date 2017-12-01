@@ -4,10 +4,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
+import android.view.ContextThemeWrapper;
 import android.widget.Toast;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import ch.epfl.sweng.groupup.R;
 
 /**
  * Class containing some useful methods to help the programmer out.
@@ -51,7 +54,7 @@ public final class AndroidHelper {
                                         String message,
                                         String
                                                 buttonText) {
-        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+        AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AboutDialog)).create();
 
         alertDialog.setTitle(title);
         alertDialog.setMessage(message);

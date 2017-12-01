@@ -3,28 +3,22 @@ package ch.epfl.sweng.groupup.activity.event.listing;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.icu.text.LocaleDisplayNames;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescription;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
+import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.lib.database.Database;
@@ -44,7 +38,7 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
     private LinearLayout linearLayout;
     private int heightInSp;
     private boolean dialogShown;
-
+    private static boolean overlapAlreadyShown=false;
 
     /**
      * Initialization of the private variables of the class and
@@ -77,6 +71,7 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
      * name and start to event dates stated
      */
     private void updateEvents() {
+        boolean showOverlapAlert=false;
         linearLayout.removeAllViews();
         List<Event> events = Account.shared.getEvents();
 
@@ -90,12 +85,20 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
         askForInvitation();
 
         for (Event e : events) {
+            String text= String.format(Locale.getDefault(), "%s | %d/%d - %d/%d", e.getEventName(),
+                    e.getStartTime().getDayOfMonth(), e.getStartTime().getMonthOfYear(),
+                    e.getEndTime().getDayOfMonth(), e.getEndTime().getMonthOfYear());
+            for(Event ev : events){
+                if(!e.equals(ev) &&e.overlap(Optional.from(ev))){
+                    showOverlapAlert=true;
+                    text+= "!!!!"; //Replace that with beautifull logo
+                }
+            }
+
             Button eventButton = new Button(this);
             eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
                     MATCH_PARENT, heightInSp));
-            eventButton.setText(String.format(Locale.getDefault(), "%s | %d/%d - %d/%d", e.getEventName(),
-                    e.getStartTime().getDayOfMonth(), e.getStartTime().getMonthOfYear(),
-                    e.getEndTime().getDayOfMonth(), e.getEndTime().getMonthOfYear()));
+            eventButton.setText(text);
             eventButton.setBackgroundColor(getResources().getColor(R.color.primaryLightColor));
             eventButton.setCompoundDrawablePadding(2);
 
@@ -111,6 +114,10 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
             });
             index++;
             linearLayout.addView(eventButton);
+        }
+        if (showOverlapAlert && !overlapAlreadyShown){
+            overlapAlreadyShown=true; //print the alert only once.
+            AndroidHelper.showAlert(this, getString(R.string.event_listing_overlap_title), getString(R.string.event_listing_overlap_text), getString(R.string.event_listing_gotit));
         }
     }
 
@@ -135,25 +142,8 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
      */
     private void askForInvitation() {
         for (final Event eventToDisplay : eventsToDisplay) {
-            List<Event> eventsToRemove = new ArrayList<>();
             if (!dialogShown) {
                 dialogShown = true;
-
-                String message = "";
-                String names = "";
-
-                for(Event e : Account.shared.getFutureEvents()){
-                    if (e.overlap(Optional.from(eventToDisplay)) && !e.getUUID().equals(eventToDisplay.getUUID())){
-                        eventsToRemove.add(e);
-                        names += e.getEventName()+" ";
-                    }
-                }
-
-                if (eventToDisplay.overlap(Account.shared.getCurrentEvent())){
-                    eventsToRemove.add(Account.shared.getCurrentEvent().get());
-                }
-
-                final List<Event> eventsToRemoveFinal = Collections.unmodifiableList(eventsToRemove);
 
                 String members = getString(R.string.event_invitation_dialog_members);
                 for (Member member : eventToDisplay.getEventMembers()) {
@@ -164,10 +154,8 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
                         new AlertDialog.Builder(new ContextThemeWrapper(EventListingActivity.this, R.style.AboutDialog));
                 alertDialogBuilder.setTitle(R.string.event_invitation_title);
 
-                if(!eventsToRemove.isEmpty()){
-                    message = getString(R.string.overlapping_events) + names + "\n";
-                }
-                message= message + getString(R.string.event_invitation_dialog_name) + eventToDisplay.getEventName() + "\n"
+
+                String message=getString(R.string.event_invitation_dialog_name) + eventToDisplay.getEventName() + "\n"
                         + getString(R.string.event_invitation_dialog_start) + eventToDisplay.getStartTimeToString() + "\n"
                         + getString(R.string.event_invitation_dialog_end) + eventToDisplay.getEndTimeToString() + "\n"
                         + getString(R.string.event_invitation_dialog_description) + eventToDisplay.getDescription() + "\n" + members;
@@ -183,10 +171,8 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
                                         Account.shared.addOrUpdateEvent(eventToDisplay.withInvitation(
                                                !eventToDisplay.getInvitation()));
                                         eventsToDisplay.remove(eventToDisplay);
-                                        for (Event e : eventsToRemoveFinal){
-                                            EventDescriptionActivity.removeEvent(e);
-                                        }
                                         dialogShown = false;
+                                        Database.update();
                                         dialogInterface.dismiss();
                                         recreate();
                                     }
