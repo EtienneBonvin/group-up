@@ -66,48 +66,51 @@ public class EventListingActivityTest {
             onView(withId(R.id.save_added_members_button)).perform(click());
         }
         catch (NoMatchingViewException e){}
-        onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
-        Espresso.closeSoftKeyboard();
-        onView(withId(R.id.save_new_event_button)).perform(click());
-        //Generate directly a new event with an invitation
-        Event eventInvitation= new Event("event invitation", LocalDateTime.now().plusHours(1),
-                LocalDateTime.now().plusDays(1),"This is the event to test the invitation process",
-                new ArrayList<>(Collections.singletonList(Account.shared.toMember())),true);
-        Account.shared.addOrUpdateEvent(eventInvitation);
+        finally {
+            onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
+            Espresso.closeSoftKeyboard();
+            onView(withId(R.id.save_new_event_button)).perform(click());
+            //Generate directly a new event with an invitation
+            Event eventInvitation = new Event("event invitation", LocalDateTime.now().plusHours(1),
+                    LocalDateTime.now().plusDays(1), "This is the event to test the invitation process",
+                    new ArrayList<>(Collections.singletonList(Account.shared.toMember())), true);
+            Account.shared.addOrUpdateEvent(eventInvitation);
 
-        onView(withId(R.id.icon_access_group_list)).perform(click());
-        onView(withText("Accept")).perform(click());
-        if(BuildConfig.DEBUG&& !(Account.shared.getEvents().size()==2)){
-            throw new AssertionError();
+            onView(withId(R.id.icon_access_group_list)).perform(click());
+            onView(withText("Accept")).perform(click());
+            if (BuildConfig.DEBUG && !(Account.shared.getEvents().size() == 2)) {
+                throw new AssertionError();
+            }
+            Account.shared.clear();
         }
-        Account.shared.clear();
     }
     @Test
-    public void invitationIsDeclinedAndDeleted(){
+    public void invitationIsDeclinedAndDeleted() {
         Database.setUpDatabase();
         onView(ViewMatchers.withId(R.id.createEventButton)).perform(click());
-        try{
+        try {
             onView(withId(R.id.edit_text_add_member)).check(matches(isDisplayed()));
             onView(withId(R.id.save_added_members_button)).perform(click());
-        }
-        catch (NoMatchingViewException e){}
-        onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
-        Espresso.closeSoftKeyboard();
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        } catch (NoMatchingViewException e) {
+        } finally {
+            onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
 
-        Event eventInvitation= new Event("event invitation", LocalDateTime.now().plusHours(1),
-                LocalDateTime.now().plusDays(1),"This is the event to test the invitation process",
-                new ArrayList<>(Collections.singletonList(Account.shared.toMember())),true);
-        Account.shared.addOrUpdateEvent(eventInvitation);
+            Espresso.closeSoftKeyboard();
+            onView(withId(R.id.save_new_event_button)).perform(click());
 
-        onView(withId(R.id.icon_access_group_list)).perform(click());
-        onView(withText("Decline")).perform(click());
-        if(BuildConfig.DEBUG&& !(Account.shared.getEvents().size()==1)){
-            throw new AssertionError();
+            Event eventInvitation = new Event("event invitation", LocalDateTime.now().plusHours(1),
+                    LocalDateTime.now().plusDays(1), "This is the event to test the invitation process",
+                    new ArrayList<>(Collections.singletonList(Account.shared.toMember())), true);
+            Account.shared.addOrUpdateEvent(eventInvitation);
+
+            onView(withId(R.id.icon_access_group_list)).perform(click());
+            onView(withText("Decline")).perform(click());
+            if (BuildConfig.DEBUG && !(Account.shared.getEvents().size() == 1)) {
+                throw new AssertionError();
+            }
+            Account.shared.clear();
         }
-        Account.shared.clear();
     }
-
     @Test
     public void alertWhenOverlappingEvent(){
         Database.setUpDatabase();
@@ -117,7 +120,9 @@ public class EventListingActivityTest {
             onView(withId(R.id.save_added_members_button)).perform(click());
         }
         catch (NoMatchingViewException e){}
-        onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
+         finally {
+            onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
+
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
 
@@ -130,7 +135,7 @@ public class EventListingActivityTest {
         onView(withText(R.string.event_listing_gotit)).perform(click());
         onView(withText("Decline")).perform(click());
         Account.shared.clear();
-
+    }
     }
 }
 
