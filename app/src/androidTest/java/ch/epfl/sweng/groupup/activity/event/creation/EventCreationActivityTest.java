@@ -250,13 +250,13 @@ public class EventCreationActivityTest {
 
     @Test
     public void noEventCreationOnOverlappingEvent(){
-        addEventName(EVENT_NAME);
+        addEventName("OVERLAP");
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
 
         onView(withId(R.id.createEventButton)).perform(click());
 
-        addEventName(EVENT_NAME+"2");
+        addEventName("OVERLAP2");
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
         onView(withText(R.string.event_creation_toast_overlapping_event))

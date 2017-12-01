@@ -60,7 +60,7 @@ public class EventListingActivityTest {
     public void invitationIsAccepted(){
         Database.setUpDatabase();
         onView(ViewMatchers.withId(R.id.createEventButton)).perform(click());
-        onView(withId(R.id.ui_edit_event_name)).perform(typeText("Event"));
+        onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
         //Generate directly a new event with an invitation
@@ -80,7 +80,7 @@ public class EventListingActivityTest {
     public void invitationIsDeclinedAndDeleted(){
         Database.setUpDatabase();
         onView(ViewMatchers.withId(R.id.createEventButton)).perform(click());
-        onView(withId(R.id.ui_edit_event_name)).perform(typeText("Event"));
+        onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
 
@@ -101,7 +101,7 @@ public class EventListingActivityTest {
     public void alertWhenOverlappingEvent(){
         Database.setUpDatabase();
         onView(ViewMatchers.withId(R.id.createEventButton)).perform(click());
-        onView(withId(R.id.ui_edit_event_name)).perform(typeText("Event"));
+        onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
 
