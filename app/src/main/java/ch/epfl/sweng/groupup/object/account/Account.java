@@ -284,7 +284,6 @@ public final class Account extends User implements Watchee {
                                                    EventStatus.CURRENT.toString());
             }
         }
-        notifyAllWatchers();
         return shared;
     }
 
@@ -355,7 +354,6 @@ public final class Account extends User implements Watchee {
             default:
                 withCurrentEvent(Optional.from(event));
         }
-        notifyAllWatchers();
         return shared;
     }
 

@@ -47,7 +47,6 @@ public class EventDescription {
         Intent i = activity.getIntent();
         final int eventIndex = i.getIntExtra(activity.getString(R.string.event_listing_extraIndex), -1);
         if (eventIndex > -1) {
-            //!!!Order the events !!!
             eventToDisplay = Account.shared.getEvents().get(eventIndex);
         }else{
             eventToDisplay = null;

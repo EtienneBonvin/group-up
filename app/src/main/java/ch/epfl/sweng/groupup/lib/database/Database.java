@@ -257,6 +257,7 @@ public final class Database {
                 }
             }
         }
+        Account.shared.notifyAllWatchers();
     }
 
 

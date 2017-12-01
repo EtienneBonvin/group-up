@@ -87,7 +87,7 @@ public class EventListingActivityTest {
                 new ArrayList<>(Collections.singletonList(Account.shared.toMember())),true);
         Account.shared.addOrUpdateEvent(eventInvitation);
 
-        onView(withId(R.id.icon_access_group_list)).perform(click());
+        //onView(withId(R.id.icon_access_group_list)).perform(click());
         onView(withText("Decline")).perform(click());
         if(BuildConfig.DEBUG&& !(Account.shared.getEvents().size()==1)){
             throw new AssertionError();

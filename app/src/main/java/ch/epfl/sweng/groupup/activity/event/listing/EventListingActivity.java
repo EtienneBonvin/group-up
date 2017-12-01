@@ -3,6 +3,7 @@ package ch.epfl.sweng.groupup.activity.event.listing;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.icu.text.LocaleDisplayNames;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
@@ -85,6 +86,8 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
                 eventsToDisplay.add(e);
             }
         }
+
+        Log.d("##", Integer.toHexString(System.identityHashCode(eventsToDisplay)));
 
         askForInvitation();
 
@@ -214,5 +217,11 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
     @Override
     public void notifyWatcher() {
         updateEvents();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        Account.shared.removeWatcher(this);
     }
 }
