@@ -22,8 +22,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
@@ -294,7 +292,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
             if (!((builder.getStartDate().compareTo(e.getStartTime()) <= 0
                     && builder.getEndDate().compareTo(e.getStartTime()) <= 0)
                     || (e.getEndTime().compareTo(builder.getStartDate()) <= 0))) {
-                AndroidHelper.showToast(getApplicationContext(), getString(R.string.toast_overlapping_event),
+                AndroidHelper.showToast(getApplicationContext(), getString(R.string.event_creation_toast_overlapping_event),
                         Toast.LENGTH_LONG);
             return;
             }

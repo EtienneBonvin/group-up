@@ -91,7 +91,7 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
             for(Event ev : events){
                 if(!e.equals(ev) &&e.overlap(Optional.from(ev))){
                     showOverlapAlert=true;
-                    text+= "!!!!"; //Replace that with beautifull logo
+                    text+= "  /!\\"; //Replace that with beautifull logo
                 }
             }
 

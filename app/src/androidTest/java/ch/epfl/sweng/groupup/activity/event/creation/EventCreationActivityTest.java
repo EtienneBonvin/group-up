@@ -259,7 +259,7 @@ public class EventCreationActivityTest {
         addEventName(EVENT_NAME+"2");
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
-        onView(withText(R.string.toast_overlapping_event))
+        onView(withText(R.string.event_creation_toast_overlapping_event))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                         .getWindow()
                         .getDecorView()))))
@@ -269,7 +269,6 @@ public class EventCreationActivityTest {
         }catch(InterruptedException ie){
             //The tests are stopped, nothing to do.
         }
-        Account.shared.clear();
     }
 
 

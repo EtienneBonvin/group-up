@@ -42,6 +42,7 @@
     <string name="event_creation_toast_event_end_before_begin">Your event ends before it begins.</string>
     <string name="event_creation_toast_event_last_1_minute">Your event should last for at least 1 minute.</string>
     <string name="event_cration_error_cant_add_yourself">You\'ll be automatically added to the event.</string>
+    <string name="event_creation_toast_overlapping_event">The event you are trying to create overlap another, you have to leave to other event first before creating an event at this time</string>
 
     <!-- Members Adding UI -->
     <string name="members_adding_tv_greet_user">Let us add some friends to your event !\n\n
@@ -56,9 +57,9 @@
 
     <!-- Event Listing UI -->
     <string name="event_listing_overlap_title">Overlapping Event</string>
-    <string name="event_listing_overlap_text">You have some overlapping event (marked with !!!!), if you don\'t remove them now, they will replace the current event when they will start</string>
+    <string name="event_listing_overlap_text">You have some overlapping event (marked with /!\\, if you don\'t remove them now, they will replace the current event when they will start</string>
     <string name="event_listing_gotit">Got it !</string>
-    
+
     <!-- SettingsActivity -->
     <string name="settings_tv_top">Settings page</string>
 
@@ -135,9 +136,7 @@
     <!-- Full screen file -->
     <string name="full_screen_file_content_description">Image to be displayed in full screen</string>
 
-    <!-- Overlapping events -->
-    <string name="overlapping_events">This event overlap with another, if you accept it you will be removed from the other event \n The overlapping events are : </string>
-    <string name="toast_overlapping_event">The event you are trying to create overlap another, you have to leave to other event first before creating an event at this time</string>
+
 
     <!-- Points of Interest -->
     <string name="poi_title_hint">title</string>
