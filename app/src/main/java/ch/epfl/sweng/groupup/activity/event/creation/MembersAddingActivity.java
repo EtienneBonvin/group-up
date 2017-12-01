@@ -1,20 +1,23 @@
 package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.HashMap;
 import java.util.MissingResourceException;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.object.account.Account;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 import static ch.epfl.sweng.groupup.lib.AndroidHelper.emailCheck;
+import static ch.epfl.sweng.groupup.lib.AndroidHelper.showToast;
 
 public class MembersAddingActivity extends EventCreationActivity implements ZXingScannerView.ResultHandler {
 
@@ -64,7 +67,9 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                         EditText memberEmail = findViewById(R.id.edit_text_add_member);
                         if (!emailCheck(memberEmail.getText().toString())){
                             memberEmail.setError(getString(R.string.members_adding_invalid_email));
-                        } else {
+                        } else if(memberEmail.getText().toString() == Account.shared.getEmail().getOrElse("Default Email")){
+                            memberEmail.setError(getString(R.string.event_cration_error_cant_add_yourself));
+                        } else{
                             MemberRepresentation newRep = new MemberRepresentation(memberEmail.getText().toString());
                             addNewMember(newRep);
                             memberEmail.setText("");
@@ -124,8 +129,12 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
         if (decoded.length != 2 || decoded[0].length() == 0){
                 throw new IllegalArgumentException("Decoded information not proper.");
         }
-        MemberRepresentation newRep = new MemberRepresentation(decoded[0], decoded[1]);
-        addNewMember(newRep);
+        if(decoded[0] == Account.shared.getUUID().getOrElse("Default UUID")){
+            showToast(this, getString(R.string.event_cration_error_cant_add_yourself), Toast.LENGTH_SHORT);
+        }else {
+            MemberRepresentation newRep = new MemberRepresentation(decoded[0], decoded[1]);
+            addNewMember(newRep);
+        }
     }
 
     /**

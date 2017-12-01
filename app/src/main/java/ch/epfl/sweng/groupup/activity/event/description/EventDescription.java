@@ -142,6 +142,8 @@ public class EventDescription {
         }
 
         Database.update();
+
+        eventToRemove.removeImagesFrom(Account.shared.getUUID().getOrElse("Default UUID"));
     }
 
     /**

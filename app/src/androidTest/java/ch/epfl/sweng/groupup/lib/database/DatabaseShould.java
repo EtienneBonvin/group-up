@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
+import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
@@ -32,8 +33,8 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class DatabaseShould {
     @Rule
-    public final ActivityTestRule<LoginActivity> mActivityRule =
-            new ActivityTestRule<>(LoginActivity.class);
+    public final ActivityTestRule<ToolbarActivity> mActivityRule =
+            new ActivityTestRule<>(ToolbarActivity.class);
 
     @Test
     public void exposeSetUpMethod() throws Exception {
