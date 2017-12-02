@@ -352,11 +352,15 @@ public class EventCreationActivityTest {
     private void addEventName(String name){
         onView(withId(R.id.ui_edit_event_name)).perform(clearText());
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
+        Espresso.closeSoftKeyboard();
+
     }
 
     private void addDescription(String description){
         onView(withId(R.id.edit_text_description)).perform(clearText());
         onView(withId(R.id.edit_text_description)).perform(typeText(description));
+        Espresso.closeSoftKeyboard();
+
     }
 }
 
