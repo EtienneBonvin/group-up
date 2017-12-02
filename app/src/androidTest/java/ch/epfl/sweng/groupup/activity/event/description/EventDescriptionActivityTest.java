@@ -118,6 +118,7 @@ public class EventDescriptionActivityTest {
         Database.setUpDatabase();
         String name = "My beautiful event";
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
+        Espresso.closeSoftKeyboard();
 
         onView(withId(R.id.save_new_event_button)).perform(click());
 
