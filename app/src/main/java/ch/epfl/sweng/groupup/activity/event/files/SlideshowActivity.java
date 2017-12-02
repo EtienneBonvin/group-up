@@ -3,7 +3,6 @@ package ch.epfl.sweng.groupup.activity.event.files;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -11,19 +10,17 @@ import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
+import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
 
 
-/**
- * Created by Besitzer on 21.11.2017.
- */
-
-public class SlideshowActivity extends ToolbarActivity {
+public class SlideshowActivity extends ToolbarActivity implements Watcher{
 
     private Event event;
     private int eventIndex;
@@ -43,15 +40,9 @@ public class SlideshowActivity extends ToolbarActivity {
         }
 
         initImageSwitcher();
-        while (true) {
-            System.out.println("Loading");
-            if (event.isAllRecovered()){
-                System.out.println("DONE");
-                loadedImages = event.getPictures();
-                break;
-            }
-        }
-        System.out.println("LOADED: "+loadedImages.toString());
+        event.addWatcher(this);
+        loadedImages = event.getPictures();
+
         loadImages();
     }
 
@@ -66,6 +57,7 @@ public class SlideshowActivity extends ToolbarActivity {
     }
 
     private void loadImages() {
+
         imageSwitcher.postDelayed(new Runnable() {
             int i = 0;
             public void run() {
@@ -99,4 +91,38 @@ public class SlideshowActivity extends ToolbarActivity {
         imageSwitcher.setOutAnimation(out);
     }
 
+    @Override
+    public void notifyWatcher() {
+        loadedImages = event.getPictures();
+    }
+
+    /**
+     * Override onPause method, remove the activity from the watchers of the event to avoid
+     * exceptions.
+     **/
+    @Override
+    protected void onPause() {
+        super.onPause();
+        event.removeWatcher(this);
+    }
+
+    /**
+     * Override onStop method, remove the activity from the watchers of the event to avoid
+     * exceptions.
+     **/
+    @Override
+    public void onStop() {
+        super.onStop();
+        event.removeWatcher(this);
+    }
+
+    /**
+     * Override onDestroy method, remove the activity from the watchers of the event to avoid
+     * exceptions.
+     **/
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        event.removeWatcher(this);
+    }
 }
