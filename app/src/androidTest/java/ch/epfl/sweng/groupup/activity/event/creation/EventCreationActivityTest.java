@@ -256,13 +256,7 @@ public class EventCreationActivityTest {
         onView(withId(R.id.save_new_event_button)).perform(click());
 
         onView(withId(R.id.createEventButton)).perform(click());
-        try{
-            onView(withId(R.id.edit_text_add_member)).check(matches(isDisplayed()));
-            onView(withId(R.id.save_added_members_button)).perform(click());
-        }
-        catch (NoMatchingViewException e){}
-        finally {
-            addEventName("OVERLAP2");
+        addEventName("OVERLAP2");
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
         onView(withText(R.string.event_creation_toast_overlapping_event))
@@ -277,7 +271,7 @@ public class EventCreationActivityTest {
 
         }
     }
-    }
+
 
 
 
