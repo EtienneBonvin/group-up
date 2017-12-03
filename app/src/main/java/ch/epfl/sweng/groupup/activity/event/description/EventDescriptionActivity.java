@@ -114,26 +114,6 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     }
 
     /**
-     * Override onPause method, remove the activity from the watchers of the event to avoid
-     * exceptions.
-     **/
-    @Override
-    protected void onPause() {
-        super.onPause();
-        fileManager.close();
-    }
-
-    /**
-     * Override onStop method, remove the activity from the watchers of the event to avoid
-     * exceptions.
-     **/
-    @Override
-    public void onStop() {
-        super.onStop();
-        fileManager.close();
-    }
-
-    /**
      * Override onDestroy method, remove the activity from the watchers of the event to avoid
      * exceptions.
      **/
