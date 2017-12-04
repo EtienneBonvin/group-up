@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Database.setUpDatabase();
+        Database.setUp();
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

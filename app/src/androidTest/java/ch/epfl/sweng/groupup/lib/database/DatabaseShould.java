@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import ch.epfl.sweng.groupup.activity.login.LoginActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -38,14 +37,14 @@ public class DatabaseShould {
 
     @Test
     public void exposeSetUpMethod() throws Exception {
-        Database.setUpDatabase();
+        Database.setUp();
 
         assertTrue(true);
     }
 
     @Test
     public void exposeSetUpListenerForDefaultAndOwnListener() throws Exception {
-        Database.setUpDatabase();
+        Database.setUp();
 
         Database.setUpEventListener(new ValueEventListener() {
             @Override
@@ -64,7 +63,7 @@ public class DatabaseShould {
 
     @Test
     public void exposeAnUpdateMethod() throws Exception {
-        Database.setUpDatabase();
+        Database.setUp();
 
         Database.update();
 
@@ -74,7 +73,7 @@ public class DatabaseShould {
     @Test
     public void updateDatabaseCorrectlyAccordingToTheUsersAccount() throws Exception {
         // Database set up.
-        Database.setUpDatabase();
+        Database.setUp();
 
         // Account initialization.
         String givenName = "Group";

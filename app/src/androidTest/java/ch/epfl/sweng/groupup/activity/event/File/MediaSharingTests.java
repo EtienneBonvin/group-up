@@ -19,9 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
-import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -59,7 +57,7 @@ public class MediaSharingTests {
 
     @Before
     public void goToFileManagement(){
-        Database.setUpDatabase();
+        Database.setUp();
         Database.setUpEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

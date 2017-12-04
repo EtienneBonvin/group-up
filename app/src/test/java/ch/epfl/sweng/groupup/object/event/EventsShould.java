@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import ch.epfl.sweng.groupup.lib.database.DatabaseEvent;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.map.PointOfInterest;
@@ -288,5 +289,36 @@ public class EventsShould {
                 now.getMonthOfYear(),now.getYear())));
         assertEquals(e.getEndTimeToString(), (String.format(Locale.getDefault(),"%d/%d/%d", now.getDayOfMonth(),
                 now.getMonthOfYear(),now.getYear())));
+    }
+
+    @Test
+    public void correctlyConvertToDatabaseEvent() {
+        Account.shared.withUUID("AccountUUID");
+        Member randomMember = new Member("UUID", "DispName", "GiveName", "FamName", "Email", null);
+        PointOfInterest poi = new PointOfInterest("UUDID", "Name", "Desc", new Location(LocationManager.GPS_PROVIDER));
+
+        LocalDateTime now = LocalDateTime.now();
+        List<Member> members = new ArrayList<>();
+        members.add(Account.shared.toMember());
+        members.add(randomMember);
+
+        Event event = new Event("My Event", now.minusDays(1), now.plusDays(2), "My Description", members, false);
+        event = event.withPointOfInterest(poi);
+        DatabaseEvent databaseEvent = event.toDatabaseEvent();
+
+        assertEquals(event.getEventName(), databaseEvent.getName());
+        assertEquals(event.getDescription(), databaseEvent.getDescription());
+        assertEquals(event.getStartTime().toString(), databaseEvent.getDatetimeStart());
+        assertEquals(event.getEndTime().toString(), databaseEvent.getDatetimeEnd());
+        assertEquals(event.getUUID(), databaseEvent.getUuid());
+
+        assertEquals(databaseEvent.getMembers().keySet().size(), 2);
+        assertEquals(databaseEvent.getMembers().get(Account.shared.getUUID().get()), Account.shared.toMember().toDatabaseUser());
+        assertEquals(databaseEvent.getMembers().get(randomMember.getUUID().get()), randomMember.toDatabaseUser());
+
+        assertEquals(databaseEvent.getPointsOfInterest().keySet().size(), 1);
+        assertEquals(databaseEvent.getPointsOfInterest().get(poi.getUuid()), poi.toDatabasePointOfInterest());
+
+        Account.shared.clear();
     }
 }

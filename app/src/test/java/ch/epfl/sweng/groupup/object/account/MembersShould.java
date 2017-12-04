@@ -2,6 +2,9 @@ package ch.epfl.sweng.groupup.object.account;
 
 import org.junit.Test;
 
+import ch.epfl.sweng.groupup.lib.database.Database;
+import ch.epfl.sweng.groupup.lib.database.DatabaseUser;
+
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -70,5 +73,19 @@ public class MembersShould {
         assertFalse(m1.equals(m5));
         assertFalse(m1.equals(m6));
         assertFalse(m1.equals(m7));
+    }
+
+    @Test
+    public void correctlyBeConvertedToDatabaseUser() {
+        Member member = new Member("UUID2", null, "Xavier", null, "xavier@pantet.ch", null);
+        DatabaseUser databaseUser = member.toDatabaseUser();
+
+        assertEquals(member.getUUID().get(), databaseUser.getUuid());
+        assertEquals(Database.EMPTY_FIELD, databaseUser.getDisplayName());
+        assertEquals(member.getGivenName().get(), databaseUser.getGivenName());
+        assertEquals(Database.EMPTY_FIELD, databaseUser.getFamilyName());
+        assertEquals(member.getEmail().get(), databaseUser.getEmail());
+        assertEquals(Database.EMPTY_FIELD, databaseUser.getLatitude());
+        assertEquals(Database.EMPTY_FIELD, databaseUser.getLongitude());
     }
 }
