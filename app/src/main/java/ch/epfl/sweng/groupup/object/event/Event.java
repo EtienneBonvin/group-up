@@ -76,11 +76,11 @@ public final class Event implements Serializable, Watcher, Watchee{
     }
 
     /**
-     * Returns true if all
-     * @return
+     * Returns true if all images have been recovered.
+     * @return true if all the images are recovered, false otherwise.
      */
     public boolean isAllRecovered(){
-        initializeProxy();
+        verifyProxyInstantiated();
         return proxy.isAllRecovered();
     }
 
