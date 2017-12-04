@@ -147,6 +147,8 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
             setContentView(R.layout.members_adding);
             initListeners();
             restoreState();
+        } else {
+            returnToEventCreation();
         }
     }
 
