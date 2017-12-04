@@ -81,6 +81,7 @@
         permission to use your location and camera. Do you want to do it now?</string>
     <string name="alert_dialog_yes">Yes</string>
     <string name="alert_dialog_no">No</string>
+    <string name="alert_dialog_title_delete_event">Deleting Event</string>
     <string name="title_activity_map">Map</string>
 
 
