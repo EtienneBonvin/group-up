@@ -2,7 +2,6 @@ package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.location.Location;
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.DatePicker;

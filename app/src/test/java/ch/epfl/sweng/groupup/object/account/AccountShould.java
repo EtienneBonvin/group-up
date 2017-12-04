@@ -14,7 +14,6 @@ import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.event.EventStatus;
 import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 
-import static ch.epfl.sweng.groupup.lib.Optional.from;
 import static ch.epfl.sweng.groupup.object.account.Account.shared;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

@@ -2,7 +2,6 @@ package ch.epfl.sweng.groupup.activity.info;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -15,8 +14,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-
-import java.io.ByteArrayOutputStream;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;

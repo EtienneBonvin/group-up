@@ -15,15 +15,12 @@ import java.util.Locale;
 import java.util.HashSet;
 import java.util.Set;
 
-import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertNotEquals;
 
 public class EventsShould {

@@ -1,12 +1,10 @@
 package ch.epfl.sweng.groupup.activity.event.listing;
 
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.contrib.BuildConfig;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 
 import junit.framework.AssertionFailedError;
 

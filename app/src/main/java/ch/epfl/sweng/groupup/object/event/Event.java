@@ -11,7 +11,6 @@ import java.util.Locale;
 import java.util.Set;
 
 import ch.epfl.sweng.groupup.activity.event.files.CompressedBitmap;
-import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.Watchee;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.lib.fileStorage.FirebaseFileProxy;
