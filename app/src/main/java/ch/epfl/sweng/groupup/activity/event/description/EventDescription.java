@@ -127,6 +127,7 @@ public class EventDescription {
      * @param eventToRemove the event to be removed from.
      */
     public static void removeEvent(Event eventToRemove) {
+        //TODO use withoutcurrentmember
         List<Member> futureMembers = new ArrayList<>(eventToRemove.getEventMembers());
         futureMembers.remove(Account.shared.toMember());
         eventToRemove = eventToRemove.withEventMembers(futureMembers);
