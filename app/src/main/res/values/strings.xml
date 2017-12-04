@@ -87,7 +87,7 @@
 
     <!-- File Management -->
     <string name="file_management_tv_description">Here you can see the files of the event and add some new ones !</string>
-    <string name="file_management_button_create_aftermovie">Create Aftermovie</string>
+    <string name="file_management_button_create_slideshow">Start Slideshow</string>
     <string name="file_management_alert_dialog_delete_event">Would you like to leave and delete this event?</string>
     <string name="file_management_button_add_file">Add file</string>
     <string name="file_management_toast_error_file_uri">An error occurred when recovering the media</string>

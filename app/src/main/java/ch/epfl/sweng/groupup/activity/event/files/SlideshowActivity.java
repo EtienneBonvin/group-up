@@ -54,7 +54,7 @@ public class SlideshowActivity extends ToolbarActivity implements Watcher{
         i.putExtra(getString(R.string.event_listing_extraIndex), eventIndex);
         startActivity(i);
     }
-
+    
     private void loadImages() {
 
         imageSwitcher.postDelayed(new Runnable() {

@@ -23,12 +23,6 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <!-- Slide show theme -->
-    <style name="SlideShowStyle" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:background">@color/dark_grey</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-
     <!-- Start up screen theme -->
     <style name="StartUpStyle" parent="Theme.AppCompat.NoActionBar">
         <item name="android:background">@color/primaryColor</item>

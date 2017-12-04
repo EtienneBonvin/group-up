@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/add_files"
-            android:text="@string/file_management_button_create_aftermovie" />
+            android:text="@string/file_management_button_create_slideshow" />
 
         <Button
             android:id="@+id/take_picture"

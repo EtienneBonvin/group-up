@@ -310,7 +310,7 @@ public class FileManager implements Watcher {
 
         if(addToDatabase)
             event.addPicture(Account.shared.getUUID().getOrElse("Default ID"),
-                    new CompressedBitmap(trimed));
+                    bitmap);
     }
 
     /**
