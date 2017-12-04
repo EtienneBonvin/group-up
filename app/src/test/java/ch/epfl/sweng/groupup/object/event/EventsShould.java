@@ -276,16 +276,4 @@ public class EventsShould {
                 now.getMonthOfYear(),now.getYear(), now.getHourOfDay(), now.getMinuteOfHour()));
 
     }
-
-    @Test
-    public void overlappingEvent(){
-        Event e = new Event("2","inmm", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2),"Pas de travail, toujours pas de travail", new ArrayList<>(Collections.singletonList(member)), new HashSet<PointOfInterest>(), false);
-        Event f = new Event("2","inmm", LocalDateTime.now().plusDays(1).plusHours(5), LocalDateTime.now().plusDays(3),"Pas de travail, toujours pas de travail", new ArrayList<>(Collections.singletonList(member)), new HashSet<PointOfInterest>(), false);
-        Event g = new Event("2","inmm", LocalDateTime.now().minusDays(1), LocalDateTime.now(),"Pas de travail, toujours pas de travail", new ArrayList<>(Collections.singletonList(member)), new HashSet<PointOfInterest>(), false);
-
-        assertTrue(e.overlap(Optional.from(f)));
-        assertTrue(f.overlap(Optional.from(e)));
-        assertFalse(f.overlap(Optional.from(g)));
-        assertFalse(g.overlap(Optional.from(f)));
-    }
 }

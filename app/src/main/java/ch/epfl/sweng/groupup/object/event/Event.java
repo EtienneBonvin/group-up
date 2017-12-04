@@ -419,12 +419,4 @@ public final class Event implements Serializable, Watcher, Watchee{
             eventImages = proxyImages;
         notifyAllWatchers();
     }
-
-    public boolean overlap(Optional<Event> e){
-
-        if(e.isEmpty()){return false;}
-        return !((this.startTime.compareTo(e.get().startTime)<=0
-                && this.endTime.compareTo(e.get().startTime)<=0)
-                || (e.get().endTime.compareTo(this.startTime)<=0));
-    }
 }

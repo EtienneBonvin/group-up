@@ -138,7 +138,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         Database.update();
         List<Event> futureEventList = new ArrayList<>(Account.shared.getEvents());
         Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>
-                ()).withCurrentEvent(Optional.<Event>empty());
+                ());
         Log.d("FUTUREEVENTBEFORE", futureEventList.toString());
         futureEventList.remove(eventToRemove);
         Log.d("FUTUREEVENTAFETERREMOVE", futureEventList.toString());

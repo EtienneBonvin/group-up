@@ -249,32 +249,6 @@ public class EventCreationActivityTest {
         }
     }
 
-    @Test
-    public void noEventCreationOnOverlappingEvent(){
-        addEventName("OVERLAP");
-        Espresso.closeSoftKeyboard();
-        onView(withId(R.id.save_new_event_button)).perform(click());
-
-        onView(withId(R.id.createEventButton)).perform(click());
-        addEventName("OVERLAP2");
-        Espresso.closeSoftKeyboard();
-        onView(withId(R.id.save_new_event_button)).perform(click());
-        onView(withText(R.string.event_creation_toast_overlapping_event))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
-                        .getWindow()
-                        .getDecorView()))))
-                .check(matches(isDisplayed()));
-        try {
-            Thread.sleep(2000);
-        }catch(InterruptedException ie){
-            //The tests are stopped, nothing to do.            //The tests are stopped, nothing to do.
-
-        }
-    }
-
-
-
-
     /**
      * Test QR Scanner
      * Does not work for Jenkins because he does not have a camera

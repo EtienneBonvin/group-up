@@ -38,7 +38,6 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
     private LinearLayout linearLayout;
     private int heightInSp;
     private boolean dialogShown;
-    private static boolean overlapAlreadyShown=false;
 
     /**
      * Initialization of the private variables of the class and
@@ -85,20 +84,12 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
         askForInvitation();
 
         for (Event e : events) {
-            String text= String.format(Locale.getDefault(), "%s | %d/%d - %d/%d", e.getEventName(),
-                    e.getStartTime().getDayOfMonth(), e.getStartTime().getMonthOfYear(),
-                    e.getEndTime().getDayOfMonth(), e.getEndTime().getMonthOfYear());
-            for(Event ev : events){
-                if(!e.equals(ev) &&e.overlap(Optional.from(ev))){
-                    showOverlapAlert=true;
-                    text+= "  /!\\"; //Replace that with beautifull logo
-                }
-            }
-
             Button eventButton = new Button(this);
             eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
                     MATCH_PARENT, heightInSp));
-            eventButton.setText(text);
+            eventButton.setText(String.format(Locale.getDefault(), "%s | %d/%d - %d/%d", e.getEventName(),
+                    e.getStartTime().getDayOfMonth(), e.getStartTime().getMonthOfYear(),
+                    e.getEndTime().getDayOfMonth(), e.getEndTime().getMonthOfYear()));
             eventButton.setBackgroundColor(getResources().getColor(R.color.primaryLightColor));
             eventButton.setCompoundDrawablePadding(2);
 
@@ -108,16 +99,11 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
                 public void onClick(View view) {
                     Intent intent = new Intent(EventListingActivity.this, EventDescriptionActivity.class);
                     intent.putExtra(getString(R.string.event_listing_extraIndex), i);
-
                     startActivity(intent);
                 }
             });
             index++;
             linearLayout.addView(eventButton);
-        }
-        if (showOverlapAlert && !overlapAlreadyShown){
-            overlapAlreadyShown=true; //print the alert only once.
-            AndroidHelper.showAlert(this, getString(R.string.event_listing_overlap_title), getString(R.string.event_listing_overlap_text), getString(R.string.event_listing_gotit));
         }
     }
 

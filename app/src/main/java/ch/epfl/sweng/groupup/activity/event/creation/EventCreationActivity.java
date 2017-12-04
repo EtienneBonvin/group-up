@@ -288,15 +288,6 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
             return;
         }
 
-        for (Event e : Account.shared.getEvents()) {
-            if (!((builder.getStartDate().compareTo(e.getStartTime()) <= 0
-                    && builder.getEndDate().compareTo(e.getStartTime()) <= 0)
-                    || (e.getEndTime().compareTo(builder.getStartDate()) <= 0))) {
-                AndroidHelper.showToast(getApplicationContext(), getString(R.string.event_creation_toast_overlapping_event),
-                        Toast.LENGTH_SHORT);
-            return;
-            }
-        }
         builder.setEventName(((EditText)findViewById(R.id.ui_edit_event_name)).getText().toString());
 
         builder.setDescription(((EditText)findViewById(R.id.edit_text_description)).getText().toString());

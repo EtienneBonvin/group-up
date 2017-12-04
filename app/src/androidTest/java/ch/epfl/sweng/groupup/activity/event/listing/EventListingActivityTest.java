@@ -34,14 +34,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class EventListingActivityTest {
 
-    private Event event;
-
     @Rule
     public ActivityTestRule<EventListingActivity> mEventListingActivityActivityTestRule =
             new ActivityTestRule<>(EventListingActivity.class);
 
     @Test
-    public void ensureCreateNewEventWork()  {
+    public void ensureCreateNewEventWork() {
 
         // Click on the create_new_event button, when ID is implemented, use it.
         onView(ViewMatchers.withId(R.id.createEventButton))
@@ -64,7 +62,7 @@ public class EventListingActivityTest {
         onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
-        //Generate directly a new event with an invitation
+        //Generate directly a new event with an invitation, can't be done in the activity
         Event eventInvitation = new Event("event invitation", LocalDateTime.now().plusHours(1),
                 LocalDateTime.now().plusDays(1), "This is the event to test the invitation process",
                 new ArrayList<>(Collections.singletonList(Account.shared.toMember())), true);
@@ -82,42 +80,21 @@ public class EventListingActivityTest {
     public void invitationIsDeclinedAndDeleted() {
         Database.setUpDatabase();
         onView(ViewMatchers.withId(R.id.createEventButton)).perform(click());
-            onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
-
-            Espresso.closeSoftKeyboard();
-            onView(withId(R.id.save_new_event_button)).perform(click());
-
-            Event eventInvitation = new Event("event invitation", LocalDateTime.now().plusHours(1),
-                    LocalDateTime.now().plusDays(1), "This is the event to test the invitation process",
-                    new ArrayList<>(Collections.singletonList(Account.shared.toMember())), true);
-            Account.shared.addOrUpdateEvent(eventInvitation);
-
-            onView(withId(R.id.icon_access_group_list)).perform(click());
-            onView(withText("Decline")).perform(click());
-            if (BuildConfig.DEBUG && !(Account.shared.getEvents().size() == 1)) {
-                throw new AssertionError();
-            }
-            Account.shared.clear();
-        }
-
-    @Test
-    public void alertWhenOverlappingEvent(){
-        Database.setUpDatabase();
-        onView(ViewMatchers.withId(R.id.createEventButton)).perform(click());
-
         onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
 
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
 
-        Event eventInvitationAndOverlap= new Event("event invitation", LocalDateTime.now(),
-                LocalDateTime.now().plusDays(1),"This is the event to test the invitation process",
-                new ArrayList<>(Collections.singletonList(Account.shared.toMember())),true);
-        Account.shared.addOrUpdateEvent(eventInvitationAndOverlap);
+        Event eventInvitation = new Event("event invitation", LocalDateTime.now().plusHours(1),
+                LocalDateTime.now().plusDays(1), "This is the event to test the invitation process",
+                new ArrayList<>(Collections.singletonList(Account.shared.toMember())), true);
+        Account.shared.addOrUpdateEvent(eventInvitation);
 
         onView(withId(R.id.icon_access_group_list)).perform(click());
-        onView(withText(R.string.event_listing_gotit)).perform(click());
         onView(withText("Decline")).perform(click());
+        if (BuildConfig.DEBUG && !(Account.shared.getEvents().size() == 1)) {
+            throw new AssertionError();
+        }
         Account.shared.clear();
     }
 }

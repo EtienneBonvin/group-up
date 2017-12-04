@@ -79,8 +79,8 @@ public final class Database {
         for (Event event : Account.shared.getPastEvents()) {
             storeEvent(event);
         }
-        if (!Account.shared.getCurrentEvent().isEmpty()) {
-            storeEvent(Account.shared.getCurrentEvent().get());
+        for (Event event : Account.shared.getCurrentEvents()) {
+            storeEvent(event);
         }
     }
 
