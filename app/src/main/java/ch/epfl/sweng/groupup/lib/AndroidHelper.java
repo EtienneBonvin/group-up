@@ -3,30 +3,38 @@ package ch.epfl.sweng.groupup.lib;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Build;
+import android.view.Gravity;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 /**
  * Class containing some useful methods to help the programmer out.
  */
-
 public final class AndroidHelper {
 
     /**
      * Check that the passed email is an "acceptable" form (not the icann official definition)
+     *
      * @param email the email to check
+     *
      * @return true if email ok else false
      */
-    public static boolean emailCheck(String email){
-        Pattern p = Pattern.compile("\\b[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,13}\\b",Pattern.CASE_INSENSITIVE);
-        Matcher m=p.matcher(email);
+    public static boolean emailCheck(String email) {
+        Pattern p = Pattern.compile("\\b[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,13}\\b", Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(email);
         return m.matches();
     }
 
+
     private static Toast lastShowedToast = null;
+
 
     /**
      * Private constructor, we don't want to instantiate this class.
@@ -34,6 +42,7 @@ public final class AndroidHelper {
     private AndroidHelper() {
         // Not instantiable.
     }
+
 
     /**
      * Method to help displaying an alert personalized with the given parameters. This alert is
@@ -44,31 +53,26 @@ public final class AndroidHelper {
      * @param title      - alert title
      * @param message    - alert message
      * @param buttonText - button text
+     *
      * @return - the alert dialog that is shown
      */
-    public static AlertDialog showAlert(Context context,
-                                        String title,
-                                        String message,
-                                        String
-                                                buttonText) {
+    public static AlertDialog showAlert(Context context, String title, String message, String buttonText) {
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
 
         alertDialog.setTitle(title);
         alertDialog.setMessage(message);
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL,
-                              buttonText,
-                              new DialogInterface.OnClickListener() {
-                                  @Override
-                                  public void onClick(DialogInterface dialog,
-                                                      int which) {
-                                      dialog.dismiss();
-                                  }
-                              });
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, buttonText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
 
         alertDialog.show();
 
         return alertDialog;
     }
+
 
     /**
      * Method to help displaying toasts on the screen. Pass in the required parameters and it
@@ -77,10 +81,27 @@ public final class AndroidHelper {
      * @param context  - current context for the toast
      * @param text     - the text to display
      * @param duration - the duration
+     *
      * @return - the toast that is shown
      */
     public static Toast showToast(Context context, String text, int duration) {
-        Toast newToast = Toast.makeText(context, text, duration);
+        // We first create the layout for the toast.
+        LinearLayout container = new LinearLayout(context);
+        container.setBackgroundColor(Color.GRAY);
+
+        TextView textView = new TextView(context);
+        textView.setBackgroundColor(Color.GRAY);
+        textView.setTextColor(Color.WHITE);
+        textView.setGravity(Gravity.CENTER_HORIZONTAL);
+        textView.setText(text);
+
+        container.addView(textView);
+
+        // We then build the toast using the layout.
+        Toast newToast = new Toast(context);
+        newToast.setDuration(duration);
+        newToast.setGravity(Gravity.BOTTOM, 0, 100);
+        newToast.setView(container);
 
         if (lastShowedToast != null) {
             lastShowedToast.cancel();
@@ -91,6 +112,7 @@ public final class AndroidHelper {
 
         return newToast;
     }
+
 
     /**
      * Returns whether we are running on an emulator or not.
@@ -106,8 +128,7 @@ public final class AndroidHelper {
                Build.MODEL.contains("Emulator") ||
                Build.MODEL.contains("Android SDK built for x86") ||
                Build.MANUFACTURER.contains("Genymotion") ||
-               (Build.BRAND.startsWith("generic") &&
-                Build.DEVICE.startsWith("generic")) ||
+               (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic")) ||
                "google_sdk".equals(Build.PRODUCT);
     }
 }
