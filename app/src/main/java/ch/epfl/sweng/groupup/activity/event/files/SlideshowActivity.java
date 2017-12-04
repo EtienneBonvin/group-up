@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -47,14 +48,14 @@ public class SlideshowActivity extends ToolbarActivity implements Watcher{
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(this, FileManager.class);
+        Intent i = new Intent(this, EventDescriptionActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                 Intent.FLAG_ACTIVITY_CLEAR_TASK |
                 Intent.FLAG_ACTIVITY_NEW_TASK);
         i.putExtra(getString(R.string.event_listing_extraIndex), eventIndex);
         startActivity(i);
     }
-    
+
     private void loadImages() {
 
         imageSwitcher.postDelayed(new Runnable() {
@@ -72,7 +73,6 @@ public class SlideshowActivity extends ToolbarActivity implements Watcher{
     }
 
     private void initImageSwitcher() {
-        System.out.println("Initiating switcher");
         imageSwitcher = (ImageSwitcher)findViewById(R.id.imageSwitcher);
 
         // implement ViewFactory interface
