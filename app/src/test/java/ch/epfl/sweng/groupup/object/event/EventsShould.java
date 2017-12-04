@@ -10,9 +10,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.HashSet;
 import java.util.Set;
 
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -20,7 +20,9 @@ import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertNotEquals;
 
 public class EventsShould {
@@ -164,6 +166,21 @@ public class EventsShould {
         List<Member> eventMembers = new ArrayList<>();
         event = new Event("Name", startDate, endDate, "Description", eventMembers,false);
         assertEquals(event.getEventStatus(), EventStatus.PAST);
+    }
+
+    @Test
+    public void beCurrentOnlyIfTheyReallyAreCurrent() {
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime endDate = LocalDateTime.now();
+        List<Member> eventMembers = new ArrayList<>();
+
+        Event futureEvent = new Event("Name", startDate.plusDays(2), endDate.plusDays(3), "Description", eventMembers, false);
+        Event currentEvent = new Event("Name", startDate.minusDays(1), endDate.plusDays(1), "Description", eventMembers, false);
+        Event pastEvent = new Event("Name", startDate.minusDays(3), endDate.minusDays(1), "Description", eventMembers, false);
+
+        assertFalse(futureEvent.isCurrent());
+        assertTrue(currentEvent.isCurrent());
+        assertFalse(pastEvent.isCurrent());
     }
 
     @Test

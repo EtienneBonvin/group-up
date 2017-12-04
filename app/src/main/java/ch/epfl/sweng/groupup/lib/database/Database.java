@@ -73,20 +73,14 @@ public final class Database {
      * Function called every time we want to update the information stored in the database.
      */
     public static void update() {
-        for (Event event : Account.shared.getFutureEvents()) {
+        for (Event event : Account.shared.getEvents()) {
             storeEvent(event);
-        }
-        for (Event event : Account.shared.getPastEvents()) {
-            storeEvent(event);
-        }
-        if (!Account.shared.getCurrentEvent().isEmpty()) {
-            storeEvent(Account.shared.getCurrentEvent().get());
         }
     }
 
 
     /**
-     * AndroidHelper function to store the events.
+     * Helper function to store the events.
      *
      * @param event - the real "Event" object
      */
@@ -111,6 +105,10 @@ public final class Database {
                                                     memberToStore.getEmail(),
                                                     memberToStore.getUUID(),
                                                     memberToStore.getLocation());
+                }
+
+                if (!event.isCurrent()) {
+                    databaseUser.clearLocation();
                 }
 
                 uuidToUserMap.put(databaseUser.uuid, databaseUser);
@@ -139,7 +137,7 @@ public final class Database {
 
 
     /**
-     * AndroidHelper function to store the events.
+     * Helper function to store the events.
      *
      * @param databaseEvent - the "DatabaseEvent" object
      */

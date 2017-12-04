@@ -269,6 +269,15 @@ public final class Event implements Serializable, Watcher, Watchee{
         else return EventStatus.CURRENT;
     }
 
+
+    /**
+     * Returns true if and only if the status of the event is current.
+     * @return -  true if the status of the event is current
+     */
+    public boolean isCurrent() {
+        return getEventStatus() == EventStatus.CURRENT;
+    }
+
     /**
      * Adds an member to the list of event members
      * @param member to add

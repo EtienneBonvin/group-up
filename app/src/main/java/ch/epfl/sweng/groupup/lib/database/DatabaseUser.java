@@ -95,6 +95,13 @@ final class DatabaseUser {
         return provider;
     }
 
+    @Exclude
+    void clearLocation() {
+        latitude = EMPTY_FIELD;
+        longitude = EMPTY_FIELD;
+        provider = EMPTY_FIELD;
+    }
+
 
     @Exclude
     Optional<String> getOptGivenName() {

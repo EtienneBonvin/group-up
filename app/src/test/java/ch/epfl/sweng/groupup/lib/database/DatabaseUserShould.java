@@ -160,4 +160,23 @@ public class DatabaseUserShould {
 
         assertTrue(databaseUser.getOptLocation().isEmpty());
     }
+
+    @Test
+    public void correctlyClearLocation() {
+        DatabaseUser databaseUser = new DatabaseUser(Optional.<String>empty(),
+                                                     Optional.<String>empty(),
+                                                     Optional.<String>empty(),
+                                                     Optional.<String>empty(),
+                                                     Optional.<String>empty(),
+                                                     Optional.<Location>empty());
+        databaseUser.latitude = "NOT_EMPTY";
+        databaseUser.longitude = "NOT_EMPTY";
+        databaseUser.provider = "NOT_EMPTY";
+
+        databaseUser.clearLocation();
+
+        assertEquals(Database.EMPTY_FIELD, databaseUser.getLatitude());
+        assertEquals(Database.EMPTY_FIELD, databaseUser.getLongitude());
+        assertEquals(Database.EMPTY_FIELD, databaseUser.getProvider());
+    }
 }
