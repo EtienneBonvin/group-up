@@ -81,7 +81,7 @@ public class MediaSharingTests {
         Account.shared.clear();
     }
 
-    @Test
+    /*@Test
     public void addingPictureWithoutExceptionAndDisplayFullScreen(){
         Resources resources = InstrumentationRegistry.getTargetContext().getResources();
 
@@ -109,7 +109,7 @@ public class MediaSharingTests {
 
         mockMediaSelection(imageUri);
 
-    }
+    }*/
 
     @Test
     public void fileNotFoundToastOnWrongURI(){
