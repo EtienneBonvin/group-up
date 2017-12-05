@@ -85,6 +85,7 @@ public class EventCreationActivityTest {
 
         addEventName(EVENT_NAME);
         addDescription(EVENT_DESCRIPTION);
+        
         LocalDateTime start = new LocalDateTime(2099, 1, 6, 9,
                 0, 0, 0);
         LocalDateTime end = start.plusDays(4);
@@ -134,6 +135,10 @@ public class EventCreationActivityTest {
         Account.shared.clear();
     }
 
+    /**
+     * Tests if members which previously were added are correctly displayed if you enter members adding view again
+     * covers the restoreState code
+     */
     @Test
     public void correctlyDisplayAlreadyAddedMembers(){
         addMember(EVENT_MEMBER);
@@ -194,7 +199,7 @@ public class EventCreationActivityTest {
     }
 
     @Test
-    public void noCreationOnstartDateBeforeEndDate(){
+    public void noCreationOnStartDateBeforeEndDate(){
         addEventName(EVENT_NAME);
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 4, 5, 5, 5);
@@ -254,6 +259,10 @@ public class EventCreationActivityTest {
         }
     }
 
+    /**
+     * Check if an error message appears if the user enters a string which is not an email address
+     * @throws InterruptedException
+     */
     @Test
     public void onlyAllowEmailsAsInput() throws InterruptedException {
         addEventName(EVENT_NAME);
@@ -349,6 +358,7 @@ public class EventCreationActivityTest {
     private void addDescription(String description){
         onView(withId(R.id.edit_text_description)).perform(clearText());
         onView(withId(R.id.edit_text_description)).perform(typeText(description));
+        Espresso.closeSoftKeyboard();
     }
 }
 
