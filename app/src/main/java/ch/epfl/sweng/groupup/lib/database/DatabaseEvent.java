@@ -93,13 +93,11 @@ public final class DatabaseEvent {
 
     @Exclude
     public Event toEvent() {
-        // TODO: test
-
         /*
         This variable defines if we need to update ourselves in the database and fill in
         our information.
         */
-        boolean needToUpdateMyself = false;
+        boolean isInvited = false;
 
         // We transform every DatabaseUser to a Member.
         List<Member> members = new ArrayList<>();
@@ -113,7 +111,7 @@ public final class DatabaseEvent {
                 // If we have to update our selves we update the member.
                 if (!memberToAdd.equals(mySelfAsMember)) {
                     memberToAdd = mySelfAsMember;
-                    needToUpdateMyself = true;
+                    isInvited = true;
                 }
             }
 
@@ -134,7 +132,7 @@ public final class DatabaseEvent {
                          getDescription(),
                          members,
                          pointsOfInterest,
-                         needToUpdateMyself);
+                         isInvited);
     }
 
 
@@ -145,11 +143,7 @@ public final class DatabaseEvent {
      */
     @Exclude
     public boolean containedAsMember() {
-        // TODO: test
-
-        Set<String> uuidsOfMembers = getMembers().keySet();
-
-        return uuidsOfMembers.contains(Account.shared.getUUID().get()) || containedAsUnknownUser();
+        return getMembers().keySet().contains(Account.shared.getUUID().get()) || containedAsUnknownUser();
     }
 
 
@@ -161,8 +155,6 @@ public final class DatabaseEvent {
      */
     @Exclude
     private boolean containedAsUnknownUser() {
-        // TODO: test
-
         Collection<DatabaseUser> users = getMembers().values();
         Set<String> unknownUsers = new HashSet<>();
 

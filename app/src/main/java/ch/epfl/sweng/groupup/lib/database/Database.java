@@ -124,5 +124,7 @@ public final class Database {
                 Account.shared.addOrUpdateEvent(databaseEvent.toEvent());
             }
         }
+
+        update();
     }
 }
