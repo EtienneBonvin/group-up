@@ -57,6 +57,7 @@ public class MediaSharingTests {
 
     @Before
     public void goToFileManagement(){
+        Account.shared.clear();
         Database.setUpDatabase();
         Database.setUpEventListener(new ValueEventListener() {
             @Override
@@ -70,8 +71,7 @@ public class MediaSharingTests {
             }
         });
         createEvent();
-        onView(withParent(withId(R.id.linear_layout_event_list)))
-                .perform(click());
+        onView(withParent(withId(R.id.linear_layout_event_list))).perform(click());
         onView(withId(R.id.swipe_bar))
                 .perform(swipeLeft());
     }
@@ -81,7 +81,7 @@ public class MediaSharingTests {
         Account.shared.clear();
     }
 
-    /*@Test
+    @Test
     public void addingPictureWithoutExceptionAndDisplayFullScreen(){
         Resources resources = InstrumentationRegistry.getTargetContext().getResources();
 
@@ -109,7 +109,7 @@ public class MediaSharingTests {
 
         mockMediaSelection(imageUri);
 
-    }*/
+    }
 
     @Test
     public void fileNotFoundToastOnWrongURI(){
