@@ -75,14 +75,6 @@ public final class Event implements Serializable, Watcher, Watchee{
         proxy.addWatcher(this);
     }
 
-    /**
-     * Returns true if all images have been recovered.
-     * @return true if all the images are recovered, false otherwise.
-     */
-    public boolean isAllRecovered(){
-        verifyProxyInstantiated();
-        return proxy.isAllRecovered();
-    }
 
     /**
      * Returns the pictures of the event.
