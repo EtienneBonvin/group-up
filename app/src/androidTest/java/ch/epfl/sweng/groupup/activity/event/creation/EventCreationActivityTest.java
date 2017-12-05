@@ -7,6 +7,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import com.google.firebase.database.ThrowOnExtraProperties;
+
 import org.hamcrest.Matchers;
 import org.joda.time.LocalDateTime;
 import org.junit.Before;
@@ -44,6 +46,7 @@ import static org.hamcrest.Matchers.not;
 public class EventCreationActivityTest {
 
     private final String EVENT_NAME = "My event";
+    private final String EVENT_DESCRIPTION = "My description";
 
     @Rule
     // third parameter is set to true which means the activity is started automatically
@@ -52,6 +55,9 @@ public class EventCreationActivityTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
+
+
+
 
     @Before
     public void setup(){
@@ -77,7 +83,6 @@ public class EventCreationActivityTest {
 
         Espresso.closeSoftKeyboard();
 
-        String EVENT_DESCRIPTION = "My description";
         addDescription(EVENT_DESCRIPTION);
 
         Espresso.closeSoftKeyboard();
@@ -108,7 +113,7 @@ public class EventCreationActivityTest {
                 .perform(PickerActions.setTime(end.getHourOfDay(), end.getMinuteOfHour()));
         onView(withId(android.R.id.button1)).perform(click());
 
-        addMembers();
+        addMember("swenggroupup@gmail.com");
         Espresso.closeSoftKeyboard();
 
         try {
@@ -204,7 +209,7 @@ public class EventCreationActivityTest {
     }
 
     @Test
-    public void atLeastOneMinuteBetweenStartAndEndDate(){
+    public void atLeastOneMinuteBetweenStartAndEndDate() {
         addEventName(EVENT_NAME);
         Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
@@ -217,7 +222,7 @@ public class EventCreationActivityTest {
                 .check(matches(isDisplayed()));
         try {
             Thread.sleep(2000);
-        }catch(InterruptedException ie){
+        } catch (InterruptedException ie) {
             //The tests are stopped, nothing to do.
         }
     }
@@ -248,6 +253,21 @@ public class EventCreationActivityTest {
         }
     }
 
+    @Test
+    public void onlyAllowEmailsAsInput() throws InterruptedException {
+        addEventName(EVENT_NAME);
+        onView(withId(R.id.button_add_members)).perform(click());
+        Espresso.closeSoftKeyboard();
+        onView(withId(R.id.edit_text_add_member)).perform(typeText("Not valid email address"));
+        Espresso.closeSoftKeyboard();
+        onView(withId(R.id.image_view_add_member)).perform(click());
+
+        onView(withId(R.id.edit_text_add_member))
+                .check(matches(hasErrorText(
+                        getTargetContext().getString(R.string.members_adding_error_toast_invalid_email))));
+    }
+
+
     /**
      * Test QR Scanner
      * Does not work for Jenkins because he does not have a camera
@@ -259,7 +279,7 @@ public class EventCreationActivityTest {
         // Enter event details
         addEventName(eventName);
         Espresso.closeSoftKeyboard();
-        addMembers();
+        addMember();
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.button_add_members)).perform(click());
         Espresso.closeSoftKeyboard();
@@ -313,10 +333,10 @@ public class EventCreationActivityTest {
         return found;
     }
 
-    private void addMembers(){
+    private void addMember(String input){
         onView(withId(R.id.button_add_members)).perform(click());
         Espresso.closeSoftKeyboard();
-        onView(withId(R.id.edit_text_add_member)).perform(typeText("swenggroupup@gmail.com"));
+        onView(withId(R.id.edit_text_add_member)).perform(typeText(input));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.image_view_add_member)).perform(click());
         onView(withId(R.id.save_added_members_button)).perform(click());
