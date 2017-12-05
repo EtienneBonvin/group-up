@@ -61,12 +61,13 @@ public class SlideshowActivity extends ToolbarActivity implements Watcher{
         imageSwitcher.postDelayed(new Runnable() {
             int i = 0;
             public void run() {
-                imageSwitcher.setImageDrawable(
-                        new BitmapDrawable(getResources(), loadedImages.get(i).asBitmap())
-                );
-                i++;
-                if (loadedImages.size() < i + 1) i = 0;
-
+                if (loadedImages.size()>0) {
+                    imageSwitcher.setImageDrawable(
+                            new BitmapDrawable(getResources(), loadedImages.get(i).asBitmap())
+                    );
+                    i++;
+                    if (loadedImages.size() < i + 1) i = 0;
+                }
                 imageSwitcher.postDelayed(this, 3000);
             }
         }, 3000);
