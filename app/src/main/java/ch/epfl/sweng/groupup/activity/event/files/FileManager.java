@@ -1,16 +1,14 @@
 package ch.epfl.sweng.groupup.activity.event.files;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -36,7 +34,6 @@ import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.CONTEXT_IGNORE_SECURITY;
 
 /**
  * FileManager class.
@@ -84,9 +81,13 @@ public class FileManager implements Watcher {
         activity.findViewById(R.id.add_files).setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Intent intent = new Intent(Intent.ACTION_PICK,
+                /*Intent intent = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                activity.startActivityForResult(intent, 0);*/
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("*/*");
                 activity.startActivityForResult(intent, 0);
+
             }
         });
 
@@ -167,20 +168,50 @@ public class FileManager implements Watcher {
                         .setLayoutParams(params);
             }
 
-            Bitmap bitmap;
-            try {
+            if(targetUri.toString().contains("image")) {
 
-                bitmap = BitmapFactory.decodeStream(activity.getContentResolver().openInputStream(targetUri));
+                recoverAndUploadImage(targetUri);
 
-            } catch (FileNotFoundException e) {
-                AndroidHelper.showToast(activity.getApplicationContext(),
-                        activity.getString(R.string.file_management_toast_error_file_uri),
-                        Toast.LENGTH_SHORT);
-                return;
+            }else if(targetUri.toString().contains("video")){
+
+                recoverAndUploadVideo(targetUri);
+
             }
-            CompressedBitmap compressedBitmap = new CompressedBitmap(bitmap);
-            addImageToGrid(compressedBitmap, true);
         }
+    }
+
+    /**
+     * Recover a video from the user's phone from its uri and download it on the database.
+     * @param targetUri the uri of the video.
+     */
+    private void recoverAndUploadVideo(Uri targetUri){
+
+        CompressedBitmap thumb = new CompressedBitmap(
+                ThumbnailUtils.createVideoThumbnail(targetUri.toString(), MediaStore.Video.Thumbnails.MINI_KIND));
+        addImageToGrid(thumb, false);
+
+        //TODO: add video to firebase storage
+
+    }
+
+    /**
+     * Recover an image from the user's phone from its uri and download it on the database.
+     * @param targetUri the uri of the image.
+     */
+    private void recoverAndUploadImage(Uri targetUri){
+        Bitmap bitmap;
+        try {
+
+            bitmap = BitmapFactory.decodeStream(activity.getContentResolver().openInputStream(targetUri));
+
+        } catch (FileNotFoundException e) {
+            AndroidHelper.showToast(activity.getApplicationContext(),
+                    activity.getString(R.string.file_management_toast_error_file_uri),
+                    Toast.LENGTH_SHORT);
+            return;
+        }
+        CompressedBitmap compressedBitmap = new CompressedBitmap(bitmap);
+        addImageToGrid(compressedBitmap, true);
     }
 
     /**
