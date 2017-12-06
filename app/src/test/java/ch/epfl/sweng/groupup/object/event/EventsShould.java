@@ -251,18 +251,7 @@ public class EventsShould {
                             new HashSet<PointOfInterest>(), false);
         assertEquals(e,f);
     }
-    @Test
-    public void differentEventsAreDifferent(){
-        LocalDateTime start = LocalDateTime.now().plusDays(1);
-        LocalDateTime end = LocalDateTime.now().plusDays(2);
-        List<Member> members =  new ArrayList<>(Arrays.asList(new Member("1","Javier","Pavier","Xantet","yolo@yolo.com", null), new Member("2","asdf","Médric","Caire","yolo1@yolo.yolo", null)));
-        Event e = new Event("2","inmm", start.minusDays(3), end.minusDays(1),"Pas de travail, toujours pas de travail",
-                            members,new HashSet<PointOfInterest>(), false);
-        Event f = new Event("1","inm", start, end,"Du travail, toujours du travail",
-                            members,new HashSet<PointOfInterest>(), false);
-        assertNotEquals(e,f);
-        assertNotEquals(e,null);
-    }
+
     @Test
     public void getCorrectDateString(){
         LocalDateTime now= LocalDateTime.now();
@@ -272,4 +261,64 @@ public class EventsShould {
         assertEquals(e.getEndTimeToString(), (String.format(Locale.getDefault(),"%d/%d/%d", now.getDayOfMonth(),
                 now.getMonthOfYear(),now.getYear())));
     }
+
+    @Test
+    public void EventsWithDifferentStatusAreDifferent(){
+        LocalDateTime start = LocalDateTime.now().plusDays(1);
+        LocalDateTime end = LocalDateTime.now().plusDays(2);
+        Event e = event.withStartTime(start).withEndTime(end); // future event
+        Event f = event.withStartTime(start.minusDays(4)).withEndTime(end.minusDays(3)); // past event
+
+        assertNotEquals(e,f);
+    }
+
+    @Test
+    public void EventsWithDifferentNameAreDifferent(){
+        Event e = event.withEventName("Event One");
+        Event f = event.withEventName("Event Two");
+
+        assertNotEquals(e,f);
+    }
+
+    @Test
+    public void EventsWithDifferentStartAreDifferent(){
+        LocalDateTime start = LocalDateTime.now();
+
+        // Important to keep the event status the same
+        Event e = event.withStartTime(start.plusDays(1));
+        Event f = event.withStartTime(start.plusDays(2));
+
+        assertNotEquals(e,f);
+    }
+
+    @Test
+    public void EventsWithDifferentEndAreDifferent(){
+        LocalDateTime start = LocalDateTime.now().minusDays(1);
+        LocalDateTime end = LocalDateTime.now();
+
+        // Important to keep the event status the same
+        Event e = event.withStartTime(start).withEndTime(end.plusDays(1));
+        Event f = event.withStartTime(start).withEndTime(end.plusDays(2));
+
+        assertNotEquals(e,f);
+    }
+
+    @Test
+    public void EventsWithDifferentMembersAreDifferent(){
+        Member member1 = new Member("UUID1", "Even monkeys can fly",
+                "Tester", "Test","test@test.test", null);
+        Member member2 = new Member("UUID2", "Even monkeys can fly",
+                "Tester", "Test","test@test.test", null);
+
+
+        List<Member> eventMembers = new ArrayList<>();
+        eventMembers.add(member1);
+        Event e = event.withEventMembers(eventMembers);
+        eventMembers.add(member2);
+        Event f = event.withEventMembers(eventMembers);
+
+        assertNotEquals(e,f);
+    }
+
+
 }

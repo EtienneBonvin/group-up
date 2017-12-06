@@ -48,7 +48,7 @@
     You can add a friend who does not have the application yet by entering his email address !</string>
     <string name="members_adding_button_save">Save members</string>
     <string name="members_adding_tv_members">Members : </string>
-    <string name="members_adding_invalid_email">Invalid email address !</string>
+    <string name="members_adding_error_toast_invalid_email">Invalid email address !</string>
     <string name="members_adding_tv_invite_new_members">Invite new members</string>
     <string name="members_adding_hint_invite_new_members">Email of new member</string>
     <string name="Logo_QR">Logo of the QR code</string>
@@ -72,7 +72,6 @@
     <string name="no_event_name">NO_EVENT_NAME</string>
     <string name="no_event_start_date">NO_EVENT_START_DATE</string>
     <string name="change_the_description_of_the_event">Add description of the event</string>
-    <string name="alert_dialog_title_delete_event">Deleting Event</string>
     <string name="event_description_swipe_hint">\u003C\u003C\u003C Swipe \u003E\u003E\u003E</string>
 
     <!-- Geo Location -->
@@ -82,11 +81,13 @@
         permission to use your location and camera. Do you want to do it now?</string>
     <string name="alert_dialog_yes">Yes</string>
     <string name="alert_dialog_no">No</string>
+    <string name="alert_dialog_title_delete_event">Deleting Event</string>
     <string name="title_activity_map">Map</string>
 
 
     <!-- File Management -->
     <string name="file_management_tv_description">Here you can see the files of the event and add some new ones !</string>
+    <string name="file_management_button_create_slideshow">Start Slideshow</string>
     <string name="file_management_button_add_file">Add file</string>
     <string name="file_management_toast_error_file_uri">An error occurred when recovering the media</string>
     <string name="file_management_toast_error_file_not_created">"Error While creating the file"</string>
