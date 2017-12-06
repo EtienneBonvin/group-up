@@ -33,15 +33,15 @@
         <activity android:name=".activity.login.LoginActivity" />
         <activity android:name=".activity.info.UserInformationActivity" />
         <activity android:name=".activity.event.listing.EventListingActivity" />
-        <activity
-            android:name=".activity.event.creation.EventCreationActivity"
-            android:windowSoftInputMode="adjustPan"
-            />
+        <activity android:name=".activity.event.creation.EventCreationActivity"
+            android:windowSoftInputMode="stateAlwaysHidden">
+        </activity>
         <activity android:name=".activity.settings.SettingsActivity" />
         <activity android:name=".activity.toolbar.ToolbarActivity" />
         <activity android:name=".activity.event.description.EventDescriptionActivity"
             android:label="@string/title_activity_map"/>
         <activity android:name=".activity.event.creation.MembersAddingActivity" />
+        <activity android:name=".activity.event.files.SlideshowActivity"/>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

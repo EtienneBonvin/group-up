@@ -54,8 +54,8 @@ public final class AndroidHelper {
                                         String message,
                                         String
                                                 buttonText) {
-        AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AboutDialog)).create();
-
+        AlertDialog alertDialog =
+                new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AboutDialog)).create();
         alertDialog.setTitle(title);
         alertDialog.setMessage(message);
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL,

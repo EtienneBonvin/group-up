@@ -64,7 +64,7 @@ public class FileManager implements Watcher {
         initializeTakePicture();
 
         Intent i = activity.getIntent();
-        int eventIndex = i.getIntExtra(activity.getString(R.string.event_listing_extraIndex), -1);
+        final int eventIndex = i.getIntExtra(activity.getString(R.string.event_listing_extraIndex), -1);
         if (eventIndex > -1) {
             //!!!Order the events !!!
             event = Account.shared.getEvents().get(eventIndex);
@@ -85,6 +85,18 @@ public class FileManager implements Watcher {
                 activity.startActivityForResult(intent, 0);
             }
         });
+
+        // Set onClickListener to create aftermovie
+        activity.findViewById(R.id.create_aftermovie).setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View arg0) {
+                Intent i = new Intent(activity, SlideshowActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                        Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.putExtra(activity.getString(R.string.event_listing_extraIndex), eventIndex);
+                activity.startActivity(i);
+            }});
 
         // Set the GridLayout and initially get the height and width of the rows and columns.
         final GridLayout grid = activity.findViewById(R.id.image_grid);
@@ -294,7 +306,7 @@ public class FileManager implements Watcher {
 
         if(addToDatabase)
             event.addPicture(Account.shared.getUUID().getOrElse("Default ID"),
-                    new CompressedBitmap(trimed));
+                    bitmap);
     }
 
     /**

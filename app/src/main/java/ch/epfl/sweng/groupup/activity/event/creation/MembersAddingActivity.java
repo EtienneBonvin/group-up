@@ -124,7 +124,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
         initListeners();
         restoreState();
 
-        // contains UUID and displayName seperated by ","
+        // contains UUID and displayName separated by ","
         String[] decoded = rawResult.getText().split(",");
         if (decoded.length != 2 || decoded[0].length() == 0){
                 throw new IllegalArgumentException("Decoded information not proper.");
@@ -138,7 +138,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
     }
 
     /**
-     * Describe the behavior of the app when the back button is pressed while using the QR scanner
+     * Describe the behavior of the app when the back button
      */
     @Override
     public void onBackPressed() {
@@ -147,6 +147,8 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
             setContentView(R.layout.members_adding);
             initListeners();
             restoreState();
+        } else {
+            returnToEventCreation();
         }
     }
 

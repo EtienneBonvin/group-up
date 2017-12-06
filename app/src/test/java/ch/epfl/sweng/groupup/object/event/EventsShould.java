@@ -207,12 +207,10 @@ public class EventsShould {
     public void equalsEventsAreEquals(){
         assertEquals(current,current);
     }
-
-    @Test
+  @Test
     public void differentEventsAreDifferent(){
         assertNotEquals(past,future);
     }
-
     @Test
     public void getCorrectDateString(){
         LocalDateTime now= LocalDateTime.now();
@@ -222,4 +220,5 @@ public class EventsShould {
         assertEquals(e.getEndTimeToString(),String.format(Locale.getDefault(),"%02d/%02d/%d %d:%02d", now.getDayOfMonth(),
                 now.getMonthOfYear(),now.getYear(), now.getHourOfDay(), now.getMinuteOfHour()));
     }
+
 }

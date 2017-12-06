@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.activity.event.File;
+package ch.epfl.sweng.groupup.activity.event.file;
 
 import android.app.Activity;
 import android.app.Instrumentation;
@@ -57,6 +57,7 @@ public class MediaSharingTests {
 
     @Before
     public void goToFileManagement(){
+        Account.shared.clear();
         Database.setUpDatabase();
         Database.setUpEventListener(new ValueEventListener() {
             @Override
@@ -70,8 +71,7 @@ public class MediaSharingTests {
             }
         });
         createEvent();
-        onView(withParent(withId(R.id.linear_layout_event_list)))
-                .perform(click());
+        onView(withParent(withId(R.id.linear_layout_event_list))).perform(click());
         onView(withId(R.id.swipe_bar))
                 .perform(swipeLeft());
     }
@@ -151,6 +151,25 @@ public class MediaSharingTests {
 
         onView(withParent(withId(R.id.image_grid)))
                 .check(doesNotExist());
+    }
+
+    @Test
+    public void openSlideShowView(){
+        Resources resources = InstrumentationRegistry.getTargetContext().getResources();
+
+        Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                resources.getResourcePackageName(R.mipmap.ic_launcher) + '/' +
+                resources.getResourceTypeName(R.mipmap.ic_launcher) + '/' +
+                resources.getResourceEntryName(R.mipmap.ic_launcher));
+
+        mockMediaSelection(imageUri);
+
+        onView(withParent(withId(R.id.image_grid)))
+                .check(matches(isDisplayed()));
+
+        onView(withId(R.id.create_aftermovie)).perform(click());
+
+        onView(withId(R.id.imageSwitcher)).check(matches(isDisplayed()));
     }
 
     private void mockWrongSelection(Uri imageUri){
