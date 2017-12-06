@@ -3,6 +3,7 @@ package ch.epfl.sweng.groupup.activity.event.listing;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
@@ -132,7 +133,9 @@ public class EventListingActivity extends ToolbarActivity {
             eventButton.setText(String.format(Locale.getDefault(), "%s | %d/%d - %d/%d", e.getEventName(),
                     e.getStartTime().getDayOfMonth(), e.getStartTime().getMonthOfYear(),
                     e.getEndTime().getDayOfMonth(), e.getEndTime().getMonthOfYear()));
-            eventButton.setBackgroundColor(getResources().getColor(R.color.primaryLightColor));
+
+            eventButton.setBackgroundResource(R.drawable.buttom_gradient);
+
             eventButton.setCompoundDrawablePadding(2);
             final int indexToPass = offset;
 
