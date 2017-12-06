@@ -8,9 +8,12 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+
+import org.joda.time.LocalDateTime;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -108,7 +111,7 @@ public class EventListingActivity extends ToolbarActivity {
      */
     private void initializeVariables() {
         linearLayout = findViewById(R.id.linear_layout_event_list);
-        heightInSp = Math.round(100 * getResources().getDisplayMetrics().scaledDensity);
+        heightInSp = Math.round(90 * getResources().getDisplayMetrics().scaledDensity);
         // Fixed height, best would be to create a dynamical height so it works for all screens
     }
 
@@ -127,12 +130,15 @@ public class EventListingActivity extends ToolbarActivity {
         }
             askForInvitation();
         for (Event e : events) {
+            LocalDateTime start = e.getStartTime();
+            LocalDateTime end = e.getEndTime();
             Button eventButton = new Button(this);
             eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
                     MATCH_PARENT, heightInSp));
-            eventButton.setText(String.format(Locale.getDefault(), "%s | %d/%d - %d/%d", e.getEventName(),
-                    e.getStartTime().getDayOfMonth(), e.getStartTime().getMonthOfYear(),
-                    e.getEndTime().getDayOfMonth(), e.getEndTime().getMonthOfYear()));
+            eventButton.setText(String.format(Locale.getDefault(), "%s \n%d.%d. %d:%d - %d.%d. %d:%d", e.getEventName(),
+                    start.getDayOfMonth(), start.getMonthOfYear(), start.getHourOfDay(), start.getMinuteOfHour(),
+                    end.getDayOfMonth(), end.getMonthOfYear(), end.getHourOfDay(), end.getMinuteOfHour()));
+            eventButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 
             eventButton.setBackgroundResource(R.drawable.buttom_gradient);
 

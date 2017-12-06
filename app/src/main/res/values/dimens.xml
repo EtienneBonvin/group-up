@@ -5,6 +5,6 @@
     <dimen name="normal_header_size">24dp</dimen>
 
     <!-- text sizes -->
-    <dimen name="large_header_size">36sp</dimen>
+    <dimen name="large_header_size">32sp</dimen>
     <dimen name="normal_text_size">18sp</dimen>
 </resources>
