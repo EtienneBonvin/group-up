@@ -198,7 +198,7 @@ public class FileManager implements Watcher {
         String realpath= getRealPathFromURI(targetUri);
         addVideoToGrid(realpath);
         File file= new File(realpath);
-        Log.d("FILE STRING", file.toString());
+        Log.d("FILESTRING", file.toString());
         event.addVideo(Account.shared.getUUID().getOrElse("Default ID"),file);
     }
     /**
