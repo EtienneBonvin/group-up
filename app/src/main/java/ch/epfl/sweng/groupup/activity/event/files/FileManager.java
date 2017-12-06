@@ -1,14 +1,18 @@
 package ch.epfl.sweng.groupup.activity.event.files;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -87,7 +91,6 @@ public class FileManager implements Watcher {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("*/*");
                 activity.startActivityForResult(intent, 0);
-
             }
         });
 
@@ -101,9 +104,9 @@ public class FileManager implements Watcher {
                 container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 columnWidth = container.getMeasuredWidth() / COLUMNS;
                 rowHeight = container.getMeasuredHeight() / ROWS;
-
             }
         });
+
         ViewGroup.LayoutParams params = grid.getLayoutParams();
         params.height = rowHeight;
         grid.setLayoutParams(params);
@@ -169,11 +172,11 @@ public class FileManager implements Watcher {
             }
 
             if(targetUri.toString().contains("image")) {
-
+                Log.d("URIPHOTO", targetUri.toString());
                 recoverAndUploadImage(targetUri);
 
-            }else if(targetUri.toString().contains("video")){
-
+            }else {
+                Log.d("URIVIDEO", targetUri.toString());
                 recoverAndUploadVideo(targetUri);
 
             }
@@ -181,17 +184,32 @@ public class FileManager implements Watcher {
     }
 
     /**
-     * Recover a video from the user's phone from its uri and download it on the database.
+     * Recover a video from the user's phone from its uri and upload it on the database.
      * @param targetUri the uri of the video.
      */
     private void recoverAndUploadVideo(Uri targetUri){
-
-        CompressedBitmap thumb = new CompressedBitmap(
-                ThumbnailUtils.createVideoThumbnail(targetUri.toString(), MediaStore.Video.Thumbnails.MINI_KIND));
+        String realpath=getRealPathFromURI(targetUri);
+      CompressedBitmap thumb = new CompressedBitmap(
+                ThumbnailUtils.createVideoThumbnail(realpath, MediaStore.Video.Thumbnails.MINI_KIND));
         addImageToGrid(thumb, false);
 
         //TODO: add video to firebase storage
-
+        File file= new File(realpath);
+        Log.d("FILE STRING", file.toString());
+        event.addVideo(Account.shared.getUUID().getOrElse("Default ID"),file);
+    }
+    /**
+     * Getting the real filepath
+     */
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
+        CursorLoader loader = new CursorLoader(activity.getApplicationContext(), contentUri, proj, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String result = cursor.getString(column_index);
+        cursor.close();
+        return result;
     }
 
     /**

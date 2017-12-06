@@ -1,7 +1,10 @@
 package ch.epfl.sweng.groupup.object.event;
 
+import android.util.Log;
+
 import org.joda.time.LocalDateTime;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +31,7 @@ public final class Event implements Serializable, Watcher, Watchee{
     private final String description;
     private final List<Member> eventMembers;
     private List<CompressedBitmap> eventImages;
+    private List<File> eventVideos; //is it a good idea to have a File ?
     private final Set<PointOfInterest> pointsOfInterest;
     private FirebaseFileProxy proxy;
     private Set<Watcher> watchers;
@@ -46,6 +50,7 @@ public final class Event implements Serializable, Watcher, Watchee{
         this.description = description;
         this.eventMembers = Collections.unmodifiableList(new ArrayList<>(eventMembers));
         eventImages = new ArrayList<>();
+        eventVideos=new ArrayList<>();
         watchers = new HashSet<>();
         this.invitation=invitation;
         this.pointsOfInterest = new HashSet<>();
@@ -62,6 +67,7 @@ public final class Event implements Serializable, Watcher, Watchee{
         this.eventMembers = Collections.unmodifiableList(new ArrayList<>(eventMembers));
         this.invitation = invitation;
         eventImages = new ArrayList<>();
+        eventVideos=new ArrayList<>();
         watchers = new HashSet<>();
         this.pointsOfInterest = Collections.unmodifiableSet(
                 new HashSet<>(pointsOfInterest));
@@ -95,6 +101,13 @@ public final class Event implements Serializable, Watcher, Watchee{
         verifyProxyInstantiated();
         eventImages.add(bitmap);
         proxy.uploadFile(uuid, bitmap);
+    }
+
+    public void addVideo(String uuid, File file){
+        Log.d("STRING TO THE FILE", file.toString());
+        verifyProxyInstantiated();
+        eventVideos.add(file);
+        proxy.uploadFile(uuid,file);
     }
 
     /**
