@@ -7,6 +7,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import com.google.firebase.database.ThrowOnExtraProperties;
+
 import org.hamcrest.Matchers;
 import org.joda.time.LocalDateTime;
 import org.junit.Before;
@@ -14,9 +16,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.SimpleTimeZone;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.lib.Optional;
@@ -27,6 +31,7 @@ import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 
 import static android.support.test.InstrumentationRegistry.getTargetContext;
+import static android.support.test.espresso.Espresso.closeSoftKeyboard;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -35,15 +40,19 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 public class EventCreationActivityTest {
 
     private final String EVENT_NAME = "My event";
+    private final String EVENT_DESCRIPTION = "My description";
+    private final String EVENT_MEMBER = "swenggroupup@gmail.com";
 
     @Rule
     // third parameter is set to true which means the activity is started automatically
@@ -52,6 +61,7 @@ public class EventCreationActivityTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
+
 
     @Before
     public void setup(){
@@ -74,14 +84,8 @@ public class EventCreationActivityTest {
         expectedMembers.add(emptyMember.withUUID(Account.shared.getUUID().getOrElse("Default UUID")));
 
         addEventName(EVENT_NAME);
-
-        Espresso.closeSoftKeyboard();
-
-        String EVENT_DESCRIPTION = "My description";
         addDescription(EVENT_DESCRIPTION);
-
-        Espresso.closeSoftKeyboard();
-
+        
         LocalDateTime start = new LocalDateTime(2099, 1, 6, 9,
                 0, 0, 0);
         LocalDateTime end = start.plusDays(4);
@@ -108,8 +112,8 @@ public class EventCreationActivityTest {
                 .perform(PickerActions.setTime(end.getHourOfDay(), end.getMinuteOfHour()));
         onView(withId(android.R.id.button1)).perform(click());
 
-        addMembers();
-        Espresso.closeSoftKeyboard();
+
+        addMember(EVENT_MEMBER);
 
         try {
             Thread.sleep(2000);
@@ -131,11 +135,23 @@ public class EventCreationActivityTest {
         Account.shared.clear();
     }
 
+    /**
+     * Tests if members which previously were added are correctly displayed if you enter members adding view again
+     * covers the restoreState code
+     */
+    @Test
+    public void correctlyDisplayAlreadyAddedMembers(){
+        addMember(EVENT_MEMBER);
+
+        // Check that already added members get displayed correctly
+        onView(withId(R.id.button_add_members)).perform(click());
+        onView(withId(R.id.members_list)).check(matches(withChild(withChild(withText((EVENT_MEMBER))))));
+    }
+
     @Test
     public void noEventCreatedOnEmptyEventName(){
 
         addEventName("");
-        Espresso.closeSoftKeyboard();
         onView(withId(R.id.save_new_event_button)).perform(click());
         onView(withId(R.id.ui_edit_event_name))
                 .check(matches(hasErrorText(
@@ -151,7 +167,6 @@ public class EventCreationActivityTest {
     public void noEventCreatedOnTooLongName() {
         addEventName("This event name should be way too long for the event creator to accept it"+
                 "I should not be able to tell my life in the event name");
-        Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 4, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_new_event_button)).perform(click());
@@ -168,7 +183,6 @@ public class EventCreationActivityTest {
     @Test
     public void dateWellComparedYear1(){
         addEventName(EVENT_NAME);
-        Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2099, 5, 5, 5, 5);
         onView(withId(R.id.save_new_event_button)).perform(click());
@@ -185,9 +199,8 @@ public class EventCreationActivityTest {
     }
 
     @Test
-    public void noCreationOnstartDateBeforeEndDate(){
+    public void noCreationOnStartDateBeforeEndDate(){
         addEventName(EVENT_NAME);
-        Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 4, 5, 5, 5);
         onView(withId(R.id.save_new_event_button)).perform(click());
@@ -204,9 +217,8 @@ public class EventCreationActivityTest {
     }
 
     @Test
-    public void atLeastOneMinuteBetweenStartAndEndDate(){
+    public void atLeastOneMinuteBetweenStartAndEndDate() {
         addEventName(EVENT_NAME);
-        Espresso.closeSoftKeyboard();
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.save_new_event_button)).perform(click());
@@ -217,7 +229,7 @@ public class EventCreationActivityTest {
                 .check(matches(isDisplayed()));
         try {
             Thread.sleep(2000);
-        }catch(InterruptedException ie){
+        } catch (InterruptedException ie) {
             //The tests are stopped, nothing to do.
         }
     }
@@ -230,7 +242,6 @@ public class EventCreationActivityTest {
         int year = now.getYear() - 1;
 
         addEventName(EVENT_NAME);
-        Espresso.closeSoftKeyboard();
         onView(withId(R.id.button_start_date)).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
                 .perform(PickerActions.setDate(year, month, day));
@@ -249,6 +260,23 @@ public class EventCreationActivityTest {
     }
 
     /**
+     * Check if an error message appears if the user enters a string which is not an email address
+     * @throws InterruptedException
+     */
+    @Test
+    public void onlyAllowEmailsAsInput() throws InterruptedException {
+        addEventName(EVENT_NAME);
+        onView(withId(R.id.button_add_members)).perform(click());
+        onView(withId(R.id.edit_text_add_member)).perform(typeText("Not valid email address"));
+        onView(withId(R.id.image_view_add_member)).perform(click());
+
+        onView(withId(R.id.edit_text_add_member))
+                .check(matches(hasErrorText(
+                        getTargetContext().getString(R.string.members_adding_error_toast_invalid_email))));
+    }
+
+
+    /**
      * Test QR Scanner
      * Does not work for Jenkins because he does not have a camera
      */
@@ -259,7 +287,7 @@ public class EventCreationActivityTest {
         // Enter event details
         addEventName(eventName);
         Espresso.closeSoftKeyboard();
-        addMembers();
+        addMember();
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.button_add_members)).perform(click());
         Espresso.closeSoftKeyboard();
@@ -313,10 +341,9 @@ public class EventCreationActivityTest {
         return found;
     }
 
-    private void addMembers(){
+    private void addMember(String input){
         onView(withId(R.id.button_add_members)).perform(click());
-        Espresso.closeSoftKeyboard();
-        onView(withId(R.id.edit_text_add_member)).perform(typeText("swenggroupup@gmail.com"));
+        onView(withId(R.id.edit_text_add_member)).perform(typeText(input));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.image_view_add_member)).perform(click());
         onView(withId(R.id.save_added_members_button)).perform(click());
@@ -325,11 +352,13 @@ public class EventCreationActivityTest {
     private void addEventName(String name){
         onView(withId(R.id.ui_edit_event_name)).perform(clearText());
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
+        Espresso.closeSoftKeyboard();
     }
 
     private void addDescription(String description){
         onView(withId(R.id.edit_text_description)).perform(clearText());
         onView(withId(R.id.edit_text_description)).perform(typeText(description));
+        Espresso.closeSoftKeyboard();
     }
 }
 
