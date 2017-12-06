@@ -91,6 +91,10 @@ public final class Event implements Serializable, Watcher, Watchee{
         verifyProxyInstantiated();
         return new ArrayList<>(eventImages);
     }
+    public List<File> getEventVideos(){
+        verifyProxyInstantiated();
+        return new ArrayList<>(eventVideos);
+    }
 
     /**
      * Upload a picture to the event and download it on the database.
@@ -100,6 +104,7 @@ public final class Event implements Serializable, Watcher, Watchee{
     public void addPicture(String uuid, CompressedBitmap bitmap){
         verifyProxyInstantiated();
         eventImages.add(bitmap);
+        Log.d("HERE","ADD PICTURE");
         proxy.uploadFile(uuid, bitmap);
     }
 
@@ -426,9 +431,14 @@ public final class Event implements Serializable, Watcher, Watchee{
     @Override
     public void notifyWatcher() {
         verifyProxyInstantiated();
-        List<CompressedBitmap> proxyImages = proxy.getFromDatabase();
-        if(proxyImages.size() > eventImages.size())
+        List<CompressedBitmap> proxyImages = proxy.getImagesFromDatabase();
+        List<File> proxyVideos= proxy.getVideosFromDatabase();
+        if(proxyImages.size() > eventImages.size()){
             eventImages = proxyImages;
+        }
+        if (proxyVideos.size()>eventVideos.size()){
+            eventVideos=proxyVideos;
+        }
         notifyAllWatchers();
     }
 }

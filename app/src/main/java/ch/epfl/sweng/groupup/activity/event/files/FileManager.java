@@ -69,7 +69,7 @@ public class FileManager implements Watcher {
         initializeTakePicture();
 
         Intent i = activity.getIntent();
-        int eventIndex = i.getIntExtra(activity.getString(R.string.event_listing_extraIndex), -1);
+        final int eventIndex = i.getIntExtra(activity.getString(R.string.event_listing_extraIndex), -1);
         if (eventIndex > -1) {
             //!!!Order the events !!!
             event = Account.shared.getEvents().get(eventIndex);
@@ -121,6 +121,13 @@ public class FileManager implements Watcher {
                     for (CompressedBitmap bitmap : event.getPictures()) {
                         addImageToGrid(bitmap, false);
                     }
+                    //TODO addviedotoGrid
+           /*         for(File f : event.getEventVideos()){
+                        Log.d("FORLOOP", "VIDEO");
+                        Uri videoUri=Uri.fromFile(f);
+                        String realpath=getRealPathFromURI(videoUri);
+                        addVideoToGrid(realpath);
+                    }*/
                 }
             }
         });
@@ -188,12 +195,8 @@ public class FileManager implements Watcher {
      * @param targetUri the uri of the video.
      */
     private void recoverAndUploadVideo(Uri targetUri){
-        String realpath=getRealPathFromURI(targetUri);
-      CompressedBitmap thumb = new CompressedBitmap(
-                ThumbnailUtils.createVideoThumbnail(realpath, MediaStore.Video.Thumbnails.MINI_KIND));
-        addImageToGrid(thumb, false);
-
-        //TODO: add video to firebase storage
+        String realpath= getRealPathFromURI(targetUri);
+        addVideoToGrid(realpath);
         File file= new File(realpath);
         Log.d("FILE STRING", file.toString());
         event.addVideo(Account.shared.getUUID().getOrElse("Default ID"),file);
@@ -298,6 +301,12 @@ public class FileManager implements Watcher {
         imagesAdded = 0;
     }
 
+    private void addVideoToGrid(String realpath){
+        Log.d("ADDVIDEO", "TOGRID");
+        CompressedBitmap thumb = new CompressedBitmap(
+                ThumbnailUtils.createVideoThumbnail(realpath, MediaStore.Video.Thumbnails.MINI_KIND));
+        addImageToGrid(thumb, false);
+    }
     /**
      * Add an image to the grid and to the Firebase storage.
      *
@@ -390,6 +399,12 @@ public class FileManager implements Watcher {
         List<CompressedBitmap> eventPictures = event.getPictures();
         for(CompressedBitmap bitmap : eventPictures){
             addImageToGrid(bitmap, false);
+        }
+        for(File f : event.getEventVideos()){
+            Log.d("FORLOOP", "VIDEO");
+            Uri videoUri=Uri.fromFile(f);
+           // String realpath=getRealPathFromURI(videoUri);
+            addVideoToGrid(videoUri.getPath());
         }
     }
 
