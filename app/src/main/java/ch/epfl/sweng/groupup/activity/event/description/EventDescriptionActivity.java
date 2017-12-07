@@ -341,7 +341,13 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         };
     }
 
-
+    /**
+     * @param latLng the LatLng coordinates of the new point of interest.
+     * @param titleEditText the title of the new point of interest.
+     * @param descriptionEditText the description of the new point of interest.
+     * @return the method to be invoked when the add button is pushed
+     * A method to create the new point of interest when the add button is pushed by the user.
+     */
     private DialogInterface.OnClickListener getCreatePositiveListener(final LatLng latLng,
                                                                       final EditText titleEditText,
                                                                       final EditText descriptionEditText) {
@@ -363,7 +369,11 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         };
     }
 
-
+    /**
+     * @return the method to be invoked when the cancel button is pushed
+     * A method that closes the dialog with the user when the cancel button
+     * is pushed by the user.
+     */
     private DialogInterface.OnClickListener getNegativeListener() {
         return new DialogInterface.OnClickListener() {
             @Override
