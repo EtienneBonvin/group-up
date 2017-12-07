@@ -68,7 +68,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                         if (!emailCheck(memberEmail.getText().toString())){
                             memberEmail.setError(getString(R.string.members_adding_error_toast_invalid_email));
                         } else if(memberEmail.getText().toString().equals(Account.shared.getEmail().getOrElse("Default Email"))){
-                            memberEmail.setError(getString(R.string.event_cration_error_cant_add_yourself));
+                            memberEmail.setError(getString(R.string.event_creation_error_cant_add_yourself));
                         } else{
                             MemberRepresentation newRep = new MemberRepresentation(memberEmail.getText().toString());
                             addNewMember(newRep);
@@ -130,7 +130,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                 throw new IllegalArgumentException("Decoded information not proper.");
         }
         if(decoded[0].equals(Account.shared.getUUID().getOrElse("Default UUID"))){
-            showToast(this, getString(R.string.event_cration_error_cant_add_yourself), Toast.LENGTH_SHORT);
+            showToast(this, getString(R.string.event_creation_error_cant_add_yourself), Toast.LENGTH_SHORT);
         }else {
             MemberRepresentation newRep = new MemberRepresentation(decoded[0], decoded[1]);
             addNewMember(newRep);
