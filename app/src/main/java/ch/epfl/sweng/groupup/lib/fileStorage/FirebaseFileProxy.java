@@ -13,8 +13,6 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.joda.time.LocalDate;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -108,30 +106,28 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
     }
 
     /**
-     * Removes all images a member uploaded on the database.
+     * Removes all files a member uploaded on the database.
      * @param uuid the uuid of the member.
      */
-    public void removeImageFromUser(String uuid){
-        removeOneImageFromUser(uuid, 0);
+    public void removeFilesFromUser(String uuid){
+        removeOneFileFromUser(uuid, 0);
     }
 
-    //TODO removeVideoFromUser
     /**
-     * Remove the index-th image uploaded by the user.
+     * Remove the index-th file uploaded by the user.
      * @param uuid the uuid of the member.
      * @param index the index of the image to remove.
      */
-    private void removeOneImageFromUser(final String uuid, final int index){
+    private void removeOneFileFromUser(final String uuid, final int index){
         StorageReference imageRef = storageRef.child(event.getUUID()+"/"+uuid+"/"+index);
 
         imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                removeOneImageFromUser(uuid, index + 1);
+                removeOneFileFromUser(uuid, index + 1);
             }
         });
     }
-//TODO removeOneVideoFromUser
     /**
      * Kill the proxy, no other operations will be emitted from it.
      */
@@ -140,7 +136,6 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
     }
 
     private void effectivelyUploadFile(String uuid, CompressedBitmap bitmap){
-        Log.d("UPLOAD","IMAGE");
         final Counter memberCount = memberCounter.get(uuid);
         StorageReference imageRef = storageRef.child(event.getUUID()+"/"+uuid+"/"+memberCount.getCount());
         imageRef.putBytes(bitmap.asByteArray())
@@ -160,14 +155,13 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
                 e.printStackTrace();
             }
         });
-        /* StorageMetadata metadata = new StorageMetadata.Builder()
+         StorageMetadata metadata = new StorageMetadata.Builder()
                 .setContentType("image/jpg")
                 .build();
-        imageRef.updateMetadata(metadata);*/
+        imageRef.updateMetadata(metadata);
     }
 
     private void effectivelyUploadFile(String uuid, File file){
-        //TODO
         final Counter memberCount=memberCounter.get(uuid);
         Uri uri = Uri.fromFile(file);
         StorageReference videoRef = storageRef.child(event.getUUID()+"/"+uuid+"/"+memberCount.getCount());
@@ -230,7 +224,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
                     @Override
                     public void onSuccess(final StorageMetadata metadata) {
                         String contentType = metadata.getContentType();
-                        if (contentType.equals("image/jpeg")) { //TODO : CHECK CONDITION
+                        if (contentType.contains("image")) {
                             fileRef.getBytes(Long.MAX_VALUE)
                                     .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                         @Override
@@ -249,16 +243,17 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
                                             ticker.tick(false);
                                         }
                                     });
-                        } else {
+                        } else if (contentType.contains("video")){
                             try {
-                                final File localFile = File.createTempFile("groupup"+metadata.getName(), ".mp4");
+                               //TODO Store locally to avoid data consumption
+                                String extension="."+contentType.substring(contentType.lastIndexOf('/')+1);
+                                final File localFile = File.createTempFile("groupUp"+metadata.getName(), ".mp4");
                                 fileRef.getFile(localFile)
                                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                             @Override
                                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                                 //Video
                                                 recoveredVideos.add(localFile);
-                                                Log.d("RECOVEREDVIDEO", recoveredVideos.toString());
                                                 memberCount.increment();
                                                 notifyAllWatchers();
                                                 ticker.tick(true);
@@ -274,7 +269,6 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {

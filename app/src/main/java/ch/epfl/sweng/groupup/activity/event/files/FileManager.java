@@ -12,7 +12,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -121,13 +120,8 @@ public class FileManager implements Watcher {
                     for (CompressedBitmap bitmap : event.getPictures()) {
                         addImageToGrid(bitmap, false);
                     }
-                    //TODO addviedotoGrid
-           /*         for(File f : event.getEventVideos()){
-                        Log.d("FORLOOP", "VIDEO");
-                        Uri videoUri=Uri.fromFile(f);
-                        String realpath=getRealPathFromURI(videoUri);
-                        addVideoToGrid(realpath);
-                    }*/
+                    //TODO addvideotoGrid, on click listener to play the videoView
+
                 }
             }
         });
@@ -179,11 +173,9 @@ public class FileManager implements Watcher {
             }
 
             if(targetUri.toString().contains("image")) {
-                Log.d("URIPHOTO", targetUri.toString());
                 recoverAndUploadImage(targetUri);
 
             }else {
-                Log.d("URIVIDEO", targetUri.toString());
                 recoverAndUploadVideo(targetUri);
 
             }
@@ -198,7 +190,6 @@ public class FileManager implements Watcher {
         String realpath= getRealPathFromURI(targetUri);
         addVideoToGrid(realpath);
         File file= new File(realpath);
-        Log.d("FILESTRING", file.toString());
         event.addVideo(Account.shared.getUUID().getOrElse("Default ID"),file);
     }
     /**
@@ -235,6 +226,7 @@ public class FileManager implements Watcher {
         addImageToGrid(compressedBitmap, true);
     }
 
+    //TODO TAKE VIDEOS FROM APP
     /**
      * Initialize the camera button and open the camera
      */
@@ -302,7 +294,6 @@ public class FileManager implements Watcher {
     }
 
     private void addVideoToGrid(String realpath){
-        Log.d("ADDVIDEO", "TOGRID");
         CompressedBitmap thumb = new CompressedBitmap(
                 ThumbnailUtils.createVideoThumbnail(realpath, MediaStore.Video.Thumbnails.MINI_KIND));
         addImageToGrid(thumb, false);
@@ -401,7 +392,6 @@ public class FileManager implements Watcher {
             addImageToGrid(bitmap, false);
         }
         for(File f : event.getEventVideos()){
-            Log.d("FORLOOP", "VIDEO");
             Uri videoUri=Uri.fromFile(f);
            // String realpath=getRealPathFromURI(videoUri);
             addVideoToGrid(videoUri.getPath());
