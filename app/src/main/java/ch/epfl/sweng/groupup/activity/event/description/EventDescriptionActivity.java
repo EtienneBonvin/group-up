@@ -284,7 +284,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
 
     /**
      * @param context the application context.
-     * @return callback that the map has finished rendering.
+     * @return callback interface for when the map has finished rendering.
      * When the map has has finished rendering, show a toast with instructions for the user
      * when the swipe bar is touched.
      */
@@ -300,7 +300,11 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         };
     }
 
-    
+    /**
+     * @return callback for when the user long presses on the map
+     * Creates the dialog for the user that shows when the user longclicks on the map,
+     * i.e. the fields to fill in and then accept/decline to add a new point of interest
+     */
     private GoogleMap.OnMapLongClickListener getMapLongClickListener() {
         return new GoogleMap.OnMapLongClickListener() {
             @Override
