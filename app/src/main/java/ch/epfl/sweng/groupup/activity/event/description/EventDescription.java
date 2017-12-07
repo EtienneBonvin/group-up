@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -52,8 +53,7 @@ public class EventDescription {
             eventToDisplay = null;
         }
 
-        final int maxName = 50;
-        activity.getWindow().setSoftInputMode(
+       activity.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
         initializeField();
@@ -101,7 +101,7 @@ public class EventDescription {
                     public void onClick(View view) {
                         String name= displayEventName.getText().toString();
                         String description = displayEventDescription.getText().toString();
-                        if (name.length()>maxName){
+                        if (name.length()> EventCreationActivity.INPUT_MAX_LENGTH){
                             displayEventName.setError(
                                     activity.getString(R.string.event_creation_toast_event_name_too_long));
                         } else if (name.length() == 0){
