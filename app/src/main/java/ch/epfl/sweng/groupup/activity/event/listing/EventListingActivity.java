@@ -31,6 +31,7 @@ import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
+import ch.epfl.sweng.groupup.object.event.EventStatus;
 
 /**
  * EventListing class
@@ -135,12 +136,17 @@ public class EventListingActivity extends ToolbarActivity {
             Button eventButton = new Button(this);
             eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
                     MATCH_PARENT, heightInSp));
-            eventButton.setText(String.format(Locale.getDefault(), "%s \n%d.%d. %d:%d - %d.%d. %d:%d", e.getEventName(),
+            eventButton.setText(String.format(Locale.getDefault(), "%s \n%d.%d. %d:%02d - %d.%d. %d:%02d", e.getEventName(),
                     start.getDayOfMonth(), start.getMonthOfYear(), start.getHourOfDay(), start.getMinuteOfHour(),
                     end.getDayOfMonth(), end.getMonthOfYear(), end.getHourOfDay(), end.getMinuteOfHour()));
             eventButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 
-            eventButton.setBackgroundResource(R.drawable.buttom_gradient);
+            eventButton.setPadding(getResources().getDimensionPixelSize(R.dimen.default_gap),0,getResources().getDimensionPixelSize(R.dimen.default_gap), 0);
+            if (e.getEventStatus().equals(EventStatus.CURRENT)){
+                eventButton.setBackgroundResource(R.drawable.buttom_gradient_current);
+            } else {
+                eventButton.setBackgroundResource(R.drawable.buttom_gradient);
+            }
 
             eventButton.setCompoundDrawablePadding(2);
             final int indexToPass = offset;
