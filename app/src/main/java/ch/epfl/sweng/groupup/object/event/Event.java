@@ -132,8 +132,8 @@ public final class Event implements Serializable, Watcher, Watchee{
 
     public String getStartTimeToString(){
         LocalDateTime date =getStartTime();
-        return String.format(Locale.getDefault(),"%d/%d/%d", date.getDayOfMonth(),
-                date.getMonthOfYear(),date.getYear());
+        return String.format(Locale.getDefault(),"%02d/%02d/%d %d:%02d", date.getDayOfMonth(),
+                date.getMonthOfYear(),date.getYear(), date.getHourOfDay(), date.getMinuteOfHour());
     }
     /**
      * Getter for the end date and time
@@ -145,8 +145,8 @@ public final class Event implements Serializable, Watcher, Watchee{
 
     public String getEndTimeToString(){
         LocalDateTime date =getEndTime();
-        return String.format(Locale.getDefault(),"%d/%d/%d", date.getDayOfMonth(),
-                date.getMonthOfYear(),date.getYear());
+        return String.format(Locale.getDefault(),"%02d/%02d/%d %d:%02d", date.getDayOfMonth(),
+                date.getMonthOfYear(),date.getYear(), date.getHourOfDay(), date.getMinuteOfHour());
     }
 
     /**
@@ -340,12 +340,9 @@ public final class Event implements Serializable, Watcher, Watchee{
 
         Event event = (Event) o;
 
-        if (!eventName.equals(event.eventName)) return false;
-        if (!this.getEventStatus().equals(event.getEventStatus())) return false;
-        if (!startTime.equals(event.startTime)) return false;
-        if (!endTime.equals(event.endTime)) return false;
-        if (!(UUID.equals(event.UUID))) return false;
-        return eventMembers.containsAll(event.getEventMembers()) && event
+        return eventName.equals(event.eventName) && this.getEventStatus().equals(event.getEventStatus())
+                && startTime.equals(event.startTime) && endTime.equals(event.endTime) &&
+                (UUID.equals(event.UUID)) && eventMembers.containsAll(event.getEventMembers()) && event
                 .getEventMembers().containsAll(eventMembers);
     }
 

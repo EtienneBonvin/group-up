@@ -69,9 +69,7 @@
                 </android.support.design.widget.CollapsingToolbarLayout>
             </android.support.design.widget.AppBarLayout>
 
-            <include
-                android:id="@+id/event_description"
-                layout="@layout/content_event_description"/>
+            <include layout="@layout/content_event_description"/>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/remove_event_button"

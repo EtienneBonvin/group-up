@@ -125,24 +125,11 @@ public abstract class User {
         }
 
         User user = (User) o;
-        if (!UUID.equals(user.UUID)) {
-            return false;
-        }
-        if (!displayName.equals(user.displayName)) {
-            return false;
-        }
-        if (!givenName.equals(user.givenName)) {
-            return false;
-        }
-        if (!familyName.equals(user.familyName)) {
-            return false;
-        }
-        if (!email.equals(user.email)) {
-            return false;
-        }
-        return true;
+        //Bye bye branches
+        return UUID.equals(user.UUID) && displayName.equals(user.displayName) &&
+                givenName.equals(user.givenName) && familyName.equals(user.familyName) &&
+                email.equals(user.email);
     }
-
     /**
      * Returns the location of the user.
      *
