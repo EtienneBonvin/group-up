@@ -158,15 +158,12 @@ public final class DatabaseUser {
 
     @Exclude
     Optional<Location> getOptLocation() {
-        switch (provider) {
-            case LocationManager.GPS_PROVIDER:
-                return createOptLocation();
-            case LocationManager.NETWORK_PROVIDER:
-                return createOptLocation();
-            case LocationManager.PASSIVE_PROVIDER:
-                return createOptLocation();
-            default:
-                return Optional.empty();
+        if (provider.equals(LocationManager.GPS_PROVIDER) ||
+            provider.equals(LocationManager.NETWORK_PROVIDER) ||
+            provider.equals(LocationManager.PASSIVE_PROVIDER)) {
+            return createOptLocation();
+        } else {
+            return Optional.empty();
         }
     }
 

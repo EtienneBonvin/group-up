@@ -9,6 +9,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -247,6 +249,7 @@ public class DatabaseUserShould {
 
         assertEquals(user01, user02);
         assertNotEquals(user01, null);
+        assertNotEquals(user01, new ArrayList<>());
 
         user02.givenName = "OTHER_STUFF";
         assertNotEquals(user01, user02);

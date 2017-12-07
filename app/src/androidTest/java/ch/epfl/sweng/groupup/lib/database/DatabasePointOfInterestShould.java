@@ -9,6 +9,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 
@@ -75,6 +77,7 @@ public class DatabasePointOfInterestShould {
 
         assertEquals(poi01, poi02);
         assertNotEquals(poi01, null);
+        assertNotEquals(poi01, new ArrayList<>());
 
         poi02.uuid = "OTHER_STUFF";
         assertNotEquals(poi01, poi02);
