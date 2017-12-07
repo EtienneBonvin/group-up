@@ -13,6 +13,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -90,10 +91,7 @@ public class MapActivityTest {
 
         UiObject mMarker = addMarker(R.string.poi_create_add);
 
-        Set<PointOfInterest> allMarkers = Account.shared.getEvents().get(0).getPointsOfInterest();
-        assertFalse(allMarkers.isEmpty());
-
-        deleteEvent();
+        assertMarkersNotEmpty();
     }
 
 
@@ -103,14 +101,11 @@ public class MapActivityTest {
 
         UiObject mMarker = addMarker(R.string.poi_create_cancel);
 
-        Set<PointOfInterest> allMarkers  = Account.shared.getEvents().get(0).getPointsOfInterest();
-        assertTrue(allMarkers.isEmpty());
-
-        deleteEvent();
+        assertMarkersEmpty();
     }
 
 
-    /*@Test
+    @Ignore
     public void testAddAndRemoveMarker() {
         createEvent();
 
@@ -121,15 +116,13 @@ public class MapActivityTest {
             onView(withText(R.string.poi_remove_positive)).perform(click());
             mMarker.click();
         } catch (UiObjectNotFoundException e) {
-            deleteEvent();
-            return;
         }
-        deleteEvent();
-        assertEquals(0, 1);
+
+        assertMarkersEmpty();
     }
 
 
-    @Test
+    @Ignore
     public void testAddAndNotRemoveMarker() {
         createEvent();
 
@@ -140,11 +133,10 @@ public class MapActivityTest {
             onView(withText(R.string.poi_remove_negative)).perform(click());
             mMarker.click();
         } catch (UiObjectNotFoundException e) {
-            deleteEvent();
-            assertEquals(0, 1);
         }
-        deleteEvent();
-    }*/
+
+        assertMarkersNotEmpty();
+    }
 
     private void createEvent() {
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(EVENT_NAME));
@@ -173,5 +165,19 @@ public class MapActivityTest {
         UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
 
         return uiDevice.findObject(new UiSelector().descriptionContains(MARKER_DESCRIPTION));
+    }
+
+    private void assertMarkersNotEmpty() {
+        Set<PointOfInterest> allMarkers  = Account.shared.getEvents().get(0).getPointsOfInterest();
+        assertFalse(allMarkers.isEmpty());
+
+        deleteEvent();
+    }
+
+    private void assertMarkersEmpty() {
+        Set<PointOfInterest> allMarkers  = Account.shared.getEvents().get(0).getPointsOfInterest();
+        assertTrue(allMarkers.isEmpty());
+
+        deleteEvent();
     }
 }
