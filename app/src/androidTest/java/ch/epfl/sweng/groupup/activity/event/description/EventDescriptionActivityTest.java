@@ -116,6 +116,7 @@ public class EventDescriptionActivityTest {
         Database.setUp();
         String name = "My beautiful event";
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
+        Espresso.closeSoftKeyboard();
 
         onView(withId(R.id.save_new_event_button)).perform(click());
 
@@ -124,6 +125,8 @@ public class EventDescriptionActivityTest {
         onView(withId(R.id.remove_event_button)).perform(click());
 
         onView(withText(R.string.alert_dialog_title_delete_event)).check(matches(isDisplayed()));
+        onView(withText("Continue")).perform(click());
+        Account.shared.clear();
 
     }
 }

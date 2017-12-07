@@ -113,7 +113,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/logout_button_layout"
-        android:id="@+id/QR_code_layout"
         android:layout_alignParentBottom="true">
 
         <ImageView

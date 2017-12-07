@@ -21,6 +21,7 @@ import ch.epfl.sweng.groupup.object.event.Event;
 public class ToolbarActivity extends AppCompatActivity {
 
     private static GeoLocationInterface geoLocation;
+    //Event with invitation need to be stored outside the listing activity
     protected static Set<Event> eventsToDisplay = new HashSet<>();
     private static boolean mockMap = false;
 

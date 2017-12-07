@@ -17,7 +17,6 @@ import java.util.List;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
-import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
@@ -49,7 +48,6 @@ public class EventDescription {
         Intent i = activity.getIntent();
         final int eventIndex = i.getIntExtra(activity.getString(R.string.event_listing_extraIndex), -1);
         if (eventIndex > -1) {
-            //!!!Order the events !!!
             eventToDisplay = Account.shared.getEvents().get(eventIndex);
         }else{
             eventToDisplay = null;
@@ -130,21 +128,19 @@ public class EventDescription {
      * @param eventToRemove the event to be removed from.
      */
     public static void removeEvent(Event eventToRemove) {
+        //TODO use withoutcurrentmember
         List<Member> futureMembers = new ArrayList<>(eventToRemove.getEventMembers());
         futureMembers.remove(Account.shared.toMember());
         eventToRemove = eventToRemove.withEventMembers(futureMembers);
         Account.shared.addOrUpdateEvent(eventToRemove);
         Database.update();
         List<Event> futureEventList = new ArrayList<>(Account.shared.getEvents());
-        Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>
-                ()).withCurrentEvent(Optional.<Event>empty());
+        Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>());
         futureEventList.remove(eventToRemove);
         for (Event fe : futureEventList) {
             Account.shared.addOrUpdateEvent(fe);
         }
-
         Database.update();
-
         eventToRemove.removeImagesFrom(Account.shared.getUUID().getOrElse("Default UUID"));
     }
 

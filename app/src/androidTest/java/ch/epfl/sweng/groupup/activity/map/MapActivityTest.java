@@ -41,7 +41,6 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-
 public class MapActivityTest {
 
     private final String EVENT_NAME = "Map test";

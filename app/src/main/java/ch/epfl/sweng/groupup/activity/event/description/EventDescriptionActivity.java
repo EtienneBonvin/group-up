@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.support.v4.app.ActivityCompat;
 import android.text.InputType;
 import android.view.ContextThemeWrapper;
@@ -29,8 +30,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -123,10 +126,46 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     }
 
     /**
-     * Override onDestroy method, remove the activity from the watchers of the event to avoid
+     * Override onPause method, remove the activity from the watchers of the event to avoid
      * exceptions.
      **/
     @Override
+    protected void onPause() {
+        super.onPause();
+        fileManager.close();
+    }
+
+    /**
+     * Remove the user from the Event
+     * TODO change the place of this method, it doesn't make much sense to have it here
+     */
+    public static void removeEvent(Event eventToRemove) {
+        List<Member> futureMembers = new ArrayList<>(eventToRemove.getEventMembers());
+        futureMembers.remove(Account.shared.toMember());
+        eventToRemove = eventToRemove.withEventMembers(futureMembers);
+        Account.shared.addOrUpdateEvent(eventToRemove);
+        Database.update();
+        List<Event> futureEventList = new ArrayList<>(Account.shared.getEvents());
+        Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>
+                ());
+        Log.d("FUTUREEVENTBEFORE", futureEventList.toString());
+        futureEventList.remove(eventToRemove);
+        Log.d("FUTUREEVENTAFETERREMOVE", futureEventList.toString());
+        for (Event fe : futureEventList) {
+            Account.shared.addOrUpdateEvent(fe);
+        }
+        Database.update();
+    }
+
+    public void onStop() {
+        super.onStop();
+        fileManager.close();
+    }
+
+    /*
+     * Override onDestroy method, remove the activity from the watchers of the event to avoid
+     * exceptions.
+     **/
     public void onDestroy() {
         super.onDestroy();
         fileManager.close();
