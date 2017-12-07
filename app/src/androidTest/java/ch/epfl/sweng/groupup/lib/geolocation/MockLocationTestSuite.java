@@ -63,7 +63,7 @@ public class MockLocationTestSuite {
     public void canHandleOnLocationChanged() throws Exception {
         final MockLocation myTestLocation = new MockLocation();
 
-        Database.setUpDatabase();
+        Database.setUp();
         Database.setUpEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

@@ -2,6 +2,8 @@ package ch.epfl.sweng.groupup.object.map;
 
 import android.location.Location;
 
+import ch.epfl.sweng.groupup.lib.database.DatabasePointOfInterest;
+
 import static java.util.UUID.randomUUID;
 
 
@@ -162,5 +164,15 @@ public final class PointOfInterest {
         result = 31 * result + uuid.hashCode();
 
         return result;
+    }
+
+
+    /**
+     * Converts a point of interest into its database representation.
+     *
+     * @return - the database point of interest
+     */
+    public DatabasePointOfInterest toDatabasePointOfInterest() {
+        return new DatabasePointOfInterest(getUuid(), getName(), getDescription(), getLocation());
     }
 }

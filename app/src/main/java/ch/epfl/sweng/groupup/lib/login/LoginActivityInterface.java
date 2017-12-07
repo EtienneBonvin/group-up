@@ -1,9 +1,15 @@
 package ch.epfl.sweng.groupup.lib.login;
 
-import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
+import android.app.Activity;
+import android.content.Intent;
 
-public abstract class LoginActivityInterface extends ToolbarActivity {
-    abstract public void onFail();
 
-    abstract public void onSuccess();
+public interface LoginActivityInterface {
+    void onFail();
+
+    void onSuccess();
+
+    void startActivityForResult(Intent intent, int requestCode);
+
+    Activity getActivity();
 }
