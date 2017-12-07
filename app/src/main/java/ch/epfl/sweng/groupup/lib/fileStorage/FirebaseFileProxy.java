@@ -3,7 +3,6 @@ package ch.epfl.sweng.groupup.lib.fileStorage;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,6 +27,7 @@ import java.util.Set;
 import ch.epfl.sweng.groupup.activity.event.files.CompressedBitmap;
 import ch.epfl.sweng.groupup.lib.Watchee;
 import ch.epfl.sweng.groupup.lib.Watcher;
+import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
 
@@ -107,24 +107,23 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
 
     /**
      * Removes all files a member uploaded on the database.
-     * @param uuid the uuid of the member.
      */
-    public void removeFilesFromUser(String uuid){
-        removeOneFileFromUser(uuid, 0);
+    public void removeFiles(){
+        removeOneFile(0);
     }
 
     /**
      * Remove the index-th file uploaded by the user.
-     * @param uuid the uuid of the member.
      * @param index the index of the image to remove.
      */
-    private void removeOneFileFromUser(final String uuid, final int index){
-        StorageReference imageRef = storageRef.child(event.getUUID()+"/"+uuid+"/"+index);
+    private void removeOneFile(final int index){
+        StorageReference imageRef = storageRef.child(event.getUUID()+"/"+ Account.shared.getUUID()+
+                "/"+index);
 
         imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                removeOneFileFromUser(uuid, index + 1);
+                removeOneFile(index + 1);
             }
         });
     }

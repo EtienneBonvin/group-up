@@ -144,7 +144,7 @@ public class EventDescription {
 
         Database.update();
 
-        eventToRemove.removeFilesFrom(Account.shared.getUUID().getOrElse("Default UUID"));
+        eventToRemove.removeFiles();
     }
 
     /**

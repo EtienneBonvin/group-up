@@ -117,11 +117,10 @@ public final class Event implements Serializable, Watcher, Watchee{
 
     /**
      * Remove of the file storage all the files of a particular member.
-     * @param uuid the uuid of the member.
      */
-    public void removeFilesFrom(String uuid){
+    public void removeFiles(){
         verifyProxyInstantiated();
-        proxy.removeFilesFromUser(uuid);
+        proxy.removeFiles();
     }
 
     /**
