@@ -154,7 +154,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         fileManager.close();
     }
 
-    /**
+    /*
      * Override onDestroy method, remove the activity from the watchers of the event to avoid
      * exceptions.
      **/

@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayDeque;
@@ -119,9 +120,20 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
     }
 
     private void effectivelyUploadFile(String uuid, CompressedBitmap bitmap){
-        Counter memberCount = memberCounter.get(uuid);
+        final Counter memberCount = memberCounter.get(uuid);
         StorageReference imageRef = storageRef.child(event.getUUID()+"/"+uuid+"/"+memberCount.getCount());
-        imageRef.putBytes(bitmap.asByteArray());
+        imageRef.putBytes(bitmap.asByteArray())
+            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    memberCount.increment();
+                    if(!queuedUploads.isEmpty()){
+                        queuedUploads.poll().execute();
+                    }else{
+                        createAsyncDownloadTask().execute();
+                    }
+                }
+            });
     }
 
     /**
@@ -350,12 +362,14 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
                 allRecovered.set(true);
                 if (!queuedUploads.isEmpty()) {
                     queuedUploads.poll().execute();
+                } else if(!killed.get()) {
+                    createAsyncDownloadTask().execute();
                 }
             }else{
                 allRecovered.set(false);
-            }
-            if(!killed.get()) {
-                createAsyncDownloadTask().execute();
+                if(!killed.get()) {
+                    createAsyncDownloadTask().execute();
+                }
             }
         }
     }
