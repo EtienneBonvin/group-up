@@ -1,8 +1,10 @@
 package ch.epfl.sweng.groupup.lib.navigation;
 
+import android.location.Location;
+
 public class MockNavigationModel implements NavigationModelInterface {
     @Override
-    public String findRoute(double originX, double originY, double destinationX, double destinationY) {
+    public String findRoute(Location origin, Location destination) {
         return "{\n" +
                 "   \"geocoded_waypoints\" : [\n" +
                 "      {\n" +

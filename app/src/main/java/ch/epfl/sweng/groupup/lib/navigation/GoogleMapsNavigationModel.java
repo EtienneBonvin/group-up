@@ -1,5 +1,6 @@
 package ch.epfl.sweng.groupup.lib.navigation;
 
+import android.location.Location;
 import android.os.AsyncTask;
 
 import java.io.BufferedInputStream;
@@ -12,6 +13,7 @@ public final class GoogleMapsNavigationModel extends AsyncTask<URL, Void, String
     private final static String baseURL = "https://maps.googleapis.com/maps/api/directions/";
     private final static String format = "json?";
     private final static String key = "AIzaSyDtv0o9SNKJWLWt51YyYhZK0nxsR5FWMdY";
+    private final static String mode = "walking";
 
     @Override
     protected String doInBackground(URL... urls) {
@@ -40,8 +42,8 @@ public final class GoogleMapsNavigationModel extends AsyncTask<URL, Void, String
     }
 
     @Override
-    public String findRoute(double originX, double originY, double destinationX, double destinationY) throws IOException {
-        URL url = new URL(baseURL + format + "origin=" + originX + "," + originY + "&destination=" + destinationX + "," + destinationY + "&key=" + key);
+    public String findRoute(Location origin, Location destination) throws IOException {
+        URL url = new URL(baseURL + format + "origin=" + origin.getLatitude() + "," + origin.getLongitude() + "&destination=" + destination.getLatitude() + "," + destination.getLongitude() + "&key=" + key + "&mode=" + mode);
         return doInBackground(url);
     }
 }
