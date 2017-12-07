@@ -11,14 +11,17 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.text.InputType;
+import android.view.ContextThemeWrapper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -34,6 +37,7 @@ import java.util.Set;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.files.FileManager;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
+import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -47,6 +51,8 @@ import ch.epfl.sweng.groupup.object.map.PointOfInterest;
  * This activity gathers the description of an event, its map and its file management.
  */
 public class EventDescriptionActivity extends ToolbarActivity implements OnMapReadyCallback {
+
+    private static boolean swipeBarTouched;
 
     private FileManager fileManager;
 
@@ -64,6 +70,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         setContentView(R.layout.activity_event_description);
         super.initializeToolbarActivity();
 
+        swipeBarTouched = false;
+
         x1 = -1;
 
         new EventDescription(this);
@@ -80,6 +88,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 .setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
+                        swipeBarTouched = true;
+
                         switch(event.getAction())
                         {
                             case MotionEvent.ACTION_DOWN:
@@ -110,26 +120,6 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                         return true;
                     }
                 });
-    }
-
-    /**
-     * Override onPause method, remove the activity from the watchers of the event to avoid
-     * exceptions.
-     **/
-    @Override
-    protected void onPause() {
-        super.onPause();
-        fileManager.close();
-    }
-
-    /**
-     * Override onStop method, remove the activity from the watchers of the event to avoid
-     * exceptions.
-     **/
-    @Override
-    public void onStop() {
-        super.onStop();
-        fileManager.close();
     }
 
     /**
@@ -165,11 +155,11 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         if (isMapMockWanted()) {
             mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
         }
 
+        mMap.setOnMapLoadedCallback(getOnMapLoadedCallback(this));
         mMap.setOnMapLongClickListener(getMapLongClickListener());
         mMap.setOnMarkerDragListener(getMarkerDragListener());
 
@@ -243,6 +233,19 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     }
 
 
+    private GoogleMap.OnMapLoadedCallback getOnMapLoadedCallback(final Context context) {
+        return new OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                if (swipeBarTouched) {
+                    AndroidHelper.showToast(context, getString(R.string.map_activity_poi_instruction), Toast.LENGTH_LONG);
+                    mMap.setOnMapLoadedCallback(null);
+                }
+            }
+        };
+    }
+
+
     private GoogleMap.OnMapLongClickListener getMapLongClickListener() {
         return new GoogleMap.OnMapLongClickListener() {
             @Override
@@ -250,7 +253,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 Context context = EventDescriptionActivity.this;
 
                 // Dialog Builder
-                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                final AlertDialog.Builder builder =
+                        new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AboutDialog));
                 builder.setTitle(R.string.poi_dialog_title);
 
                 // Container + Child Views to enable input from the user.
@@ -318,7 +322,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 Context context = EventDescriptionActivity.this;
 
                 // Dialog Builder
-                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                final AlertDialog.Builder builder =
+                        new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AboutDialog));
                 builder.setTitle(R.string.poi_remove_title);
 
                 builder.setPositiveButton(R.string.poi_remove_positive, getRemovePositiveListener(marker));

@@ -54,7 +54,7 @@ public class MapActivityTest {
     @Before
     public void setup() {
         Account.shared.clear();
-        Database.setUpDatabase();
+        Database.setUp();
         Database.setUpEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

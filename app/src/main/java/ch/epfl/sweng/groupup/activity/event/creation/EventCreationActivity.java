@@ -50,6 +50,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
     private transient DatePickerDialog datePickerDialog;
     private transient TimePickerDialog timePickerDialog;
     private transient boolean set_start_date, set_end_date, set_start_time, set_end_time;
+    public static final int INPUT_MAX_LENGTH = 30;
 
     public static final String EXTRA_MESSAGE = "Builder";
 
@@ -257,7 +258,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
      */
     private void saveEvent(){
 
-        int INPUT_MAX_LENGTH = 50;
+
 
         EditText eventName = findViewById(R.id.ui_edit_event_name);
         if(eventName.getText().toString().length() == 0){
