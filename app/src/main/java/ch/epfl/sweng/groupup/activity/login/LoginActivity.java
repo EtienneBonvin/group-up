@@ -1,7 +1,9 @@
 package ch.epfl.sweng.groupup.activity.login;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -18,39 +20,39 @@ import ch.epfl.sweng.groupup.lib.login.MockAuth;
 
 import static ch.epfl.sweng.groupup.lib.AndroidHelper.showAlert;
 
+
 /**
  * Activity to handle the sign up / login process of the user. It either asks the user to sign up /
  * login or logs the user automatically in depending of the last state of the app.
  */
-
-public class LoginActivity extends LoginActivityInterface implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, LoginActivityInterface {
 
     private SignInButton signInButton;
     private ProgressBar progressBar;
     private GoogleAuthenticationService authService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        this.authService = new FirebaseAuthentication(getString(R.string.web_client_id),
-                                                      this,
-                                                      this,
-                                                      this);
+        this.authService = new FirebaseAuthentication(getString(R.string.web_client_id), this, this, this);
 
         initializeFields();
         setOnClickListener();
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
-        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             toggleLoading(Status.CONNECTING);
             authService.signIn();
         }
     }
+
 
     @Override
     public void onClick(View v) {
@@ -62,14 +64,16 @@ public class LoginActivity extends LoginActivityInterface implements View.OnClic
         }
     }
 
+
     @Override
     public void onFail() {
         showAlert(this /* context  */,
-                getString(R.string.title_connection_failed),
-                getString(R.string.text_firebase_login_failed),
-                getString(R.string.text_button_connection_failed));
+                  getString(R.string.title_connection_failed),
+                  getString(R.string.text_firebase_login_failed),
+                  getString(R.string.text_button_connection_failed));
         toggleLoading(Status.DISCONNECTED);
     }
+
 
     @Override
     public void onSuccess() {
@@ -79,6 +83,13 @@ public class LoginActivity extends LoginActivityInterface implements View.OnClic
                         Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
+
+    @Override
+    public Activity getActivity() {
+        return this;
+    }
+
 
     /**
      * Method used to initialize all the fields of the activity.
@@ -90,12 +101,14 @@ public class LoginActivity extends LoginActivityInterface implements View.OnClic
         progressBar.setVisibility(View.GONE);
     }
 
+
     /**
      * Method used to set up all on click listener for this activity.
      */
     private void setOnClickListener() {
         signInButton.setOnClickListener(this /* on click listener  */);
     }
+
 
     /**
      * This method toggle the GUI parts of the activity depending on the state of the connection.
@@ -112,11 +125,13 @@ public class LoginActivity extends LoginActivityInterface implements View.OnClic
         }
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         authService.onActivityResult(requestCode, data);
     }
+
 
     public void mock(boolean loginStatus, boolean logoutStatus) {
         this.authService = new MockAuth(this, loginStatus, logoutStatus);

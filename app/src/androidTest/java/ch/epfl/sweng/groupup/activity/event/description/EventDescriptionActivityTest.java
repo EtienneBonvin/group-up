@@ -16,8 +16,6 @@ import ch.epfl.sweng.groupup.object.account.Account;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -35,7 +33,7 @@ public class EventDescriptionActivityTest {
 
     @Test
     public void nameTooLong(){
-        Database.setUpDatabase();
+        Database.setUp();
         String name="aaaaaaaaaaaaaaaaaaaaaaaaaaa";
         String impossibleName="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
@@ -61,7 +59,7 @@ public class EventDescriptionActivityTest {
     /*
     @Test
     public void nameTooShort(){
-        Database.setUpDatabase();
+        Database.setUp();
         String name="U so pretty";
         String impossibleName="";
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
@@ -86,7 +84,7 @@ public class EventDescriptionActivityTest {
 
     @Test
     public void createDisplayAndChangeAnEvent() {
-        Database.setUpDatabase();
+        Database.setUp();
         String name = "My event";
         String endName = " is changed";
         String description = "has an awesome description";
@@ -115,9 +113,10 @@ public class EventDescriptionActivityTest {
 
     @Test
     public void CreateAndDisplayAlertOnDeleteEvent() {
-        Database.setUpDatabase();
+        Database.setUp();
         String name = "My beautiful event";
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
+        Espresso.closeSoftKeyboard();
 
         onView(withId(R.id.save_new_event_button)).perform(click());
 
@@ -126,6 +125,8 @@ public class EventDescriptionActivityTest {
         onView(withId(R.id.remove_event_button)).perform(click());
 
         onView(withText(R.string.alert_dialog_title_delete_event)).check(matches(isDisplayed()));
+        onView(withText("Continue")).perform(click());
+        Account.shared.clear();
 
     }
 }

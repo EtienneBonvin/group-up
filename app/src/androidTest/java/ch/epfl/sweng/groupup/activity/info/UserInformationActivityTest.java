@@ -3,7 +3,6 @@ package ch.epfl.sweng.groupup.activity.info;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,14 +11,13 @@ import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.object.account.Account;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.core.IsNot.not;
 
 @RunWith(AndroidJUnit4.class)
 public class UserInformationActivityTest {
@@ -71,19 +69,15 @@ public class UserInformationActivityTest {
                                                                    .getString(R.string.text_view_email_text)))));
     }
 
-    /* IMPLEMENTATION CHANGED, THIS IS NOW USELESS
     @Test
-    public void displayErrorToastOnQrButtonClick() throws Exception {
+    public void displayErrorToast() throws Exception {
         Account.shared.clear();
-        onView(withId(R.id.buttonDisplayQR)).perform(click());
         onView(withText(R.string.toast_unable_to_generate_qr))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                                                      .getWindow()
                                                      .getDecorView()))))
                 .check(matches(isDisplayed()));
-        onView(withId(R.id.buttonDisplayQR)).perform(click());
-        Account.shared.clear();
-    }*/
+    }
 
     /* IMPLEMENTATION CHANGED, THIS IS NOW USELESS
     @Test

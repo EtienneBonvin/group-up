@@ -66,8 +66,8 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                     public void onClick(View v) {
                         EditText memberEmail = findViewById(R.id.edit_text_add_member);
                         if (!emailCheck(memberEmail.getText().toString())){
-                            memberEmail.setError(getString(R.string.members_adding_invalid_email));
-                        } else if(memberEmail.getText().toString() == Account.shared.getEmail().getOrElse("Default Email")){
+                            memberEmail.setError(getString(R.string.members_adding_error_toast_invalid_email));
+                        } else if(memberEmail.getText().toString().equals(Account.shared.getEmail().getOrElse("Default Email"))){
                             memberEmail.setError(getString(R.string.event_cration_error_cant_add_yourself));
                         } else{
                             MemberRepresentation newRep = new MemberRepresentation(memberEmail.getText().toString());
@@ -124,12 +124,12 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
         initListeners();
         restoreState();
 
-        // contains UUID and displayName seperated by ","
+        // contains UUID and displayName separated by ","
         String[] decoded = rawResult.getText().split(",");
         if (decoded.length != 2 || decoded[0].length() == 0){
                 throw new IllegalArgumentException("Decoded information not proper.");
         }
-        if(decoded[0] == Account.shared.getUUID().getOrElse("Default UUID")){
+        if(decoded[0].equals(Account.shared.getUUID().getOrElse("Default UUID"))){
             showToast(this, getString(R.string.event_cration_error_cant_add_yourself), Toast.LENGTH_SHORT);
         }else {
             MemberRepresentation newRep = new MemberRepresentation(decoded[0], decoded[1]);
@@ -138,7 +138,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
     }
 
     /**
-     * Describe the behavior of the app when the back button is pressed while using the QR scanner
+     * Describe the behavior of the app when the back button
      */
     @Override
     public void onBackPressed() {
@@ -147,6 +147,8 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
             setContentView(R.layout.members_adding);
             initListeners();
             restoreState();
+        } else {
+            returnToEventCreation();
         }
     }
 

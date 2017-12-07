@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Html;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -14,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
-import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
@@ -47,14 +48,12 @@ public class EventDescription {
         Intent i = activity.getIntent();
         final int eventIndex = i.getIntExtra(activity.getString(R.string.event_listing_extraIndex), -1);
         if (eventIndex > -1) {
-            //!!!Order the events !!!
             eventToDisplay = Account.shared.getEvents().get(eventIndex);
         }else{
             eventToDisplay = null;
         }
 
-        final int maxName = 50;
-        activity.getWindow().setSoftInputMode(
+       activity.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
         initializeField();
@@ -66,10 +65,10 @@ public class EventDescription {
                     @Override
                     public void onClick(View v) {
 
-                        final AlertDialog alertDialog = new AlertDialog.Builder(
-                                activity).create();
+                        final AlertDialog alertDialog =
+                                new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AboutDialog)).create();
                         alertDialog.setTitle(R.string.alert_dialog_title_delete_event);
-                        alertDialog.setMessage(Html.fromHtml("<font color='#000000'>Would you " +
+                        alertDialog.setMessage(Html.fromHtml("<font color='#ffffff'>Would you " +
                                 "like to leave and delete this event?</font>"));
                         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Continue",
                                 new DialogInterface.OnClickListener() {
@@ -102,7 +101,7 @@ public class EventDescription {
                     public void onClick(View view) {
                         String name= displayEventName.getText().toString();
                         String description = displayEventDescription.getText().toString();
-                        if (name.length()>maxName){
+                        if (name.length()> EventCreationActivity.INPUT_MAX_LENGTH){
                             displayEventName.setError(
                                     activity.getString(R.string.event_creation_toast_event_name_too_long));
                         } else if (name.length() == 0){
@@ -129,21 +128,19 @@ public class EventDescription {
      * @param eventToRemove the event to be removed from.
      */
     public static void removeEvent(Event eventToRemove) {
+        //TODO use withoutcurrentmember
         List<Member> futureMembers = new ArrayList<>(eventToRemove.getEventMembers());
         futureMembers.remove(Account.shared.toMember());
         eventToRemove = eventToRemove.withEventMembers(futureMembers);
         Account.shared.addOrUpdateEvent(eventToRemove);
         Database.update();
         List<Event> futureEventList = new ArrayList<>(Account.shared.getEvents());
-        Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>
-                ()).withCurrentEvent(Optional.<Event>empty());
+        Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>());
         futureEventList.remove(eventToRemove);
         for (Event fe : futureEventList) {
             Account.shared.addOrUpdateEvent(fe);
         }
-
         Database.update();
-
         eventToRemove.removeFiles();
     }
 

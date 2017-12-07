@@ -13,26 +13,38 @@
         android:textSize="20sp"
         android:gravity="center"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/linear_layout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
 
         <Button
-            style="@style/ButtonStyle"
             android:id="@+id/add_files"
+            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/file_management_button_add_file"/>
+            android:text="@string/file_management_button_add_file" />
+
         <Button
+            android:id="@+id/create_aftermovie"
             style="@style/ButtonStyle"
-            android:id="@+id/take_picture"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/add_files"
+            android:text="@string/file_management_button_create_slideshow" />
+
+        <Button
+            android:id="@+id/take_picture"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/create_aftermovie"
             android:text="@string/file_management_take_picture" />
 
-    </LinearLayout>
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/scroll_view_container"
