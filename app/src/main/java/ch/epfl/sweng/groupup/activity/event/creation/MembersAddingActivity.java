@@ -66,7 +66,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                     public void onClick(View v) {
                         EditText memberEmail = findViewById(R.id.edit_text_add_member);
                         if (!emailCheck(memberEmail.getText().toString())){
-                            memberEmail.setError(getString(R.string.members_adding_invalid_email));
+                            memberEmail.setError(getString(R.string.members_adding_error_toast_invalid_email));
                         } else if(memberEmail.getText().toString().equals(Account.shared.getEmail().getOrElse("Default Email"))){
                             memberEmail.setError(getString(R.string.event_cration_error_cant_add_yourself));
                         } else{
