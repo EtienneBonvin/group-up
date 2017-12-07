@@ -226,6 +226,11 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         super.provideGeoLocation();
     }
 
+    /**
+     * @param event to be updated
+     * Updates the member markers and points of interests of an event by removing the old state
+     * and checking that the google map is initialized and given event corresponds with current
+     */
     public void updateEventIfNeeded(Event event) {
         if (mMap != null && event.getUUID().equals(currentEvent.getUUID())) {
             currentEvent = event;
@@ -236,6 +241,9 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         }
     }
 
+    /**
+     * Updates the member markers on the map with the position of each member in the event.
+     */
     private void updateMemberMarkers() {
         for (Member memberToDisplay : currentEvent.getEventMembers()) {
             Optional<Location> location = memberToDisplay.getLocation();
@@ -255,7 +263,10 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         }
     }
 
-
+    /**
+     * Updates the points of interests on the map with the position of
+     * each point of interests in the event.
+     */
     private void updatePoiMarkers() {
         for (PointOfInterest poi : currentEvent.getPointsOfInterest()) {
             LatLng latLng = new LatLng(poi.getLocation().getLatitude(), poi.getLocation().getLongitude());
@@ -271,7 +282,12 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         }
     }
 
-
+    /**
+     * @param context the application context.
+     * @return callback that the map has finished rendering.
+     * When the map has has finished rendering, show a toast with instructions for the user
+     * when the swipe bar is touched.
+     */
     private GoogleMap.OnMapLoadedCallback getOnMapLoadedCallback(final Context context) {
         return new OnMapLoadedCallback() {
             @Override
@@ -284,7 +300,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         };
     }
 
-
+    
     private GoogleMap.OnMapLongClickListener getMapLongClickListener() {
         return new GoogleMap.OnMapLongClickListener() {
             @Override
