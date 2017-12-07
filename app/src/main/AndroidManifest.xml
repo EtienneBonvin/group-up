@@ -23,12 +23,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+
         <activity
             android:name=".activity.main.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -43,7 +43,8 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.event.creation.EventCreationActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activity.settings.SettingsActivity"
             android:screenOrientation="portrait"/>
@@ -56,6 +57,9 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.event.creation.MembersAddingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.event.files.SlideshowActivity"
             android:screenOrientation="portrait"/>
 
         <!--

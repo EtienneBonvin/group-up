@@ -82,6 +82,7 @@ public final class Event implements Serializable, Watcher, Watchee{
         proxy.addWatcher(this);
     }
 
+
     /**
      * Returns the pictures of the event.
      * The pictures list synchronizes itself with the database when the

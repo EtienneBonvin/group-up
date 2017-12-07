@@ -8,16 +8,22 @@ import android.os.Build;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.view.ContextThemeWrapper;
 import android.widget.Toast;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import ch.epfl.sweng.groupup.R;
 
 
 /**
  * Class containing some useful methods to help the programmer out.
  */
 public final class AndroidHelper {
+
+    private static Toast lastShowedToast = null;
+
 
     /**
      * Check that the passed email is an "acceptable" form (not the icann official definition)
@@ -30,17 +36,6 @@ public final class AndroidHelper {
         Pattern p = Pattern.compile("\\b[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,13}\\b", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(email);
         return m.matches();
-    }
-
-
-    private static Toast lastShowedToast = null;
-
-
-    /**
-     * Private constructor, we don't want to instantiate this class.
-     */
-    private AndroidHelper() {
-        // Not instantiable.
     }
 
 
@@ -57,7 +52,8 @@ public final class AndroidHelper {
      * @return - the alert dialog that is shown
      */
     public static AlertDialog showAlert(Context context, String title, String message, String buttonText) {
-        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+        AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(context,
+                                                                                  R.style.AboutDialog)).create();
 
         alertDialog.setTitle(title);
         alertDialog.setMessage(message);

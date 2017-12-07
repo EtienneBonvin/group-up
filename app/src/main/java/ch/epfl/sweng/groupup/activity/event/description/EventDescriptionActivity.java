@@ -11,6 +11,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.text.InputType;
+import android.view.ContextThemeWrapper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -120,26 +121,6 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                         return true;
                     }
                 });
-    }
-
-    /**
-     * Override onPause method, remove the activity from the watchers of the event to avoid
-     * exceptions.
-     **/
-    @Override
-    protected void onPause() {
-        super.onPause();
-        fileManager.close();
-    }
-
-    /**
-     * Override onStop method, remove the activity from the watchers of the event to avoid
-     * exceptions.
-     **/
-    @Override
-    public void onStop() {
-        super.onStop();
-        fileManager.close();
     }
 
     /**
@@ -268,7 +249,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 Context context = EventDescriptionActivity.this;
 
                 // Dialog Builder
-                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                final AlertDialog.Builder builder =
+                        new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AboutDialog));
                 builder.setTitle(R.string.poi_dialog_title);
 
                 // Container + Child Views to enable input from the user.
@@ -346,7 +328,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 Context context = EventDescriptionActivity.this;
 
                 // Dialog Builder
-                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                final AlertDialog.Builder builder =
+                        new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AboutDialog));
                 builder.setTitle(R.string.poi_remove_title);
 
                 builder.setPositiveButton(R.string.poi_remove_positive, getRemovePositiveListener(marker));

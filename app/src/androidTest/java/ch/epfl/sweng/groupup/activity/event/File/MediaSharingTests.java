@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.activity.event.File;
+package ch.epfl.sweng.groupup.activity.event.file;
 
 import android.app.Activity;
 import android.app.Instrumentation;
@@ -12,10 +12,21 @@ import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
+import org.hamcrest.Matcher;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
+import ch.epfl.sweng.groupup.lib.database.Database;
+import ch.epfl.sweng.groupup.object.account.Account;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -36,18 +47,6 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
-import org.hamcrest.Matcher;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
-import ch.epfl.sweng.groupup.lib.database.Database;
-import ch.epfl.sweng.groupup.object.account.Account;
-
 @RunWith(AndroidJUnit4.class)
 public class MediaSharingTests {
 
@@ -58,6 +57,7 @@ public class MediaSharingTests {
     @Before
     public void goToFileManagement(){
         Database.setUp();
+        Account.shared.clear();
         Database.setUpEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -70,8 +70,7 @@ public class MediaSharingTests {
             }
         });
         createEvent();
-        onView(withParent(withId(R.id.linear_layout_event_list)))
-                .perform(click());
+        onView(withParent(withId(R.id.linear_layout_event_list))).perform(click());
         onView(withId(R.id.swipe_bar))
                 .perform(swipeLeft());
     }
@@ -151,6 +150,25 @@ public class MediaSharingTests {
 
         onView(withParent(withId(R.id.image_grid)))
                 .check(doesNotExist());
+    }
+
+    @Test
+    public void openSlideShowView(){
+        Resources resources = InstrumentationRegistry.getTargetContext().getResources();
+
+        Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                resources.getResourcePackageName(R.mipmap.ic_launcher) + '/' +
+                resources.getResourceTypeName(R.mipmap.ic_launcher) + '/' +
+                resources.getResourceEntryName(R.mipmap.ic_launcher));
+
+        mockMediaSelection(imageUri);
+
+        onView(withParent(withId(R.id.image_grid)))
+                .check(matches(isDisplayed()));
+
+        onView(withId(R.id.create_aftermovie)).perform(click());
+
+        onView(withId(R.id.imageSwitcher)).check(matches(isDisplayed()));
     }
 
     private void mockWrongSelection(Uri imageUri){
