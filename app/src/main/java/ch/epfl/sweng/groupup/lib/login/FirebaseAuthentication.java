@@ -108,7 +108,7 @@ public final class FirebaseAuthentication implements GoogleAuthenticationService
         AuthCredential credential = GoogleAuthProvider
                 .getCredential(googleCurrentUser.getIdToken(), null);
         FirebaseAuth.getInstance().signInWithCredential(credential)
-                .addOnCompleteListener(activity, getOnCompleteListener(googleCurrentUser));
+                .addOnCompleteListener(activity.getActivity(), getOnCompleteListener(googleCurrentUser));
     }
 
     private OnCompleteListener<AuthResult> getOnCompleteListener(final GoogleSignInAccount googleCurrentUser) {

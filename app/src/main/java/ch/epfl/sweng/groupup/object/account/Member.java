@@ -3,6 +3,8 @@ package ch.epfl.sweng.groupup.object.account;
 import android.location.Location;
 
 import ch.epfl.sweng.groupup.lib.Optional;
+import ch.epfl.sweng.groupup.lib.database.DatabaseUser;
+
 
 /**
  * This class represents members of a group (which are User objects)
@@ -111,13 +113,25 @@ public final class Member extends User {
      * @return - a new member with the given location
      */
     public Member withLocation(Location location) {
-        Member updatedMember = new Member(UUID,
-                displayName,
-                givenName,
-                familyName,
-                email,
-                Optional.from(location));
+        return new Member(UUID,
+                          displayName,
+                          givenName,
+                          familyName,
+                          email,
+                          Optional.from(location));
+    }
 
-        return updatedMember;
+
+    /**
+     * Converts a member to its database representation.
+     * @return - the member as a database user
+     */
+    public DatabaseUser toDatabaseUser() {
+        return new DatabaseUser(getGivenName(),
+                                getFamilyName(),
+                                getDisplayName(),
+                                getEmail(),
+                                getUUID(),
+                                getLocation());
     }
 }

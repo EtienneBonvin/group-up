@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import ch.epfl.sweng.groupup.activity.login.LoginActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -28,24 +27,25 @@ import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
 
 @RunWith(AndroidJUnit4.class)
 public class DatabaseShould {
+
     @Rule
-    public final ActivityTestRule<ToolbarActivity> mActivityRule =
-            new ActivityTestRule<>(ToolbarActivity.class);
+    public final ActivityTestRule<ToolbarActivity> mActivityRule = new ActivityTestRule<>(ToolbarActivity.class);
+
 
     @Test
-    public void exposeSetUpMethod() throws Exception {
-        Database.setUpDatabase();
-
-        assertTrue(true);
+    public void existAndExposeSetUpMethod() throws Exception {
+        Database database = new Database();
+        Database.setUp();
     }
+
 
     @Test
     public void exposeSetUpListenerForDefaultAndOwnListener() throws Exception {
-        Database.setUpDatabase();
+        Database.setUp();
 
         Database.setUpEventListener(new ValueEventListener() {
             @Override
@@ -53,28 +53,27 @@ public class DatabaseShould {
                 // Do nothing
             }
 
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Do nothing
             }
         });
-
-        assertTrue(true);
     }
+
 
     @Test
     public void exposeAnUpdateMethod() throws Exception {
-        Database.setUpDatabase();
+        Database.setUp();
 
         Database.update();
-
-        assertTrue(true);
     }
+
 
     @Test
     public void updateDatabaseCorrectlyAccordingToTheUsersAccount() throws Exception {
         // Database set up.
-        Database.setUpDatabase();
+        Database.setUp();
 
         // Account initialization.
         String givenName = "Group";
@@ -83,10 +82,10 @@ public class DatabaseShould {
         String email = "groupup@flyingmonkeys.com";
         String uuid = "myAccountUuidIsVeryComplex";
         Account.shared.withGivenName(givenName)
-                .withFamilyName(familyName)
-                .withDisplayName(displayName)
-                .withEmail(email)
-                .withUUID(uuid);
+                      .withFamilyName(familyName)
+                      .withDisplayName(displayName)
+                      .withEmail(email)
+                      .withUUID(uuid);
 
         // Add of current event.
         String nameCurrent = "Current Event";
@@ -110,10 +109,7 @@ public class DatabaseShould {
         String poiName01 = "PoIName01";
         String poiDesc01 = "PoIDesc01";
         Location poiLocation01 = new Location(LocationManager.GPS_PROVIDER);
-        poiCurrent.add(new PointOfInterest(poiUuid01,
-                                           poiName01,
-                                           poiDesc01,
-                                           poiLocation01));
+        poiCurrent.add(new PointOfInterest(poiUuid01, poiName01, poiDesc01, poiLocation01));
         final Event eventCurrent = new Event(uuidCurrent,
                                              nameCurrent,
                                              startCurrent,
@@ -147,10 +143,7 @@ public class DatabaseShould {
         String poiName02 = "PoIName02";
         String poiDesc02 = "PoIDesc02";
         Location poiLocation02 = new Location(LocationManager.GPS_PROVIDER);
-        poiPast.add(new PointOfInterest(poiUuid02,
-                                        poiName02,
-                                        poiDesc02,
-                                        poiLocation02));
+        poiPast.add(new PointOfInterest(poiUuid02, poiName02, poiDesc02, poiLocation02));
         final Event eventPast = new Event(uuidPast,
                                           namePast,
                                           startPast,
@@ -184,10 +177,7 @@ public class DatabaseShould {
         String poiName03 = "PoIName03";
         String poiDesc03 = "PoIDesc03";
         Location poiLocation03 = new Location(LocationManager.GPS_PROVIDER);
-        poiFuture.add(new PointOfInterest(poiUuid03,
-                                          poiName03,
-                                          poiDesc03,
-                                          poiLocation03));
+        poiFuture.add(new PointOfInterest(poiUuid03, poiName03, poiDesc03, poiLocation03));
         final Event eventFuture = new Event(uuidFuture,
                                             nameFuture,
                                             startFuture,
@@ -215,15 +205,11 @@ public class DatabaseShould {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
-                    DatabaseEvent
-                            event =
-                            eventSnapshot.getValue(DatabaseEvent.class);
+                    DatabaseEvent event = eventSnapshot.getValue(DatabaseEvent.class);
 
-                    if (event != null &&
-                        !event.uuid.equals(Database.EMPTY_FIELD)) {
-                        if (event.uuid.equals(uuidCurrent) ||
-                            event.uuid.equals(uuidPast) ||
-                            event.uuid.equals(uuidFuture)) {
+                    if (event != null && !event.uuid.equals(Database.EMPTY_FIELD)) {
+                        if (event.uuid.equals(uuidCurrent) || event.uuid.equals(uuidPast) || event.uuid.equals(
+                                uuidFuture)) {
 
                             List<Member> members = new ArrayList<>();
                             for (DatabaseUser user : event.members.values()) {
@@ -235,24 +221,22 @@ public class DatabaseShould {
                                                        user.getOptLocation()));
                             }
 
-                            HashSet<PointOfInterest> pointsOfInterest = new
-                                    HashSet<>();
-                            for (DatabasePointOfInterest poi : event
-                                    .pointsOfInterest.values()) {
+                            HashSet<PointOfInterest> pointsOfInterest = new HashSet<>();
+                            for (DatabasePointOfInterest poi : event.pointsOfInterest.values()) {
                                 pointsOfInterest.add(new PointOfInterest(poi.uuid,
                                                                          poi.name,
                                                                          poi.description,
                                                                          poi.getLocation()));
                             }
 
-                            Event tempEvent = new Event(
-                                    event.uuid,
-                                    event.name,
-                                    LocalDateTime.parse(event.datetimeStart),
-                                    LocalDateTime.parse(event.datetimeEnd),
-                                    event.description, members,
-                                    pointsOfInterest,
-                                    false);
+                            Event tempEvent = new Event(event.uuid,
+                                                        event.name,
+                                                        LocalDateTime.parse(event.datetimeStart),
+                                                        LocalDateTime.parse(event.datetimeEnd),
+                                                        event.description,
+                                                        members,
+                                                        pointsOfInterest,
+                                                        false);
 
                             switch (event.uuid) {
                                 case uuidCurrent:
@@ -268,13 +252,13 @@ public class DatabaseShould {
                                     assertEquals(eventEmpty, tempEvent);
                                     break;
                                 default:
-                                    throw new Error(
-                                            "default case in switch statement");
+                                    throw new Error("default case in switch statement");
                             }
                         }
                     }
                 }
             }
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {

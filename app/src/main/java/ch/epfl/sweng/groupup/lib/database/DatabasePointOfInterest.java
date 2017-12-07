@@ -7,11 +7,13 @@ import android.util.Log;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import ch.epfl.sweng.groupup.object.map.PointOfInterest;
+
 import static ch.epfl.sweng.groupup.lib.database.Database.EMPTY_FIELD;
 
 
 @IgnoreExtraProperties
-final class DatabasePointOfInterest {
+public final class DatabasePointOfInterest {
 
     /**
      * Class to represent a point of interest that will be stored in the
@@ -29,7 +31,7 @@ final class DatabasePointOfInterest {
     }
 
 
-    DatabasePointOfInterest(String uuid, String name, String description, Location location) {
+    public DatabasePointOfInterest(String uuid, String name, String description, Location location) {
         this.uuid = uuid;
         this.name = name;
         this.description = description;
@@ -83,5 +85,31 @@ final class DatabasePointOfInterest {
         }
 
         return location;
+    }
+
+
+    @Exclude
+    public PointOfInterest toPointOfInterest() {
+        return new PointOfInterest(getUuid(), getName(), getDescription(), getLocation());
+    }
+
+
+    @Exclude
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        DatabasePointOfInterest that = (DatabasePointOfInterest) o;
+
+        return uuid.equals(that.uuid) &&
+               name.equals(that.name) &&
+               description.equals(that.description) &&
+               latitude.equals(that.latitude) &&
+               longitude.equals(that.longitude);
     }
 }
