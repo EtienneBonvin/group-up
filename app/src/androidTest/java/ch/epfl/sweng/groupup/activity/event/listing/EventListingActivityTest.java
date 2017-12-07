@@ -55,7 +55,7 @@ public class EventListingActivityTest {
 
     @Test
     public void invitationIsAccepted() {
-        Database.setUpDatabase();
+        Database.setUp();
         onView(ViewMatchers.withId(R.id.createEventButton)).perform(click());
         onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
         Espresso.closeSoftKeyboard();
@@ -76,7 +76,7 @@ public class EventListingActivityTest {
 
     @Test
     public void invitationIsDeclinedAndDeleted() {
-        Database.setUpDatabase();
+        Database.setUp();
         onView(ViewMatchers.withId(R.id.createEventButton)).perform(click());
         onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
 
