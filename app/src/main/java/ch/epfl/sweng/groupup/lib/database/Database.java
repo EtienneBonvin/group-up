@@ -22,14 +22,6 @@ public final class Database {
 
 
     /**
-     * Private constructor, we don't want to instantiate this class.
-     */
-    private Database() {
-        // Not instantiable.
-    }
-
-
-    /**
      * Function to set up the database. Has to be called at the start of the app.
      */
     public static void setUp() {
@@ -96,7 +88,15 @@ public final class Database {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (!Account.shared.getUUID().isEmpty() && !Account.shared.getEmail().isEmpty()) {
-                    onDataChangeCallback(dataSnapshot);
+                    for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+                        DatabaseEvent databaseEvent = eventSnapshot.getValue(DatabaseEvent.class);
+
+                        if (databaseEvent != null &&
+                            !databaseEvent.getUuid().equals(Database.EMPTY_FIELD) &&
+                            databaseEvent.containedAsMember()) {
+                            Account.shared.addOrUpdateEvent(databaseEvent.toEvent());
+                        }
+                    }
                 }
             }
 
@@ -106,23 +106,5 @@ public final class Database {
                 // UNUSED
             }
         };
-    }
-
-
-    /**
-     * Callback function for the onDataChange event for the "events" node.
-     *
-     * @param dataSnapshot - the data snapshot received
-     */
-    private static void onDataChangeCallback(DataSnapshot dataSnapshot) {
-        for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
-            DatabaseEvent databaseEvent = eventSnapshot.getValue(DatabaseEvent.class);
-
-            if (databaseEvent != null &&
-                !databaseEvent.getUuid().equals(Database.EMPTY_FIELD) &&
-                databaseEvent.containedAsMember()) {
-                Account.shared.addOrUpdateEvent(databaseEvent.toEvent());
-            }
-        }
     }
 }

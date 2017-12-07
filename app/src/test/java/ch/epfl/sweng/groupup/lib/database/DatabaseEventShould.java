@@ -114,6 +114,8 @@ public class DatabaseEventShould {
     @Test
     public void correctlyConvertToEvent() {
         Account.shared.withUUID("ACCOUNT_UUID").withEmail("account@email.com");
+        DatabaseUser invitedUser = new DatabaseUser();
+        invitedUser.email = Account.shared.getEmail().get();
 
         String name = "GroupUp Event";
         String description = "This is going to be fun.";
@@ -126,6 +128,7 @@ public class DatabaseEventShould {
         members.put("userUuid02", new DatabaseUser());
         members.put("userUuid03", new DatabaseUser());
         members.put(Account.shared.getUUID().get(), Account.shared.toMember().toDatabaseUser());
+        members.put("INVITED_UUID", invitedUser);
 
         HashMap<String, DatabasePointOfInterest> pointsOfInterest = new HashMap<>();
         pointsOfInterest.put("poiUuid01", new DatabasePointOfInterest());

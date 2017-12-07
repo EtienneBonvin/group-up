@@ -1,30 +1,42 @@
 package ch.epfl.sweng.groupup.lib.database;
 
 import android.location.Location;
+import android.location.LocationManager;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 
+import static ch.epfl.sweng.groupup.lib.database.Database.EMPTY_FIELD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 
+@RunWith(AndroidJUnit4.class)
 public class DatabaseUserShould {
+
+    @Rule
+    public final ActivityTestRule<ToolbarActivity> mActivityRule = new ActivityTestRule<>(ToolbarActivity.class);
+
 
     @Test
     public void overrideDefaultConstructorAndHaveDefaultValuesAssigned() throws Exception {
         DatabaseUser databaseUser = new DatabaseUser();
 
-        assertEquals(Database.EMPTY_FIELD, databaseUser.givenName);
-        assertEquals(Database.EMPTY_FIELD, databaseUser.familyName);
-        assertEquals(Database.EMPTY_FIELD, databaseUser.displayName);
-        assertEquals(Database.EMPTY_FIELD, databaseUser.email);
-        assertEquals(Database.EMPTY_FIELD, databaseUser.uuid);
+        assertEquals(EMPTY_FIELD, databaseUser.givenName);
+        assertEquals(EMPTY_FIELD, databaseUser.familyName);
+        assertEquals(EMPTY_FIELD, databaseUser.displayName);
+        assertEquals(EMPTY_FIELD, databaseUser.email);
+        assertEquals(EMPTY_FIELD, databaseUser.uuid);
     }
 
 
@@ -172,6 +184,28 @@ public class DatabaseUserShould {
                                                      Optional.<Location>empty());
 
         assertTrue(databaseUser.getOptLocation().isEmpty());
+
+        Location location = new Location(LocationManager.GPS_PROVIDER);
+        location.setLatitude(3.1415);
+        location.setLongitude(3.1415);
+
+        databaseUser = new DatabaseUser(Optional.<String>empty(),
+                                        Optional.<String>empty(),
+                                        Optional.<String>empty(),
+                                        Optional.<String>empty(),
+                                        Optional.<String>empty(),
+                                        Optional.from(location));
+
+        assertTrue(!databaseUser.getOptLocation().isEmpty());
+
+        databaseUser.provider = LocationManager.NETWORK_PROVIDER;
+        assertTrue(!databaseUser.getOptLocation().isEmpty());
+
+        databaseUser.provider = LocationManager.PASSIVE_PROVIDER;
+        assertTrue(!databaseUser.getOptLocation().isEmpty());
+
+        databaseUser.latitude = "SOME_RANDOM_STUFF_THAT_IS_NOT_PARSABLE";
+        assertTrue(databaseUser.getOptLocation().isEmpty());
     }
 
 
@@ -189,9 +223,9 @@ public class DatabaseUserShould {
 
         databaseUser.clearLocation();
 
-        assertEquals(Database.EMPTY_FIELD, databaseUser.getLatitude());
-        assertEquals(Database.EMPTY_FIELD, databaseUser.getLongitude());
-        assertEquals(Database.EMPTY_FIELD, databaseUser.getProvider());
+        assertEquals(EMPTY_FIELD, databaseUser.getLatitude());
+        assertEquals(EMPTY_FIELD, databaseUser.getLongitude());
+        assertEquals(EMPTY_FIELD, databaseUser.getProvider());
     }
 
 
@@ -212,6 +246,7 @@ public class DatabaseUserShould {
                                                Optional.<Location>empty());
 
         assertEquals(user01, user02);
+        assertNotEquals(user01, null);
 
         user02.givenName = "OTHER_STUFF";
         assertNotEquals(user01, user02);
@@ -235,11 +270,11 @@ public class DatabaseUserShould {
 
         user02.latitude = "OTHER_STUFF";
         assertNotEquals(user01, user02);
-        user02.latitude = "NOT_EMPTY";
+        user02.latitude = EMPTY_FIELD;
 
         user02.longitude = "OTHER_STUFF";
         assertNotEquals(user01, user02);
-        user02.longitude = "NOT_EMPTY";
+        user02.longitude = EMPTY_FIELD;
     }
 
 

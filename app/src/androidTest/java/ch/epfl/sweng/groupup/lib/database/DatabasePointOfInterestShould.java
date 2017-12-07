@@ -9,7 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.sweng.groupup.activity.main.MainActivity;
+import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 
 import static org.junit.Assert.assertEquals;
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertNotEquals;
 public class DatabasePointOfInterestShould {
 
     @Rule
-    public final ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
+    public final ActivityTestRule<ToolbarActivity> mActivityRule = new ActivityTestRule<>(ToolbarActivity.class);
 
 
     @Test
@@ -74,6 +74,7 @@ public class DatabasePointOfInterestShould {
         DatabasePointOfInterest poi02 = new DatabasePointOfInterest("STUFF", "STUFF", "STUFF", location);
 
         assertEquals(poi01, poi02);
+        assertNotEquals(poi01, null);
 
         poi02.uuid = "OTHER_STUFF";
         assertNotEquals(poi01, poi02);
