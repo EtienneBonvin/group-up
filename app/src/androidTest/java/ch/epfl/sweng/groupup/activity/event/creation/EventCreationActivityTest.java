@@ -65,7 +65,7 @@ public class EventCreationActivityTest {
 
     @Before
     public void setup(){
-        Database.setUpDatabase();
+        Database.setUp();
     }
 
 

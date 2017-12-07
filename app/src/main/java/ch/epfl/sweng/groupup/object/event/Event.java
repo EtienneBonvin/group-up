@@ -5,6 +5,7 @@ import org.joda.time.LocalDateTime;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -13,10 +14,16 @@ import java.util.Set;
 import ch.epfl.sweng.groupup.activity.event.files.CompressedBitmap;
 import ch.epfl.sweng.groupup.lib.Watchee;
 import ch.epfl.sweng.groupup.lib.Watcher;
+import ch.epfl.sweng.groupup.lib.database.DatabaseEvent;
+import ch.epfl.sweng.groupup.lib.database.DatabasePointOfInterest;
+import ch.epfl.sweng.groupup.lib.database.DatabaseUser;
 import ch.epfl.sweng.groupup.lib.fileStorage.FirebaseFileProxy;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.map.PointOfInterest;
+
+import static ch.epfl.sweng.groupup.lib.database.Database.EMPTY_FIELD;
+
 
 @SuppressWarnings("SimplifiableIfStatement")
 public final class Event implements Serializable, Watcher, Watchee{
@@ -270,6 +277,15 @@ public final class Event implements Serializable, Watcher, Watchee{
         else return EventStatus.CURRENT;
     }
 
+
+    /**
+     * Returns true if and only if the status of the event is current.
+     * @return -  true if the status of the event is current
+     */
+    public boolean isCurrent() {
+        return getEventStatus() == EventStatus.CURRENT;
+    }
+
     /**
      * Adds an member to the list of event members
      * @param member to add
@@ -415,5 +431,42 @@ public final class Event implements Serializable, Watcher, Watchee{
         if(proxyImages.size() > eventImages.size())
             eventImages = proxyImages;
         notifyAllWatchers();
+    }
+
+
+    /**
+     * Converts a regular event into its database representation.
+     * @return - the database event that can be stored easily
+     */
+    public DatabaseEvent toDatabaseEvent() {
+        HashMap<String, DatabaseUser> uuidToUserMap = new HashMap<>();
+        for (Member memberToStore : getEventMembers()) {
+            if (!memberToStore.getUUID().isEmpty()) {
+                DatabaseUser databaseUser = memberToStore.toDatabaseUser();
+
+                if (memberToStore.getUUID().get().equals(Account.shared.getUUID().getOrElse(EMPTY_FIELD))) {
+                    databaseUser = Account.shared.toMember().toDatabaseUser();
+                }
+
+                if (!isCurrent()) {
+                    databaseUser.clearLocation();
+                }
+
+                uuidToUserMap.put(databaseUser.getUuid(), databaseUser);
+            }
+        }
+
+        HashMap<String, DatabasePointOfInterest> uuidToPoIMap = new HashMap<>();
+        for (PointOfInterest poiToStore : getPointsOfInterest()) {
+            uuidToPoIMap.put(poiToStore.getUuid(), poiToStore.toDatabasePointOfInterest());
+        }
+
+        return new DatabaseEvent(getEventName(),
+                                 getDescription(),
+                                 getStartTime().toString(),
+                                 getEndTime().toString(),
+                                 getUUID(),
+                                 uuidToUserMap,
+                                 uuidToPoIMap);
     }
 }

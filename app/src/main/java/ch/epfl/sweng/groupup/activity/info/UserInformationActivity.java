@@ -1,5 +1,6 @@
 package ch.epfl.sweng.groupup.activity.info;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -17,6 +18,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
+import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.login.FirebaseAuthentication;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService;
@@ -31,7 +33,7 @@ import static ch.epfl.sweng.groupup.object.account.Account.shared;
  * user a way to sign out.
  */
 
-public class UserInformationActivity extends LoginActivityInterface {
+public class UserInformationActivity extends ToolbarActivity implements LoginActivityInterface {
 
 
     // Fields to represent the different objects on the GUI of the activity.
@@ -164,5 +166,11 @@ public class UserInformationActivity extends LoginActivityInterface {
                         Intent.FLAG_ACTIVITY_CLEAR_TASK |
                         Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+
+    @Override
+    public Activity getActivity() {
+        return this;
     }
 }

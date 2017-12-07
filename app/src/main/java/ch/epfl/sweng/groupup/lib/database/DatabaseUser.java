@@ -8,12 +8,14 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import ch.epfl.sweng.groupup.lib.Optional;
+import ch.epfl.sweng.groupup.object.account.Account;
+import ch.epfl.sweng.groupup.object.account.Member;
 
 import static ch.epfl.sweng.groupup.lib.database.Database.EMPTY_FIELD;
 
 
 @IgnoreExtraProperties
-final class DatabaseUser {
+public final class DatabaseUser {
 
     /**
      * Class to represent the user object that will be stored in the database.
@@ -32,12 +34,12 @@ final class DatabaseUser {
     }
 
 
-    DatabaseUser(Optional<String> givenName,
-                 Optional<String> familyName,
-                 Optional<String> displayName,
-                 Optional<String> email,
-                 Optional<String> uuid,
-                 Optional<Location> location) {
+    public DatabaseUser(Optional<String> givenName,
+                        Optional<String> familyName,
+                        Optional<String> displayName,
+                        Optional<String> email,
+                        Optional<String> uuid,
+                        Optional<Location> location) {
         this.givenName = givenName.getOrElse(EMPTY_FIELD);
         this.familyName = familyName.getOrElse(EMPTY_FIELD);
         this.displayName = displayName.getOrElse(EMPTY_FIELD);
@@ -97,6 +99,14 @@ final class DatabaseUser {
 
 
     @Exclude
+    public void clearLocation() {
+        latitude = EMPTY_FIELD;
+        longitude = EMPTY_FIELD;
+        provider = EMPTY_FIELD;
+    }
+
+
+    @Exclude
     Optional<String> getOptGivenName() {
         if (givenName.equals(EMPTY_FIELD)) {
             return Optional.empty();
@@ -148,15 +158,12 @@ final class DatabaseUser {
 
     @Exclude
     Optional<Location> getOptLocation() {
-        switch (provider) {
-            case LocationManager.GPS_PROVIDER:
-                return createOptLocation();
-            case LocationManager.NETWORK_PROVIDER:
-                return createOptLocation();
-            case LocationManager.PASSIVE_PROVIDER:
-                return createOptLocation();
-            default:
-                return Optional.empty();
+        if (provider.equals(LocationManager.GPS_PROVIDER) ||
+            provider.equals(LocationManager.NETWORK_PROVIDER) ||
+            provider.equals(LocationManager.PASSIVE_PROVIDER)) {
+            return createOptLocation();
+        } else {
+            return Optional.empty();
         }
     }
 
@@ -174,5 +181,44 @@ final class DatabaseUser {
         }
 
         return Optional.from(location);
+    }
+
+
+    @Exclude
+    public Member toMember() {
+        return new Member(getOptUuid(),
+                          getOptDisplayName(),
+                          getOptGivenName(),
+                          getOptFamilyName(),
+                          getOptEmail(),
+                          getOptLocation());
+    }
+
+
+    @Exclude
+    public boolean isAccount() {
+        return getUuid().equals(Account.shared.getUUID().get()) || getEmail().equals(Account.shared.getEmail().get());
+    }
+
+
+    @Exclude
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        DatabaseUser that = (DatabaseUser) o;
+
+        return givenName.equals(that.givenName) &&
+               familyName.equals(that.familyName) &&
+               displayName.equals(that.displayName) &&
+               email.equals(that.email) &&
+               uuid.equals(that.uuid) &&
+               latitude.equals(that.latitude) &&
+               longitude.equals(that.longitude);
     }
 }

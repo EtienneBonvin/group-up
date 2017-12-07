@@ -39,7 +39,7 @@ public class MapActivityTest {
 
     @Before
     public void setup(){
-        Database.setUpDatabase();
+        Database.setUp();
     }
 
     @After

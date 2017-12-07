@@ -23,41 +23,44 @@ import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 
+
 public final class GeoLocation implements GeoLocationInterface {
 
     private static final long MIN_UPDATE_TIME_INTERVAL = 5000;
     private static final float MIN_UPDATE_DISTANCE_INTERVAL = 5;
-
     private static final String ASK_PERMISSION = "ASK_PERMISSION";
     private static final String ASK_ENABLE_GPS = "ASK_ENABLE_GPS";
-
+    private static boolean alreadyAskedPermission = false;
+    private static boolean alreadyAskedEnableGps = false;
+    private static boolean dialogIsShown = false;
     private static final String INTENT_SCHEME = "package";
-
     private final Activity activity;
     private final Context context;
-
     private final LocationManager locationManager;
     private final String provider;
+
 
     public GeoLocation(Activity activity, Context context) {
         this.activity = activity;
         this.context = context;
 
-        locationManager = (LocationManager) context
-                .getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         if (AndroidHelper.isEmulator()) {
             provider = LocationManager.GPS_PROVIDER;
         } else {
             provider = locationManager.getBestProvider(getCriteria(), false);
 
-            if (provider == null) {
-                askToEnableProvider(ASK_PERMISSION);
-            } else if (!locationManager.isProviderEnabled(provider)) {
-                askToEnableProvider(ASK_ENABLE_GPS);
+            if (!dialogIsShown) {
+                if (provider == null && !alreadyAskedPermission) {
+                    askToEnableProvider(ASK_PERMISSION);
+                } else if (provider != null && !locationManager.isProviderEnabled(provider) && !alreadyAskedEnableGps) {
+                    askToEnableProvider(ASK_ENABLE_GPS);
+                }
             }
         }
     }
+
 
     @Override
     public void onLocationChanged(Location location) {
@@ -67,47 +70,41 @@ public final class GeoLocation implements GeoLocationInterface {
         }
     }
 
+
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
         switch (i) {
             case LocationProvider.OUT_OF_SERVICE:
                 pauseLocationUpdates();
-                AndroidHelper.showToast(context,
-                                 "Provider \"" + s + "\" out of service.",
-                                        Toast.LENGTH_SHORT);
+                AndroidHelper.showToast(context, "Provider \"" + s + "\" out of service.", Toast.LENGTH_SHORT);
                 break;
             case LocationProvider.TEMPORARILY_UNAVAILABLE:
                 pauseLocationUpdates();
-                AndroidHelper.showToast(context,
-                                 "Provider \"" + s + "\" unavailable.",
-                                        Toast.LENGTH_SHORT);
+                AndroidHelper.showToast(context, "Provider \"" + s + "\" unavailable.", Toast.LENGTH_SHORT);
                 break;
             case LocationProvider.AVAILABLE:
                 requestLocationUpdates();
-                AndroidHelper.showToast(context,
-                                 "Provider \"" + s + "\" available.",
-                                        Toast.LENGTH_SHORT);
+                AndroidHelper.showToast(context, "Provider \"" + s + "\" available.", Toast.LENGTH_SHORT);
                 break;
             default:
                 break;
         }
     }
 
+
     @Override
     public void onProviderEnabled(String s) {
         requestLocationUpdates();
-        AndroidHelper.showToast(context,
-                         "Provider \"" + s + "\" enabled.",
-                                Toast.LENGTH_SHORT);
+        AndroidHelper.showToast(context, "Provider \"" + s + "\" enabled.", Toast.LENGTH_SHORT);
     }
+
 
     @Override
     public void onProviderDisabled(String s) {
         pauseLocationUpdates();
-        AndroidHelper.showToast(context,
-                         "Provider \"" + s + "\" disabled.",
-                                Toast.LENGTH_SHORT);
+        AndroidHelper.showToast(context, "Provider \"" + s + "\" disabled.", Toast.LENGTH_SHORT);
     }
+
 
     /**
      * Eases the creation of the criteria we want for the localisation.
@@ -133,26 +130,22 @@ public final class GeoLocation implements GeoLocationInterface {
         return criteria;
     }
 
+
     /**
      * Method to be called in the onCreate()/onResume() method of the activity
      * to start listening for location updates.
      */
     public void requestLocationUpdates() {
-        if ((ActivityCompat
-                     .checkSelfPermission(context,
-                                          Manifest.permission.ACCESS_FINE_LOCATION) !=
-             PackageManager.PERMISSION_GRANTED) ||
-            (ActivityCompat
-                     .checkSelfPermission(context,
-                                          Manifest.permission.ACCESS_COARSE_LOCATION) !=
-             PackageManager.PERMISSION_GRANTED)) {
+        if ((ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) !=
+             PackageManager.PERMISSION_GRANTED) || (ActivityCompat.checkSelfPermission(context,
+                                                                                       Manifest.permission
+                                                                                               .ACCESS_COARSE_LOCATION) !=
+                                                    PackageManager.PERMISSION_GRANTED)) {
             return;
         }
-        locationManager.requestLocationUpdates(provider,
-                                               MIN_UPDATE_TIME_INTERVAL,
-                                               MIN_UPDATE_DISTANCE_INTERVAL,
-                                               this);
+        locationManager.requestLocationUpdates(provider, MIN_UPDATE_TIME_INTERVAL, MIN_UPDATE_DISTANCE_INTERVAL, this);
     }
+
 
     /**
      * Method to be called in onPause() method in the activity to stop
@@ -162,52 +155,52 @@ public final class GeoLocation implements GeoLocationInterface {
         locationManager.removeUpdates(this);
     }
 
+
     /**
      * Method used to ask the user to enable the GPS function if it wasn't
      * already enabled.
      */
     private void askToEnableProvider(final String whatToAsk) {
-        AlertDialog.Builder alertDialogBuilder =
-                new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AboutDialog));
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(context,
+                                                                                                 R.style.AboutDialog));
 
         alertDialogBuilder.setMessage(R.string.alert_dialog_ask_enable_provider_message)
-                .setTitle(R.string.alert_dialog_ask_enable_provider_title);
+                          .setTitle(R.string.alert_dialog_ask_enable_provider_title);
 
-        alertDialogBuilder.setPositiveButton(R.string.alert_dialog_yes,
-                                             getPositiveOnClick(whatToAsk));
-        alertDialogBuilder.setNegativeButton(R.string.alert_dialog_no,
-                                             getNegativeOnClick());
+        alertDialogBuilder.setPositiveButton(R.string.alert_dialog_yes, getPositiveOnClick(whatToAsk));
+        alertDialogBuilder.setNegativeButton(R.string.alert_dialog_no, getNegativeOnClick(whatToAsk));
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+
+        dialogIsShown = true;
     }
+
 
     /**
      * Returns the on click listener for the positive button of the dialog.
      *
      * @param whatToAsk - what we need to ask to the user
+     *
      * @return - callback for the positive button
      */
     private DialogInterface.OnClickListener getPositiveOnClick(final String whatToAsk) {
         return new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                dialogIsShown = false;
                 dialogInterface.dismiss();
 
                 switch (whatToAsk) {
                     case ASK_PERMISSION: {
-                        Intent intent =
-                                new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri = Uri.fromParts(INTENT_SCHEME,
-                                                activity.getPackageName(),
-                                                null);
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts(INTENT_SCHEME, activity.getPackageName(), null);
                         intent.setData(uri);
                         activity.startActivity(intent);
                         break;
                     }
                     case ASK_ENABLE_GPS: {
-                        Intent intent =
-                                new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         activity.startActivity(intent);
                         break;
                     }
@@ -218,15 +211,24 @@ public final class GeoLocation implements GeoLocationInterface {
         };
     }
 
+
     /**
      * Returns the on click listener for the negative button on the dialog.
      *
      * @return - callback for the negative button
      */
-    private DialogInterface.OnClickListener getNegativeOnClick() {
+    private DialogInterface.OnClickListener getNegativeOnClick(final String whatToAsk) {
         return new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                dialogIsShown = false;
+
+                if (whatToAsk.equals(ASK_PERMISSION)) {
+                    alreadyAskedPermission = true;
+                } else if (whatToAsk.equals(ASK_ENABLE_GPS)) {
+                    alreadyAskedEnableGps = true;
+                }
+
                 dialogInterface.dismiss();
             }
         };

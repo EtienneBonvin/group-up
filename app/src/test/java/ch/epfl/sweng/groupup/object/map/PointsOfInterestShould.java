@@ -7,6 +7,7 @@ import android.location.LocationManager;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.epfl.sweng.groupup.lib.database.DatabasePointOfInterest;
 import ch.epfl.sweng.groupup.object.TestHelper;
 
 import static org.junit.Assert.assertEquals;
@@ -151,5 +152,16 @@ public class PointsOfInterestShould {
         assertTrue(samePoI.hashCode() == defaultPoint.hashCode());
         assertTrue(defaultPoint.equals(defaultPoint));
         assertTrue(defaultPoint.hashCode() == defaultPoint.hashCode());
+    }
+
+    @Test
+    public void correctlyConvertToDatabasePointOfInterest() {
+        DatabasePointOfInterest databasePointOfInterest = defaultPoint.toDatabasePointOfInterest();
+
+        assertEquals(defaultPoint.getDescription(), databasePointOfInterest.getDescription());
+        assertEquals(defaultPoint.getName(), databasePointOfInterest.getName());
+        assertEquals(defaultPoint.getUuid(), databasePointOfInterest.getUuid());
+        assertEquals("" + defaultPoint.getLocation().getLatitude(), databasePointOfInterest.getLatitude());
+        assertEquals("" + defaultPoint.getLocation().getLongitude(), databasePointOfInterest.getLongitude());
     }
 }
