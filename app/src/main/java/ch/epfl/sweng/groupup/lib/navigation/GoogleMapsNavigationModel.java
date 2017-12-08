@@ -3,11 +3,16 @@ package ch.epfl.sweng.groupup.lib.navigation;
 import android.location.Location;
 import android.os.AsyncTask;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import ch.epfl.sweng.groupup.lib.Optional;
 
 public final class GoogleMapsNavigationModel extends AsyncTask<URL, Void, String> implements NavigationModelInterface {
     private final static String baseURL = "https://maps.googleapis.com/maps/api/directions/";
@@ -24,7 +29,7 @@ public final class GoogleMapsNavigationModel extends AsyncTask<URL, Void, String
                 urlConnection = (HttpURLConnection) urls[0].openConnection();
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 int c;
-                while((c = in.read()) != -1){
+                while((c = in.read()) != -1) {
                     response.append((char) c);
                 }
             }
@@ -33,7 +38,7 @@ public final class GoogleMapsNavigationModel extends AsyncTask<URL, Void, String
             }
             finally {
                 urlConnection.disconnect();
-                return response.toString();
+                return jsonDecode(response.toString()).toString();
             }
         }
         else{
@@ -45,5 +50,16 @@ public final class GoogleMapsNavigationModel extends AsyncTask<URL, Void, String
     public String findRoute(Location origin, Location destination) throws IOException {
         URL url = new URL(baseURL + format + "origin=" + origin.getLatitude() + "," + origin.getLongitude() + "&destination=" + destination.getLatitude() + "," + destination.getLongitude() + "&key=" + key + "&mode=" + mode);
         return doInBackground(url);
+    }
+
+    public Optional<JSONArray> jsonDecode(String json) {
+        if(json != null) {
+            try {
+                return Optional.from(new JSONObject(json).getJSONArray("routes"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return Optional.empty();
     }
 }
