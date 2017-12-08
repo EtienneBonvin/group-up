@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -20,6 +21,13 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.akexorcist.googledirection.DirectionCallback;
+import com.akexorcist.googledirection.GoogleDirection;
+import com.akexorcist.googledirection.constant.RequestResult;
+import com.akexorcist.googledirection.constant.TransportMode;
+import com.akexorcist.googledirection.model.Direction;
+import com.akexorcist.googledirection.model.Step;
+import com.akexorcist.googledirection.util.DirectionConverter;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -28,6 +36,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +44,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.mail.Transport;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.files.FileManager;
@@ -369,10 +380,10 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 // Dialog Builder
                 final AlertDialog.Builder builder =
                         new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AboutDialog));
-                builder.setTitle(R.string.poi_remove_title);
-
-                builder.setPositiveButton(R.string.poi_remove_positive, getRemovePositiveListener(marker));
-                builder.setNegativeButton(R.string.poi_remove_negative, getNegativeListener());
+                builder.setTitle(R.string.poi_action_title);
+                builder.setNeutralButton(R.string.poi_action_route, getNeutralListener(marker));
+                builder.setPositiveButton(R.string.poi_action_remove, getRemovePositiveListener(marker));
+                builder.setNegativeButton(R.string.poi_action_cancel, getNegativeListener());
 
                 builder.create().show();
             }
@@ -421,6 +432,42 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 marker.remove();
 
                 Database.update();
+            }
+        };
+    }
+
+    private DialogInterface.OnClickListener getNeutralListener(final Marker marker){
+        return new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if(!Account.shared.getLocation().isEmpty()) {
+
+                    // Due to Google Maps strange behaviour, location needs to be corrected
+                    LatLng correctedDestination = new LatLng(marker.getPosition().latitude - 0.0015, marker.getPosition().longitude);
+                    GoogleDirection.withServerKey("AIzaSyDtv0o9SNKJWLWt51YyYhZK0nxsR5FWMdY")
+                            .from(new LatLng(Account.shared.getLocation().get().getLatitude(), Account.shared.getLocation().get().getLongitude()))
+                            .to(correctedDestination)
+                            .transportMode(TransportMode.WALKING)
+                            .execute(new DirectionCallback() {
+                                @Override
+                                public void onDirectionSuccess(Direction direction, String rawBody) {
+                                    String status = direction.getStatus();
+                                    if(status.equals(RequestResult.OK)) {
+                                        List<Step> stepList = direction.getRouteList().get(0).getLegList().get(0).getStepList();
+                                        ArrayList<PolylineOptions> polylineOptionList = DirectionConverter.createTransitPolyline(getBaseContext(), stepList, 5, Color.RED, 3, Color.BLUE);
+                                        for (PolylineOptions polylineOption : polylineOptionList) {
+                                            mMap.addPolyline(polylineOption);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onDirectionFailure(Throwable t) {
+                                    AndroidHelper.showToast(getBaseContext(), "Unable to compute route to desired point of interest. Try again later...", Toast.LENGTH_SHORT);
+                                }
+                            });
+                }
             }
         };
     }
