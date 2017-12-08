@@ -81,6 +81,7 @@ public class ToolbarActivity extends AppCompatActivity {
                 break;
             case USER_PROFILE:
                 title.setText(R.string.toolbar_title_user_profile);
+                break;
             default:
                 rightImage.setImageResource(R.drawable.ic_user);
                 findViewById(R.id.toolbar_image_right).setOnClickListener(new View.OnClickListener() {
