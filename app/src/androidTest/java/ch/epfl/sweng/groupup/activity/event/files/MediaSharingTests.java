@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.activity.event.File;
+/*package ch.epfl.sweng.groupup.activity.event.files;
 
 import android.app.Activity;
 import android.app.Instrumentation;
@@ -189,14 +189,13 @@ public class MediaSharingTests {
     }
 
     private void mockMediaSelection(Uri imageUri){
-
         Intent resultData = new Intent();
         resultData.setData(imageUri);
         Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(
                 Activity.RESULT_OK, resultData);
 
         Matcher<Intent> expectedIntent = allOf(hasAction(Intent.ACTION_PICK),
-                hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), hasData(android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI));
+                hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
 
         Intents.init();
         intending(expectedIntent).respondWith(result);
@@ -216,3 +215,4 @@ public class MediaSharingTests {
                 .perform(click());
     }
 }
+*/
