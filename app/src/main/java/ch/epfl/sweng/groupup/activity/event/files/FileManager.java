@@ -183,12 +183,10 @@ public class FileManager implements Watcher {
                         .setLayoutParams(params);
             }
 
-            if(targetUri.toString().contains("image")) {
+            if(targetUri.toString().contains("image") || targetUri.toString().contains("mipmap")) {
                 recoverAndUploadImage(targetUri);
-
             }else {
                 recoverAndUploadVideo(targetUri);
-
             }
         }
     }
@@ -210,11 +208,17 @@ public class FileManager implements Watcher {
         String[] proj = { MediaStore.Images.Media.DATA };
         CursorLoader loader = new CursorLoader(activity.getApplicationContext(), contentUri, proj, null, null, null);
         Cursor cursor = loader.loadInBackground();
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String result = cursor.getString(column_index);
-        cursor.close();
-        return result;
+        try{
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            String result = cursor.getString(column_index);
+            cursor.close();
+            return result;
+        }
+        catch (NullPointerException e){
+            return contentUri.toString();
+        }
+
     }
 
     /**

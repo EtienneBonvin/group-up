@@ -117,7 +117,6 @@ public final class Event implements Serializable, Watcher, Watchee{
     }
 
     public void addVideo(String uuid, File file){
-        Log.d("STRING TO THE FILE", file.toString());
         verifyProxyInstantiated();
         eventVideos.add(file);
         proxy.uploadFile(uuid,file);
