@@ -85,7 +85,7 @@ public class EventCreationActivityTest {
 
         addEventName(EVENT_NAME);
         addDescription(EVENT_DESCRIPTION);
-        
+
         LocalDateTime start = new LocalDateTime(2099, 1, 6, 9,
                 0, 0, 0);
         LocalDateTime end = start.plusDays(4);
@@ -121,7 +121,7 @@ public class EventCreationActivityTest {
             //The tests are stopped, nothing to do.
         }
 
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
 
 
         Event found = findEvent(EVENT_NAME);
@@ -152,14 +152,14 @@ public class EventCreationActivityTest {
     public void noEventCreatedOnEmptyEventName(){
 
         addEventName("");
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
         onView(withId(R.id.ui_edit_event_name))
                 .check(matches(hasErrorText(
                         getTargetContext().getString(R.string.event_creation_toast_non_empty_event_name))));
 
         //Remove the error text for further tests
         addEventName(EVENT_NAME);
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
         Account.shared.clear();
     }
 
@@ -169,14 +169,14 @@ public class EventCreationActivityTest {
                 "I should not be able to tell my life in the event name");
         setStartDate(2100, 5, 5, 4, 5);
         setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
         onView(withId(R.id.ui_edit_event_name))
                 .check(matches(hasErrorText(
                         getTargetContext().getString(R.string.event_creation_toast_event_name_too_long))));
 
         //Remove the error text for further tests
         addEventName(EVENT_NAME);
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
         Account.shared.clear();
     }
 
@@ -185,7 +185,7 @@ public class EventCreationActivityTest {
         addEventName(EVENT_NAME);
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2099, 5, 5, 5, 5);
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
         onView(withText(R.string.event_creation_toast_event_end_before_begin))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                         .getWindow()
@@ -203,7 +203,7 @@ public class EventCreationActivityTest {
         addEventName(EVENT_NAME);
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 4, 5, 5, 5);
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
         onView(withText(R.string.event_creation_toast_event_end_before_begin))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                         .getWindow()
@@ -221,7 +221,7 @@ public class EventCreationActivityTest {
         addEventName(EVENT_NAME);
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
         onView(withText(R.string.event_creation_toast_event_last_1_minute))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                         .getWindow()
@@ -246,7 +246,7 @@ public class EventCreationActivityTest {
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
                 .perform(PickerActions.setDate(year, month, day));
         onView(withId(android.R.id.button1)).perform(click());
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
         onView(withText(R.string.event_creation_toast_event_start_before_now))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
                         .getWindow()
@@ -295,7 +295,7 @@ public class EventCreationActivityTest {
         onView(withId(R.id.buttonScanQR)).perform(click());
         // Click back
         Espresso.pressBack();
-        onView(withId(R.id.save_added_members_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
         // Check event details
         onView(withId(R.id.ui_edit_event_name)).check(matches(withText(eventName)));
         Account.shared.clear();
@@ -346,7 +346,7 @@ public class EventCreationActivityTest {
         onView(withId(R.id.edit_text_add_member)).perform(typeText(input));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.image_view_add_member)).perform(click());
-        onView(withId(R.id.save_added_members_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
     }
 
     private void addEventName(String name){

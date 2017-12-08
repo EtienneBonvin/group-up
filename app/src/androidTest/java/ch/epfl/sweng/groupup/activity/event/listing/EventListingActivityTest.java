@@ -59,14 +59,14 @@ public class EventListingActivityTest {
         onView(ViewMatchers.withId(R.id.createEventButton)).perform(click());
         onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
         Espresso.closeSoftKeyboard();
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
         //Generate directly a new event with an invitation, can't be done in the activity
         Event eventInvitation = new Event("event invitation", LocalDateTime.now().plusHours(1),
                 LocalDateTime.now().plusDays(1), "This is the event to test the invitation process",
                 new ArrayList<>(Collections.singletonList(Account.shared.toMember())), true);
         Account.shared.addOrUpdateEvent(eventInvitation);
 
-        onView(withId(R.id.icon_access_group_list)).perform(click());
+        onView(withId(R.id.toolbar_image_left)).perform(click());
         onView(withText("Accept")).perform(click());
         if (BuildConfig.DEBUG && !(Account.shared.getEvents().size() == 2)) {
             throw new AssertionError();
@@ -81,14 +81,14 @@ public class EventListingActivityTest {
         onView(withId(R.id.ui_edit_event_name)).perform(typeText("EventInvitation"));
 
         Espresso.closeSoftKeyboard();
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
 
         Event eventInvitation = new Event("event invitation", LocalDateTime.now().plusHours(1),
                 LocalDateTime.now().plusDays(1), "This is the event to test the invitation process",
                 new ArrayList<>(Collections.singletonList(Account.shared.toMember())), true);
         Account.shared.addOrUpdateEvent(eventInvitation);
 
-        onView(withId(R.id.icon_access_group_list)).perform(click());
+        onView(withId(R.id.toolbar_image_left)).perform(click());
         onView(withText("Decline")).perform(click());
         if (BuildConfig.DEBUG && !(Account.shared.getEvents().size() == 1)) {
             throw new AssertionError();

@@ -14,6 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
+        android:layout_marginEnd="@dimen/default_gap"
+        android:layout_marginStart="@dimen/default_gap"
+        android:layout_marginTop="@dimen/default_gap"
         android:text="@string/members_adding_tv_greet_user"
         android:gravity="center"
         android:textSize="20sp"/>
@@ -22,32 +25,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/members"
+        android:layout_marginEnd="@dimen/default_gap"
+        android:layout_marginStart="@dimen/default_gap"
         android:text="@string/members_adding_tv_members"
         android:layout_below="@id/greetings"
         android:textSize="20sp"
         android:paddingTop="20sp"/>
 
-    <Button
-        android:id="@+id/save_added_members_button"
-        style="@style/ButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="@string/members_adding_button_save" />
 
     <!-- User input for the email address of the invited users -->
     <LinearLayout
         android:id="@+id/layout_add_member"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/save_added_members_button">
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="@dimen/default_gap"
+        android:layout_marginStart="@dimen/default_gap"
+        android:layout_marginBottom="@dimen/default_gap">
 
         <ImageView
             android:id="@+id/buttonScanQR"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:layout_weight="0.08"
+            android:layout_weight="0.09"
             android:adjustViewBounds="false"
             android:contentDescription="@string/Logo_QR"
             android:cropToPadding="false"
@@ -60,6 +60,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
             android:hint="@string/members_adding_hint_invite_new_members"
+            android:layout_marginEnd="@dimen/default_gap"
+            android:layout_marginStart="@dimen/default_gap"
             android:textColor="@color/primaryTextColor"
             android:inputType="textEmailAddress"
             android:textSize="20sp" />
@@ -80,8 +82,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/layout_add_member"
+        android:layout_marginEnd="@dimen/default_gap"
+        android:layout_marginStart="@dimen/default_gap"
         android:gravity="center"
-        android:paddingTop="20sp"
         android:text="@string/members_adding_tv_invite_new_members"
         android:textSize="20sp" />
 
@@ -92,6 +95,8 @@
         android:layout_height="match_parent"
         android:layout_below="@id/members"
         android:layout_above="@id/text_view_add_members"
+        android:layout_marginEnd="@dimen/default_gap"
+        android:layout_marginStart="@dimen/default_gap"
         android:id="@+id/scrollView">
 
         <LinearLayout
