@@ -62,12 +62,8 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_creation);
-        super.initializeToolbarActivity();
-
         initFields();
-
         initListeners();
-
     }
 
     /**
@@ -140,7 +136,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
      */
     private void initListeners(){
 
-        super.initializeToolbarActivity();
+        super.initializeToolbarActivity(ToolbarActivity.EVENT_CREATION);
 
         findViewById(R.id.button_start_date)
                 .setOnClickListener(new View.OnClickListener() {
@@ -177,7 +173,7 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
                     }
                 });
 
-        findViewById(R.id.save_new_event_button)
+        findViewById(R.id.toolbar_image_right)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

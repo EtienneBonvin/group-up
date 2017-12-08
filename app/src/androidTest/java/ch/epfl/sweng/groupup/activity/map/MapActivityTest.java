@@ -125,7 +125,7 @@ public class MapActivityTest {
     private void createEvent() {
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(EVENT_NAME));
         Espresso.closeSoftKeyboard();
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
         onView(withId(R.id.linear_layout_event_list)).perform(click());
         onView(withId(R.id.swipe_bar))
                 .perform(swipeRight());

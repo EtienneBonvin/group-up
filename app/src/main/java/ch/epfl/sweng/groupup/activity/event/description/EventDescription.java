@@ -95,7 +95,7 @@ public class EventDescription {
                 });
 
         //Save changes and go to event listing
-        activity.findViewById(R.id.save_event_modification_button)
+        activity.findViewById(R.id.toolbar_image_right)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

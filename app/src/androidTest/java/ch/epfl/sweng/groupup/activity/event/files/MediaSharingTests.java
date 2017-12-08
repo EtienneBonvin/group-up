@@ -214,7 +214,7 @@ public class MediaSharingTests {
                 .perform(typeText(EVENT_NAME));
         Espresso.closeSoftKeyboard();
 
-        onView(withId(R.id.save_new_event_button))
+        onView(withId(R.id.toolbar_image_right))
                 .perform(click());
     }
 }

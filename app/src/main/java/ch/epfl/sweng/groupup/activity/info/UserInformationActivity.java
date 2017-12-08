@@ -51,7 +51,7 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_list);
-        super.initializeToolbarActivity();
+        super.initializeToolbarActivity(ToolbarActivity.USER_PROFILE);
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             authService = new FirebaseAuthentication(

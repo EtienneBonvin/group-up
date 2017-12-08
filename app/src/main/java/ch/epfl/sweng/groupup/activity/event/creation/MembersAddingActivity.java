@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.MissingResourceException;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.object.account.Account;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -85,7 +86,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                     }
                 });
 
-        findViewById(R.id.save_added_members_button)
+        findViewById(R.id.toolbar_image_right)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -93,7 +94,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                     }
                 });
 
-        super.initializeToolbarActivity();
+        super.initializeToolbarActivity(ToolbarActivity.MEMBERS_ADDING);
     }
 
     /**

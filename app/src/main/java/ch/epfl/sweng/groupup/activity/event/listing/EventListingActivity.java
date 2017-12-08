@@ -14,8 +14,6 @@ import android.widget.LinearLayout;
 
 import org.joda.time.LocalDateTime;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,7 +51,7 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_listing);
-        super.initializeToolbarActivity();
+        super.initializeToolbarActivity("");
 
         Account.shared.addWatcher(this);
         initializeVariables();
