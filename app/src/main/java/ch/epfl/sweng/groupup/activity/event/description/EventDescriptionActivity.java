@@ -67,6 +67,12 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     private float x1,x2;
     private static final int MIN_DISTANCE = 150;
 
+    /**
+     * Override the onCreated method, where when the activity is called, set up GoogleMaps,
+     * swipe bar and instantiate variables
+     *
+     * @param savedInstanceState the Bundle object containing the activity's previously saved state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,7 +134,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     /**
      * Override onPause method, remove the activity from the watchers of the event to avoid
      * exceptions.
-     **/
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -157,15 +163,19 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         Database.update();
     }
 
+    /**
+     * Override onStop method, remove the activity from the watchers of the event to avoid
+     * exceptions.
+     */
     public void onStop() {
         super.onStop();
         fileManager.close();
     }
 
-    /*
+    /**
      * Override onDestroy method, remove the activity from the watchers of the event to avoid
      * exceptions.
-     **/
+     */
     public void onDestroy() {
         super.onDestroy();
         fileManager.close();
@@ -189,6 +199,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
 
     /**
      * Defines the behavior of the activity when the Google map is ready.
+     *
      * @param googleMap the Google map.
      */
     @Override
@@ -227,7 +238,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     }
 
     /**
-     * @param event to be updated
+     * @param event to be updated.
+     *
      * Updates the member markers and points of interests of an event by removing the old state
      * and checking that the google map is initialized and given event corresponds with current
      */
@@ -283,10 +295,11 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     }
 
     /**
-     * @param context the application context.
-     * @return callback interface for when the map has finished rendering.
      * When the map has has finished rendering, show a toast with instructions for the user
      * when the swipe bar is touched.
+     *
+     * @param context the application context.
+     * @return callback interface for when the map has finished rendering.
      */
     private GoogleMap.OnMapLoadedCallback getOnMapLoadedCallback(final Context context) {
         return new OnMapLoadedCallback() {
@@ -301,9 +314,10 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     }
 
     /**
-     * @return callback for when the user long presses on the map
      * Creates the dialog for the user that shows when the user longclicks on the map,
      * i.e. the fields to fill in and then accept/decline to add a new point of interest
+     *
+     * @return callback for when the user long presses on the map
      */
     private GoogleMap.OnMapLongClickListener getMapLongClickListener() {
         return new GoogleMap.OnMapLongClickListener() {
@@ -311,12 +325,10 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
             public void onMapLongClick(final LatLng latLng) {
                 Context context = EventDescriptionActivity.this;
 
-                // Dialog Builder
                 final AlertDialog.Builder builder =
                         new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AboutDialog));
                 builder.setTitle(R.string.poi_dialog_title);
 
-                // Container + Child Views to enable input from the user.
                 LinearLayout container = new LinearLayout(context);
                 container.setOrientation(LinearLayout.VERTICAL);
 
@@ -342,11 +354,12 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     }
 
     /**
+     * A method to create the new point of interest when the add button is pushed by the user.
+     *
      * @param latLng the LatLng coordinates of the new point of interest.
      * @param titleEditText the title of the new point of interest.
      * @param descriptionEditText the description of the new point of interest.
      * @return the method to be invoked when the add button is pushed
-     * A method to create the new point of interest when the add button is pushed by the user.
      */
     private DialogInterface.OnClickListener getCreatePositiveListener(final LatLng latLng,
                                                                       final EditText titleEditText,
@@ -370,9 +383,10 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     }
 
     /**
-     * @return the method to be invoked when the cancel button is pushed
      * A method that closes the dialog with the user when the cancel button
      * is pushed by the user.
+     *
+     * @return the method to be invoked when the cancel button is pushed.
      */
     private DialogInterface.OnClickListener getNegativeListener() {
         return new DialogInterface.OnClickListener() {
@@ -383,7 +397,12 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         };
     }
 
-
+    /**
+     * Creates a dialog for the user to decide to remove a
+     * point of interest or not.
+     *
+     * @return the method to be invoked when a marker is dragged.
+     */
     private GoogleMap.OnMarkerDragListener getMarkerDragListener() {
         return new GoogleMap.OnMarkerDragListener() {
             @Override
@@ -401,19 +420,20 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 builder.create().show();
             }
 
-
             @Override
             public void onMarkerDrag(Marker marker) {
                 // Ignore
             }
 
 
+            /**
+             * This needs to be done because of a "bug" of the Google Maps, when you start dragging a marker it gets
+             * automatically deviated a little bit.
+             *
+             * @param marker being dragged.
+             */
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                /*
-                This needs to be done because of a "bug" of the Google Maps, when you start dragging a marker it gets
-                 automatically deviated a little bit.
-                 */
                 marker.remove();
                 updatePoiMarkers();
             }
@@ -421,6 +441,13 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     }
 
 
+    /**
+     * Removes a point of interest chosen by a user to be deleted by pushing on the delete
+     * button when a point of interest is dragged.
+     *
+     * @param marker to be removed from the map.
+     * @return the method to be invoked when the user decides to remove a point of interest
+     */
     private DialogInterface.OnClickListener getRemovePositiveListener(final Marker marker) {
         return new DialogInterface.OnClickListener() {
             @Override
