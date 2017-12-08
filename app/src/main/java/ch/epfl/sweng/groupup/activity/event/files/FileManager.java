@@ -1,16 +1,13 @@
 package ch.epfl.sweng.groupup.activity.event.files;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -36,7 +33,6 @@ import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.CONTEXT_IGNORE_SECURITY;
 
 /**
  * FileManager class.
