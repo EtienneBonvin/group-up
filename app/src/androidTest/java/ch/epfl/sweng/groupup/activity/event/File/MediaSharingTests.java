@@ -1,4 +1,4 @@
-package ch.epfl.sweng.groupup.activity.event.file;
+package ch.epfl.sweng.groupup.activity.event.File;
 
 import android.app.Activity;
 import android.app.Instrumentation;
@@ -196,7 +196,8 @@ public class MediaSharingTests {
                 Activity.RESULT_OK, resultData);
 
         Matcher<Intent> expectedIntent = allOf(hasAction(Intent.ACTION_PICK),
-                hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
+                hasData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), hasData(android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI));
+
         Intents.init();
         intending(expectedIntent).respondWith(result);
 
