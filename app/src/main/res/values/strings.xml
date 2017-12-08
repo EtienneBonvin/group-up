@@ -2,9 +2,12 @@
     <string name="app_name">GroupUp</string>
 
     <!-- ToolbarActivity -->
-    <string name="toolbar_description_group_list_icon">Icon to click to access group list</string>
-    <string name="toolbar_description_settings_icon">Icon to click to access settings</string>
-    <string name="user_profile">Access the user profile</string>
+    <string name="toolbar_image_left">Most left icon in toolbar</string>
+    <string name="toolbar_image_second_right">Second most right icon in toolbar</string>
+    <string name="toolbar_image_right">Most right icon in toolbar</string>
+    <string name="toolbar_title_add_members">Add Members</string>
+    <string name="toolbar_title_create_event">Create Event</string>
+    <string name="toolbar_title_user_profile">User Profile</string>
 
     <!-- Welcome page -->
     <string name="welcome_view_powered_by">Powered by Flying Monkeys Team</string>
@@ -33,20 +36,17 @@
     <string name="event_creation_tv_start_time">Start time : </string>
     <string name="event_creation_tv_end_time">End time : </string>
     <string name="event_creation_tv_description">Description : </string>
-    <string name="event_creation_button_add_members">Show / Add members</string>
+    <string name="event_creation_button_add_members">Add members</string>
     <string name="event_creation_tv_number_of_members">Number of members :</string>
-    <string name="event_creation_button_add_event">ADD EVENT</string>
     <string name="event_creation_toast_non_empty_event_name">Give a name to your event !</string>
     <string name="event_creation_toast_event_name_too_long">The name of the event is too long.</string>
     <string name="event_creation_toast_event_start_before_now">Are you planning to go back to the past ?</string>
     <string name="event_creation_toast_event_end_before_begin">Your event ends before it begins.</string>
     <string name="event_creation_toast_event_last_1_minute">Your event should last for at least 1 minute.</string>
-    <string name="event_cration_error_cant_add_yourself">You\'ll be automatically added to the event.</string>
+    <string name="event_creation_error_cant_add_yourself">You\'ll be automatically added to the event.</string>
 
     <!-- Members Adding UI -->
-    <string name="members_adding_tv_greet_user">Let us add some friends to your event !\n\n
-    You can add a friend who does not have the application yet by entering his email address !</string>
-    <string name="members_adding_button_save">Save members</string>
+    <string name="members_adding_tv_greet_user">You can invite a friend who does not have the application yet by entering his email address !</string>
     <string name="members_adding_tv_members">Members : </string>
     <string name="members_adding_error_toast_invalid_email">Invalid email address !</string>
     <string name="members_adding_tv_invite_new_members">Invite new members</string>
@@ -55,9 +55,6 @@
     <string name="plus_sign">Plus sign</string>
 
     <!-- Event Listing UI -->
-
-    <!-- SettingsActivity -->
-    <string name="settings_tv_top">Settings page</string>
 
     <!-- activity_display_qr-->
     <string name="QR_code">QR Code</string>
@@ -146,6 +143,7 @@
     <string name="poi_create_add">Add</string>
     <string name="map_activity_poi_instruction">You can add Points Of Interest by long clicking on the map.</string>
     <string name="poi_action_route">Bring me there</string>
+
 
 
 </resources>

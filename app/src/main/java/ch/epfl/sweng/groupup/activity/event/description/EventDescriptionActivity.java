@@ -82,7 +82,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_description);
-        super.initializeToolbarActivity();
+        super.initializeToolbarActivity(ToolbarActivity.EVENT_DESCRIPTION);
 
         swipeBarTouched = false;
 
