@@ -97,7 +97,7 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
             eventButton.setText(String.format(Locale.getDefault(), "%s \n%d.%d. %d:%02d - %d.%d. %d:%02d", e.getEventName(),
                     start.getDayOfMonth(), start.getMonthOfYear(), start.getHourOfDay(), start.getMinuteOfHour(),
                     end.getDayOfMonth(), end.getMonthOfYear(), end.getHourOfDay(), end.getMinuteOfHour()));
-            eventButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+            eventButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
 
             eventButton.setPadding(getResources().getDimensionPixelSize(R.dimen.default_gap),0,getResources().getDimensionPixelSize(R.dimen.default_gap), 0);
             if (e.getEventStatus().equals(EventStatus.CURRENT)){
