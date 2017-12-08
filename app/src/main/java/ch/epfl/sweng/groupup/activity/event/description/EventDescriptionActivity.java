@@ -23,7 +23,6 @@ import android.widget.ViewFlipper;
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
 import com.akexorcist.googledirection.constant.RequestResult;
-import com.akexorcist.googledirection.constant.TransitMode;
 import com.akexorcist.googledirection.constant.TransportMode;
 import com.akexorcist.googledirection.model.Direction;
 import com.akexorcist.googledirection.model.Step;
@@ -344,10 +343,10 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 // Dialog Builder
                 final AlertDialog.Builder builder =
                         new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AboutDialog));
-                builder.setTitle(R.string.poi_remove_title);
-                builder.setNeutralButton("Bring me there", getNeutralListener(marker));
-                builder.setPositiveButton(R.string.poi_remove_positive, getRemovePositiveListener(marker));
-                builder.setNegativeButton(R.string.poi_remove_negative, getNegativeListener());
+                builder.setTitle(R.string.poi_action_title);
+                builder.setNeutralButton(R.string.poi_action_route, getNeutralListener(marker));
+                builder.setPositiveButton(R.string.poi_action_remove, getRemovePositiveListener(marker));
+                builder.setNegativeButton(R.string.poi_action_cancel, getNegativeListener());
 
                 builder.create().show();
             }
@@ -406,6 +405,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if(!Account.shared.getLocation().isEmpty()) {
+
+                    // Due to Google Maps strange behaviour, location needs to be corrected
                     LatLng correctedDestination = new LatLng(marker.getPosition().latitude - 0.0015, marker.getPosition().longitude);
                     GoogleDirection.withServerKey("AIzaSyDtv0o9SNKJWLWt51YyYhZK0nxsR5FWMdY")
                             .from(new LatLng(Account.shared.getLocation().get().getLatitude(), Account.shared.getLocation().get().getLongitude()))
@@ -426,7 +427,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
 
                                 @Override
                                 public void onDirectionFailure(Throwable t) {
-                                    // Do something here
+                                    AndroidHelper.showToast(getBaseContext(), "Unable to compute route to desired point of interest. Try again later...", Toast.LENGTH_SHORT);
                                 }
                             });
                 }

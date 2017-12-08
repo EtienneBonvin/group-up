@@ -135,12 +135,13 @@
     <string name="poi_title_hint">title</string>
     <string name="poi_description_hint">description</string>
     <string name="poi_dialog_title">Add a Point Of Interest</string>
-    <string name="poi_remove_title">Do you really want to remove this PoI?</string>
-    <string name="poi_remove_positive">Yes</string>
-    <string name="poi_remove_negative">No</string>
+    <string name="poi_action_title">What you wanna do, huh?</string>
+    <string name="poi_action_remove">Remove</string>
+    <string name="poi_action_cancel">Cancel</string>
     <string name="poi_create_cancel">Cancel</string>
     <string name="poi_create_add">Add</string>
     <string name="map_activity_poi_instruction">You can add Points Of Interest by long clicking on the map.</string>
+    <string name="poi_action_route">Bring me there</string>
 
 </resources>
 
