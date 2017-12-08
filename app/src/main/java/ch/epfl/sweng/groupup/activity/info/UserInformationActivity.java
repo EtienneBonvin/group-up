@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -109,7 +110,7 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
                                      y,
                                      bitMatrix.get(x, y) ?
                                      Color.BLACK :
-                                     getResources().getColor(R.color.background));
+                                     ContextCompat.getColor(this,R.color.background));
                     }
                 }
 

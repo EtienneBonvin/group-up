@@ -2,6 +2,7 @@ package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -186,7 +187,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 0.9f));
         textView.setText(memberInfo.toString());
-        textView.setTextColor(getResources().getColor(R.color.primaryTextColor));
+        textView.setTextColor(ContextCompat.getColor(this,R.color.primaryTextColor));
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 0,
@@ -196,7 +197,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
         ImageView minus = new ImageView(this);
         minus.setImageResource(R.drawable.ic_minus_box);
         minus.setLayoutParams(params);
-        minus.setBackgroundColor(getResources().getColor(R.color.transparent));
+        minus.setBackgroundColor(ContextCompat.getColor(this,R.color.transparent));
 
         newMember.addView(textView);
         newMember.addView(minus);
