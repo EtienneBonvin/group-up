@@ -2,11 +2,14 @@ package ch.epfl.sweng.groupup.activity.event.files;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,8 +83,11 @@ public class FileManager implements Watcher {
         activity.findViewById(R.id.add_files).setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Intent intent = new Intent(Intent.ACTION_PICK,
+                /*Intent intent = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                activity.startActivityForResult(intent, 0);*/
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("*/*");
                 activity.startActivityForResult(intent, 0);
             }
         });
@@ -108,9 +114,9 @@ public class FileManager implements Watcher {
                 container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 columnWidth = container.getMeasuredWidth() / COLUMNS;
                 rowHeight = container.getMeasuredHeight() / ROWS;
-
             }
         });
+
         ViewGroup.LayoutParams params = grid.getLayoutParams();
         params.height = rowHeight;
         grid.setLayoutParams(params);
@@ -125,6 +131,8 @@ public class FileManager implements Watcher {
                     for (CompressedBitmap bitmap : event.getPictures()) {
                         addImageToGrid(bitmap, false);
                     }
+                    //TODO addvideotoGrid, on click listener to play the videoView
+
                 }
             }
         });
@@ -175,22 +183,65 @@ public class FileManager implements Watcher {
                         .setLayoutParams(params);
             }
 
-            Bitmap bitmap;
-            try {
-
-                bitmap = BitmapFactory.decodeStream(activity.getContentResolver().openInputStream(targetUri));
-
-            } catch (FileNotFoundException e) {
-                AndroidHelper.showToast(activity.getApplicationContext(),
-                        activity.getString(R.string.file_management_toast_error_file_uri),
-                        Toast.LENGTH_SHORT);
-                return;
+            if(targetUri.toString().contains("image") || targetUri.toString().contains("mipmap")) {
+                recoverAndUploadImage(targetUri);
+            }else {
+                recoverAndUploadVideo(targetUri);
             }
-            CompressedBitmap compressedBitmap = new CompressedBitmap(bitmap);
-            addImageToGrid(compressedBitmap, true);
         }
     }
 
+    /**
+     * Recover a video from the user's phone from its uri and upload it on the database.
+     * @param targetUri the uri of the video.
+     */
+    private void recoverAndUploadVideo(Uri targetUri){
+        String realpath= getRealPathFromURI(targetUri);
+        addVideoToGrid(realpath);
+        File file= new File(realpath);
+        event.addVideo(Account.shared.getUUID().getOrElse("Default ID"),file);
+    }
+    /**
+     * Getting the real filepath
+     */
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
+        CursorLoader loader = new CursorLoader(activity.getApplicationContext(), contentUri, proj, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+        try{
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            String result = cursor.getString(column_index);
+            cursor.close();
+            return result;
+        }
+        catch (NullPointerException e){
+            return contentUri.toString();
+        }
+
+    }
+
+    /**
+     * Recover an image from the user's phone from its uri and download it on the database.
+     * @param targetUri the uri of the image.
+     */
+    private void recoverAndUploadImage(Uri targetUri){
+        Bitmap bitmap;
+        try {
+
+            bitmap = BitmapFactory.decodeStream(activity.getContentResolver().openInputStream(targetUri));
+
+        } catch (FileNotFoundException e) {
+            AndroidHelper.showToast(activity.getApplicationContext(),
+                    activity.getString(R.string.file_management_toast_error_file_uri),
+                    Toast.LENGTH_SHORT);
+            return;
+        }
+        CompressedBitmap compressedBitmap = new CompressedBitmap(bitmap);
+        addImageToGrid(compressedBitmap, true);
+    }
+
+    //TODO TAKE VIDEOS FROM APP
     /**
      * Initialize the camera button and open the camera
      */
@@ -257,6 +308,11 @@ public class FileManager implements Watcher {
         imagesAdded = 0;
     }
 
+    private void addVideoToGrid(String realpath){
+        CompressedBitmap thumb = new CompressedBitmap(
+                ThumbnailUtils.createVideoThumbnail(realpath, MediaStore.Video.Thumbnails.MINI_KIND));
+        addImageToGrid(thumb, false);
+    }
     /**
      * Add an image to the grid and to the Firebase storage.
      *
@@ -349,6 +405,11 @@ public class FileManager implements Watcher {
         List<CompressedBitmap> eventPictures = event.getPictures();
         for(CompressedBitmap bitmap : eventPictures){
             addImageToGrid(bitmap, false);
+        }
+        for(File f : event.getEventVideos()){
+            Uri videoUri=Uri.fromFile(f);
+           // String realpath=getRealPathFromURI(videoUri);
+            addVideoToGrid(videoUri.getPath());
         }
     }
 

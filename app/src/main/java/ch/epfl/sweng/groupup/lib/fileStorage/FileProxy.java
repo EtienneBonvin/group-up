@@ -1,5 +1,6 @@
 package ch.epfl.sweng.groupup.lib.fileStorage;
 
+import java.io.File;
 import java.util.List;
 
 import ch.epfl.sweng.groupup.activity.event.files.CompressedBitmap;
@@ -21,7 +22,9 @@ public interface FileProxy {
      * Get all the files from the external storage.
      * @return a list of the stored images in the external storage.
      */
-    List<CompressedBitmap> getFromDatabase();
+    List<CompressedBitmap> getImagesFromDatabase();
+    List<File> getVideosFromDatabase();
+
 
     /**
      * Indicates whether all the files have been recovered.
