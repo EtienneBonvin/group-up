@@ -28,8 +28,8 @@ public final class GeoLocation implements GeoLocationInterface {
 
     private static final long MIN_UPDATE_TIME_INTERVAL = 5000;
     private static final float MIN_UPDATE_DISTANCE_INTERVAL = 5;
-    private static final String ASK_PERMISSION = "ASK_PERMISSION";
-    private static final String ASK_ENABLE_GPS = "ASK_ENABLE_GPS";
+    static final String ASK_PERMISSION = "ASK_PERMISSION";
+    static final String ASK_ENABLE_GPS = "ASK_ENABLE_GPS";
     private static boolean alreadyAskedPermission = false;
     private static boolean alreadyAskedEnableGps = false;
     private static boolean dialogIsShown = false;
@@ -37,7 +37,7 @@ public final class GeoLocation implements GeoLocationInterface {
     private final Activity activity;
     private final Context context;
     private final LocationManager locationManager;
-    private final String provider;
+    private String provider;
 
 
     public GeoLocation(Activity activity, Context context) {
@@ -45,12 +45,11 @@ public final class GeoLocation implements GeoLocationInterface {
         this.context = context;
 
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        provider = locationManager.getBestProvider(getCriteria(), false);
 
         if (AndroidHelper.isEmulator()) {
             provider = LocationManager.GPS_PROVIDER;
         } else {
-            provider = locationManager.getBestProvider(getCriteria(), false);
-
             if (!dialogIsShown) {
                 if (provider == null && !alreadyAskedPermission) {
                     askToEnableProvider(ASK_PERMISSION);
@@ -160,8 +159,8 @@ public final class GeoLocation implements GeoLocationInterface {
      * Method used to ask the user to enable the GPS function if it wasn't
      * already enabled.
      */
-    private void askToEnableProvider(final String whatToAsk) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(context,
+    void askToEnableProvider(final String whatToAsk) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(activity,
                                                                                                  R.style.AboutDialog));
 
         alertDialogBuilder.setMessage(R.string.alert_dialog_ask_enable_provider_message)

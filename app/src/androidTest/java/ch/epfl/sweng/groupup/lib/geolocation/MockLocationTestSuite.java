@@ -16,27 +16,27 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
+import ch.epfl.sweng.groupup.object.account.Account;
+
+import static org.junit.Assert.assertEquals;
+
 
 @RunWith(AndroidJUnit4.class)
 public class MockLocationTestSuite {
+
     @Rule
-    public final ActivityTestRule<ToolbarActivity> mActivityRule =
-            new ActivityTestRule<>(ToolbarActivity.class);
+    public final ActivityTestRule<ToolbarActivity> mActivityRule = new ActivityTestRule<>(ToolbarActivity.class);
+
 
     @Test
     public void handlesAllStatusChanges() throws Exception {
         MockLocation myTestLocation = new MockLocation();
 
-        myTestLocation.onStatusChanged(null,
-                                       LocationProvider.OUT_OF_SERVICE,
-                                       null);
-        myTestLocation.onStatusChanged(null,
-                                       LocationProvider.TEMPORARILY_UNAVAILABLE,
-                                       null);
-        myTestLocation.onStatusChanged(null,
-                                       LocationProvider.AVAILABLE,
-                                       null);
+        myTestLocation.onStatusChanged(null, LocationProvider.OUT_OF_SERVICE, null);
+        myTestLocation.onStatusChanged(null, LocationProvider.TEMPORARILY_UNAVAILABLE, null);
+        myTestLocation.onStatusChanged(null, LocationProvider.AVAILABLE, null);
     }
+
 
     @Test
     public void handlesOnProviderEnabled() throws Exception {
@@ -45,12 +45,22 @@ public class MockLocationTestSuite {
         myTestLocation.onProviderEnabled("MY_PROVIDER");
     }
 
+
     @Test
     public void handlesOnProviderDisabled() throws Exception {
         MockLocation myTestLocation = new MockLocation();
 
         myTestLocation.onProviderDisabled("MY_PROVIDER");
     }
+
+
+    @Test
+    public void canRequestLocationUpdates() throws Throwable {
+        MockLocation myTestLocation = new MockLocation();
+
+        myTestLocation.requestLocationUpdates();
+    }
+
 
     @Test
     public void canPauseLocationUpdates() throws Exception {
@@ -59,8 +69,10 @@ public class MockLocationTestSuite {
         myTestLocation.pauseLocationUpdates();
     }
 
+
     @Test
     public void canHandleOnLocationChanged() throws Exception {
+        Account.shared.clear();
         final MockLocation myTestLocation = new MockLocation();
 
         Database.setUp();
@@ -69,6 +81,7 @@ public class MockLocationTestSuite {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Ignore
             }
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -79,8 +92,20 @@ public class MockLocationTestSuite {
         mActivityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                myTestLocation.onLocationChanged(new Location(LocationManager.GPS_PROVIDER));
+                Location location = new Location(LocationManager.GPS_PROVIDER);
+                location.setLatitude(3.1415);
+                location.setLongitude(4.1415);
+
+                myTestLocation.onLocationChanged(location);
+                assertEquals(location.getLatitude(), Account.shared.getLocation().get().getLatitude(), 0.01);
+                assertEquals(location.getLongitude(), Account.shared.getLocation().get().getLongitude(), 0.01);
+
+                myTestLocation.onLocationChanged(null);
+                assertEquals(location.getLatitude(), Account.shared.getLocation().get().getLatitude(), 0.01);
+                assertEquals(location.getLongitude(), Account.shared.getLocation().get().getLongitude(), 0.01);
             }
         });
+
+        Account.shared.clear();
     }
 }

@@ -13,15 +13,15 @@ import java.util.TimerTask;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 
+
 public final class MockLocation implements GeoLocationInterface {
 
     private final static int REPEAT_DELAY = 0;
     private final static int REPEAT_INTERVAL = 5000;
     private final static List<Location> locations = getCoordinates();
-
-    private final static Timer locationMocker = new Timer();
-
+    private static Timer locationMocker = new Timer();
     private int coordinateIndex = 0;
+
 
     @Override
     public void onLocationChanged(Location location) {
@@ -31,24 +31,29 @@ public final class MockLocation implements GeoLocationInterface {
         }
     }
 
+
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
         // Ignored
     }
+
 
     @Override
     public void onProviderEnabled(String s) {
         // Ignored
     }
 
+
     @Override
     public void onProviderDisabled(String s) {
         // Ignored
     }
 
+
     @Override
     public void requestLocationUpdates() {
         locationMocker.cancel();
+        locationMocker = new Timer();
         locationMocker.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -62,10 +67,12 @@ public final class MockLocation implements GeoLocationInterface {
         }, REPEAT_DELAY, REPEAT_INTERVAL);
     }
 
+
     @Override
     public void pauseLocationUpdates() {
         locationMocker.cancel();
     }
+
 
     /**
      * Generates a coordinates path to ease mocking of the location. The path
@@ -100,15 +107,16 @@ public final class MockLocation implements GeoLocationInterface {
         return coordinates;
     }
 
+
     /**
      * Eases the process of getting a location object from raw coordinates.
      *
      * @param coordinatesPair - a pair containing the latitude and longitude
+     *
      * @return - a location object representing the coordinates given as
      * parameter
      */
-    private static Location getLocationFromPair(Pair<Double, Double>
-                                                        coordinatesPair) {
+    private static Location getLocationFromPair(Pair<Double, Double> coordinatesPair) {
         Location location = new Location(LocationManager.GPS_PROVIDER);
 
         location.setLatitude(coordinatesPair.first);

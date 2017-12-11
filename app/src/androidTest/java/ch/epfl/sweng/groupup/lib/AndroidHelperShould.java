@@ -21,11 +21,13 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertTrue;
 
+
 @RunWith(AndroidJUnit4.class)
 public class AndroidHelperShould {
+
     @Rule
-    public final ActivityTestRule<MainActivity> mActivityRule =
-            new ActivityTestRule<>(MainActivity.class);
+    public final ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
+
 
     @Test
     public void correctlyDisplayAlert() throws Exception {
@@ -36,20 +38,17 @@ public class AndroidHelperShould {
         mActivityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                AndroidHelper.showAlert(mActivityRule.getActivity()
-                                                .getWindow()
-                                                .getContext(),
+                AndroidHelper.showAlert(mActivityRule.getActivity().getWindow().getContext(),
                                         alertTitle,
                                         alertMessage,
                                         alertButtonText);
             }
         });
-        onView(withText(alertTitle))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
-                                                     .getWindow()
-                                                     .getDecorView()))))
-                .perform(click());
+        onView(withText(alertTitle)).inRoot(withDecorView(not(is(mActivityRule.getActivity()
+                                                                              .getWindow()
+                                                                              .getDecorView())))).perform(click());
     }
+
 
     @Test
     public void correctlyDisplayToast() throws Exception {
@@ -58,18 +57,17 @@ public class AndroidHelperShould {
         mActivityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                AndroidHelper.showToast(mActivityRule.getActivity()
-                                                .getApplicationContext(),
+                AndroidHelper.showToast(mActivityRule.getActivity().getApplicationContext(),
                                         toastString,
                                         Toast.LENGTH_SHORT);
             }
         });
-        onView(withText(toastString))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
-                                                     .getWindow()
-                                                     .getDecorView()))))
-                .check(matches(isDisplayed()));
+        onView(withText(toastString)).inRoot(withDecorView(not(is(mActivityRule.getActivity()
+                                                                               .getWindow()
+                                                                               .getDecorView())))).check(matches(
+                isDisplayed()));
     }
+
 
     @Test
     public void beAbleToTestIfEmulator() throws Exception {
@@ -79,8 +77,7 @@ public class AndroidHelperShould {
                              Build.MODEL.contains("Emulator") ||
                              Build.MODEL.contains("Android SDK built for x86") ||
                              Build.MANUFACTURER.contains("Genymotion") ||
-                             (Build.BRAND.startsWith("generic") &&
-                              Build.DEVICE.startsWith("generic")) ||
+                             (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic")) ||
                              "google_sdk".equals(Build.PRODUCT);
 
         assertTrue(isEmulator == AndroidHelper.isEmulator());
