@@ -1,16 +1,19 @@
 package ch.epfl.sweng.groupup.activity.event.files;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -69,7 +72,6 @@ public class FileManager implements Watcher {
         Intent i = activity.getIntent();
         final int eventIndex = i.getIntExtra(activity.getString(R.string.event_listing_extraIndex), -1);
         if (eventIndex > -1) {
-            //!!!Order the events !!!
             event = Account.shared.getEvents().get(eventIndex);
         }else{
             event = null;
@@ -166,7 +168,7 @@ public class FileManager implements Watcher {
             addImageToGrid(compressedBitmap, true);
         } else if (resultCode == RESULT_OK) {
             Uri targetUri = data.getData();
-
+            String type= data.getType();
             if (targetUri == null) {
                 AndroidHelper.showToast(activity.getApplicationContext(),
                         activity.getString(R.string.file_management_toast_error_file_uri),
@@ -183,7 +185,8 @@ public class FileManager implements Watcher {
                         .setLayoutParams(params);
             }
 
-            if(targetUri.toString().contains("image") || targetUri.toString().contains("mipmap")) {
+
+            if(type.contains("image")) {
                 recoverAndUploadImage(targetUri);
             }else {
                 recoverAndUploadVideo(targetUri);
@@ -196,29 +199,8 @@ public class FileManager implements Watcher {
      * @param targetUri the uri of the video.
      */
     private void recoverAndUploadVideo(Uri targetUri){
-        String realpath= getRealPathFromURI(targetUri);
-        addVideoToGrid(realpath);
-        File file= new File(realpath);
-        event.addVideo(Account.shared.getUUID().getOrElse("Default ID"),file);
-    }
-    /**
-     * Getting the real filepath
-     */
-    private String getRealPathFromURI(Uri contentUri) {
-        String[] proj = { MediaStore.Images.Media.DATA };
-        CursorLoader loader = new CursorLoader(activity.getApplicationContext(), contentUri, proj, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-        try{
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            String result = cursor.getString(column_index);
-            cursor.close();
-            return result;
-        }
-        catch (NullPointerException e){
-            return contentUri.toString();
-        }
-
+        addVideoToGrid(targetUri);
+        event.addVideo(Account.shared.getUUID().getOrElse("Default ID"),targetUri);
     }
 
     /**
@@ -308,9 +290,10 @@ public class FileManager implements Watcher {
         imagesAdded = 0;
     }
 
-    private void addVideoToGrid(String realpath){
-        CompressedBitmap thumb = new CompressedBitmap(
-                ThumbnailUtils.createVideoThumbnail(realpath, MediaStore.Video.Thumbnails.MINI_KIND));
+    private void addVideoToGrid(Uri uri){
+        MediaMetadataRetriever mMMR = new MediaMetadataRetriever();
+        mMMR.setDataSource(activity,uri);
+        CompressedBitmap thumb = new CompressedBitmap(mMMR.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC));
         addImageToGrid(thumb, false);
     }
     /**
@@ -402,14 +385,11 @@ public class FileManager implements Watcher {
     @Override
     public void notifyWatcher() {
         clearImages();
-        List<CompressedBitmap> eventPictures = event.getPictures();
-        for(CompressedBitmap bitmap : eventPictures){
+        for(CompressedBitmap bitmap :  event.getPictures()){
             addImageToGrid(bitmap, false);
         }
-        for(File f : event.getEventVideos()){
-            Uri videoUri=Uri.fromFile(f);
-           // String realpath=getRealPathFromURI(videoUri);
-            addVideoToGrid(videoUri.getPath());
+        for(Uri f : event.getEventVideos()){
+            addVideoToGrid(f);
         }
     }
 
