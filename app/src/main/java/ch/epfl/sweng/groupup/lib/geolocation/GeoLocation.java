@@ -192,15 +192,19 @@ public final class GeoLocation implements GeoLocationInterface {
 
                 switch (whatToAsk) {
                     case ASK_PERMISSION: {
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri = Uri.fromParts(INTENT_SCHEME, activity.getPackageName(), null);
-                        intent.setData(uri);
-                        activity.startActivity(intent);
+                        if (!AndroidHelper.isEmulator()) {
+                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts(INTENT_SCHEME, activity.getPackageName(), null);
+                            intent.setData(uri);
+                            activity.startActivity(intent);
+                        }
                         break;
                     }
                     case ASK_ENABLE_GPS: {
-                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        activity.startActivity(intent);
+                        if (!AndroidHelper.isEmulator()) {
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            activity.startActivity(intent);
+                        }
                         break;
                     }
                     default:

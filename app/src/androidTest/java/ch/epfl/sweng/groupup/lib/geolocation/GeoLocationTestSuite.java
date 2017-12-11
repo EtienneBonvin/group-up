@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
+import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 
@@ -29,7 +29,9 @@ import static org.junit.Assert.assertEquals;
 public class GeoLocationTestSuite {
 
     @Rule
-    public final ActivityTestRule<ToolbarActivity> mActivityRule = new ActivityTestRule<>(ToolbarActivity.class);
+    public final ActivityTestRule<EventListingActivity>
+            mActivityRule
+            = new ActivityTestRule<>(EventListingActivity.class);
 
 
     @Test
@@ -160,6 +162,7 @@ public class GeoLocationTestSuite {
         onView(withText(R.string.alert_dialog_no)).perform(click());
     }
 
+
     @Test
     public void canCorrectlyAskForPermissionsAndRefuse() throws Throwable {
         mActivityRule.runOnUiThread(new Runnable() {
@@ -174,6 +177,7 @@ public class GeoLocationTestSuite {
 
         onView(withText(R.string.alert_dialog_no)).perform(click());
     }
+
 
     @Test
     public void canCorrectlyAskForGpsPermissionsAndAccept() throws Throwable {
@@ -190,6 +194,7 @@ public class GeoLocationTestSuite {
         onView(withText(R.string.alert_dialog_yes)).perform(click());
     }
 
+
     @Test
     public void canCorrectlyAskForPermissionsAndAccept() throws Throwable {
         mActivityRule.runOnUiThread(new Runnable() {
@@ -205,6 +210,7 @@ public class GeoLocationTestSuite {
         onView(withText(R.string.alert_dialog_yes)).perform(click());
     }
 
+
     @Test
     public void canCorrectlyAskForAnythingAndAccept() throws Throwable {
         mActivityRule.runOnUiThread(new Runnable() {
@@ -219,6 +225,7 @@ public class GeoLocationTestSuite {
 
         onView(withText(R.string.alert_dialog_yes)).perform(click());
     }
+
 
     @Test
     public void canCorrectlyAskForAnythingAndRefuse() throws Throwable {
