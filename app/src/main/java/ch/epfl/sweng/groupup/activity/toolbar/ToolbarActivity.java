@@ -24,6 +24,7 @@ public class ToolbarActivity extends AppCompatActivity {
     private static GeoLocationInterface geoLocation;
     //Event with invitation need to be stored outside the listing activity
     protected static Set<Event> eventsToDisplay = new HashSet<>();
+    private static boolean mockMap = false;
 
     protected static final String MEMBERS_ADDING = "MembersAdding";
     protected static final String EVENT_CREATION = "EventCreation";
@@ -109,9 +110,27 @@ public class ToolbarActivity extends AppCompatActivity {
      * Permits the tester to mock the location correctly when performing some
      * tests.
      */
-    public void mock() {
+    public void mockLocation() {
         geoLocation = new MockLocation();
         geoLocation.requestLocationUpdates();
+    }
+
+
+    /**
+     * Permits the tester to mock the map when performing some tests.
+     */
+    public void mockMap() {
+        mockMap = true;
+    }
+
+
+    /**
+     * Return true when the map should be mocked.
+     *
+     * @return - true if the map should be mocked
+     */
+    public boolean isMapMockWanted() {
+        return mockMap;
     }
 
 

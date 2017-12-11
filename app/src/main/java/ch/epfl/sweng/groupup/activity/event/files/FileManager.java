@@ -72,7 +72,6 @@ public class FileManager implements Watcher {
         Intent i = activity.getIntent();
         final int eventIndex = i.getIntExtra(activity.getString(R.string.event_listing_extraIndex), -1);
         if (eventIndex > -1) {
-            //!!!Order the events !!!
             event = Account.shared.getEvents().get(eventIndex);
         }else{
             event = null;
