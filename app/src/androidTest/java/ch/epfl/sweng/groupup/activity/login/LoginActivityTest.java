@@ -56,7 +56,7 @@ public class LoginActivityTest {
 
     private void loginThenLogout() {
         onView(withId(R.id.sign_in_button_google)).perform(click());
-        onView(withId(R.id.icon_access_user_profile)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
         onView(withId(R.id.button_sign_out)).perform(click());
     }
 }

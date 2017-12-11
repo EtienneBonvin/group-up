@@ -16,6 +16,7 @@ import ch.epfl.sweng.groupup.object.account.Account;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -39,7 +40,7 @@ public class EventDescriptionActivityTest {
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
         Espresso.closeSoftKeyboard();
 
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
 
 
         onView(withId(R.id.linear_layout_event_list)).perform(click());
@@ -48,7 +49,7 @@ public class EventDescriptionActivityTest {
 
         onView(withId(R.id.event_description_name)).perform(typeText(impossibleName));
         Espresso.closeSoftKeyboard();
-        onView(withId(R.id.save_event_modification_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
         onView(withId(R.id.event_description_name))
                 .check(matches(hasErrorText(
                         getTargetContext().getString(R.string.event_creation_toast_event_name_too_long))));
@@ -56,7 +57,6 @@ public class EventDescriptionActivityTest {
 
     }
 
-    /*
     @Test
     public void nameTooShort(){
         Database.setUp();
@@ -65,15 +65,15 @@ public class EventDescriptionActivityTest {
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
         Espresso.closeSoftKeyboard();
 
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
 
-        onView(withId(R.id.linear_layout_event_list)).perform(longClick());
+        onView(withId(R.id.linear_layout_event_list)).perform(click());
         onView(withId(R.id.event_description_name))
                 .check(matches(withText(name)));
 
         onView(withId(R.id.event_description_name)).perform(replaceText(impossibleName));
         Espresso.closeSoftKeyboard();
-        onView(withId(R.id.save_event_modification_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
         onView(withId(R.id.event_description_name))
                 .check(matches(hasErrorText(
                         getTargetContext().getString(R.string.event_creation_toast_non_empty_event_name))));
@@ -91,7 +91,7 @@ public class EventDescriptionActivityTest {
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
         Espresso.closeSoftKeyboard();
 
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
 
         onView(withId(R.id.linear_layout_event_list)).perform(click());
         onView(withId(R.id.event_description_tv_description))
@@ -100,16 +100,16 @@ public class EventDescriptionActivityTest {
         onView(withId(R.id.event_description_name))
                 .check(matches(withText(name)));
 
-        onView(withId(R.id.event_description_name)).perform(typeText(endName));
+        onView(withId(R.id.event_description_name)).perform(replaceText(name+endName));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.event_description_description)).perform(typeText(description));
-        onView(withId(R.id.save_event_modification_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
         onView(withId(R.id.linear_layout_event_list)).perform(click());
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.event_description_name)).check(matches(withText(name + endName)));
         onView(withId(R.id.event_description_description)).check(matches(withText(description)));
         Account.shared.clear();
-    }*/
+    }
 
     @Test
     public void CreateAndDisplayAlertOnDeleteEvent() {
@@ -118,7 +118,7 @@ public class EventDescriptionActivityTest {
         onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
         Espresso.closeSoftKeyboard();
 
-        onView(withId(R.id.save_new_event_button)).perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
 
         onView(withId(R.id.linear_layout_event_list)).perform(click());
 
