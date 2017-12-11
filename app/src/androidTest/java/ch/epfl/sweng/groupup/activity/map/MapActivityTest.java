@@ -112,7 +112,7 @@ public class MapActivityTest {
 
         try {
             mMarker.dragTo(mMarker, 1);
-            onView(withText(R.string.poi_remove_positive)).perform(click());
+            onView(withText(R.string.poi_action_remove)).perform(click());
             mMarker.click();
         } catch (UiObjectNotFoundException e) {
         }
@@ -129,7 +129,7 @@ public class MapActivityTest {
 
         try {
             mMarker.dragTo(mMarker, 1);
-            onView(withText(R.string.poi_remove_negative)).perform(click());
+            onView(withText(R.string.poi_action_cancel)).perform(click());
             mMarker.click();
         } catch (UiObjectNotFoundException e) {
         }
