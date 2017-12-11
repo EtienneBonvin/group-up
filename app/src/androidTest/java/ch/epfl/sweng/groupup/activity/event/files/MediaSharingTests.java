@@ -57,14 +57,18 @@ public class MediaSharingTests {
             resources.getResourcePackageName(R.mipmap.ic_launcher) + '/' +
             resources.getResourceTypeName(R.mipmap.ic_launcher) + '/' +
             resources.getResourceEntryName(R.mipmap.ic_launcher));
-    String imageType= "image/jpeg";
-    String videoType="video/mp4";
+    Uri videoUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+            resources.getResourcePackageName(R.raw.testvideo) + '/' +
+            resources.getResourceTypeName(R.raw.testvideo) + '/' +
+            resources.getResourceEntryName(R.raw.testvideo));
+    String imageType = "image/jpeg";
+    String videoType = "video/mp4";
     @Rule
     public final ActivityTestRule<EventCreationActivity> mActivityRule =
             new ActivityTestRule<>(EventCreationActivity.class);
 
     @Before
-    public void goToFileManagement(){
+    public void goToFileManagement() {
         Database.setUp();
         Account.shared.clear();
         Database.setUpEventListener(new ValueEventListener() {
@@ -85,21 +89,20 @@ public class MediaSharingTests {
     }
 
     @After
-    public void clearDatabase(){
+    public void clearDatabase() {
         Account.shared.clear();
     }
 
-
     @Test
-    public void addingPictureWithoutExceptionAndDisplayFullScreen(){
-        mockMediaSelection(imageUri,imageType);
+    public void addVideo() {
+        mockMediaSelection(videoUri, videoType);
 
         onView(withParent(withId(R.id.image_grid)))
                 .check(matches(isDisplayed()));
 
         onView(withParent(withId(R.id.image_grid)))
                 .perform(click());
-
+        //RUN THE VIDEO VIEW wHEN IMPLEMENTED
         onView(withId(R.id.show_image))
                 .check(matches(isDisplayed()));
 
@@ -108,14 +111,12 @@ public class MediaSharingTests {
 
         onView(withParent(withId(R.id.image_grid)))
                 .check(matches(isDisplayed()));
-
-        mockMediaSelection(imageUri,imageType);
-
     }
 
     @Test
-    public void addVideo(){
-        mockMediaSelection(imageUri,videoType);
+    public void addingPictureWithoutExceptionAndDisplayFullScreen() {
+        mockMediaSelection(imageUri, imageType);
+
         onView(withParent(withId(R.id.image_grid)))
                 .check(matches(isDisplayed()));
 
@@ -130,13 +131,16 @@ public class MediaSharingTests {
 
         onView(withParent(withId(R.id.image_grid)))
                 .check(matches(isDisplayed()));
+
+        mockMediaSelection(imageUri, imageType);
 
     }
 
-    @Test
-    public void fileNotFoundToastOnWrongURI(){
 
-        mockMediaSelection(Uri.parse("scrogneugneu"),imageType);
+    @Test
+    public void fileNotFoundToastOnWrongURI() {
+
+        mockMediaSelection(Uri.parse("scrogneugneu"), imageType);
 
         onView(withText(R.string.file_management_toast_error_file_uri))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
@@ -147,9 +151,9 @@ public class MediaSharingTests {
     }
 
     @Test
-    public void fileNotFoundToastOnNullURI(){
+    public void fileNotFoundToastOnNullURI() {
 
-        mockMediaSelection(null,null);
+        mockMediaSelection(null, null);
 
         onView(withText(R.string.file_management_toast_error_file_uri))
                 .inRoot(withDecorView(not(is(mActivityRule.getActivity()
@@ -160,7 +164,7 @@ public class MediaSharingTests {
     }
 
     @Test
-    public void fileNotAddedOnBadResult(){
+    public void fileNotAddedOnBadResult() {
         mockWrongSelection(imageUri);
 
         onView(withParent(withId(R.id.image_grid)))
@@ -168,8 +172,8 @@ public class MediaSharingTests {
     }
 
     @Test
-    public void openSlideShowView(){
-        mockMediaSelection(imageUri,imageType);
+    public void openSlideShowView() {
+        mockMediaSelection(imageUri, imageType);
 
         onView(withParent(withId(R.id.image_grid)))
                 .check(matches(isDisplayed()));
@@ -179,7 +183,7 @@ public class MediaSharingTests {
         onView(withId(R.id.imageSwitcher)).check(matches(isDisplayed()));
     }
 
-    private void mockWrongSelection(Uri imageUri){
+    private void mockWrongSelection(Uri imageUri) {
         Intent resultData = new Intent();
         resultData.setData(imageUri);
         Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(
@@ -194,9 +198,9 @@ public class MediaSharingTests {
         Intents.release();
     }
 
-    private void mockMediaSelection(Uri imageUri,String type){
+    private void mockMediaSelection(Uri imageUri, String type) {
         Intent resultData = new Intent();
-        resultData.setDataAndType(imageUri,type);
+        resultData.setDataAndType(imageUri, type);
         Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(
                 Activity.RESULT_OK, resultData);
 
@@ -210,7 +214,7 @@ public class MediaSharingTests {
         Intents.release();
     }
 
-    private void createEvent(){
+    private void createEvent() {
         final String EVENT_NAME = "My event";
         onView(withId(R.id.ui_edit_event_name))
                 .perform(typeText(EVENT_NAME));
