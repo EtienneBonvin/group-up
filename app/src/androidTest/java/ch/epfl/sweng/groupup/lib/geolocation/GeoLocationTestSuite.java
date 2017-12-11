@@ -88,6 +88,7 @@ public class GeoLocationTestSuite {
                                                              mActivityRule.getActivity().getApplicationContext());
 
                 myTestLocation.requestLocationUpdates();
+                myTestLocation.pauseLocationUpdates();
             }
         });
     }
