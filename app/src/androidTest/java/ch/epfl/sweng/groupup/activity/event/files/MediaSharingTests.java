@@ -33,6 +33,7 @@ import ch.epfl.sweng.groupup.object.account.Account;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
+import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -112,11 +113,9 @@ public class MediaSharingTests {
         onView(withParent(withId(R.id.image_grid)))
                 .check(matches(isDisplayed()));
 
-        //GIVE SOME TIME TO UPLOAD THE FILE
-        try {
-            Thread.sleep(10000);
-        }
-        catch (InterruptedException e){}
+        onView(withId(R.id.swipe_bar))
+                .perform(swipeRight());
+        onView(withId(R.id.remove_event_button)).perform(click());
     }
 
 
@@ -141,15 +140,14 @@ public class MediaSharingTests {
                 .check(matches(isDisplayed()));
 
         mockMediaSelection(imageUri, imageType);
-        //GIVE SOME TIME TO UPLOAD THE FILE
-        try {
-            Thread.sleep(10000);
-        }
-        catch (InterruptedException e){}
-
     }
 
 
+    @Test
+    public void notifyTest(){
+        createEvent();
+
+    }
     @Test
     public void fileNotFoundToastOnWrongURI() {
 

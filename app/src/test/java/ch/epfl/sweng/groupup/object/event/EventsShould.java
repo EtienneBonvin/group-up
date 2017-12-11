@@ -320,12 +320,4 @@ public class EventsShould {
 
         Account.shared.clear();
     }
-
-    @Test
-    public void notifyTest(){
-        current.addWatcher(future);
-        current.notifyAllWatchers();
-        current.notifyWatcher();
-        current.removeWatcher(future);
-    }
 }
