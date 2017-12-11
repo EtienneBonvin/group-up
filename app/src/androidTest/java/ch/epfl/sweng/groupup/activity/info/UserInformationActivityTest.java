@@ -25,7 +25,7 @@ public class UserInformationActivityTest {
     public final ActivityTestRule<UserInformationActivity> mActivityRule =
             new ActivityTestRule<>(UserInformationActivity.class);
 
-    
+
     @Test
     public void displayRightAccountFields() throws Exception {
         Account a = Account.shared;
@@ -79,15 +79,8 @@ public class UserInformationActivityTest {
                 .check(matches(isDisplayed()));
     }
 
-    /* IMPLEMENTATION CHANGED, THIS IS NOW USELESS
     @Test
-    public void displayErrorToastOnSignOutButtonClick() throws Exception {
-        onView(withId(R.id.button_sign_out)).perform(click());
-        onView(withText(R.string.toast_unable_to_sign_out))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
-                                                     .getWindow()
-                                                     .getDecorView()))))
-                .check(matches(isDisplayed()));
+    public void shouldBeAbleToReturnActivity() throws Exception {
+        mActivityRule.getActivity().getActivity();
     }
-    */
 }
