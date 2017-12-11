@@ -113,25 +113,6 @@ public class MediaSharingTests {
 
     }
 
-    @Test
-    public void addVideo(){
-        mockMediaSelection(imageUri,videoType);
-        onView(withParent(withId(R.id.image_grid)))
-                .check(matches(isDisplayed()));
-
-        onView(withParent(withId(R.id.image_grid)))
-                .perform(click());
-
-        onView(withId(R.id.show_image))
-                .check(matches(isDisplayed()));
-
-        onView(withId(R.id.show_image))
-                .perform(click());
-
-        onView(withParent(withId(R.id.image_grid)))
-                .check(matches(isDisplayed()));
-
-    }
 
     @Test
     public void fileNotFoundToastOnWrongURI(){
