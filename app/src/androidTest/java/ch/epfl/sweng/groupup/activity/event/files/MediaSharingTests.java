@@ -141,13 +141,7 @@ public class MediaSharingTests {
 
         mockMediaSelection(imageUri, imageType);
     }
-
-
-    @Test
-    public void notifyTest(){
-        createEvent();
-
-    }
+    
     @Test
     public void fileNotFoundToastOnWrongURI() {
 
