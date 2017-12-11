@@ -124,4 +124,12 @@ public final class MockLocation implements GeoLocationInterface {
 
         return location;
     }
+
+
+    /**
+     * Cancels the location mocker, it stops the mocking of walking.
+     */
+    public static void cancel() {
+        locationMocker.cancel();
+    }
 }

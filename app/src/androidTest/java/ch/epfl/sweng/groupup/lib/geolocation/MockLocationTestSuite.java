@@ -59,6 +59,7 @@ public class MockLocationTestSuite {
         MockLocation myTestLocation = new MockLocation();
 
         myTestLocation.requestLocationUpdates();
+        MockLocation.cancel();
     }
 
 
