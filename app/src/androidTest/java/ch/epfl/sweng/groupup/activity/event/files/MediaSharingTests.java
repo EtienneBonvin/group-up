@@ -111,7 +111,15 @@ public class MediaSharingTests {
 
         onView(withParent(withId(R.id.image_grid)))
                 .check(matches(isDisplayed()));
+
+        //GIVE SOME TIME TO UPLOAD THE FILE
+        try {
+            Thread.sleep(10000);
+        }
+        catch (InterruptedException e){}
     }
+
+
 
     @Test
     public void addingPictureWithoutExceptionAndDisplayFullScreen() {
@@ -133,6 +141,11 @@ public class MediaSharingTests {
                 .check(matches(isDisplayed()));
 
         mockMediaSelection(imageUri, imageType);
+        //GIVE SOME TIME TO UPLOAD THE FILE
+        try {
+            Thread.sleep(10000);
+        }
+        catch (InterruptedException e){}
 
     }
 

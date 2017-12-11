@@ -155,7 +155,7 @@ public class FileManager implements Watcher {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         event.addWatcher(this);
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE ) {
             galleryAddPic();
             Bitmap imageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
             CompressedBitmap compressedBitmap = new CompressedBitmap(imageBitmap);
