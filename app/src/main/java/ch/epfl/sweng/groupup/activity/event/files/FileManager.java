@@ -1,5 +1,6 @@
 package ch.epfl.sweng.groupup.activity.event.files;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -168,7 +169,7 @@ public class FileManager implements Watcher {
             addImageToGrid(compressedBitmap, true);
         } else if (resultCode == RESULT_OK) {
             Uri targetUri = data.getData();
-
+            String type= data.getType();
             if (targetUri == null) {
                 AndroidHelper.showToast(activity.getApplicationContext(),
                         activity.getString(R.string.file_management_toast_error_file_uri),
@@ -185,7 +186,8 @@ public class FileManager implements Watcher {
                         .setLayoutParams(params);
             }
 
-            if(targetUri.toString().contains("image")) {
+
+            if(type.contains("image")) {
                 recoverAndUploadImage(targetUri);
             }else {
                 recoverAndUploadVideo(targetUri);
@@ -201,21 +203,7 @@ public class FileManager implements Watcher {
         addVideoToGrid(targetUri);
         event.addVideo(Account.shared.getUUID().getOrElse("Default ID"),targetUri);
     }
-    /**
-     *
-     * Getting the real filepath
-     */
-    /*private String getRealPathFromURI(Uri contentUri) {
-        String[] proj = { MediaStore.Images.Media.DATA };
-        CursorLoader loader = new CursorLoader(activity.getApplicationContext(), contentUri, proj, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String result = cursor.getString(column_index);
-        cursor.close();
-        return result;
-    }
-*/
+
     /**
      * Recover an image from the user's phone from its uri and download it on the database.
      * @param targetUri the uri of the image.
