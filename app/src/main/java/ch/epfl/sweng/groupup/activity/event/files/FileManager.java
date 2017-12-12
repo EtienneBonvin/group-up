@@ -154,12 +154,10 @@ public class FileManager implements Watcher {
      * Override of onActivityResult method.
      * Define the behavior when the user finished selecting the picture he wants to add or
      * taking a picture.
-     *
-     * @param requestCode unused.
      * @param resultCode  indicate if the operation succeeded.
      * @param data        the data returned by the previous activity.
      */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int resultCode, Intent data) {
         event.addWatcher(this);
         if (resultCode == RESULT_OK) {
             galleryAddPic();

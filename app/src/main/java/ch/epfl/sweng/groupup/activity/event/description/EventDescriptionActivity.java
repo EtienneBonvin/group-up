@@ -175,7 +175,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        fileManager.onActivityResult(requestCode, resultCode, data);
+        fileManager.onActivityResult(resultCode, data);
     }
 
     /**
