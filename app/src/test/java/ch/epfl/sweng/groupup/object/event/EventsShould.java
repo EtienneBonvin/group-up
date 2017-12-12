@@ -20,6 +20,9 @@ import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 
+import static ch.epfl.sweng.groupup.object.event.EventStatus.CURRENT;
+import static ch.epfl.sweng.groupup.object.event.EventStatus.FUTURE;
+import static ch.epfl.sweng.groupup.object.event.EventStatus.PAST;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertNotEquals;
@@ -101,7 +104,7 @@ public class EventsShould {
         LocalDateTime start = LocalDateTime.now().minusHours(1);
         LocalDateTime end = LocalDateTime.now().plusHours(1);
         String eventName = current.getEventName();
-        EventStatus eventStatus = EventStatus.CURRENT;
+        EventStatus eventStatus = CURRENT;
         String ID = current.getUUID();
         String expectedOutput = "Event{" +
                                 "eventName='" +
@@ -125,7 +128,7 @@ public class EventsShould {
         LocalDateTime start = LocalDateTime.now().minusHours(1);
         LocalDateTime end = LocalDateTime.now().plusHours(1);
         String eventName = current.getEventName();
-        EventStatus eventStatus = EventStatus.CURRENT;
+        EventStatus eventStatus = CURRENT;
         String ID = current.getUUID();
         String eventMembers = current.getEventMembers().toString();
         String expectedOutput = "Event{" +
@@ -187,19 +190,19 @@ public class EventsShould {
 
     @Test
     public void haveStatusCurrent() {
-        assertEquals(current.getEventStatus(), EventStatus.CURRENT);
+        assertEquals(current.getEventStatus(), CURRENT);
     }
 
 
     @Test
     public void haveStatusFuture() {
-        assertEquals(future.getEventStatus(), EventStatus.FUTURE);
+        assertEquals(future.getEventStatus(), FUTURE);
     }
 
 
     @Test
     public void haveStatusPast() {
-        assertEquals(past.getEventStatus(), EventStatus.PAST);
+        assertEquals(past.getEventStatus(), PAST);
     }
 
 
@@ -263,6 +266,8 @@ public class EventsShould {
     @Test
     public void differentEventsAreDifferent() {
         assertNotEquals(past, future);
+        assertNotEquals(past, null);
+        assertNotEquals(past, new ArrayList<>());
     }
 
 
@@ -319,5 +324,12 @@ public class EventsShould {
         assertEquals(databaseEvent.getPointsOfInterest().get(poi.getUuid()), poi.toDatabasePointOfInterest());
 
         Account.shared.clear();
+    }
+
+    @Test
+    public void haveCorrectEventStatus() {
+        assertEquals(PAST, EventStatus.valueOf("PAST"));
+        assertEquals(FUTURE, EventStatus.valueOf("FUTURE"));
+        assertEquals(CURRENT, EventStatus.valueOf("CURRENT"));
     }
 }

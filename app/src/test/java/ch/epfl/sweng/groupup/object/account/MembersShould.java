@@ -2,6 +2,8 @@ package ch.epfl.sweng.groupup.object.account;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.lib.database.DatabaseUser;
 
@@ -53,7 +55,7 @@ public class MembersShould {
         assertFalse(m1.withEmail("cedric@maire.de") == m1);
     }
 
-    @SuppressWarnings({"EqualsBetweenInconvertibleTypes", "EqualsWithItself"})
+    @SuppressWarnings("all")
     @Test
     public void beEquatable(){
         assertTrue(m1.equals(m1));
@@ -62,6 +64,8 @@ public class MembersShould {
         assertFalse(m1.equals(m4));
         assertFalse(m1.equals(m5));
         assertFalse(m1.equals(m6));
+        assertFalse(m1.equals(null));
+        assertFalse(m1.equals(new ArrayList<>()));
     }
 
     @Test

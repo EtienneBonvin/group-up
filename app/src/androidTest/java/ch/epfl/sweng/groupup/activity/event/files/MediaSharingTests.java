@@ -118,8 +118,6 @@ public class MediaSharingTests {
         onView(withId(R.id.remove_event_button)).perform(click());
     }
 
-
-
     @Test
     public void addingPictureWithoutExceptionAndDisplayFullScreen() {
         mockMediaSelection(imageUri, imageType);
@@ -141,8 +139,8 @@ public class MediaSharingTests {
 
         mockMediaSelection(imageUri, imageType);
     }
-    
-    @Test
+ 
+   @Test
     public void fileNotFoundToastOnWrongURI() {
 
         mockMediaSelection(Uri.parse("scrogneugneu"), imageType);
