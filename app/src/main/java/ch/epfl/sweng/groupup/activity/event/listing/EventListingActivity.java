@@ -58,6 +58,7 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
         initializeVariables();
         updateEvents();
         initializeCreateEvent();
+        Account.shared.notifyAllWatchers();
     }
 
     /**
