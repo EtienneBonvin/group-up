@@ -125,7 +125,6 @@ public abstract class User {
         }
 
         User user = (User) o;
-        //Bye bye branches
         return UUID.equals(user.UUID) && displayName.equals(user.displayName) &&
                 givenName.equals(user.givenName) && familyName.equals(user.familyName) &&
                 email.equals(user.email);
