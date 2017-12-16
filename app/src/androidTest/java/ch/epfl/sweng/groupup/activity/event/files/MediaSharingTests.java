@@ -55,6 +55,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -117,10 +119,11 @@ public class MediaSharingTests {
         }
         CompressedBitmap compressedBitmap = new CompressedBitmap(bitmap);
         assertEquals(compressedBitmap, new CompressedBitmap(compressedBitmap.asByteArray()));
-        compressedBitmap.equals(bitmap);
-        compressedBitmap.equals(compressedBitmap);
+        assertFalse(compressedBitmap.equals(bitmap));
+        assertFalse(compressedBitmap.equals(null));
+        assertTrue(compressedBitmap.equals(compressedBitmap));
     }
-    
+
 
     @Test
     public void addVideo() {
