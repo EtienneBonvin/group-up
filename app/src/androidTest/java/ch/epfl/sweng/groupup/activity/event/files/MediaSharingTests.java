@@ -117,7 +117,10 @@ public class MediaSharingTests {
         }
         CompressedBitmap compressedBitmap = new CompressedBitmap(bitmap);
         assertEquals(compressedBitmap, new CompressedBitmap(compressedBitmap.asByteArray()));
+        compressedBitmap.equals(bitmap);
+        compressedBitmap.equals(compressedBitmap);
     }
+    
 
     @Test
     public void addVideo() {
