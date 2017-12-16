@@ -21,7 +21,6 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.annotation.Target;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -29,13 +28,12 @@ import java.util.Locale;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.lib.AndroidHelper;
-import ch.epfl.sweng.groupup.lib.Optional;
+
+import ch.epfl.sweng.groupup.lib.CompressedBitmap;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
 
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_FIRST_USER;
 import static android.app.Activity.RESULT_OK;
 
 /**
@@ -163,6 +161,7 @@ public class FileManager implements Watcher {
             galleryAddPic();
             String type;
             Uri targetUri;
+
             //Apparently some phone (including mine) doesn't return intent
             try {
                 type = data.getType();
@@ -180,6 +179,7 @@ public class FileManager implements Watcher {
             } else {
                 recoverAndUploadVideo(targetUri);
             }
+            mCurrentFilePath="";
         }
     }
 
@@ -200,8 +200,8 @@ public class FileManager implements Watcher {
      */
     private void recoverAndUploadImage(Uri targetUri) {
         Bitmap bitmap;
-        try {
 
+        try {
             bitmap = BitmapFactory.decodeStream(activity.getContentResolver().openInputStream(targetUri));
 
         } catch (FileNotFoundException e) {
@@ -210,6 +210,7 @@ public class FileManager implements Watcher {
                     Toast.LENGTH_SHORT);
             return;
         }
+
         CompressedBitmap compressedBitmap = new CompressedBitmap(bitmap);
         addImageToGrid(compressedBitmap, true);
     }

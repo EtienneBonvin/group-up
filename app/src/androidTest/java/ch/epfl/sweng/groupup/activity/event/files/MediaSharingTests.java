@@ -5,6 +5,8 @@ import android.app.Instrumentation;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.test.InstrumentationRegistry;
@@ -13,6 +15,7 @@ import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,8 +28,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
+import ch.epfl.sweng.groupup.lib.AndroidHelper;
+import ch.epfl.sweng.groupup.lib.CompressedBitmap;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 
@@ -46,6 +54,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -92,6 +101,22 @@ public class MediaSharingTests {
     @After
     public void clearDatabase() {
         Account.shared.clear();
+    }
+
+    /**
+     * Theses test are for the method not test in CompressedBitmap class by the other test
+     */
+    @Test
+    public void compressBitmapWithArray(){
+        Bitmap bitmap=null;
+
+        try {
+            bitmap = BitmapFactory.decodeStream(mActivityRule.getActivity().getContentResolver().openInputStream(imageUri));
+
+        } catch (FileNotFoundException e) {
+        }
+        CompressedBitmap compressedBitmap = new CompressedBitmap(bitmap);
+        assertEquals(compressedBitmap, new CompressedBitmap(compressedBitmap.asByteArray()));
     }
 
     @Test
@@ -187,6 +212,7 @@ public class MediaSharingTests {
         onView(withId(R.id.imageSwitcher)).check(matches(isDisplayed()));
     }
 
+    /*
     private void mockWrongSelection(Uri imageUri) {
         Intent resultData = new Intent();
         resultData.setData(imageUri);
@@ -201,7 +227,7 @@ public class MediaSharingTests {
         intended(expectedIntent);
         Intents.release();
     }
-
+*/
     private void mockMediaSelection(Uri imageUri, String type) {
         Intent resultData = new Intent();
         resultData.setDataAndType(imageUri, type);
