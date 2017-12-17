@@ -266,6 +266,7 @@ public class EventCreationActivityTest {
     public void onlyAllowEmailsAsInput() throws InterruptedException {
         addEventName(EVENT_NAME);
         onView(withId(R.id.button_add_members)).perform(click());
+        Thread.sleep(1000);
         onView(withId(R.id.edit_text_add_member)).perform(typeText("Not valid email address"));
         onView(withId(R.id.image_view_add_member)).perform(click());
 
