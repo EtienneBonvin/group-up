@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.AndroidHelper;
@@ -77,6 +79,16 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
 
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), EventListingActivity.class);
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
     private void displayQR() {
         if (!shared.getUUID().isEmpty()) {
             String text = shared.getUUID().get() + ","+ shared.getDisplayName().getOrElse("Unknown User");
@@ -98,7 +110,7 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
                                      y,
                                      bitMatrix.get(x, y) ?
                                      Color.BLACK :
-                                     getResources().getColor(R.color.background));
+                                     ContextCompat.getColor(this,R.color.background));
                     }
                 }
 
