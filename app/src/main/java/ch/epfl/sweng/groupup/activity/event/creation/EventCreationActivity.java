@@ -67,32 +67,40 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
      */
     private void initFields(){
 
+        LocalDateTime regStart;
+        LocalDateTime regEnd;
+
         try {
             builder = (EventBuilder)getIntent().getSerializableExtra(EXTRA_MESSAGE);
+            regStart = builder.getStartDate();
+            regEnd = builder.getEndDate();
         }catch(Exception e){
             builder = new EventBuilder();
-        }
-        if(builder == null){
-            builder = new EventBuilder();
+            regStart = LocalDateTime.now().plusMinutes(5);
+            regEnd = LocalDateTime.now().plusMinutes(6);
         }
 
-        LocalDateTime now = LocalDateTime.now();
+        if(builder == null){
+            builder = new EventBuilder();
+            regStart = LocalDateTime.now().plusMinutes(5);
+            regEnd = LocalDateTime.now().plusMinutes(6);
+        }
 
         startDate = new DecoratedDatePicker(this,
                 (Button)findViewById(R.id.button_start_date),
-                now);
+                regStart);
 
         endDate = new DecoratedDatePicker(this,
                 (Button)findViewById(R.id.button_end_date),
-                now);
+                regEnd);
 
         startTime = new DecoratedTimePicker(this,
                 (Button)findViewById(R.id.button_start_time),
-                now.plusMinutes(5));
+                regStart);
 
         endTime = new DecoratedTimePicker(this,
                 (Button)findViewById(R.id.button_end_time),
-                now.plusMinutes(6));
+                regEnd);
 
         ((TextView)findViewById(R.id.number_of_members))
                 .setText(String.format(Locale.getDefault(),
@@ -132,6 +140,16 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
                         builder.setDescription(
                                 ((EditText)findViewById(R.id.edit_text_description))
                                 .getText().toString());
+                        builder.setStartDate(startDate.getDate().getYear(),
+                                startDate.getDate().getMonthOfYear(),
+                                startDate.getDate().getDayOfMonth());
+                        builder.setEndDate(endDate.getDate().getYear(),
+                                endDate.getDate().getMonthOfYear(),
+                                endDate.getDate().getDayOfMonth());
+                        builder.setStartTime(startTime.getTime().getHourOfDay(),
+                                startTime.getTime().getMinuteOfHour());
+                        builder.setEndTime(endTime.getTime().getHourOfDay(),
+                                endTime.getTime().getMinuteOfHour());
                         Intent intent = new Intent(getApplicationContext(), MembersAddingActivity.class);
                         intent.putExtra(EXTRA_MESSAGE, builder);
                         startActivity(intent);
