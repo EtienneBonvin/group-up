@@ -342,6 +342,12 @@ public class EventCreationActivityTest {
 
     private void addMember(String input){
         onView(withId(R.id.button_add_members)).perform(click());
+        // Let time to the view to get loaded
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         onView(withId(R.id.edit_text_add_member)).perform(typeText(input));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.image_view_add_member)).perform(click());
