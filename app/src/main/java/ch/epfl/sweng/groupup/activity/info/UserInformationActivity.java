@@ -17,6 +17,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.AndroidHelper;
@@ -75,6 +76,20 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
                     }
                 });
 
+    }
+
+    @Override
+    public void initializeToolbar(){
+        TextView title = findViewById(R.id.toolbar_title);
+        title.setText(R.string.toolbar_title_user_profile);
+
+        // home button
+        findViewById(R.id.toolbar_image_left).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(EventListingActivity.class);
+            }
+        });
     }
 
     private void displayQR() {

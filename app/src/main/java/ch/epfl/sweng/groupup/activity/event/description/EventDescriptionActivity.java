@@ -17,7 +17,9 @@ import android.view.ContextThemeWrapper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -50,6 +52,8 @@ import javax.mail.Transport;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.files.FileManager;
+import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
+import ch.epfl.sweng.groupup.activity.info.UserInformationActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.Optional;
@@ -140,6 +144,29 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                         return true;
                     }
                 });
+    }
+
+    @Override
+    public void initializeToolbar(){
+        ImageView rightImage = findViewById(R.id.toolbar_image_right);
+        ImageView secondRightImage = findViewById(R.id.toolbar_image_second_from_right);
+
+        rightImage.setImageResource(R.drawable.ic_check);
+        secondRightImage.setImageResource(R.drawable.ic_user);
+        findViewById(R.id.toolbar_image_second_from_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(UserInformationActivity.class);
+            }
+        });
+
+        // home button
+        findViewById(R.id.toolbar_image_left).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(EventListingActivity.class);
+            }
+        });
     }
 
     /**

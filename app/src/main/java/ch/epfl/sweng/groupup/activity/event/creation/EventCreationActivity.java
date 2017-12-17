@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ import java.util.Locale;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
+import ch.epfl.sweng.groupup.activity.info.UserInformationActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.Optional;
@@ -64,6 +66,24 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
         setContentView(R.layout.event_creation);
         initFields();
         initListeners();
+    }
+
+    @Override
+    public void initializeToolbar(){
+        TextView title = findViewById(R.id.toolbar_title);
+        ImageView rightImage = findViewById(R.id.toolbar_image_right);
+        title.setText(R.string.toolbar_title_create_event);
+        rightImage.setImageResource(R.drawable.ic_check);
+
+        // home button
+        findViewById(R.id.toolbar_image_left).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(EventListingActivity.class);
+            }
+        });
+
+
     }
 
     /**
