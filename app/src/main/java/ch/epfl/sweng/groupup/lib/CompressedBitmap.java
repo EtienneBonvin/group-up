@@ -1,9 +1,10 @@
-package ch.epfl.sweng.groupup.activity.event.files;
+package ch.epfl.sweng.groupup.lib;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 
 /**
  * CompressedBitmap class.
@@ -29,5 +30,17 @@ public class CompressedBitmap {
 
     public byte[] asByteArray(){
         return compressed.clone();
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CompressedBitmap that = (CompressedBitmap) o;
+
+        return Arrays.equals(compressed, that.compressed);
+
     }
 }

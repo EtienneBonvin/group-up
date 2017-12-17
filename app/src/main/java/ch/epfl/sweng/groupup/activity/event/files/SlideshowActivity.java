@@ -10,12 +10,12 @@ import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
+import ch.epfl.sweng.groupup.lib.CompressedBitmap;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;

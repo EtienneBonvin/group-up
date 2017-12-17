@@ -1,7 +1,6 @@
 package ch.epfl.sweng.groupup.object.event;
 
 import android.net.Uri;
-import android.util.Log;
 
 import org.joda.time.LocalDateTime;
 
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import ch.epfl.sweng.groupup.activity.event.files.CompressedBitmap;
+import ch.epfl.sweng.groupup.lib.CompressedBitmap;
 import ch.epfl.sweng.groupup.lib.Watchee;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.lib.database.DatabaseEvent;
