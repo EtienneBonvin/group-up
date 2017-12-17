@@ -2,6 +2,8 @@ package ch.epfl.sweng.groupup.activity.event.files;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -9,6 +11,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -23,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import ch.epfl.sweng.groupup.R;
@@ -55,7 +59,7 @@ public class FileManager implements Watcher {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_VIDEO_CAPTURE = 2;
-    private String mCurrentFilePath = "";
+    private String mCurrentFilePath = ""; //See onActivityResult for explanation
 
     /**
      * Creates a FileManager for a particular EventDescription activity.
@@ -159,25 +163,30 @@ public class FileManager implements Watcher {
         event.addWatcher(this);
         if (resultCode == RESULT_OK) {
             galleryAddPic();
-            String type;
-            Uri targetUri;
+            String type="";
+            String targetString;
 
-            //Apparently some phone (including mine) doesn't return intent
+            /*
+            This code really smell.
+            There is different behavior between the emulator and phones
+            -The emulator return an intent with Type after taking a picture or a video.
+            -My phone (API 24) doesn't return anything and method getData() and getType()
+            are throwing exceptions if the intent is null
+            -Another phone (API 19) return an intent without Type
+            That's why I need to try catch some method and have the mCurrentFilePath to get the
+            path without intent
+             */
             try {
-                type = data.getType();
+                targetString = data.getData().toString();
+                type = data.getType()!=null? data.getType():""; //If the intent doesn't have a type, set it to null
             } catch (NullPointerException n) {
-                type = "";
-            }
-            try {
-                targetUri = data.getData();
-            } catch (NullPointerException n) {
-                targetUri = Uri.fromFile(new File(mCurrentFilePath));
+                targetString = Uri.fromFile(new File(mCurrentFilePath)).toString();
             }
 
-            if (type.contains("image") || mCurrentFilePath.contains("Pictures")) {
-                recoverAndUploadImage(targetUri);
+            if ( mCurrentFilePath.contains("Pictures") || targetString.contains("image")|| type.contains("image")) {
+                recoverAndUploadImage(Uri.parse(targetString));
             } else {
-                recoverAndUploadVideo(targetUri);
+                recoverAndUploadVideo(Uri.parse(targetString));
             }
             mCurrentFilePath="";
         }
@@ -234,8 +243,19 @@ public class FileManager implements Watcher {
                                 Toast.LENGTH_SHORT);
                     }
                     if (video != null) {
-                        Uri videoUri = FileProvider.getUriForFile(thisContext, "com.example.android.fileprovider", video);
+                        Uri videoUri = FileProvider.getUriForFile(thisContext,
+                                "com.example.android.fileprovider", video);
                         takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
+                        //Need to set permission for phone running with android<5.0, inspired from :
+                        // https://stackoverflow.com/questions/33650632/fileprovider-not-working-with-camera#33652695
+                        List<ResolveInfo> resInfoList = thisContext.getPackageManager().
+                                queryIntentActivities(takeVideoIntent, PackageManager.MATCH_DEFAULT_ONLY);
+                        for (ResolveInfo resolveInfo : resInfoList) {
+                            String packageName = resolveInfo.activityInfo.packageName;
+                            thisContext.grantUriPermission(packageName, videoUri,
+                                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION |
+                                            Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        }
                         activity.startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
                     }
                 }
@@ -263,8 +283,20 @@ public class FileManager implements Watcher {
                                 Toast.LENGTH_SHORT);
                     }
                     if (photo != null) {
-                        Uri photoUri = FileProvider.getUriForFile(thisContext, "com.example.android.fileprovider", photo);
+                        Uri photoUri = FileProvider.getUriForFile(thisContext,
+                                "com.example.android.fileprovider", photo);
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+
+                        //Need to set permission for phone running with android<5.0, inspired from :
+                        // https://stackoverflow.com/questions/33650632/fileprovider-not-working-with-camera#33652695
+                        List<ResolveInfo> resInfoList = thisContext.getPackageManager().
+                                queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+                        for (ResolveInfo resolveInfo : resInfoList) {
+                            String packageName = resolveInfo.activityInfo.packageName;
+                            thisContext.grantUriPermission(packageName, photoUri,
+                                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION |
+                                            Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        }
                         activity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                     }
                 }
