@@ -2,32 +2,33 @@ package ch.epfl.sweng.groupup.activity.event.files;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.media.MediaMetadataRetriever;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import ch.epfl.sweng.groupup.R;
@@ -81,7 +82,6 @@ public class FileManager implements Watcher {
             event.addWatcher(this);
 
         // Set onClickListeners to add files
-        // TODO adding videos.
         activity.findViewById(R.id.add_files).setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -303,11 +303,68 @@ public class FileManager implements Watcher {
         imagesAdded = 0;
     }
 
-    private void addVideoToGrid(Uri uri){
+    private void addVideoToGrid(final Uri uri){
         MediaMetadataRetriever mMMR = new MediaMetadataRetriever();
         mMMR.setDataSource(activity,uri);
-        CompressedBitmap thumb = new CompressedBitmap(mMMR.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC));
-        addImageToGrid(thumb, false);
+        CompressedBitmap noPlayThumb = new CompressedBitmap(mMMR.getFrameAtTime(1000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC));
+
+        Drawable[] layers = new Drawable[2];
+        layers[0] = new BitmapDrawable(activity.getResources(), noPlayThumb.asBitmap());
+        layers[1] = activity.getResources().getDrawable(R.drawable.ic_play_circle_outline_black_24dp);
+        LayerDrawable layerDrawable = new LayerDrawable(layers);
+
+        Bitmap original = noPlayThumb.asBitmap();
+
+        Bitmap b = Bitmap.createBitmap(original.getWidth(), original.getHeight(), original.getConfig());
+        layerDrawable.draw(new Canvas(b));
+
+        CompressedBitmap thumb = new CompressedBitmap(noPlayThumb.asBitmap());
+
+        ImageView image = new ImageView(activity);
+
+        GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
+        layoutParams.width = columnWidth;
+        layoutParams.height = rowHeight;
+        image.setLayoutParams(layoutParams);
+
+        Bitmap trimed = trimBitmap(thumb.asBitmap());
+
+        image.setImageBitmap(trimed);
+
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                activity.findViewById(R.id.image_grid)
+                        .setVisibility(View.INVISIBLE);
+
+                activity.findViewById(R.id.show_video)
+                        .setVisibility(View.VISIBLE);
+
+                VideoView video = activity.findViewById(R.id.show_video);
+                MediaController mc = new MediaController(activity);
+                mc.setAnchorView(video);
+                mc.setMediaPlayer(video);
+                video.setVideoURI(uri);
+                video.setMediaController(mc);
+                video.setZOrderOnTop(true);
+
+
+                video.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        activity.findViewById(R.id.show_video)
+                                .setVisibility(View.INVISIBLE);
+
+                        activity.findViewById(R.id.image_grid)
+                                .setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
+
+        ((GridLayout) activity.findViewById(R.id.image_grid))
+                .addView(image, imagesAdded++);
     }
     /**
      * Add an image to the grid and to the Firebase storage.

@@ -3,7 +3,6 @@ package ch.epfl.sweng.groupup.activity.event.listing;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.ContextThemeWrapper;
