@@ -134,6 +134,7 @@
     <string name="invitationMail_subject">Hello ✌️</string>
     <string name="event_listing_extraIndex">eventIndex</string>
     <string name="file_management_take_picture">Take picture</string>
+    <string name="file_management_take_video">Take video</string>
 
     <!-- Full screen file -->
     <string name="full_screen_file_content_description">Image to be displayed in full screen</string>

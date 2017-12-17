@@ -172,27 +172,6 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         fileManager.close();
     }
 
-    /**
-     * Remove the user from the Event
-     * TODO change the place of this method, it doesn't make much sense to have it here
-     */
-    public static void removeEvent(Event eventToRemove) {
-        List<Member> futureMembers = new ArrayList<>(eventToRemove.getEventMembers());
-        futureMembers.remove(Account.shared.toMember());
-        eventToRemove = eventToRemove.withEventMembers(futureMembers);
-        Account.shared.addOrUpdateEvent(eventToRemove);
-        Database.update();
-        List<Event> futureEventList = new ArrayList<>(Account.shared.getEvents());
-        Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>
-                ());
-        Log.d("FUTUREEVENTBEFORE", futureEventList.toString());
-        futureEventList.remove(eventToRemove);
-        Log.d("FUTUREEVENTAFETERREMOVE", futureEventList.toString());
-        for (Event fe : futureEventList) {
-            Account.shared.addOrUpdateEvent(fe);
-        }
-        Database.update();
-    }
 
     /**
      * Override onStop method, remove the activity from the watchers of the event to avoid
@@ -225,7 +204,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        fileManager.onActivityResult(requestCode, resultCode, data);
+        fileManager.onActivityResult(resultCode, data);
     }
 
     /**

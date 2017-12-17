@@ -7,7 +7,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
-import com.google.firebase.database.ThrowOnExtraProperties;
 
 import org.hamcrest.Matchers;
 import org.joda.time.LocalDateTime;

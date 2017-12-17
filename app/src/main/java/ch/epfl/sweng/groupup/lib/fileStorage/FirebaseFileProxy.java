@@ -3,9 +3,6 @@ package ch.epfl.sweng.groupup.lib.fileStorage;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.ThemedSpinnerAdapter;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -16,10 +13,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -30,8 +24,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import ch.epfl.sweng.groupup.activity.event.files.CompressedBitmap;
-import ch.epfl.sweng.groupup.lib.AndroidHelper;
+import ch.epfl.sweng.groupup.lib.CompressedBitmap;
 import ch.epfl.sweng.groupup.lib.Watchee;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.account.Account;
