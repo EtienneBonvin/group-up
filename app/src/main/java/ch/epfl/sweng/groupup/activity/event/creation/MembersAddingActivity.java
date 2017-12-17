@@ -41,6 +41,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
 
     @Override
     public void initializeToolbar(){
+        super.initializeToolbar();
         TextView title = findViewById(R.id.toolbar_title);
         ImageView rightImage = findViewById(R.id.toolbar_image_right);
 
@@ -114,8 +115,6 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                         returnToEventCreation();
                     }
                 });
-
-        super.initializeToolbarActivity(ToolbarActivity.MEMBERS_ADDING);
     }
 
     /**

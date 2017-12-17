@@ -92,7 +92,6 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_description);
-        super.initializeToolbarActivity(ToolbarActivity.EVENT_DESCRIPTION);
 
         swipeBarTouched = false;
 
@@ -148,6 +147,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
 
     @Override
     public void initializeToolbar(){
+        super.initializeToolbar();
         ImageView rightImage = findViewById(R.id.toolbar_image_right);
         ImageView secondRightImage = findViewById(R.id.toolbar_image_second_from_right);
 

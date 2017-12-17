@@ -51,7 +51,6 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_listing);
-        super.initializeToolbarActivity("");
 
         Account.shared.addWatcher(this);
         initializeVariables();

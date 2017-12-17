@@ -26,18 +26,10 @@ public abstract class ToolbarActivity extends AppCompatActivity {
     protected static Set<Event> eventsToDisplay = new HashSet<>();
     private static boolean mockMap = false;
 
-    protected static final String MEMBERS_ADDING = "MembersAdding";
-    protected static final String EVENT_CREATION = "EventCreation";
-    protected static final String EVENT_DESCRIPTION = "EventDescription";
-    protected static final String USER_PROFILE = "UserProfile";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.toolbar);
-    }
-
-    protected void initializeToolbarActivity(String activity) {
         provideGeoLocation();
         initializeToolbar();
     }
@@ -53,8 +45,15 @@ public abstract class ToolbarActivity extends AppCompatActivity {
     }
 
 
-    public void initializeToolbar(){
-        // Nothing by default
+    public void initializeToolbar() {
+        ImageView rightImage = findViewById(R.id.toolbar_image_right);
+        rightImage.setImageResource(R.drawable.ic_user);
+        findViewById(R.id.toolbar_image_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(UserInformationActivity.class);
+            }
+        });
     }
 
 
