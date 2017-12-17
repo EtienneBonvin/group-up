@@ -1,17 +1,13 @@
 package ch.epfl.sweng.groupup.activity.event.creation;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.joda.time.LocalDateTime;
@@ -30,6 +26,8 @@ import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.lib.email.GMailService;
+import ch.epfl.sweng.groupup.lib.pickers.DecoratedDatePicker;
+import ch.epfl.sweng.groupup.lib.pickers.DecoratedTimePicker;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
@@ -42,13 +40,11 @@ import static ch.epfl.sweng.groupup.lib.AndroidHelper.emailCheck;
  * Offers the possibility to the user to create a new event.
  * Is linked to the layout event_creation.xml
  */
-public class EventCreationActivity extends ToolbarActivity implements DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener, Serializable{
+public class EventCreationActivity extends ToolbarActivity implements Serializable{
 
-    private transient DatePickerDialog datePickerDialog;
-    private transient TimePickerDialog timePickerDialog;
-    private transient boolean set_start_date, set_end_date, set_start_time, set_end_time;
     public static final int INPUT_MAX_LENGTH = 30;
+    private transient DecoratedDatePicker endDate, startDate;
+    private transient DecoratedTimePicker endTime, startTime;
 
     public static final String EXTRA_MESSAGE = "Builder";
 
@@ -80,32 +76,23 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
             builder = new EventBuilder();
         }
 
-        set_start_date = false;
-        set_end_date = false;
-        set_start_time = false;
-        set_end_time = false;
+        LocalDateTime now = LocalDateTime.now();
 
-        ((Button)findViewById(R.id.button_start_date))
-                .setText(date_format(
-                        builder.getStartDate().getDayOfMonth(),
-                        builder.getStartDate().getMonthOfYear(),
-                        builder.getStartDate().getYear()));
+        startDate = new DecoratedDatePicker(this,
+                (Button)findViewById(R.id.button_start_date),
+                now);
 
-        ((Button)findViewById(R.id.button_start_time))
-                .setText(time_format(
-                        builder.getStartDate().getHourOfDay(),
-                        builder.getStartDate().getMinuteOfHour()));
+        endDate = new DecoratedDatePicker(this,
+                (Button)findViewById(R.id.button_end_date),
+                now);
 
-        ((Button)findViewById(R.id.button_end_date))
-                .setText(date_format(
-                        builder.getEndDate().getDayOfMonth(),
-                        builder.getEndDate().getMonthOfYear(),
-                        builder.getEndDate().getYear()));
+        startTime = new DecoratedTimePicker(this,
+                (Button)findViewById(R.id.button_start_time),
+                now);
 
-        ((Button)findViewById(R.id.button_end_time))
-                .setText(time_format(
-                        builder.getEndDate().getHourOfDay(),
-                        builder.getEndDate().getMinuteOfHour()));
+        endTime = new DecoratedTimePicker(this,
+                (Button)findViewById(R.id.button_end_time),
+                now);
 
         ((TextView)findViewById(R.id.number_of_members))
                 .setText(String.format(Locale.getDefault(),
@@ -118,17 +105,6 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
 
         ((EditText)findViewById(R.id.edit_text_description))
                 .setText(builder.getDescription());
-
-        datePickerDialog = new DatePickerDialog(
-                this, EventCreationActivity.this,
-                builder.getStartDate().getYear(),
-                builder.getStartDate().getMonthOfYear() - 1,
-                builder.getStartDate().getDayOfMonth());
-
-        timePickerDialog = new TimePickerDialog(
-                this, EventCreationActivity.this,
-                builder.getStartDate().getHourOfDay(),
-                builder.getStartDate().getMinuteOfHour(), true);
     }
 
     /**
@@ -137,41 +113,6 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
     private void initListeners(){
 
         super.initializeToolbarActivity(ToolbarActivity.EVENT_CREATION);
-
-        findViewById(R.id.button_start_date)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        set_start_date = true;
-                        datePickerDialog.show();
-                    }
-                });
-
-        findViewById(R.id.button_end_date)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        set_end_date = true;
-                        datePickerDialog.show();
-                    }
-                });
-
-        findViewById(R.id.button_start_time)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        set_start_time = true;
-                        timePickerDialog.show();
-                    }
-                });
-        findViewById(R.id.button_end_time)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        set_end_time = true;
-                        timePickerDialog.show();
-                    }
-                });
 
         findViewById(R.id.toolbar_image_right)
                 .setOnClickListener(new View.OnClickListener() {
@@ -199,60 +140,11 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
     }
 
     /**
-     * Overrides the method onDateSet of the interface DatePickerDialog.OnDateSetListener,
-     * changes the text of the button on the UI accordingly to the data entered by the user
-     * on the DatePickerDialog.
-     * @param view unused
-     * @param year int containing year
-     * @param month int containing month
-     * @param dayOfMonth int containing date
-     */
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        if(set_start_date) {
-            builder.setStartDate(year, month + 1, dayOfMonth);
-            ((Button)findViewById(R.id.button_start_date))
-                    .setText(date_format(dayOfMonth, month + 1, year));
-            set_start_date = false;
-        }else if(set_end_date){
-            builder.setEndDate(year, month + 1, dayOfMonth);
-            ((Button)findViewById(R.id.button_end_date))
-                    .setText(date_format(dayOfMonth, month + 1, year));
-            set_end_date = false;
-        }
-    }
-
-    /**
-     * Overrides the method onTimeSet of the interface TimePickerDialog.OnTimeSetListener,
-     * changes the text of the button on the UI accordingly to the data entered by the user
-     * on the TimePickerDialog.
-     * @param view unused
-     * @param hourOfDay int containing hour
-     * @param minute int containing minute
-     */
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        if(set_start_time) {
-            builder.setStartTime(hourOfDay, minute);
-            ((Button)findViewById(R.id.button_start_time))
-                    .setText(time_format(hourOfDay, minute));
-            set_start_time = false;
-        }else if(set_end_time){
-            builder.setEndTime(hourOfDay, minute);
-            ((Button)findViewById(R.id.button_end_time))
-                    .setText(time_format(hourOfDay, minute));
-            set_end_time = false;
-        }
-    }
-
-    /**
      * Method called when the 'Save event' button is clicked.
      * It registers the informations entered by the user, verify them and bring him to the
      * group list Activity.
      */
     private void saveEvent(){
-
-
 
         EditText eventName = findViewById(R.id.ui_edit_event_name);
         if(eventName.getText().toString().length() == 0){
@@ -263,6 +155,20 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
             return;
         }
         eventName.setError(null);
+
+        builder.setStartDate(startDate.getDate().getYear(),
+                startDate.getDate().getMonthOfYear(),
+                startDate.getDate().getDayOfMonth());
+
+        builder.setEndDate(endDate.getDate().getYear(),
+                endDate.getDate().getMonthOfYear(),
+                endDate.getDate().getDayOfMonth());
+
+        builder.setStartTime(startTime.getTime().getHourOfDay(),
+                startTime.getTime().getMinuteOfHour());
+
+        builder.setEndTime(endTime.getTime().getHourOfDay(),
+                endTime.getTime().getMinuteOfHour());
 
         if(builder.getStartDate().isBefore(LocalDateTime.now())){
             AndroidHelper.showToast(getApplicationContext(),
@@ -297,30 +203,6 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
                         Intent.FLAG_ACTIVITY_CLEAR_TASK |
                         Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-    }
-
-    /**
-     * Format a date into a DD/MM/YY string.
-     * @param day int containing date
-     * @param month int containing month
-     * @param year int containing year
-     * @return a DD/MM/YY string
-     */
-    private String date_format(int day, int month, int year){
-        return String.format(Locale.getDefault(), "%02d", day)+"/"+
-                String.format(Locale.getDefault(), "%02d", month)+"/"+
-                String.format(Locale.getDefault(), "%02d", (year%100));
-    }
-
-    /**
-     * Format a time into a HH:MM string.
-     * @param hour int containing hour
-     * @param minutes int containing minute
-     * @return a HH:MM string
-     */
-    private String time_format(int hour, int minutes){
-        return String.format(Locale.getDefault(), "%02d", hour)+":"+
-                String.format(Locale.getDefault(), "%02d", minutes);
     }
 
     protected class MemberRepresentation implements Serializable{
