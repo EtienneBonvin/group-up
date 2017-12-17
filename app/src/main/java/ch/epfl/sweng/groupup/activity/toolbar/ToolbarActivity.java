@@ -49,6 +49,9 @@ public abstract class ToolbarActivity extends AppCompatActivity {
         geoLocation.requestLocationUpdates();
     }
 
+    /**
+     * Initializes the toolbar depending on what activity is running
+     */
     public abstract void initializeToolbar();
 
 
