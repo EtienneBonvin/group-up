@@ -2,14 +2,12 @@ package ch.epfl.sweng.groupup.activity.event.files;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +23,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.lib.AndroidHelper;
+
+import ch.epfl.sweng.groupup.lib.CompressedBitmap;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
@@ -44,6 +43,7 @@ import static android.app.Activity.RESULT_OK;
 @SuppressWarnings("WeakerAccess")
 public class FileManager implements Watcher {
 
+
     private EventDescriptionActivity activity;
 
     private final int COLUMNS = 3;
@@ -54,28 +54,28 @@ public class FileManager implements Watcher {
     private int imagesAdded = 0;
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-
-    private String mCurrentPhotoPath;
+    private static final int REQUEST_VIDEO_CAPTURE = 2;
+    private String mCurrentFilePath = "";
 
     /**
      * Creates a FileManager for a particular EventDescription activity.
+     *
      * @param activity the activity this FileManager is linked to.
      */
-    public FileManager(final EventDescriptionActivity activity){
+    public FileManager(final EventDescriptionActivity activity) {
         this.activity = activity;
 
         initializeTakePicture();
-
+        initializeTakeVideo();
         Intent i = activity.getIntent();
         final int eventIndex = i.getIntExtra(activity.getString(R.string.event_listing_extraIndex), -1);
         if (eventIndex > -1) {
-            //!!!Order the events !!!
             event = Account.shared.getEvents().get(eventIndex);
-        }else{
+        } else {
             event = null;
         }
 
-        if(event != null)
+        if (event != null)
             event.addWatcher(this);
 
         // Set onClickListeners to add files
@@ -93,7 +93,7 @@ public class FileManager implements Watcher {
         });
 
         // Set onClickListener to create aftermovie
-        activity.findViewById(R.id.create_aftermovie).setOnClickListener(new Button.OnClickListener(){
+        activity.findViewById(R.id.create_aftermovie).setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 Intent i = new Intent(activity, SlideshowActivity.class);
@@ -102,7 +102,8 @@ public class FileManager implements Watcher {
                         Intent.FLAG_ACTIVITY_NEW_TASK);
                 i.putExtra(activity.getString(R.string.event_listing_extraIndex), eventIndex);
                 activity.startActivity(i);
-            }});
+            }
+        });
 
         // Set the GridLayout and initially get the height and width of the rows and columns.
         final GridLayout grid = activity.findViewById(R.id.image_grid);
@@ -127,7 +128,7 @@ public class FileManager implements Watcher {
             @Override
             public void onGlobalLayout() {
                 container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                if(event != null) {
+                if (event != null) {
                     for (CompressedBitmap bitmap : event.getPictures()) {
                         addImageToGrid(bitmap, false);
                     }
@@ -143,7 +144,7 @@ public class FileManager implements Watcher {
      * This method should be called when the activity using the FileManager is paused or destroyed
      * to avoid unnecessary network communications.
      */
-    public void close(){
+    public void close() {
         event.removeWatcher(this);
     }
 
@@ -151,84 +152,56 @@ public class FileManager implements Watcher {
      * Override of onActivityResult method.
      * Define the behavior when the user finished selecting the picture he wants to add or
      * taking a picture.
-     *
-     * @param requestCode unused.
      * @param resultCode  indicate if the operation succeeded.
      * @param data        the data returned by the previous activity.
      */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int resultCode, Intent data) {
         event.addWatcher(this);
-
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             galleryAddPic();
-            Bitmap imageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
-            CompressedBitmap compressedBitmap = new CompressedBitmap(imageBitmap);
-            addImageToGrid(compressedBitmap, true);
-        } else if (resultCode == RESULT_OK) {
-            Uri targetUri = data.getData();
+            String type;
+            Uri targetUri;
 
-            if (targetUri == null) {
-                AndroidHelper.showToast(activity.getApplicationContext(),
-                        activity.getString(R.string.file_management_toast_error_file_uri),
-                        Toast.LENGTH_SHORT);
-                return;
+            //Apparently some phone (including mine) doesn't return intent
+            try {
+                type = data.getType();
+            } catch (NullPointerException n) {
+                type = "";
+            }
+            try {
+                targetUri = data.getData();
+            } catch (NullPointerException n) {
+                targetUri = Uri.fromFile(new File(mCurrentFilePath));
             }
 
-            if (imagesAdded % COLUMNS == 0) {
-                ((GridLayout) activity.findViewById(R.id.image_grid))
-                        .setRowCount(imagesAdded / ROWS + 1);
-                ViewGroup.LayoutParams params = activity.findViewById(R.id.image_grid).getLayoutParams();
-                params.height = Math.round(rowHeight * (imagesAdded / ROWS + 1));
-                activity.findViewById(R.id.image_grid)
-                        .setLayoutParams(params);
-            }
-
-            if(targetUri.toString().contains("image") || targetUri.toString().contains("mipmap")) {
+            if (type.contains("image") || mCurrentFilePath.contains("Pictures")) {
                 recoverAndUploadImage(targetUri);
-            }else {
+            } else {
                 recoverAndUploadVideo(targetUri);
             }
+            mCurrentFilePath="";
         }
     }
 
     /**
      * Recover a video from the user's phone from its uri and upload it on the database.
+     *
      * @param targetUri the uri of the video.
      */
-    private void recoverAndUploadVideo(Uri targetUri){
-        String realpath= getRealPathFromURI(targetUri);
-        addVideoToGrid(realpath);
-        File file= new File(realpath);
-        event.addVideo(Account.shared.getUUID().getOrElse("Default ID"),file);
-    }
-    /**
-     * Getting the real filepath
-     */
-    private String getRealPathFromURI(Uri contentUri) {
-        String[] proj = { MediaStore.Images.Media.DATA };
-        CursorLoader loader = new CursorLoader(activity.getApplicationContext(), contentUri, proj, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-        try{
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            String result = cursor.getString(column_index);
-            cursor.close();
-            return result;
-        }
-        catch (NullPointerException e){
-            return contentUri.toString();
-        }
-
+    private void recoverAndUploadVideo(Uri targetUri) {
+        addVideoToGrid(targetUri);
+        event.addVideo(Account.shared.getUUID().getOrElse("Default ID"), targetUri);
     }
 
     /**
      * Recover an image from the user's phone from its uri and download it on the database.
+     *
      * @param targetUri the uri of the image.
      */
-    private void recoverAndUploadImage(Uri targetUri){
+    private void recoverAndUploadImage(Uri targetUri) {
         Bitmap bitmap;
-        try {
 
+        try {
             bitmap = BitmapFactory.decodeStream(activity.getContentResolver().openInputStream(targetUri));
 
         } catch (FileNotFoundException e) {
@@ -237,17 +210,45 @@ public class FileManager implements Watcher {
                     Toast.LENGTH_SHORT);
             return;
         }
+
         CompressedBitmap compressedBitmap = new CompressedBitmap(bitmap);
         addImageToGrid(compressedBitmap, true);
     }
 
     //TODO TAKE VIDEOS FROM APP
+
+    private void initializeTakeVideo() {
+        final Button takeVideo = activity.findViewById(R.id.take_video);
+        final Context thisContext = activity.getApplicationContext();
+        takeVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                if (takeVideoIntent.resolveActivity(activity.getPackageManager()) != null) {
+                    File video = null;
+                    try {
+                        video = createFile(false);
+                    } catch (IOException e) {
+                        AndroidHelper.showToast(activity.getApplicationContext(),
+                                activity.getString(R.string.file_management_toast_error_file_not_created),
+                                Toast.LENGTH_SHORT);
+                    }
+                    if (video != null) {
+                        Uri videoUri = FileProvider.getUriForFile(thisContext, "com.example.android.fileprovider", video);
+                        takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
+                        activity.startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
+                    }
+                }
+            }
+        });
+    }
+
     /**
      * Initialize the camera button and open the camera
      */
     private void initializeTakePicture() {
-        Button takePicture = activity.findViewById(R.id.take_picture);
-        final Context thisContext= activity.getApplicationContext();
+        final Button takePicture = activity.findViewById(R.id.take_picture);
+        final Context thisContext = activity.getApplicationContext();
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -255,15 +256,15 @@ public class FileManager implements Watcher {
                 if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
                     File photo = null;
                     try {
-                        photo = createImageFile();
+                        photo = createFile(true);
                     } catch (IOException e) {
                         AndroidHelper.showToast(activity.getApplicationContext(),
                                 activity.getString(R.string.file_management_toast_error_file_not_created),
                                 Toast.LENGTH_SHORT);
                     }
                     if (photo != null) {
-                        Uri photoUri= FileProvider.getUriForFile(thisContext,"com.example.android.fileprovider",photo);
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,photoUri);
+                        Uri photoUri = FileProvider.getUriForFile(thisContext, "com.example.android.fileprovider", photo);
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                         activity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                     }
                 }
@@ -271,20 +272,28 @@ public class FileManager implements Watcher {
         });
     }
 
-    private File createImageFile() throws IOException {
+    private File createFile(boolean image) throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss", Locale.getDefault()).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+        String FileName = timeStamp + "_";
+        String extension;
+        File storageDir;
+        if (image) {
+            storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            extension = ".jpg";
+        } else {
+            storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_MOVIES);
+            extension = ".mp4";
+        }
+        File file = File.createTempFile(
+                FileName,  /* prefix */
+                extension,         /* suffix */
                 storageDir      /* directory */
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
+        mCurrentFilePath = file.getAbsolutePath();
+        return file;
     }
 
     /**
@@ -292,7 +301,7 @@ public class FileManager implements Watcher {
      */
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
+        File f = new File(mCurrentFilePath);
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         activity.sendBroadcast(mediaScanIntent);
@@ -308,11 +317,13 @@ public class FileManager implements Watcher {
         imagesAdded = 0;
     }
 
-    private void addVideoToGrid(String realpath){
-        CompressedBitmap thumb = new CompressedBitmap(
-                ThumbnailUtils.createVideoThumbnail(realpath, MediaStore.Video.Thumbnails.MINI_KIND));
+    private void addVideoToGrid(Uri uri) {
+        MediaMetadataRetriever mMMR = new MediaMetadataRetriever();
+        mMMR.setDataSource(activity, uri);
+        CompressedBitmap thumb = new CompressedBitmap(mMMR.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC));
         addImageToGrid(thumb, false);
     }
+
     /**
      * Add an image to the grid and to the Firebase storage.
      *
@@ -334,7 +345,7 @@ public class FileManager implements Watcher {
             @Override
             public void onClick(View v) {
 
-                ((ImageView)activity.findViewById(R.id.show_image))
+                ((ImageView) activity.findViewById(R.id.show_image))
                         .setImageBitmap(bitmap.asBitmap());
 
                 activity.findViewById(R.id.image_grid)
@@ -360,7 +371,7 @@ public class FileManager implements Watcher {
         ((GridLayout) activity.findViewById(R.id.image_grid))
                 .addView(image, imagesAdded++);
 
-        if(addToDatabase)
+        if (addToDatabase)
             event.addPicture(Account.shared.getUUID().getOrElse("Default ID"),
                     bitmap);
     }
@@ -388,9 +399,9 @@ public class FileManager implements Watcher {
         int cutOnSide = (scaled.getWidth() - columnWidth) / 2;
         int cutOnTop = (scaled.getHeight() - rowHeight) / 2;
 
-        if(cutOnSide > 0 || cutOnTop > 0)
-        scaled = Bitmap.createBitmap(scaled, cutOnSide, cutOnTop,
-                columnWidth, rowHeight);
+        if (cutOnSide > 0 || cutOnTop > 0)
+            scaled = Bitmap.createBitmap(scaled, cutOnSide, cutOnTop,
+                    columnWidth, rowHeight);
 
         return scaled;
     }
@@ -402,14 +413,11 @@ public class FileManager implements Watcher {
     @Override
     public void notifyWatcher() {
         clearImages();
-        List<CompressedBitmap> eventPictures = event.getPictures();
-        for(CompressedBitmap bitmap : eventPictures){
+        for (CompressedBitmap bitmap : event.getPictures()) {
             addImageToGrid(bitmap, false);
         }
-        for(File f : event.getEventVideos()){
-            Uri videoUri=Uri.fromFile(f);
-           // String realpath=getRealPathFromURI(videoUri);
-            addVideoToGrid(videoUri.getPath());
+        for (Uri f : event.getEventVideos()) {
+            addVideoToGrid(f);
         }
     }
 

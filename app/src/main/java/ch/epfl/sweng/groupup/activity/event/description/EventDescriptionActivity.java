@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
 import com.akexorcist.googledirection.constant.RequestResult;
@@ -77,7 +78,12 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     private float x1,x2;
     private static final int MIN_DISTANCE = 150;
 
-
+    /**
+     * Override the onCreated method, where when the activity is called, set up GoogleMaps,
+     * swipe bar and instantiate variables
+     *
+     * @param savedInstanceState the Bundle object containing the activity's previously saved state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,8 +97,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         new EventDescription(this);
         fileManager = new FileManager(this);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         User.observer = this;
@@ -140,44 +145,27 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     /**
      * Override onPause method, remove the activity from the watchers of the event to avoid
      * exceptions.
-     **/
+     */
     @Override
     protected void onPause() {
         super.onPause();
         fileManager.close();
     }
 
-    /**
-     * Remove the user from the Event
-     * TODO change the place of this method, it doesn't make much sense to have it here
-     */
-    public static void removeEvent(Event eventToRemove) {
-        List<Member> futureMembers = new ArrayList<>(eventToRemove.getEventMembers());
-        futureMembers.remove(Account.shared.toMember());
-        eventToRemove = eventToRemove.withEventMembers(futureMembers);
-        Account.shared.addOrUpdateEvent(eventToRemove);
-        Database.update();
-        List<Event> futureEventList = new ArrayList<>(Account.shared.getEvents());
-        Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>
-                ());
-        Log.d("FUTUREEVENTBEFORE", futureEventList.toString());
-        futureEventList.remove(eventToRemove);
-        Log.d("FUTUREEVENTAFETERREMOVE", futureEventList.toString());
-        for (Event fe : futureEventList) {
-            Account.shared.addOrUpdateEvent(fe);
-        }
-        Database.update();
-    }
 
+    /**
+     * Override onStop method, remove the activity from the watchers of the event to avoid
+     * exceptions.
+     */
     public void onStop() {
         super.onStop();
         fileManager.close();
     }
 
-    /*
+    /**
      * Override onDestroy method, remove the activity from the watchers of the event to avoid
      * exceptions.
-     **/
+     */
     public void onDestroy() {
         super.onDestroy();
         fileManager.close();
@@ -196,16 +184,21 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        fileManager.onActivityResult(requestCode, resultCode, data);
+        fileManager.onActivityResult(resultCode, data);
     }
 
     /**
      * Defines the behavior of the activity when the Google map is ready.
+     *
      * @param googleMap the Google map.
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        if (isMapMockWanted()) {
+            mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
+        }
+
         mMap.setOnMapLoadedCallback(getOnMapLoadedCallback(this));
         mMap.setOnMapLongClickListener(getMapLongClickListener());
         mMap.setOnMarkerDragListener(getMarkerDragListener());
@@ -234,6 +227,12 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         super.provideGeoLocation();
     }
 
+    /**
+     * @param event to be updated.
+     *
+     * Updates the member markers and points of interests of an event by removing the old state
+     * and checking that the google map is initialized and given event corresponds with current
+     */
     public void updateEventIfNeeded(Event event) {
         if (mMap != null && event.getUUID().equals(currentEvent.getUUID())) {
             currentEvent = event;
@@ -244,6 +243,9 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         }
     }
 
+    /**
+     * Updates the member markers on the map with the position of each member in the event.
+     */
     private void updateMemberMarkers() {
         for (Member memberToDisplay : currentEvent.getEventMembers()) {
             Optional<Location> location = memberToDisplay.getLocation();
@@ -263,7 +265,10 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         }
     }
 
-
+    /**
+     * Updates the points of interests on the map with the position of
+     * each point of interests in the event.
+     */
     private void updatePoiMarkers() {
         for (PointOfInterest poi : currentEvent.getPointsOfInterest()) {
             LatLng latLng = new LatLng(poi.getLocation().getLatitude(), poi.getLocation().getLongitude());
@@ -273,12 +278,19 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                     .draggable(true)
                     .icon(BitmapDescriptorFactory.defaultMarker(
                             BitmapDescriptorFactory.HUE_GREEN)));
+            marker.setVisible(true);
 
             mPoiMarkers.put(marker, poi.getUuid());
         }
     }
 
-
+    /**
+     * When the map has has finished rendering, show a toast with instructions for the user
+     * when the swipe bar is touched.
+     *
+     * @param context the application context.
+     * @return callback interface for when the map has finished rendering.
+     */
     private GoogleMap.OnMapLoadedCallback getOnMapLoadedCallback(final Context context) {
         return new OnMapLoadedCallback() {
             @Override
@@ -291,19 +303,22 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         };
     }
 
-
+    /**
+     * Creates the dialog for the user that shows when the user longclicks on the map,
+     * i.e. the fields to fill in and then accept/decline to add a new point of interest
+     *
+     * @return callback for when the user long presses on the map
+     */
     private GoogleMap.OnMapLongClickListener getMapLongClickListener() {
         return new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(final LatLng latLng) {
                 Context context = EventDescriptionActivity.this;
 
-                // Dialog Builder
                 final AlertDialog.Builder builder =
                         new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AboutDialog));
                 builder.setTitle(R.string.poi_dialog_title);
 
-                // Container + Child Views to enable input from the user.
                 LinearLayout container = new LinearLayout(context);
                 container.setOrientation(LinearLayout.VERTICAL);
 
@@ -328,7 +343,14 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         };
     }
 
-
+    /**
+     * A method to create the new point of interest when the add button is pushed by the user.
+     *
+     * @param latLng the LatLng coordinates of the new point of interest.
+     * @param titleEditText the title of the new point of interest.
+     * @param descriptionEditText the description of the new point of interest.
+     * @return the method to be invoked when the add button is pushed
+     */
     private DialogInterface.OnClickListener getCreatePositiveListener(final LatLng latLng,
                                                                       final EditText titleEditText,
                                                                       final EditText descriptionEditText) {
@@ -342,25 +364,20 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 location.setLatitude(latLng.latitude);
                 location.setLongitude(latLng.longitude);
 
-                MarkerOptions markerOptions = new MarkerOptions().position(latLng)
-                        .title(title)
-                        .snippet(description)
-                        .icon(BitmapDescriptorFactory.defaultMarker(
-                                BitmapDescriptorFactory.HUE_GREEN));
-                mMap.addMarker(markerOptions);
-
-                PointOfInterest poi = new PointOfInterest(title, description, location);
-
-                Event newEvent = currentEvent.withPointOfInterest(poi);
-
-                Account.shared.addOrUpdateEvent(newEvent);
-                currentEvent = newEvent;
+                Account.shared.addOrUpdateEvent(currentEvent.withPointOfInterest(new PointOfInterest(title, description, location)));
                 Database.update();
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         };
     }
 
-
+    /**
+     * A method that closes the dialog with the user when the cancel button
+     * is pushed by the user.
+     *
+     * @return the method to be invoked when the cancel button is pushed.
+     */
     private DialogInterface.OnClickListener getNegativeListener() {
         return new DialogInterface.OnClickListener() {
             @Override
@@ -370,7 +387,12 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         };
     }
 
-
+    /**
+     * Creates a dialog for the user to decide to remove a
+     * point of interest or not.
+     *
+     * @return the method to be invoked when a marker is dragged.
+     */
     private GoogleMap.OnMarkerDragListener getMarkerDragListener() {
         return new GoogleMap.OnMarkerDragListener() {
             @Override
@@ -388,19 +410,20 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 builder.create().show();
             }
 
-
             @Override
             public void onMarkerDrag(Marker marker) {
                 // Ignore
             }
 
 
+            /**
+             * This needs to be done because of a "bug" of the Google Maps, when you start dragging a marker it gets
+             * automatically deviated a little bit.
+             *
+             * @param marker being dragged.
+             */
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                /*
-                This needs to be done because of a "bug" of the Google Maps, when you start dragging a marker it gets
-                 automatically deviated a little bit.
-                 */
                 marker.remove();
                 updatePoiMarkers();
             }
@@ -408,11 +431,17 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     }
 
 
+    /**
+     * Removes a point of interest chosen by a user to be deleted by pushing on the delete
+     * button when a point of interest is dragged.
+     *
+     * @param marker to be removed from the map.
+     * @return the method to be invoked when the user decides to remove a point of interest
+     */
     private DialogInterface.OnClickListener getRemovePositiveListener(final Marker marker) {
         return new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
                 String uuidToDelete = mPoiMarkers.get(marker);
                 if (uuidToDelete == null) {
                     return;
@@ -425,10 +454,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                     }
                 }
 
-                Event newEvent = currentEvent.withPointsOfInterest(newPointsOfInterest);
-
-                Account.shared.addOrUpdateEvent(newEvent);
-                currentEvent = newEvent;
+                Account.shared.addOrUpdateEvent(currentEvent.withPointsOfInterest(newPointsOfInterest));
                 marker.remove();
 
                 Database.update();

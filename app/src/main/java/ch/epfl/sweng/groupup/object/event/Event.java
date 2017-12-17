@@ -1,6 +1,6 @@
 package ch.epfl.sweng.groupup.object.event;
 
-import android.util.Log;
+import android.net.Uri;
 
 import org.joda.time.LocalDateTime;
 
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import ch.epfl.sweng.groupup.activity.event.files.CompressedBitmap;
+import ch.epfl.sweng.groupup.lib.CompressedBitmap;
 import ch.epfl.sweng.groupup.lib.Watchee;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.lib.database.DatabaseEvent;
@@ -38,7 +38,7 @@ public final class Event implements Serializable, Watcher, Watchee{
     private final String description;
     private final List<Member> eventMembers;
     private List<CompressedBitmap> eventImages;
-    private List<File> eventVideos; //is it a good idea to have a File ?
+    private List<Uri> eventVideos; //is it a good idea to have a File ?
     private final Set<PointOfInterest> pointsOfInterest;
     private FirebaseFileProxy proxy;
     private Set<Watcher> watchers;
@@ -99,7 +99,7 @@ public final class Event implements Serializable, Watcher, Watchee{
         verifyProxyInstantiated();
         return new ArrayList<>(eventImages);
     }
-    public List<File> getEventVideos(){
+    public List<Uri> getEventVideos(){
         verifyProxyInstantiated();
         return new ArrayList<>(eventVideos);
     }
@@ -112,14 +112,13 @@ public final class Event implements Serializable, Watcher, Watchee{
     public void addPicture(String uuid, CompressedBitmap bitmap){
         verifyProxyInstantiated();
         eventImages.add(bitmap);
-        Log.d("HERE","ADD PICTURE");
         proxy.uploadFile(uuid, bitmap);
     }
 
-    public void addVideo(String uuid, File file){
+    public void addVideo(String uuid, Uri uri){
         verifyProxyInstantiated();
-        eventVideos.add(file);
-        proxy.uploadFile(uuid,file);
+        eventVideos.add(uri);
+        proxy.uploadFile(uuid,uri);
     }
 
     /**
@@ -444,7 +443,10 @@ public final class Event implements Serializable, Watcher, Watchee{
     public void notifyWatcher() {
         verifyProxyInstantiated();
         List<CompressedBitmap> proxyImages = proxy.getImagesFromDatabase();
-        List<File> proxyVideos= proxy.getVideosFromDatabase();
+        List<Uri> proxyVideos= new ArrayList<>();
+        for (File f : proxy.getVideosFromDatabase()){
+            proxyVideos.add(Uri.fromFile(f));
+        }
         if(proxyImages.size() > eventImages.size()){
             eventImages = proxyImages;
         }

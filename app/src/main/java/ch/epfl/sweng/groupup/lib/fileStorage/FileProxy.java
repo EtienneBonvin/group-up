@@ -3,7 +3,7 @@ package ch.epfl.sweng.groupup.lib.fileStorage;
 import java.io.File;
 import java.util.List;
 
-import ch.epfl.sweng.groupup.activity.event.files.CompressedBitmap;
+import ch.epfl.sweng.groupup.lib.CompressedBitmap;
 
 /**
  * FileProxy interface.

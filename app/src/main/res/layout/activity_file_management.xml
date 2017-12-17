@@ -42,7 +42,13 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/create_aftermovie"
             android:text="@string/file_management_take_picture" />
-
+        <Button
+            android:id="@+id/take_video"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/take_picture"
+            android:text="@string/file_management_take_video" />
 
     </RelativeLayout>
 

@@ -74,8 +74,8 @@
     <!-- Geo Location -->
     <string name="alert_dialog_ask_enable_provider_title">Please Grant Permission</string>
     <string name="alert_dialog_ask_enable_provider_message">To be able to share your live location
-        during the event and invite friends via QR Scanner you have to grant the GroupUp! the
-        permission to use your location and camera. Do you want to do it now?</string>
+        during the event and invite friends via QR Scanner you have to grant GroupUp! the
+        permission to use your location and camera.</string>
     <string name="alert_dialog_yes">Yes</string>
     <string name="alert_dialog_no">No</string>
     <string name="alert_dialog_title_delete_event">Deleting Event</string>
@@ -126,6 +126,7 @@
     <string name="invitationMail_subject">Hello ✌️</string>
     <string name="event_listing_extraIndex">eventIndex</string>
     <string name="file_management_take_picture">Take picture</string>
+    <string name="file_management_take_video">Take video</string>
 
     <!-- Full screen file -->
     <string name="full_screen_file_content_description">Image to be displayed in full screen</string>

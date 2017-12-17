@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import ch.epfl.sweng.groupup.activity.event.files.CompressedBitmap;
+import ch.epfl.sweng.groupup.lib.CompressedBitmap;
 import ch.epfl.sweng.groupup.lib.Watchee;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -90,11 +90,11 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
     /**
      * Upload a video to the firebase storage
      * @param uuid
-     * @param file
+     * @param uri
      */
-    public void uploadFile(String uuid, File file){
+    public void uploadFile(String uuid, Uri uri){
         //TODO
-        queuedUploads.offer(new AsyncUploadFileTask(this,uuid, file));
+        queuedUploads.offer(new AsyncUploadFileTask(this,uuid, uri));
     }
     /**
      * Indicates whether all files have been recovered from the Firebase Storage.
@@ -160,31 +160,30 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
         imageRef.updateMetadata(metadata);
     }
 
-    private void effectivelyUploadFile(String uuid, File file){
+    private void effectivelyUploadFile(String uuid, Uri uri){
         final Counter memberCount=memberCounter.get(uuid);
-        Uri uri = Uri.fromFile(file);
-        StorageReference videoRef = storageRef.child(event.getUUID()+"/"+uuid+"/"+memberCount.getCount());
-        videoRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                memberCount.increment();
-                if(!queuedUploads.isEmpty()){
-                    queuedUploads.poll().execute();
-                }else{
-                    createAsyncDownloadTask().execute();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-        @Override
-        public void onFailure(Exception e) {
-            e.printStackTrace();
-        }
-    });
         StorageMetadata metadata = new StorageMetadata.Builder()
                 .setContentType("video/mp4")
                 .build();
-        videoRef.updateMetadata(metadata);
-    }
+        StorageReference videoRef = storageRef.child(event.getUUID()+"/"+uuid+"/"+memberCount.getCount());
+        videoRef.putFile(uri, metadata).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    memberCount.increment();
+                    if(!queuedUploads.isEmpty()){
+                        queuedUploads.poll().execute();
+                    }else{
+                        createAsyncDownloadTask().execute();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
 
     /**
      * Return the last images recovered from the storage.
@@ -223,6 +222,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
                     @Override
                     public void onSuccess(final StorageMetadata metadata) {
                         String contentType = metadata.getContentType();
+                        //Images
                         if (contentType.contains("image")) {
                             fileRef.getBytes(Long.MAX_VALUE)
                                     .addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -242,16 +242,17 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
                                             ticker.tick(false);
                                         }
                                     });
-                        } else if (contentType.contains("video")){
+                        }
+                        //Videos
+                        else if (contentType.contains("video")){
                             try {
                                //TODO Store locally to avoid data consumption
                                 String extension="."+contentType.substring(contentType.lastIndexOf('/')+1);
-                                final File localFile = File.createTempFile("groupUp"+metadata.getName(), ".mp4");
+                                final File localFile = File.createTempFile("groupUp"+metadata.getName(), extension);
                                 fileRef.getFile(localFile)
                                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                             @Override
                                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                                //Video
                                                 recoveredVideos.add(localFile);
                                                 memberCount.increment();
                                                 notifyAllWatchers();
@@ -388,7 +389,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
 
         private final WeakReference<FirebaseFileProxy> wproxy;
         private final String uuid;
-        private  File file;
+        private  Uri uri;
         private final CompressedBitmap image;
 
 
@@ -404,7 +405,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
             wproxy = new WeakReference<>(proxy);
             this.uuid = uuid;
             this.image = image;
-            this.file=null;
+            this.uri=null;
         }
         /**
          * Constructor for AsyncDownloadFileTask.
@@ -412,13 +413,13 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
          * Avoids leaks.
          * @param proxy the FirebaseFileProxy asking for the asynchronous task.
          * @param uuid the user's id.
-         * @param file the file to upload.
+         * @param uri the file to upload.
          */
-        private AsyncUploadFileTask(FirebaseFileProxy proxy, String uuid, File file){
+        private AsyncUploadFileTask(FirebaseFileProxy proxy, String uuid, Uri uri){
             wproxy = new WeakReference<>(proxy);
             this.uuid = uuid;
             this.image = null;
-            this.file=file;
+            this.uri=uri;
         }
 
         /**
@@ -435,7 +436,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
                     proxy.effectivelyUploadFile(uuid, image);
                     }
                     else {
-                        proxy.effectivelyUploadFile(uuid,file);
+                        proxy.effectivelyUploadFile(uuid,uri);
                     }
                 }catch(Exception e){
                     //TODO check if exceptions should be caught
