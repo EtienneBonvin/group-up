@@ -88,11 +88,11 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
 
         startTime = new DecoratedTimePicker(this,
                 (Button)findViewById(R.id.button_start_time),
-                now);
+                now.plusMinutes(5));
 
         endTime = new DecoratedTimePicker(this,
                 (Button)findViewById(R.id.button_end_time),
-                now);
+                now.plusMinutes(6));
 
         ((TextView)findViewById(R.id.number_of_members))
                 .setText(String.format(Locale.getDefault(),
