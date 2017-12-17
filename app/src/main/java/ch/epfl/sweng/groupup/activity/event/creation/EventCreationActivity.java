@@ -70,10 +70,17 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
 
     @Override
     public void initializeToolbar(){
-        TextView title = findViewById(R.id.toolbar_title);
         ImageView rightImage = findViewById(R.id.toolbar_image_right);
-        title.setText(R.string.toolbar_title_create_event);
+        ImageView secondRightImage = findViewById(R.id.toolbar_image_second_from_right);
+
         rightImage.setImageResource(R.drawable.ic_check);
+        secondRightImage.setImageResource(R.drawable.ic_user);
+        findViewById(R.id.toolbar_image_second_from_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(UserInformationActivity.class);
+            }
+        });
 
         // home button
         findViewById(R.id.toolbar_image_left).setOnClickListener(new View.OnClickListener() {
@@ -82,8 +89,6 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
                 setUpListener(EventListingActivity.class);
             }
         });
-
-
     }
 
     /**

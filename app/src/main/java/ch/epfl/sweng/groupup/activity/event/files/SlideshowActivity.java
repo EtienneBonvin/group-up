@@ -3,6 +3,7 @@ package ch.epfl.sweng.groupup.activity.event.files;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -51,25 +52,7 @@ public class SlideshowActivity extends ToolbarActivity implements Watcher{
 
     @Override
     public void initializeToolbar() {
-        TextView title = findViewById(R.id.toolbar_title);
-        ImageView rightImage = findViewById(R.id.toolbar_image_right);
-        ImageView secondRightImage = findViewById(R.id.toolbar_image_second_from_right);
 
-        rightImage.setImageResource(R.drawable.ic_user);
-        findViewById(R.id.toolbar_image_right).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setUpListener(UserInformationActivity.class);
-            }
-        });
-
-        // home button
-        findViewById(R.id.toolbar_image_left).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setUpListener(EventListingActivity.class);
-            }
-        });
     }
 
     @Override
