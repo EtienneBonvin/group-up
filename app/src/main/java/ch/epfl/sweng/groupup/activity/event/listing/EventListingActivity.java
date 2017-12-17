@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.View;
@@ -54,7 +55,6 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_listing);
-
         Account.shared.addWatcher(this);
         initializeVariables();
         updateEvents();
@@ -64,9 +64,7 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
 
     @Override
     public void initializeToolbar() {
-        TextView title = findViewById(R.id.toolbar_title);
         ImageView rightImage = findViewById(R.id.toolbar_image_right);
-        ImageView secondRightImage = findViewById(R.id.toolbar_image_second_from_right);
 
         rightImage.setImageResource(R.drawable.ic_user);
         findViewById(R.id.toolbar_image_right).setOnClickListener(new View.OnClickListener() {

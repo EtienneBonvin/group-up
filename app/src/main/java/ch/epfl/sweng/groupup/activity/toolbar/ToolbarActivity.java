@@ -32,6 +32,11 @@ public abstract class ToolbarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.toolbar);
         provideGeoLocation();
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
         initializeToolbar();
     }
 
