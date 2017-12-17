@@ -3,6 +3,7 @@ package ch.epfl.sweng.groupup.activity.toolbar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -45,16 +46,7 @@ public abstract class ToolbarActivity extends AppCompatActivity {
     }
 
 
-    public void initializeToolbar() {
-        ImageView rightImage = findViewById(R.id.toolbar_image_right);
-        rightImage.setImageResource(R.drawable.ic_user);
-        findViewById(R.id.toolbar_image_right).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setUpListener(UserInformationActivity.class);
-            }
-        });
-    }
+    public abstract void initializeToolbar();
 
 
     /**

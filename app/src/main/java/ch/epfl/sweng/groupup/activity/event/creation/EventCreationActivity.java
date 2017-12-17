@@ -70,7 +70,6 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
 
     @Override
     public void initializeToolbar(){
-        super.initializeToolbar();
         TextView title = findViewById(R.id.toolbar_title);
         ImageView rightImage = findViewById(R.id.toolbar_image_right);
         title.setText(R.string.toolbar_title_create_event);

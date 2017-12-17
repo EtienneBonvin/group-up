@@ -79,7 +79,6 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
 
     @Override
     public void initializeToolbar(){
-        super.initializeToolbar();
         TextView title = findViewById(R.id.toolbar_title);
         title.setText(R.string.toolbar_title_user_profile);
 

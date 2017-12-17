@@ -147,7 +147,6 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
 
     @Override
     public void initializeToolbar(){
-        super.initializeToolbar();
         ImageView rightImage = findViewById(R.id.toolbar_image_right);
         ImageView secondRightImage = findViewById(R.id.toolbar_image_second_from_right);
 
