@@ -52,6 +52,7 @@ public class SlideshowActivity extends ToolbarActivity implements Watcher{
 
     @Override
     public void initializeToolbar() {
+        // No toolbar
     }
 
     @Override
