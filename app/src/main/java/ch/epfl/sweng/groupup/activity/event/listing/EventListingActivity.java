@@ -3,22 +3,19 @@ package ch.epfl.sweng.groupup.activity.event.listing;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
+import android.support.v4.content.ContextCompat;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.joda.time.LocalDateTime;
 
 import java.util.List;
-import java.util.Locale;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
@@ -116,10 +113,9 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
             Button eventButton = new Button(this);
             eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
                     MATCH_PARENT, heightInSp));
-            eventButton.setText(String.format(Locale.getDefault(), "%s \n%d.%d. %d:%02d - %d.%d. %d:%02d", e.getEventName(),
-                    start.getDayOfMonth(), start.getMonthOfYear(), start.getHourOfDay(), start.getMinuteOfHour(),
-                    end.getDayOfMonth(), end.getMonthOfYear(), end.getHourOfDay(), end.getMinuteOfHour()));
+            eventButton.setText(e.getEventName()+"\n"+e.getStartTimeToString()+" - "+e.getEndTimeToString());
             eventButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
+            eventButton.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
 
             eventButton.setPadding(getResources().getDimensionPixelSize(R.dimen.default_gap),0,getResources().getDimensionPixelSize(R.dimen.default_gap), 0);
             if (e.getEventStatus().equals(EventStatus.CURRENT)){

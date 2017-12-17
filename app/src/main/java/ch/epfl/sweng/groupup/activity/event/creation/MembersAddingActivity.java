@@ -2,6 +2,7 @@ package ch.epfl.sweng.groupup.activity.event.creation;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -9,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.MissingResourceException;
 
@@ -24,9 +26,8 @@ import static ch.epfl.sweng.groupup.lib.AndroidHelper.showToast;
 
 public class MembersAddingActivity extends EventCreationActivity implements ZXingScannerView.ResultHandler {
 
-    private transient HashMap<View.OnClickListener, View> viewsWithOCL;
-    private transient HashMap<View.OnClickListener, MemberRepresentation> uIdsWithOCL;
     private transient ZXingScannerView mScannerView;
+    private transient MemberLabelFactory factory;
 
     private EventBuilder builder;
 
@@ -63,8 +64,6 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
      * Initialize the fields of the activity.
      */
     private void initFields(){
-        viewsWithOCL = new HashMap<>();
-        uIdsWithOCL = new HashMap<>();
 
         builder = (EventBuilder)getIntent().getSerializableExtra(EventCreationActivity.EXTRA_MESSAGE);
         if(builder == null){
@@ -74,8 +73,10 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                     "Builder");
         }
 
+        factory = new MemberLabelFactory(this);
+
         for(MemberRepresentation member : builder.getMembers()){
-            addNewMember(member);
+            factory.addNewMember(member);
         }
     }
 
@@ -94,7 +95,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                             memberEmail.setError(getString(R.string.event_creation_error_cant_add_yourself));
                         } else{
                             MemberRepresentation newRep = new MemberRepresentation(memberEmail.getText().toString());
-                            addNewMember(newRep);
+                            factory.addNewMember(newRep);
                             memberEmail.setText("");
                         }
                     }
@@ -121,7 +122,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
      * Saves the already added members
      */
     private void saveState(){
-        builder.setMembersTo(uIdsWithOCL.values());
+        builder.setMembersTo(factory.getMembers());
     }
 
     /**
@@ -129,7 +130,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
      */
     private void restoreState() {
         for (MemberRepresentation member : builder.getMembers()) {
-            addNewMember(member);
+            factory.addNewMember(member);
         }
     }
 
@@ -154,7 +155,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
             showToast(this, getString(R.string.event_creation_error_cant_add_yourself), Toast.LENGTH_SHORT);
         }else {
             MemberRepresentation newRep = new MemberRepresentation(decoded[0], decoded[1]);
-            addNewMember(newRep);
+            factory.addNewMember(newRep);
         }
     }
 
@@ -188,66 +189,109 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
     }
 
     /**
-     * Adds a line in the member list on the UI with either email or UUDI specified by the user
-     * @param memberInfo the MemberRepresentation of the member that will be added
-     */
-    private void addNewMember(MemberRepresentation memberInfo) {
-
-        LinearLayout newMember = new LinearLayout(this);
-        newMember.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
-
-
-        TextView textView = new TextView(this);
-        textView.setTextSize(20);
-        textView.setLayoutParams(new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                0.9f));
-        textView.setText(memberInfo.toString());
-        textView.setTextColor(getResources().getColor(R.color.primaryTextColor));
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                0.1f);
-        params.setMargins(2, 2, 2, 2);
-        ImageView minus = new ImageView(this);
-        minus.setImageResource(R.drawable.ic_minus_box);
-        minus.setLayoutParams(params);
-        minus.setBackgroundColor(getResources().getColor(R.color.transparent));
-
-        newMember.addView(textView);
-        newMember.addView(minus);
-
-        ((LinearLayout) findViewById(R.id.members_list))
-                .addView(newMember);
-
-        View.OnClickListener ocl = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((LinearLayout) findViewById(R.id.members_list))
-                        .removeView(
-                                viewsWithOCL.get(this)
-                        );
-                uIdsWithOCL.remove(this);
-            }
-        };
-
-        minus.setOnClickListener(ocl);
-        viewsWithOCL.put(ocl, newMember);
-        uIdsWithOCL.put(ocl, memberInfo);
-    }
-
-    /**
      * Save the members added in the builder and returns to the event creation activity.
      */
     private void returnToEventCreation(){
-        builder.setMembersTo(uIdsWithOCL.values());
+        builder.setMembersTo(factory.getMembers());
 
         Intent intent = new Intent(this, EventCreationActivity.class);
         intent.putExtra(EventCreationActivity.EXTRA_MESSAGE, builder);
         startActivity(intent);
+    }
+
+    /**
+     * MemberLabelFactory class.
+     * Variation of the factory design pattern. This class generates the layout labels to display the
+     * members and allow to add them to the layout.
+     */
+    private class MemberLabelFactory {
+
+        private transient LinearLayout baseLayout;
+        private transient TextView baseTextView;
+        private transient ImageView delImage;
+        private transient HashMap<View.OnClickListener, View> viewsWithOCL;
+        private transient HashMap<View.OnClickListener, MemberRepresentation> uIdsWithOCL;
+        private transient MembersAddingActivity activity;
+
+        /**
+         * Create a MemberTagFactory to display member labels on the given MembersAddingActivity.
+         * @param activity the activity where to display the members tags.
+         */
+        private MemberLabelFactory(MembersAddingActivity activity){
+            this.activity = activity;
+            viewsWithOCL = new HashMap<>();
+            uIdsWithOCL = new HashMap<>();
+            generateLayout();
+        }
+
+        /**
+         * Generate an empty label linked to the activity.
+         */
+        private void generateLayout(){
+            baseLayout = new LinearLayout(activity);
+            baseLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+
+
+            baseTextView = new TextView(activity);
+            baseTextView.setTextSize(20);
+            baseTextView.setLayoutParams(new LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    0.9f));
+
+            baseTextView.setTextColor(getResources().getColor(R.color.primaryTextColor));
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    0.1f);
+            params.setMargins(2, 2, 2, 2);
+            delImage = new ImageView(activity);
+            delImage.setImageResource(R.drawable.ic_minus_box);
+            delImage.setLayoutParams(params);
+            delImage.setBackgroundColor(getResources().getColor(R.color.transparent));
+
+            baseLayout.addView(baseTextView);
+            baseLayout.addView(delImage);
+        }
+
+        /**
+         * Add a new member label to the activity filled with the given member infos.
+         * @param memberInfo the MemberRepresentation representing the informations of the member.
+         */
+        private void addNewMember(MemberRepresentation memberInfo){
+
+            generateLayout();
+
+            baseTextView.setText(memberInfo.toString());
+            ((LinearLayout) findViewById(R.id.members_list))
+                    .addView(baseLayout);
+
+            View.OnClickListener ocl = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((LinearLayout) findViewById(R.id.members_list))
+                            .removeView(
+                                    viewsWithOCL.get(this)
+                            );
+                    uIdsWithOCL.remove(this);
+                }
+            };
+
+            delImage.setOnClickListener(ocl);
+            viewsWithOCL.put(ocl, baseLayout);
+            uIdsWithOCL.put(ocl, memberInfo);
+        }
+
+        /**
+         * Give a collection of the members that have been added so far.
+         * @return a collection of MemberRepresentations of the members added so far.
+         */
+        private Collection<MemberRepresentation> getMembers(){
+            return uIdsWithOCL.values();
+        }
+
     }
 }

@@ -41,9 +41,12 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -81,6 +84,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     // Switch view attributes
     private float x1,x2;
     private static final int MIN_DISTANCE = 150;
+    private ArrayList<Integer> swipe_text = new ArrayList<>();
+    private int actualIndex;
 
     /**
      * Override the onCreated method, where when the activity is called, set up GoogleMaps,
@@ -94,6 +99,14 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         setContentView(R.layout.activity_event_description);
 
         swipeBarTouched = false;
+
+        swipe_text.add(R.string.event_description_swipe_hint_in_main);
+        swipe_text.add(R.string.event_description_swipe_hint_in_map);
+        swipe_text.add(R.string.event_description_swipe_hint_in_media_sharing);
+        actualIndex = 0;
+
+        ((TextView)findViewById(R.id.swipe_bar))
+                .setText(swipe_text.get(actualIndex));
 
         x1 = -1;
 
@@ -127,9 +140,15 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                                         if(x2 > x1) {
                                             ((ViewFlipper) findViewById(R.id.view_flipper))
                                                     .showNext();
+                                            actualIndex = (actualIndex + 1) % 3;
+                                            ((TextView)findViewById(R.id.swipe_bar))
+                                                    .setText(swipe_text.get(actualIndex));
                                         }else{
                                             ((ViewFlipper) findViewById(R.id.view_flipper))
                                                     .showPrevious();
+                                            actualIndex = (actualIndex + 2) % 3;
+                                            ((TextView)findViewById(R.id.swipe_bar))
+                                                    .setText(swipe_text.get(actualIndex));
                                         }
                                     }else{
                                         //Handle click for further uses.
