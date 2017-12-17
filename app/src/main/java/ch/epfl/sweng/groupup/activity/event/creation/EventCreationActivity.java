@@ -120,13 +120,17 @@ public class EventCreationActivity extends ToolbarActivity implements DatePicker
                 .setText(builder.getDescription());
 
         datePickerDialog = new DatePickerDialog(
-                this, EventCreationActivity.this,
+                this,
+                R.style.AboutDialog,
+                EventCreationActivity.this,
                 builder.getStartDate().getYear(),
                 builder.getStartDate().getMonthOfYear() - 1,
                 builder.getStartDate().getDayOfMonth());
 
         timePickerDialog = new TimePickerDialog(
-                this, EventCreationActivity.this,
+                this,
+                R.style.AboutDialog,
+                EventCreationActivity.this,
                 builder.getStartDate().getHourOfDay(),
                 builder.getStartDate().getMinuteOfHour(), true);
     }
