@@ -1,6 +1,5 @@
 package ch.epfl.sweng.groupup.lib.pickers;
 
-import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.view.View;
 import android.widget.Button;
