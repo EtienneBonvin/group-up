@@ -38,8 +38,7 @@ public class DecoratedDatePicker implements DatePickerDialog.OnDateSetListener{
 
         datePickerDialog = new DatePickerDialog(
                 activity,
-                R.style.AboutDialog,
-                this,
+                DecoratedDatePicker.this,
                 date.getYear(),
                 date.getMonthOfYear() - 1,
                 date.getDayOfMonth());

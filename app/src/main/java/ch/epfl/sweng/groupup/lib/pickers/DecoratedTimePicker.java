@@ -37,8 +37,7 @@ public class DecoratedTimePicker implements TimePickerDialog.OnTimeSetListener{
 
         timePickerDialog = new TimePickerDialog(
                 activity,
-                R.style.AboutDialog,
-                this,
+                DecoratedTimePicker.this,
                 time.getHourOfDay(),
                 time.getMinuteOfHour(),
                 true);
