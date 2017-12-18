@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,13 +22,13 @@ import java.util.Locale;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
+import ch.epfl.sweng.groupup.activity.info.UserInformationActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.lib.email.GMailService;
-import ch.epfl.sweng.groupup.lib.pickers.DecoratedDatePicker;
-import ch.epfl.sweng.groupup.lib.pickers.DecoratedTimePicker;
+import ch.epfl.sweng.groupup.lib.pickers.DecoratedDateTimePicker;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
@@ -43,8 +44,7 @@ import static ch.epfl.sweng.groupup.lib.AndroidHelper.emailCheck;
 public class EventCreationActivity extends ToolbarActivity implements Serializable{
 
     public static final int INPUT_MAX_LENGTH = 30;
-    private transient DecoratedDatePicker endDate, startDate;
-    private transient DecoratedTimePicker endTime, startTime;
+    private transient DecoratedDateTimePicker startDateTime, endDateTime;
 
     public static final String EXTRA_MESSAGE = "Builder";
 
@@ -60,6 +60,31 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
         setContentView(R.layout.event_creation);
         initFields();
         initListeners();
+    }
+
+    @Override
+    public void initializeToolbar(){
+        TextView title = findViewById(R.id.toolbar_title);
+        ImageView rightImage = findViewById(R.id.toolbar_image_right);
+        ImageView secondRightImage = findViewById(R.id.toolbar_image_second_from_right);
+
+        title.setText(R.string.toolbar_title_create_event);
+        rightImage.setImageResource(R.drawable.ic_check);
+        secondRightImage.setImageResource(R.drawable.ic_user);
+        findViewById(R.id.toolbar_image_second_from_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(UserInformationActivity.class);
+            }
+        });
+
+        // home button
+        findViewById(R.id.toolbar_image_left).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(EventListingActivity.class);
+            }
+        });
     }
 
     /**
@@ -86,19 +111,13 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
             regEnd = LocalDateTime.now().plusMinutes(6);
         }
 
-        startDate = new DecoratedDatePicker(this,
+        startDateTime = new DecoratedDateTimePicker(this,
                 (Button)findViewById(R.id.button_start_date),
-                regStart);
-
-        endDate = new DecoratedDatePicker(this,
-                (Button)findViewById(R.id.button_end_date),
-                regEnd);
-
-        startTime = new DecoratedTimePicker(this,
                 (Button)findViewById(R.id.button_start_time),
                 regStart);
 
-        endTime = new DecoratedTimePicker(this,
+        endDateTime = new DecoratedDateTimePicker(this,
+                (Button)findViewById(R.id.button_end_date),
                 (Button)findViewById(R.id.button_end_time),
                 regEnd);
 
@@ -120,8 +139,6 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
      */
     private void initListeners(){
 
-        super.initializeToolbarActivity(ToolbarActivity.EVENT_CREATION);
-
         findViewById(R.id.toolbar_image_right)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -140,16 +157,8 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
                         builder.setDescription(
                                 ((EditText)findViewById(R.id.edit_text_description))
                                 .getText().toString());
-                        builder.setStartDate(startDate.getDate().getYear(),
-                                startDate.getDate().getMonthOfYear(),
-                                startDate.getDate().getDayOfMonth());
-                        builder.setEndDate(endDate.getDate().getYear(),
-                                endDate.getDate().getMonthOfYear(),
-                                endDate.getDate().getDayOfMonth());
-                        builder.setStartTime(startTime.getTime().getHourOfDay(),
-                                startTime.getTime().getMinuteOfHour());
-                        builder.setEndTime(endTime.getTime().getHourOfDay(),
-                                endTime.getTime().getMinuteOfHour());
+                        builder.setStartDateTime(startDateTime.getDateTime());
+                        builder.setEndDateTime(endDateTime.getDateTime());
                         Intent intent = new Intent(getApplicationContext(), MembersAddingActivity.class);
                         intent.putExtra(EXTRA_MESSAGE, builder);
                         startActivity(intent);
@@ -174,19 +183,8 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
         }
         eventName.setError(null);
 
-        builder.setStartDate(startDate.getDate().getYear(),
-                startDate.getDate().getMonthOfYear(),
-                startDate.getDate().getDayOfMonth());
-
-        builder.setEndDate(endDate.getDate().getYear(),
-                endDate.getDate().getMonthOfYear(),
-                endDate.getDate().getDayOfMonth());
-
-        builder.setStartTime(startTime.getTime().getHourOfDay(),
-                startTime.getTime().getMinuteOfHour());
-
-        builder.setEndTime(endTime.getTime().getHourOfDay(),
-                endTime.getTime().getMinuteOfHour());
+        builder.setStartDateTime(startDateTime.getDateTime());
+        builder.setEndDateTime(endDateTime.getDateTime());
 
         if(builder.getStartDate().isBefore(LocalDateTime.now())){
             AndroidHelper.showToast(getApplicationContext(),
@@ -337,46 +335,26 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
 
         /**
          * Setter for the start date of the event.
-         * @param year the year.
-         * @param monthOfYear the month of the year.
-         * @param dayOfMonth the day of the month.
+         * @param dateTime the new start date time to set.
          */
-        private void setStartDate(int year, int monthOfYear, int dayOfMonth){
-            startDate = startDate.withYear(year)
-                    .withMonthOfYear(monthOfYear)
-                    .withDayOfMonth(dayOfMonth);
+        private void setStartDateTime(LocalDateTime dateTime){
+            startDate = startDate.withYear(dateTime.getYear())
+                    .withMonthOfYear(dateTime.getMonthOfYear())
+                    .withDayOfMonth(dateTime.getDayOfMonth())
+                    .withHourOfDay(dateTime.getHourOfDay())
+                    .withMinuteOfHour(dateTime.getMinuteOfHour());
         }
 
         /**
          * Setter for the end date of the event.
-         * @param year the year.
-         * @param monthOfYear the month of the year.
-         * @param dayOfMonth the day of the month.
+         * @param dateTime the new end date time to set.
          */
-        private void setEndDate(int year, int monthOfYear, int dayOfMonth){
-            endDate = endDate.withYear(year)
-                    .withMonthOfYear(monthOfYear)
-                    .withDayOfMonth(dayOfMonth);
-        }
-
-        /**
-         * Setter for the start time of the event.
-         * @param hoursOfDay the hour of the day.
-         * @param minutesOfHour the minute of the hour.
-         */
-        private void setStartTime(int hoursOfDay, int minutesOfHour){
-            startDate = startDate.withHourOfDay(hoursOfDay)
-                    .withMinuteOfHour(minutesOfHour);
-        }
-
-        /**
-         * Setter for the end time of the event.
-         * @param hoursOfDay the hour of the day.
-         * @param minutesOfHour the minute of the hour.
-         */
-        private void setEndTime(int hoursOfDay, int minutesOfHour){
-            endDate = endDate.withHourOfDay(hoursOfDay)
-                    .withMinuteOfHour(minutesOfHour);
+        private void setEndDateTime(LocalDateTime dateTime){
+            endDate = endDate.withYear(dateTime.getYear())
+                    .withMonthOfYear(dateTime.getMonthOfYear())
+                    .withDayOfMonth(dateTime.getDayOfMonth())
+                    .withHourOfDay(dateTime.getHourOfDay())
+                    .withMinuteOfHour(dateTime.getMinuteOfHour());
         }
 
         /**

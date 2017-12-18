@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.MissingResourceException;
 
 import ch.epfl.sweng.groupup.R;
+import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
+import ch.epfl.sweng.groupup.activity.info.UserInformationActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.object.account.Account;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -36,6 +38,26 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
 
         initFields();
         initListeners();
+    }
+
+    @Override
+    public void initializeToolbar(){
+        super.initializeToolbar();
+        TextView title = findViewById(R.id.toolbar_title);
+        ImageView rightImage = findViewById(R.id.toolbar_image_right);
+
+        title.setText(R.string.toolbar_title_add_members);
+        rightImage.setImageResource(R.drawable.ic_check);
+
+        // home button
+        findViewById(R.id.toolbar_image_left).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(EventListingActivity.class);
+            }
+        });
+
+
     }
 
     /**
@@ -94,8 +116,6 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                         returnToEventCreation();
                     }
                 });
-
-        super.initializeToolbarActivity(ToolbarActivity.MEMBERS_ADDING);
     }
 
     /**

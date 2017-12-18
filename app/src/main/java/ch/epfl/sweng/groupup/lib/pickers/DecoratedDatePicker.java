@@ -24,7 +24,6 @@ public class DecoratedDatePicker implements DatePickerDialog.OnDateSetListener{
     private LocalDateTime setDate;
     private final DecoratedPickersVisitor visitor;
     private DatePickerDialog datePickerDialog;
-    private EventCreationActivity activity;
 
     /**
      * Create a DecoratedDatePicker with the activity to be linked to, the button to be triggered on
@@ -34,7 +33,6 @@ public class DecoratedDatePicker implements DatePickerDialog.OnDateSetListener{
      * @param date the initial date of the picker.
      */
     public DecoratedDatePicker(EventCreationActivity activity, Button trigger, LocalDateTime date){
-        this.activity = activity;
         this.trigger = trigger;
         setDate = date;
         visitor = new DecoratedPickersVisitor();

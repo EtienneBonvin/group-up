@@ -9,6 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -26,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 public class AndroidHelperShould {
 
     @Rule
-    public final ActivityTestRule<ToolbarActivity> mActivityRule = new ActivityTestRule<>(ToolbarActivity.class);
+    public final ActivityTestRule<EventListingActivity> mActivityRule = new ActivityTestRule<>(EventListingActivity.class);
 
 
     @Test

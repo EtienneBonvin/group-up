@@ -53,7 +53,6 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_list);
-        super.initializeToolbarActivity(ToolbarActivity.USER_PROFILE);
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             authService = new FirebaseAuthentication(
@@ -80,6 +79,19 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
     }
 
     @Override
+    public void initializeToolbar(){
+        TextView title = findViewById(R.id.toolbar_title);
+        title.setText(R.string.toolbar_title_user_profile);
+
+        // home button
+        findViewById(R.id.toolbar_image_left).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(EventListingActivity.class);
+            }
+        });
+    }
+
     public void onBackPressed() {
         Intent intent = new Intent(getApplicationContext(), EventListingActivity.class);
 
