@@ -113,7 +113,7 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
             Button eventButton = new Button(this);
             eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
                     MATCH_PARENT, heightInSp));
-            eventButton.setText(e.getEventName()+"\n"+e.getStartTimeToString()+" - "+e.getEndTimeToString());
+            eventButton.setText(String.format("%s\n%s - %s", e.getEventName(), e.getStartTimeToString(), e.getEndTimeToString()));
             eventButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
             eventButton.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
 

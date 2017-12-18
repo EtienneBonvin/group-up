@@ -7,6 +7,7 @@ import android.widget.DatePicker;
 
 import org.joda.time.LocalDateTime;
 
+import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 
 /**
@@ -20,7 +21,6 @@ public class DecoratedDatePicker implements DatePickerDialog.OnDateSetListener{
     private LocalDateTime setDate;
     private final DecoratedPickersVisitor visitor;
     private DatePickerDialog datePickerDialog;
-    private EventCreationActivity activity;
 
     /**
      * Create a DecoratedDatePicker with the activity to be linked to, the button to be triggered on
@@ -30,7 +30,6 @@ public class DecoratedDatePicker implements DatePickerDialog.OnDateSetListener{
      * @param date the initial date of the picker.
      */
     public DecoratedDatePicker(EventCreationActivity activity, Button trigger, LocalDateTime date){
-        this.activity = activity;
         this.trigger = trigger;
         setDate = date;
         visitor = new DecoratedPickersVisitor();
@@ -38,7 +37,8 @@ public class DecoratedDatePicker implements DatePickerDialog.OnDateSetListener{
         trigger.setText(visitor.getFormatted());
 
         datePickerDialog = new DatePickerDialog(
-                activity, DecoratedDatePicker.this,
+                activity,
+                DecoratedDatePicker.this,
                 date.getYear(),
                 date.getMonthOfYear() - 1,
                 date.getDayOfMonth());
