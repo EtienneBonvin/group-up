@@ -316,7 +316,8 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
             startDate = startDate.withYear(dateTime.getYear())
                     .withMonthOfYear(dateTime.getMonthOfYear())
                     .withDayOfMonth(dateTime.getDayOfMonth())
-                    .withHourOfDay(dateTime.getHourOfDay());
+                    .withHourOfDay(dateTime.getHourOfDay())
+                    .withMinuteOfHour(dateTime.getMinuteOfHour());
         }
 
         /**
