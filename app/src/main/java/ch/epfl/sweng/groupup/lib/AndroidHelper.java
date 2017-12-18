@@ -84,6 +84,10 @@ public final class AndroidHelper {
      */
     public static Toast showToast(Context context, String text, int duration) {
         Toast toast = Toast.makeText(context,text,duration);
+        if (lastShowedToast != null) {
+            lastShowedToast.cancel();
+        }
+        lastShowedToast = toast;
         toast.show();
         return toast;
     }
