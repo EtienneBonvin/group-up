@@ -1,5 +1,6 @@
 package ch.epfl.sweng.groupup.lib.pickers;
 
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.view.View;
 import android.widget.Button;
@@ -7,6 +8,7 @@ import android.widget.TimePicker;
 
 import org.joda.time.LocalDateTime;
 
+import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 
 /**
@@ -20,7 +22,6 @@ public class DecoratedTimePicker implements TimePickerDialog.OnTimeSetListener{
     private LocalDateTime setTime;
     private final DecoratedPickersVisitor visitor;
     private TimePickerDialog timePickerDialog;
-    private EventCreationActivity activity;
 
     /**
      * Create a DecoratedTimePicker associated to an activity and a trigger with a given initial time.
@@ -29,7 +30,6 @@ public class DecoratedTimePicker implements TimePickerDialog.OnTimeSetListener{
      * @param time the initial time of the dialog.
      */
     public DecoratedTimePicker(EventCreationActivity activity, Button trigger, LocalDateTime time){
-        this.activity = activity;
         this.trigger = trigger;
         this.visitor = new DecoratedPickersVisitor();
         this.setTime = time;
@@ -38,7 +38,8 @@ public class DecoratedTimePicker implements TimePickerDialog.OnTimeSetListener{
 
         timePickerDialog = new TimePickerDialog(
                 activity,
-                DecoratedTimePicker.this,
+                R.style.AboutDialog,
+                this,
                 time.getHourOfDay(),
                 time.getMinuteOfHour(),
                 true);
