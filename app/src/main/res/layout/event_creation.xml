@@ -33,7 +33,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.6"
                 android:hint="@string/event_creation_hint_event_name"
-                android:cursorVisible="false"
                 android:inputType="text"
                 android:textColor="@color/primaryTextColor"/>
 
@@ -146,7 +145,6 @@
             <EditText
                 android:id="@id/edit_text_description"
                 android:layout_width="match_parent"
-                android:cursorVisible="false"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine|textNoSuggestions"
                 android:textColor="@color/primaryTextColor"/>

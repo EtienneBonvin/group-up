@@ -57,7 +57,6 @@
                         android:layout_gravity="bottom"
                         android:layout_marginBottom="@dimen/text_margin"
                         android:background="@android:color/transparent"
-                        android:cursorVisible="false"
                         android:selectAllOnFocus="false"
                         android:text="@string/no_event_name"
                         android:gravity="center"

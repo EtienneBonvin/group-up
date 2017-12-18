@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.view.Gravity;
 import android.widget.LinearLayout;
@@ -63,6 +64,7 @@ public final class AndroidHelper {
                 dialog.dismiss();
             }
         });
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         alertDialog.show();
 
@@ -81,32 +83,9 @@ public final class AndroidHelper {
      * @return - the toast that is shown
      */
     public static Toast showToast(Context context, String text, int duration) {
-        // We first create the layout for the toast.
-        LinearLayout container = new LinearLayout(context);
-        container.setBackgroundColor(Color.GRAY);
-
-        TextView textView = new TextView(context);
-        textView.setBackgroundColor(Color.GRAY);
-        textView.setTextColor(Color.WHITE);
-        textView.setGravity(Gravity.CENTER_HORIZONTAL);
-        textView.setText(text);
-
-        container.addView(textView);
-
-        // We then build the toast using the layout.
-        Toast newToast = new Toast(context);
-        newToast.setDuration(duration);
-        newToast.setGravity(Gravity.BOTTOM, 0, 100);
-        newToast.setView(container);
-
-        if (lastShowedToast != null) {
-            lastShowedToast.cancel();
-        }
-        lastShowedToast = newToast;
-
-        newToast.show();
-
-        return newToast;
+        Toast toast = Toast.makeText(context,text,duration);
+        toast.show();
+        return toast;
     }
 
 
