@@ -3,7 +3,6 @@ package ch.epfl.sweng.groupup.activity.event.listing;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -11,17 +10,18 @@ import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import org.joda.time.LocalDateTime;
 
 import java.util.List;
-import java.util.Locale;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescription;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
+import ch.epfl.sweng.groupup.activity.info.UserInformationActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.lib.database.Database;
@@ -52,13 +52,32 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_listing);
-        super.initializeToolbarActivity("");
-
         Account.shared.addWatcher(this);
         initializeVariables();
         updateEvents();
         initializeCreateEvent();
         Account.shared.notifyAllWatchers();
+    }
+
+    @Override
+    public void initializeToolbar() {
+        ImageView rightImage = findViewById(R.id.toolbar_image_right);
+
+        rightImage.setImageResource(R.drawable.ic_user);
+        findViewById(R.id.toolbar_image_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(UserInformationActivity.class);
+            }
+        });
+
+        // home button
+        findViewById(R.id.toolbar_image_left).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(EventListingActivity.class);
+            }
+        });
     }
 
     /**
@@ -94,7 +113,7 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
             Button eventButton = new Button(this);
             eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
                     MATCH_PARENT, heightInSp));
-            eventButton.setText(e.getEventName()+"\n"+e.getStartTimeToString()+" - "+e.getEndTimeToString());
+            eventButton.setText(String.format("%s\n%s - %s", e.getEventName(), e.getStartTimeToString(), e.getEndTimeToString()));
             eventButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
             eventButton.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
 

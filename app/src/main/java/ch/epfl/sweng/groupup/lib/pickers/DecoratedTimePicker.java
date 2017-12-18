@@ -24,7 +24,6 @@ public class DecoratedTimePicker implements TimePickerDialog.OnTimeSetListener{
     private LocalDateTime setTime;
     private final DecoratedPickersVisitor visitor;
     private TimePickerDialog timePickerDialog;
-    private EventCreationActivity activity;
 
     /**
      * Create a DecoratedTimePicker associated to an activity and a trigger with a given initial time.
@@ -33,7 +32,6 @@ public class DecoratedTimePicker implements TimePickerDialog.OnTimeSetListener{
      * @param time the initial time of the dialog.
      */
     public DecoratedTimePicker(EventCreationActivity activity, Button trigger, LocalDateTime time){
-        this.activity = activity;
         this.trigger = trigger;
         this.visitor = new DecoratedPickersVisitor();
         this.setTime = time;

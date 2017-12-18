@@ -6,6 +6,7 @@ import android.location.LocationProvider;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.google.android.gms.measurement.AppMeasurement;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -14,6 +15,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
@@ -25,7 +27,7 @@ import static org.junit.Assert.assertEquals;
 public class MockLocationTestSuite {
 
     @Rule
-    public final ActivityTestRule<ToolbarActivity> mActivityRule = new ActivityTestRule<>(ToolbarActivity.class);
+    public final ActivityTestRule<EventListingActivity> mActivityRule = new ActivityTestRule<>(EventListingActivity.class);
 
 
     @Test

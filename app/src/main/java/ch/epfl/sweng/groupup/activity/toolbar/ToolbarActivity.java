@@ -19,30 +19,24 @@ import ch.epfl.sweng.groupup.lib.geolocation.MockLocation;
 import ch.epfl.sweng.groupup.object.event.Event;
 
 
-public class ToolbarActivity extends AppCompatActivity {
+public abstract class ToolbarActivity extends AppCompatActivity {
 
     private static GeoLocationInterface geoLocation;
     //Event with invitation need to be stored outside the listing activity
     protected static Set<Event> eventsToDisplay = new HashSet<>();
     private static boolean mockMap = false;
 
-    protected static final String MEMBERS_ADDING = "MembersAdding";
-    protected static final String EVENT_CREATION = "EventCreation";
-    protected static final String EVENT_DESCRIPTION = "EventDescription";
-    protected static final String USER_PROFILE = "UserProfile";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.toolbar);
-        initializeToolbarActivity("");
+        provideGeoLocation();
     }
 
-
-    protected void initializeToolbarActivity(String activity) {
-        provideGeoLocation();
-        initializeToolbar(activity);
+    @Override
+    protected void onStart(){
+        super.onStart();
+        initializeToolbar();
     }
 
 
@@ -55,55 +49,10 @@ public class ToolbarActivity extends AppCompatActivity {
         geoLocation.requestLocationUpdates();
     }
 
-
-    private void initializeToolbar(String activity) {
-        TextView title = findViewById(R.id.toolbar_title);
-        ImageView rightImage = findViewById(R.id.toolbar_image_right);
-        ImageView secondRightImage = findViewById(R.id.toolbar_image_second_from_right);
-
-        switch (activity){
-            case EVENT_CREATION:
-                title.setText(R.string.toolbar_title_create_event);
-                rightImage.setImageResource(R.drawable.ic_check);
-                break;
-            case EVENT_DESCRIPTION:
-                rightImage.setImageResource(R.drawable.ic_check);
-                secondRightImage.setImageResource(R.drawable.ic_user);
-                findViewById(R.id.toolbar_image_second_from_right).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setUpListener(UserInformationActivity.class);
-                    }
-                });
-                break;
-            case MEMBERS_ADDING:
-                title.setText(R.string.toolbar_title_add_members);
-                rightImage.setImageResource(R.drawable.ic_check);
-                break;
-            case USER_PROFILE:
-                title.setText(R.string.toolbar_title_user_profile);
-                break;
-            default:
-                rightImage.setImageResource(R.drawable.ic_user);
-                findViewById(R.id.toolbar_image_right).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setUpListener(UserInformationActivity.class);
-                    }
-                });
-                break;
-        }
-
-        // home button
-        findViewById(R.id.toolbar_image_left).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setUpListener(EventListingActivity.class);
-            }
-        });
-
-
-    }
+    /**
+     * Initializes the toolbar depending on what activity is running
+     */
+    public abstract void initializeToolbar();
 
 
     /**
@@ -139,7 +88,7 @@ public class ToolbarActivity extends AppCompatActivity {
      *
      * @param intentClass the class of the activity to be started
      */
-    private void setUpListener(Class intentClass) {
+    protected void setUpListener(Class intentClass) {
         Intent intent = new Intent(getApplicationContext(), intentClass);
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
