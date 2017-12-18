@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import java.util.Locale;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
+import ch.epfl.sweng.groupup.activity.info.UserInformationActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.Optional;
@@ -58,6 +60,31 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
         setContentView(R.layout.event_creation);
         initFields();
         initListeners();
+    }
+
+    @Override
+    public void initializeToolbar(){
+        TextView title = findViewById(R.id.toolbar_title);
+        ImageView rightImage = findViewById(R.id.toolbar_image_right);
+        ImageView secondRightImage = findViewById(R.id.toolbar_image_second_from_right);
+
+        title.setText(R.string.toolbar_title_create_event);
+        rightImage.setImageResource(R.drawable.ic_check);
+        secondRightImage.setImageResource(R.drawable.ic_user);
+        findViewById(R.id.toolbar_image_second_from_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(UserInformationActivity.class);
+            }
+        });
+
+        // home button
+        findViewById(R.id.toolbar_image_left).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(EventListingActivity.class);
+            }
+        });
     }
 
     /**
@@ -111,8 +138,6 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
      * Initialize the OnClickListeners of the layout.
      */
     private void initListeners(){
-
-        super.initializeToolbarActivity(ToolbarActivity.EVENT_CREATION);
 
         findViewById(R.id.toolbar_image_right)
                 .setOnClickListener(new View.OnClickListener() {

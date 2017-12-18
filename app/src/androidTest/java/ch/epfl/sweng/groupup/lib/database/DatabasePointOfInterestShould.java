@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
+import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 
@@ -22,7 +23,7 @@ import static org.junit.Assert.assertNotEquals;
 public class DatabasePointOfInterestShould {
 
     @Rule
-    public final ActivityTestRule<ToolbarActivity> mActivityRule = new ActivityTestRule<>(ToolbarActivity.class);
+    public final ActivityTestRule<EventListingActivity> mActivityRule = new ActivityTestRule<>(EventListingActivity.class);
 
 
     @Test
