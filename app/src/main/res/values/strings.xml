@@ -69,7 +69,15 @@
     <string name="no_event_name">NO_EVENT_NAME</string>
     <string name="no_event_start_date">NO_EVENT_START_DATE</string>
     <string name="change_the_description_of_the_event">Add description of the event</string>
-    <string name="event_description_swipe_hint">\u003C\u003C\u003C Swipe \u003E\u003E\u003E</string>
+    <string name="event_description_swipe_hint_in_main">\u003C\u003C\u003C Map\u0020\u0020\u0020
+        \u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020
+        \u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020Media \u003E\u003E\u003E</string>
+    <string name="event_description_swipe_hint_in_map">\u003C\u003C\u003C Media\u0020\u0020\u0020
+        \u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020
+        \u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020Details \u003E\u003E\u003E</string>
+    <string name="event_description_swipe_hint_in_media_sharing">\u003C\u003C\u003C Details\u0020
+        \u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020
+        \u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020Map \u003E\u003E\u003E</string>
 
     <!-- Geo Location -->
     <string name="alert_dialog_ask_enable_provider_title">Please Grant Permission</string>

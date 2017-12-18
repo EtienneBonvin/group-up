@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.View;
@@ -93,10 +94,9 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
             Button eventButton = new Button(this);
             eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
                     MATCH_PARENT, heightInSp));
-            eventButton.setText(String.format(Locale.getDefault(), "%s \n%d.%d. %d:%02d - %d.%d. %d:%02d", e.getEventName(),
-                    start.getDayOfMonth(), start.getMonthOfYear(), start.getHourOfDay(), start.getMinuteOfHour(),
-                    end.getDayOfMonth(), end.getMonthOfYear(), end.getHourOfDay(), end.getMinuteOfHour()));
+            eventButton.setText(String.format("%s\n%s - %s", e.getEventName(), e.getStartTimeToString(), e.getEndTimeToString()));
             eventButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
+            eventButton.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
 
             eventButton.setPadding(getResources().getDimensionPixelSize(R.dimen.default_gap),0,getResources().getDimensionPixelSize(R.dimen.default_gap), 0);
             if (e.getEventStatus().equals(EventStatus.CURRENT)){
