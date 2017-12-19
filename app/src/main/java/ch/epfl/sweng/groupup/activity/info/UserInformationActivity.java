@@ -20,6 +20,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.activity.login.LoginActivity;
+import ch.epfl.sweng.groupup.activity.main.MainActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.login.FirebaseAuthentication;
@@ -185,7 +186,7 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
     public void onSuccess() {
         updateUI(Status.DISCONNECTED);
 
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                         Intent.FLAG_ACTIVITY_CLEAR_TASK |
                         Intent.FLAG_ACTIVITY_NEW_TASK);

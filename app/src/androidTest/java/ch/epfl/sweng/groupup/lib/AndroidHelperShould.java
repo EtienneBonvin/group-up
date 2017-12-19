@@ -20,6 +20,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
@@ -29,6 +30,11 @@ public class AndroidHelperShould {
     @Rule
     public final ActivityTestRule<EventListingActivity> mActivityRule = new ActivityTestRule<>(EventListingActivity.class);
 
+
+    @Test
+    public void instanciate(){
+        new AndroidHelper();
+    }
 
     @Test
     public void correctlyDisplayAlert() throws Exception {
