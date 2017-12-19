@@ -35,6 +35,7 @@
     <!-- Event Creation UI -->
     <string name="event_creation_tv_event_name">Event name : </string>
     <string name="event_creation_hint_event_name">Enter name</string>
+    <string name="event_creation_hint_event_description">Enter Description</string>
     <string name="event_creation_tv_start_time">Start time : </string>
     <string name="event_creation_tv_end_time">End time : </string>
     <string name="event_creation_tv_description">Description : </string>
