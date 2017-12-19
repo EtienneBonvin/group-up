@@ -84,7 +84,6 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     // Switch view attributes
     private float x1,x2;
     private static final int MIN_DISTANCE = 150;
-    private ArrayList<Integer> swipe_text = new ArrayList<>();
     private int actualIndex;
 
     /**
@@ -100,13 +99,15 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
 
         swipeBarTouched = false;
 
-        swipe_text.add(R.string.event_description_swipe_hint_in_main);
-        swipe_text.add(R.string.event_description_swipe_hint_in_map);
-        swipe_text.add(R.string.event_description_swipe_hint_in_media_sharing);
-        actualIndex = 0;
-
-        ((TextView)findViewById(R.id.swipe_bar))
-                .setText(swipe_text.get(actualIndex));
+        /**
+         * This Map will map all onClickListeners of the tap view to an index.
+         * It will then allow us to know how to flip the view.
+         * The map has index 0.
+         * The details of the event has index 1.
+         * The media sharing of the index has index 2.
+         */
+        final Map<View.OnClickListener, Integer> oclToIndex = new HashMap<>();
+        actualIndex = 1;
 
         x1 = -1;
 
@@ -119,49 +120,57 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         User.observer = this;
         mPoiMarkers = new HashMap<>();
 
-        // View Switcher
-        findViewById(R.id.swipe_bar)
-                .setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        swipeBarTouched = true;
+        //Tap view initialization
+        findViewById(R.id.tap_view_map).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!oclToIndex.keySet().contains(this)) {
+                    oclToIndex.put(this, 0);
+                }
+                if(actualIndex == 1){
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showNext();
+                }else if(actualIndex == 2){
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showPrevious();
+                }
+                actualIndex = 0;
+            }
+        });
 
-                        switch(event.getAction())
-                        {
-                            case MotionEvent.ACTION_DOWN:
-                                if(x1 == -1)
-                                    x1 = event.getX();
-                                break;
+        findViewById(R.id.tap_view_details).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!oclToIndex.keySet().contains(this)) {
+                    oclToIndex.put(this, 1);
+                }
+                if(actualIndex == 2){
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showNext();
+                }else if(actualIndex == 0){
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showPrevious();
+                }
+                actualIndex = 1;
+            }
+        });
 
-                            case MotionEvent.ACTION_UP:
-                                if(x1 != -1) {
-                                    x2 = event.getX();
-                                    if (Math.abs(x2 - x1) > MIN_DISTANCE) {
-                                        if(x2 > x1) {
-                                            ((ViewFlipper) findViewById(R.id.view_flipper))
-                                                    .showNext();
-                                            actualIndex = (actualIndex + 1) % 3;
-                                            ((TextView)findViewById(R.id.swipe_bar))
-                                                    .setText(swipe_text.get(actualIndex));
-                                        }else{
-                                            ((ViewFlipper) findViewById(R.id.view_flipper))
-                                                    .showPrevious();
-                                            actualIndex = (actualIndex + 2) % 3;
-                                            ((TextView)findViewById(R.id.swipe_bar))
-                                                    .setText(swipe_text.get(actualIndex));
-                                        }
-                                    }else{
-                                        //Handle click for further uses.
-                                        findViewById(R.id.swipe_bar)
-                                                .performClick();
-                                    }
-                                    x1 = -1;
-                                }
-                                break;
-                        }
-                        return true;
-                    }
-                });
+        findViewById(R.id.tap_view_media).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!oclToIndex.keySet().contains(this)) {
+                    oclToIndex.put(this, 2);
+                }
+                if(actualIndex == 0){
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showNext();
+                }else if(actualIndex == 1){
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showPrevious();
+                }
+                actualIndex = 2;
+            }
+        });
     }
 
     @Override
