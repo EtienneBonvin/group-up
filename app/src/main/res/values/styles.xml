@@ -70,5 +70,4 @@
     <!-- Needed for scrolling view used in event description -->
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-
 </resources>
