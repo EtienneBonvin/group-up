@@ -144,7 +144,7 @@ public class MediaSharingTests {
         onView(withParent(withId(R.id.image_grid)))
                 .check(matches(isDisplayed()));
 
-        onView(withId(R.id.tap_view_media))
+        onView(withId(R.id.tap_view_details))
                 .perform(click());
 
         onView(withId(R.id.remove_event_button)).perform(click());
