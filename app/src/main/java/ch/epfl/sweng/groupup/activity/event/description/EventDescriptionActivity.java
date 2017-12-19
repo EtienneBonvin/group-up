@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.support.v4.app.ActivityCompat;
 import android.text.InputType;
@@ -315,6 +316,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
      * each point of interests in the event.
      */
     private void updatePoiMarkers() {
+
         for (PointOfInterest poi : currentEvent.getPointsOfInterest()) {
             LatLng latLng = new LatLng(poi.getLocation().getLatitude(), poi.getLocation().getLongitude());
             Marker marker = mMap.addMarker(new MarkerOptions().position(latLng)
@@ -322,7 +324,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                     .snippet(poi.getDescription())
                     .draggable(true)
                     .icon(BitmapDescriptorFactory.defaultMarker(
-                            BitmapDescriptorFactory.HUE_GREEN)));
+                            resColorToHue(R.color.secondaryColor))));
             marker.setVisible(true);
 
             mPoiMarkers.put(marker, poi.getUuid());
@@ -541,5 +543,23 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 }
             }
         };
+    }
+
+
+    /**
+     * Helper function that converts the colors in the resources
+     * R.color to it's Hue value that is an integer [0..360[
+     *
+     * @param resColor, i.e. an R.color to be converted
+     * @return the Hue value of the color
+     */
+    private float resColorToHue(int resColor) {
+        int color  = ContextCompat.getColor(this, resColor);
+        int r = (color >> 16) & 0xff;
+        int g = (color >> 8) & 0xff;
+        int b = (color >> 0) & 0xff;
+        float[] hsv = new float[3];
+        Color.RGBToHSV(r,g,b,hsv);
+        return hsv[0];
     }
 }
