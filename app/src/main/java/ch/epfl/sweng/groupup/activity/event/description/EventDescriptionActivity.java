@@ -10,16 +10,13 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.support.v4.app.ActivityCompat;
 import android.text.InputType;
 import android.view.ContextThemeWrapper;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -41,17 +38,12 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.mail.Transport;
 
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.files.FileManager;
@@ -108,6 +100,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
          */
         final Map<View.OnClickListener, Integer> oclToIndex = new HashMap<>();
         actualIndex = 1;
+        findViewById(R.id.tap_view_details)
+                .setBackground(getResources().getDrawable(R.drawable.borders_selected));
 
         x1 = -1;
 
@@ -130,10 +124,17 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 if(actualIndex == 1){
                     ((ViewFlipper) findViewById(R.id.view_flipper))
                             .showNext();
+                    findViewById(R.id.tap_view_details)
+                            .setBackground(getResources().getDrawable(R.drawable.borders_unselected));
                 }else if(actualIndex == 2){
                     ((ViewFlipper) findViewById(R.id.view_flipper))
                             .showPrevious();
+                    findViewById(R.id.tap_view_media)
+                            .setBackground(getResources().getDrawable(R.drawable.borders_unselected));
                 }
+
+                findViewById(R.id.tap_view_map)
+                        .setBackground(getResources().getDrawable(R.drawable.borders_selected));
                 actualIndex = 0;
             }
         });
@@ -147,10 +148,16 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 if(actualIndex == 2){
                     ((ViewFlipper) findViewById(R.id.view_flipper))
                             .showNext();
+                    findViewById(R.id.tap_view_media)
+                            .setBackground(getResources().getDrawable(R.drawable.borders_unselected));
                 }else if(actualIndex == 0){
                     ((ViewFlipper) findViewById(R.id.view_flipper))
                             .showPrevious();
+                    findViewById(R.id.tap_view_map)
+                            .setBackground(getResources().getDrawable(R.drawable.borders_unselected));
                 }
+                findViewById(R.id.tap_view_details)
+                        .setBackground(getResources().getDrawable(R.drawable.borders_selected));
                 actualIndex = 1;
             }
         });
@@ -164,10 +171,16 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 if(actualIndex == 0){
                     ((ViewFlipper) findViewById(R.id.view_flipper))
                             .showNext();
+                    findViewById(R.id.tap_view_map)
+                            .setBackground(getResources().getDrawable(R.drawable.borders_unselected));
                 }else if(actualIndex == 1){
                     ((ViewFlipper) findViewById(R.id.view_flipper))
                             .showPrevious();
+                    findViewById(R.id.tap_view_details)
+                            .setBackground(getResources().getDrawable(R.drawable.borders_unselected));
                 }
+                findViewById(R.id.tap_view_media)
+                        .setBackground(getResources().getDrawable(R.drawable.borders_selected));
                 actualIndex = 2;
             }
         });
