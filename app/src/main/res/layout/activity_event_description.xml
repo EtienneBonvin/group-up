@@ -14,14 +14,14 @@
     <LinearLayout
         android:id="@+id/tapView"
         android:layout_width="match_parent"
-        android:layout_height="62dp"
+        android:layout_height="50dp"
         android:layout_below="@id/toolbar"
         style="@style/ToolbarStyle">
 
         <TextView
             android:id="@+id/tap_view_map"
             android:layout_width="0dp"
-            android:layout_height="62dp"
+            android:layout_height="match_parent"
             android:layout_weight="0.33"
             android:text="@string/event_description_tap_view_map"
             android:textSize="20sp"
@@ -33,7 +33,7 @@
         <TextView
             android:id="@+id/tap_view_details"
             android:layout_width="0dp"
-            android:layout_height="62dp"
+            android:layout_height="match_parent"
             android:layout_weight="0.33"
             android:text="@string/event_description_tap_view_details"
             android:gravity="center"
@@ -44,7 +44,7 @@
         <TextView
             android:id="@+id/tap_view_media"
             android:layout_width="0dp"
-            android:layout_height="62dp"
+            android:layout_height="match_parent"
             android:layout_weight="0.33"
             android:text="@string/event_description_tap_view_media"
             android:gravity="center"

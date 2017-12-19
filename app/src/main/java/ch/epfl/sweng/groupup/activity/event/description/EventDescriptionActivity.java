@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -73,9 +74,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     private Event currentEvent;
     private Map<Marker, String> mPoiMarkers;
 
-    // Switch view attributes
-    private float x1,x2;
-    private static final int MIN_DISTANCE = 150;
+    // Tap view attributes
+    private Map<View.OnClickListener, Integer> oclToIndex;
     private int actualIndex;
 
     /**
@@ -98,12 +98,9 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
          * The details of the event has index 1.
          * The media sharing of the index has index 2.
          */
-        final Map<View.OnClickListener, Integer> oclToIndex = new HashMap<>();
+        oclToIndex = new HashMap<>();
         actualIndex = 1;
-        findViewById(R.id.tap_view_details)
-                .setBackground(getResources().getDrawable(R.drawable.borders_selected));
-
-        x1 = -1;
+        switchToSelected((TextView)findViewById(R.id.tap_view_details));
 
         new EventDescription(this);
         fileManager = new FileManager(this);
@@ -114,76 +111,25 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         User.observer = this;
         mPoiMarkers = new HashMap<>();
 
-        //Tap view initialization
-        findViewById(R.id.tap_view_map).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!oclToIndex.keySet().contains(this)) {
-                    oclToIndex.put(this, 0);
-                }
-                if(actualIndex == 1){
-                    ((ViewFlipper) findViewById(R.id.view_flipper))
-                            .showNext();
-                    findViewById(R.id.tap_view_details)
-                            .setBackground(getResources().getDrawable(R.drawable.borders_unselected));
-                }else if(actualIndex == 2){
-                    ((ViewFlipper) findViewById(R.id.view_flipper))
-                            .showPrevious();
-                    findViewById(R.id.tap_view_media)
-                            .setBackground(getResources().getDrawable(R.drawable.borders_unselected));
-                }
+        initializeTapView();
+    }
 
-                findViewById(R.id.tap_view_map)
-                        .setBackground(getResources().getDrawable(R.drawable.borders_selected));
-                actualIndex = 0;
-            }
-        });
+    /**
+     * Show a text view as a selected one.
+     * @param button the text view which design should be switch.
+     */
+    private void switchToSelected(TextView button){
+        button.setBackground(getResources().getDrawable(R.drawable.borders_selected));
+        button.setTextColor(getResources().getColor(R.color.accentTextColor));
+    }
 
-        findViewById(R.id.tap_view_details).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!oclToIndex.keySet().contains(this)) {
-                    oclToIndex.put(this, 1);
-                }
-                if(actualIndex == 2){
-                    ((ViewFlipper) findViewById(R.id.view_flipper))
-                            .showNext();
-                    findViewById(R.id.tap_view_media)
-                            .setBackground(getResources().getDrawable(R.drawable.borders_unselected));
-                }else if(actualIndex == 0){
-                    ((ViewFlipper) findViewById(R.id.view_flipper))
-                            .showPrevious();
-                    findViewById(R.id.tap_view_map)
-                            .setBackground(getResources().getDrawable(R.drawable.borders_unselected));
-                }
-                findViewById(R.id.tap_view_details)
-                        .setBackground(getResources().getDrawable(R.drawable.borders_selected));
-                actualIndex = 1;
-            }
-        });
-
-        findViewById(R.id.tap_view_media).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!oclToIndex.keySet().contains(this)) {
-                    oclToIndex.put(this, 2);
-                }
-                if(actualIndex == 0){
-                    ((ViewFlipper) findViewById(R.id.view_flipper))
-                            .showNext();
-                    findViewById(R.id.tap_view_map)
-                            .setBackground(getResources().getDrawable(R.drawable.borders_unselected));
-                }else if(actualIndex == 1){
-                    ((ViewFlipper) findViewById(R.id.view_flipper))
-                            .showPrevious();
-                    findViewById(R.id.tap_view_details)
-                            .setBackground(getResources().getDrawable(R.drawable.borders_unselected));
-                }
-                findViewById(R.id.tap_view_media)
-                        .setBackground(getResources().getDrawable(R.drawable.borders_selected));
-                actualIndex = 2;
-            }
-        });
+    /**
+     * Show a text view as an unselected one
+     * @param button the text view which design should be switch.
+     */
+    private void switchToUnselected(TextView button){
+        button.setBackground(getResources().getDrawable(R.drawable.borders_unselected));
+        button.setTextColor(getResources().getColor(R.color.primaryTextColor));
     }
 
     @Override
@@ -236,6 +182,73 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     public void onDestroy() {
         super.onDestroy();
         fileManager.close();
+    }
+
+    /**
+     * Tap view initialization.
+     */
+    private void initializeTapView() {
+
+        findViewById(R.id.tap_view_map).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!oclToIndex.keySet().contains(this)) {
+                    oclToIndex.put(this, 0);
+                }
+                if (actualIndex == 1) {
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showNext();
+                    switchToUnselected((TextView) findViewById(R.id.tap_view_details));
+                } else if (actualIndex == 2) {
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showPrevious();
+                    switchToUnselected((TextView) findViewById(R.id.tap_view_media));
+                }
+
+                switchToSelected((TextView) findViewById(R.id.tap_view_map));
+                actualIndex = 0;
+            }
+        });
+
+        findViewById(R.id.tap_view_details).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!oclToIndex.keySet().contains(this)) {
+                    oclToIndex.put(this, 1);
+                }
+                if (actualIndex == 2) {
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showNext();
+                    switchToUnselected((TextView) findViewById(R.id.tap_view_media));
+                } else if (actualIndex == 0) {
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showPrevious();
+                    switchToUnselected((TextView) findViewById(R.id.tap_view_map));
+                }
+                switchToSelected((TextView) findViewById(R.id.tap_view_details));
+                actualIndex = 1;
+            }
+        });
+
+        findViewById(R.id.tap_view_media).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!oclToIndex.keySet().contains(this)) {
+                    oclToIndex.put(this, 2);
+                }
+                if (actualIndex == 0) {
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showNext();
+                    switchToUnselected((TextView) findViewById(R.id.tap_view_map));
+                } else if (actualIndex == 1) {
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showPrevious();
+                    switchToUnselected((TextView) findViewById(R.id.tap_view_details));
+                }
+                switchToSelected((TextView) findViewById(R.id.tap_view_media));
+                actualIndex = 2;
+            }
+        });
     }
 
     /**
