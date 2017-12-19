@@ -96,8 +96,8 @@ public class MediaSharingTests {
         });
         createEvent();
         onView(withParent(withId(R.id.linear_layout_event_list))).perform(click());
-        onView(withId(R.id.swipe_bar))
-                .perform(swipeLeft());
+        onView(withId(R.id.tap_view_media))
+                .perform(click());
     }
 
     @After
@@ -144,8 +144,9 @@ public class MediaSharingTests {
         onView(withParent(withId(R.id.image_grid)))
                 .check(matches(isDisplayed()));
 
-        onView(withId(R.id.swipe_bar))
-                .perform(swipeRight());
+        onView(withId(R.id.tap_view_media))
+                .perform(click());
+
         onView(withId(R.id.remove_event_button)).perform(click());
     }
 

@@ -142,12 +142,14 @@ public class MapActivityTest {
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.toolbar_image_right)).perform(click());
         onView(withId(R.id.linear_layout_event_list)).perform(click());
-        onView(withId(R.id.swipe_bar)).perform(swipeRight());
+        onView(withId(R.id.tap_view_map))
+                .perform(click());
     }
 
 
     private void deleteEvent() {
-        onView(withId(R.id.swipe_bar)).perform(swipeLeft());
+        onView(withId(R.id.tap_view_details))
+                .perform(click());
         onView(withId(R.id.remove_event_button)).perform(click());
         onView(withText("Continue")).perform(click());
     }
