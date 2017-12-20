@@ -2,16 +2,19 @@
 <resources>
     <color name="background">#f5f5f6</color>
     <color name="background_dark">#e4e4e6</color>
+
     <color name="black">#000000</color>
     <color name="white">#ffffff </color>
     <color name="middle_grey">#888888</color>
-    <color name="primaryColor">#78909c</color>
-    <color name="primaryLightColor">#a7c0cd</color>
-    <color name="primaryDarkColor">#4b636e</color>
-    <color name="secondaryColor">#ffab40</color>
-    <color name="secondaryDarkColor">#c77c02</color>
-    <color name="accentTextColor">#FFFFFF</color>
-    <color name="primaryTextColor">#444444</color>
+
+    <color name="primaryColor">#5b6d77</color>
+    <color name="primaryLightColor">#889ba6</color>
+    <color name="primaryDarkColor">#31424b</color>
+    <color name="primaryTextColor">#ffffff</color>
+
+    <color name="secondaryColor">#d38c30</color>
+    <color name="secondaryDarkColor">#9d5f00</color>
     <color name="secondaryTextColor">#000000</color>
+
     <color name="transparent">@android:color/transparent</color>
 </resources>

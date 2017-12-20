@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.transition.Slide;
 import android.support.v4.app.ActivityCompat;
 import android.text.InputType;
 import android.view.ContextThemeWrapper;
@@ -120,7 +121,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
      */
     private void switchToSelected(TextView button){
         button.setBackground(getResources().getDrawable(R.drawable.borders_selected));
-        button.setTextColor(getResources().getColor(R.color.accentTextColor));
+        button.setTextColor(getResources().getColor(R.color.white));
     }
 
     /**
@@ -129,7 +130,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
      */
     private void switchToUnselected(TextView button){
         button.setBackground(getResources().getDrawable(R.drawable.borders_unselected));
-        button.setTextColor(getResources().getColor(R.color.primaryTextColor));
+        button.setTextColor(getResources().getColor(R.color.background_dark));
     }
 
     @Override
