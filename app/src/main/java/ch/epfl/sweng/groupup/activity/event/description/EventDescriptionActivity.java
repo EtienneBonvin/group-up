@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
@@ -339,8 +338,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 if (!Account.shared.getUUID().isEmpty() && !uuid.equals(Account.shared.getUUID().get())) {
                     mMap.addMarker(new MarkerOptions().position(pos)
                             .title(displayName)
-                            .icon(BitmapDescriptorFactory.defaultMarker(
-                                    BitmapDescriptorFactory.HUE_ORANGE)));
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_member)));
                 }
             }
         }
@@ -351,14 +349,14 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
      * each point of interests in the event.
      */
     private void updatePoiMarkers() {
+
         for (PointOfInterest poi : currentEvent.getPointsOfInterest()) {
             LatLng latLng = new LatLng(poi.getLocation().getLatitude(), poi.getLocation().getLongitude());
             Marker marker = mMap.addMarker(new MarkerOptions().position(latLng)
                     .title(poi.getName())
                     .snippet(poi.getDescription())
                     .draggable(true)
-                    .icon(BitmapDescriptorFactory.defaultMarker(
-                            BitmapDescriptorFactory.HUE_GREEN)));
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_poi)));
             marker.setVisible(true);
 
             mPoiMarkers.put(marker, poi.getUuid());
