@@ -391,7 +391,7 @@ public final class Account extends User implements Watchee {
      */
     private Account addOrUpdateCurrentEvent(Event current) {
         List<Event> newCurrent = new ArrayList<>(currentEvents);
-        for (Event e : futureEvents) {
+        for (Event e : currentEvents) {
             if (e.getUUID().equals(current.getUUID())) {
                 newCurrent.remove(e);
             }
@@ -403,7 +403,7 @@ public final class Account extends User implements Watchee {
                 return o2.getStartTime().compareTo(o1.getStartTime());
             }
         });
-        return Account.shared.withFutureEvents(newCurrent);
+        return Account.shared.withCurrentEvent(newCurrent);
     }
 
     /**

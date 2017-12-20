@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.View;
@@ -220,6 +221,7 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
     @Override
     public void notifyWatcher() {
         updateEvents();
+        Log.e("###", Account.shared.getEvents().toString());
     }
 
     @Override
