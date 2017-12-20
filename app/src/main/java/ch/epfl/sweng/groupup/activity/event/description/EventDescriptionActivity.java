@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.transition.Slide;
 import android.support.v4.app.ActivityCompat;
 import android.text.InputType;
 import android.view.ContextThemeWrapper;
@@ -20,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
@@ -120,7 +120,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
      */
     private void switchToSelected(TextView button){
         button.setBackground(getResources().getDrawable(R.drawable.borders_selected));
-        button.setTextColor(getResources().getColor(R.color.accentTextColor));
+        button.setTextColor(getResources().getColor(R.color.white));
     }
 
     /**
@@ -129,7 +129,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
      */
     private void switchToUnselected(TextView button){
         button.setBackground(getResources().getDrawable(R.drawable.borders_unselected));
-        button.setTextColor(getResources().getColor(R.color.primaryTextColor));
+        button.setTextColor(getResources().getColor(R.color.background_dark));
     }
 
     @Override
@@ -338,8 +338,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 if (!Account.shared.getUUID().isEmpty() && !uuid.equals(Account.shared.getUUID().get())) {
                     mMap.addMarker(new MarkerOptions().position(pos)
                             .title(displayName)
-                            .icon(BitmapDescriptorFactory.defaultMarker(
-                                    BitmapDescriptorFactory.HUE_ORANGE)));
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_member)));
                 }
             }
         }
@@ -350,14 +349,14 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
      * each point of interests in the event.
      */
     private void updatePoiMarkers() {
+
         for (PointOfInterest poi : currentEvent.getPointsOfInterest()) {
             LatLng latLng = new LatLng(poi.getLocation().getLatitude(), poi.getLocation().getLongitude());
             Marker marker = mMap.addMarker(new MarkerOptions().position(latLng)
                     .title(poi.getName())
                     .snippet(poi.getDescription())
                     .draggable(true)
-                    .icon(BitmapDescriptorFactory.defaultMarker(
-                            BitmapDescriptorFactory.HUE_GREEN)));
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_poi)));
             marker.setVisible(true);
 
             mPoiMarkers.put(marker, poi.getUuid());

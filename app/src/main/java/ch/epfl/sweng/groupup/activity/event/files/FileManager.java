@@ -6,20 +6,27 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -83,7 +90,6 @@ public class FileManager implements Watcher {
             event.addWatcher(this);
 
         // Set onClickListeners to add files
-        // TODO adding videos.
         activity.findViewById(R.id.add_files).setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -136,8 +142,6 @@ public class FileManager implements Watcher {
                     for (CompressedBitmap bitmap : event.getPictures()) {
                         addImageToGrid(bitmap, false);
                     }
-                    //TODO addvideotoGrid, on click listener to play the videoView
-
                 }
             }
         });
@@ -224,10 +228,8 @@ public class FileManager implements Watcher {
         addImageToGrid(compressedBitmap, true);
     }
 
-    //TODO TAKE VIDEOS FROM APP
-
     private void initializeTakeVideo() {
-        final Button takeVideo = activity.findViewById(R.id.take_video);
+        final FloatingActionButton takeVideo = activity.findViewById(R.id.take_video);
         final Context thisContext = activity.getApplicationContext();
         takeVideo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -267,7 +269,7 @@ public class FileManager implements Watcher {
      * Initialize the camera button and open the camera
      */
     private void initializeTakePicture() {
-        final Button takePicture = activity.findViewById(R.id.take_picture);
+        final FloatingActionButton takePicture = activity.findViewById(R.id.take_picture);
         final Context thisContext = activity.getApplicationContext();
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -349,11 +351,63 @@ public class FileManager implements Watcher {
         imagesAdded = 0;
     }
 
-    private void addVideoToGrid(Uri uri) {
+    private void addVideoToGrid(final Uri uri){
         MediaMetadataRetriever mMMR = new MediaMetadataRetriever();
-        mMMR.setDataSource(activity, uri);
-        CompressedBitmap thumb = new CompressedBitmap(mMMR.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC));
-        addImageToGrid(thumb, false);
+        mMMR.setDataSource(activity,uri);
+        CompressedBitmap noPlayThumb = new CompressedBitmap(mMMR.getFrameAtTime(1000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC));
+
+        Bitmap original = noPlayThumb.asBitmap();
+
+        Bitmap overlay = BitmapFactory.decodeResource(activity.getResources(), R.drawable.ic_video_thumb_overlay);
+        Bitmap finalThumb = Bitmap.createBitmap(overlay.getWidth(), overlay.getHeight(), overlay.getConfig());
+        Canvas canvas = new Canvas(finalThumb);
+        canvas.drawBitmap(original, new Matrix(), null);
+        canvas.drawBitmap(overlay, new Matrix(), null);
+
+        Bitmap trimed = trimBitmap(finalThumb);
+
+        ImageView image = new ImageView(activity);
+
+        GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
+        layoutParams.width = columnWidth;
+        layoutParams.height = rowHeight;
+        image.setLayoutParams(layoutParams);
+
+        image.setImageBitmap(trimed);
+
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final VideoView video = activity.findViewById(R.id.show_video);
+                video.setVideoURI(uri);
+
+                activity.findViewById(R.id.image_grid)
+                        .setVisibility(View.INVISIBLE);
+
+                activity.findViewById(R.id.video_container)
+                        .setVisibility(View.VISIBLE);
+
+                video.start();
+
+                activity.findViewById(R.id.video_container).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        video.pause();
+
+                        activity.findViewById(R.id.video_container)
+                                .setVisibility(View.INVISIBLE);
+
+                        activity.findViewById(R.id.image_grid)
+                                .setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
+
+        ((GridLayout) activity.findViewById(R.id.image_grid))
+                .addView(image, imagesAdded++);
     }
 
     /**
@@ -405,7 +459,7 @@ public class FileManager implements Watcher {
 
         if (addToDatabase)
             event.addPicture(Account.shared.getUUID().getOrElse("Default ID"),
-                    bitmap);
+                    new CompressedBitmap(trimed));
     }
 
     /**

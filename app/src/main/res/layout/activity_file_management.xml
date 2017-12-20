@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,35 +21,46 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true">
 
-        <Button
+
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/add_files"
-            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/file_management_button_add_file" />
+            android:layout_margin="@dimen/default_gap"
+            app:fabSize="normal"
+            app:backgroundTint="@color/secondaryColor"
+            app:srcCompat="@drawable/ic_add_file" />
 
-        <Button
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/create_aftermovie"
-            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/add_files"
-            android:text="@string/file_management_button_create_slideshow" />
+            android:layout_margin="@dimen/default_gap"
+            app:fabSize="normal"
+            app:backgroundTint="@color/secondaryColor"
+            app:srcCompat="@drawable/ic_movie" />
 
-        <Button
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/take_picture"
-            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/create_aftermovie"
-            android:text="@string/file_management_take_picture" />
-        <Button
+            android:layout_margin="@dimen/default_gap"
+            app:fabSize="normal"
+            app:backgroundTint="@color/secondaryColor"
+            app:srcCompat="@drawable/ic_take_picture" />
+
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/take_video"
-            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_gap"
             android:layout_toEndOf="@id/take_picture"
-            android:text="@string/file_management_take_video" />
+            app:fabSize="normal"
+            app:backgroundTint="@color/secondaryColor"
+            app:srcCompat="@drawable/ic_take_video" />
+
 
     </RelativeLayout>
 
@@ -82,11 +94,28 @@
 
     <ImageView
         android:id="@+id/show_image"
-        android:contentDescription="@string/full_screen_file_content_description"
+        android:contentDescription="@string/full_screen_image_content_description"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/description"
         android:layout_above="@id/linear_layout"
         android:visibility="invisible"/>
+
+    <FrameLayout
+        android:id="@+id/video_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/description"
+        android:layout_above="@id/linear_layout"
+        android:visibility="invisible">
+
+        <VideoView
+            android:id="@+id/show_video"
+            android:contentDescription="@string/full_screen_video_content_description"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
 
 </RelativeLayout>
