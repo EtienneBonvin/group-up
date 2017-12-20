@@ -82,20 +82,28 @@
 
     <ImageView
         android:id="@+id/show_image"
-        android:contentDescription="@string/full_screen_file_content_description"
+        android:contentDescription="@string/full_screen_image_content_description"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/description"
         android:layout_above="@id/linear_layout"
         android:visibility="invisible"/>
 
-    <VideoView
-        android:id="@+id/show_video"
-        android:contentDescription="@string/full_screen_file_content_description"
+    <FrameLayout
+        android:id="@+id/video_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/description"
         android:layout_above="@id/linear_layout"
-        android:visibility="invisible"/>
+        android:visibility="invisible">
+
+        <VideoView
+            android:id="@+id/show_video"
+            android:contentDescription="@string/full_screen_video_content_description"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
 
 </RelativeLayout>

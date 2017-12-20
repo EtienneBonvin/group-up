@@ -7,6 +7,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -358,17 +359,14 @@ public class FileManager implements Watcher {
         mMMR.setDataSource(activity,uri);
         CompressedBitmap noPlayThumb = new CompressedBitmap(mMMR.getFrameAtTime(1000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC));
 
-        //Drawable[] layers = new Drawable[2];
-        //layers[0] = new BitmapDrawable(activity.getResources(), noPlayThumb.asBitmap());
-        //layers[1] = activity.getResources().getDrawable(R.drawable.ic_play_circle_outline_black_24dp);
-        //LayerDrawable layerDrawable = new LayerDrawable(layers);
-
         Bitmap original = noPlayThumb.asBitmap();
 
-        Bitmap b = Bitmap.createBitmap(original.getWidth(), original.getHeight(), original.getConfig());
-        //layerDrawable.draw(new Canvas(b));
-
-        CompressedBitmap thumb = new CompressedBitmap(noPlayThumb.asBitmap());
+        Bitmap finalThumb = Bitmap.createBitmap(original.getWidth(), original.getHeight(), original.getConfig());
+        //Bitmap overlay = BitmapFactory.decodeResource(activity.getResources(), R.mipmap.ic_video_thumb_overlay);
+        Canvas canvas = new Canvas(finalThumb);
+        canvas.drawBitmap(original, new Matrix(), null);
+        canvas.drawBitmap(BitmapFactory.decodeResource(activity.getResources(),
+                R.mipmap.ic_video_thumb_overlay), new Matrix(), null);
 
         ImageView image = new ImageView(activity);
 
@@ -377,7 +375,7 @@ public class FileManager implements Watcher {
         layoutParams.height = rowHeight;
         image.setLayoutParams(layoutParams);
 
-        Bitmap trimed = trimBitmap(thumb.asBitmap());
+        Bitmap trimed = trimBitmap(finalThumb);
 
         image.setImageBitmap(trimed);
 
@@ -388,22 +386,21 @@ public class FileManager implements Watcher {
                 activity.findViewById(R.id.image_grid)
                         .setVisibility(View.INVISIBLE);
 
-                activity.findViewById(R.id.show_video)
+                activity.findViewById(R.id.video_container)
                         .setVisibility(View.VISIBLE);
 
-                VideoView video = activity.findViewById(R.id.show_video);
-                MediaController mc = new MediaController(activity);
-                mc.setAnchorView(video);
-                mc.setMediaPlayer(video);
+                final VideoView video = activity.findViewById(R.id.show_video);
                 video.setVideoURI(uri);
-                video.setMediaController(mc);
                 video.start();
 
 
-                video.setOnClickListener(new View.OnClickListener() {
+                activity.findViewById(R.id.video_container).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        activity.findViewById(R.id.show_video)
+
+                        video.pause();
+
+                        activity.findViewById(R.id.video_container)
                                 .setVisibility(View.INVISIBLE);
 
                         activity.findViewById(R.id.image_grid)
