@@ -354,19 +354,19 @@ public class FileManager implements Watcher {
     }
 
     private void addVideoToGrid(final Uri uri){
-        /*MediaMetadataRetriever mMMR = new MediaMetadataRetriever();
+        MediaMetadataRetriever mMMR = new MediaMetadataRetriever();
         mMMR.setDataSource(activity,uri);
         CompressedBitmap noPlayThumb = new CompressedBitmap(mMMR.getFrameAtTime(1000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC));
 
-        Drawable[] layers = new Drawable[2];
-        layers[0] = new BitmapDrawable(activity.getResources(), noPlayThumb.asBitmap());
-        layers[1] = activity.getResources().getDrawable(R.drawable.ic_play_circle_outline_black_24dp);
-        LayerDrawable layerDrawable = new LayerDrawable(layers);
+        //Drawable[] layers = new Drawable[2];
+        //layers[0] = new BitmapDrawable(activity.getResources(), noPlayThumb.asBitmap());
+        //layers[1] = activity.getResources().getDrawable(R.drawable.ic_play_circle_outline_black_24dp);
+        //LayerDrawable layerDrawable = new LayerDrawable(layers);
 
         Bitmap original = noPlayThumb.asBitmap();
 
         Bitmap b = Bitmap.createBitmap(original.getWidth(), original.getHeight(), original.getConfig());
-        layerDrawable.draw(new Canvas(b));
+        //layerDrawable.draw(new Canvas(b));
 
         CompressedBitmap thumb = new CompressedBitmap(noPlayThumb.asBitmap());
 
@@ -414,7 +414,7 @@ public class FileManager implements Watcher {
         });
 
         ((GridLayout) activity.findViewById(R.id.image_grid))
-                .addView(image, imagesAdded++);*/
+                .addView(image, imagesAdded++);
     }
 
     /**
