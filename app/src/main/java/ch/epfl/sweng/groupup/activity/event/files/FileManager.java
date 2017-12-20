@@ -84,7 +84,6 @@ public class FileManager implements Watcher {
             event.addWatcher(this);
 
         // Set onClickListeners to add files
-        // TODO adding videos.
         activity.findViewById(R.id.add_files).setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -137,8 +136,6 @@ public class FileManager implements Watcher {
                     for (CompressedBitmap bitmap : event.getPictures()) {
                         addImageToGrid(bitmap, false);
                     }
-                    //TODO addvideotoGrid, on click listener to play the videoView
-
                 }
             }
         });
@@ -404,7 +401,7 @@ public class FileManager implements Watcher {
 
         if (addToDatabase)
             event.addPicture(Account.shared.getUUID().getOrElse("Default ID"),
-                    bitmap);
+                    new CompressedBitmap(trimed));
     }
 
     /**
