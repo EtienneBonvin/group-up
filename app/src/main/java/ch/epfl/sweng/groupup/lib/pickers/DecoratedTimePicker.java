@@ -1,6 +1,9 @@
 package ch.epfl.sweng.groupup.lib.pickers;
 
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TimePicker;
@@ -37,10 +40,12 @@ public class DecoratedTimePicker implements TimePickerDialog.OnTimeSetListener{
 
         timePickerDialog = new TimePickerDialog(
                 activity,
+                R.style.Picker,
                 DecoratedTimePicker.this,
                 time.getHourOfDay(),
                 time.getMinuteOfHour(),
                 true);
+        timePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         trigger.setOnClickListener(new View.OnClickListener() {
             @Override

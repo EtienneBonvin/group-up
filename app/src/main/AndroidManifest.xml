@@ -54,7 +54,8 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.event.creation.MembersAddingActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activity.event.files.SlideshowActivity"
             android:screenOrientation="portrait"/>
