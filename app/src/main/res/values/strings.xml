@@ -10,7 +10,9 @@
     <string name="toolbar_title_user_profile">User Profile</string>
 
     <!-- Welcome page -->
-    <string name="welcome_view_powered_by">Powered by Flying Monkeys Team</string>
+    <string name="welcome_view_powered_by">Powered by Flying Monkeys Team </string>
+    <string name="credits_monkey">"Monkey Face" by Oksana Latysheva from thenounproject.com </string>
+
     <string name="flying_monkey_logo_description">Flying Monkeys logo</string>
 
     <string name="web_client_id" tools:ignore="TypographyDashes">418104898937-1n61g2sra1bfnd1eupddavfabqqbahi1.apps.googleusercontent.com</string>
