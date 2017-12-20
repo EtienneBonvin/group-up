@@ -98,7 +98,7 @@ public class AccountShould {
     @Test
     public void addCurrentEventOK(){
         shared.addOrUpdateEvent(current);
-        assertEquals(shared.getFutureEvents().get(0).getEventStatus(),EventStatus.CURRENT);
+        assertEquals(shared.getCurrentEvents().get(0).getEventStatus(),EventStatus.CURRENT);
         shared.clear();
     }
 
