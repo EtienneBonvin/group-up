@@ -135,10 +135,10 @@ public class MediaSharingTests {
         onView(withParent(withId(R.id.image_grid)))
                 .perform(click());
         //RUN THE VIDEO VIEW wHEN IMPLEMENTED
-        onView(withId(R.id.show_image))
+        onView(withId(R.id.video_container))
                 .check(matches(isDisplayed()));
 
-        onView(withId(R.id.show_image))
+        onView(withId(R.id.video_container))
                 .perform(click());
 
         onView(withParent(withId(R.id.image_grid)))
