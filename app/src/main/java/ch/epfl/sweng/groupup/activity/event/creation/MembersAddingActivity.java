@@ -166,9 +166,11 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
     public void onBackPressed() {
         if (mScannerView != null) {
             mScannerView.stopCamera();
+            mScannerView = null;
             setContentView(R.layout.members_adding);
             initListeners();
             restoreState();
+            initializeToolbar();
         } else {
             returnToEventCreation();
         }
