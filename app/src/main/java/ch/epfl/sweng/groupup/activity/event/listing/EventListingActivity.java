@@ -221,7 +221,6 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
     @Override
     public void notifyWatcher() {
         updateEvents();
-        Log.e("###", Account.shared.getEvents().toString());
     }
 
     @Override
