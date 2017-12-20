@@ -7,25 +7,57 @@
     android:layout_width="match_parent"
     tools:context="ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity">
 
-    <TextView
-        style="@style/ButtonStyle"
-        android:id="@+id/swipe_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="@string/event_description_swipe_hint"
-        android:gravity="center"
-        android:layout_alignParentBottom="true"/>
-
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
 
+    <LinearLayout
+        android:id="@+id/tapView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/toolbar"
+        style="@style/ToolbarStyle">
+
+        <TextView
+            android:id="@+id/tap_view_map"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.33"
+            android:text="@string/event_description_tap_view_map"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:background="@drawable/borders_unselected"
+            android:textColor="@color/primaryTextColor"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+
+        <TextView
+            android:id="@+id/tap_view_details"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.33"
+            android:text="@string/event_description_tap_view_details"
+            android:gravity="center"
+            android:background="@drawable/borders_unselected"
+            android:textColor="@color/primaryTextColor"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+
+        <TextView
+            android:id="@+id/tap_view_media"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.33"
+            android:text="@string/event_description_tap_view_media"
+            android:gravity="center"
+            android:background="@drawable/borders_unselected"
+            android:textColor="@color/primaryTextColor"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+
+    </LinearLayout>
+
     <ViewFlipper
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_above="@id/swipe_bar"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/tapView"
         android:id="@+id/view_flipper">
 
         <android.support.design.widget.CoordinatorLayout
@@ -58,7 +90,6 @@
                         android:layout_gravity="bottom"
                         android:layout_marginBottom="@dimen/text_margin"
                         android:background="@android:color/transparent"
-                        android:cursorVisible="false"
                         android:selectAllOnFocus="false"
                         android:text="@string/no_event_name"
                         android:gravity="center"

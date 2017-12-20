@@ -10,17 +10,18 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.support.v4.app.ActivityCompat;
 import android.text.InputType;
 import android.view.ContextThemeWrapper;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
 import com.akexorcist.googledirection.constant.RequestResult;
@@ -45,10 +46,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.mail.Transport;
-
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.files.FileManager;
+import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
+import ch.epfl.sweng.groupup.activity.info.UserInformationActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.Optional;
@@ -73,114 +74,181 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     private Event currentEvent;
     private Map<Marker, String> mPoiMarkers;
 
-    // Switch view attributes
-    private float x1,x2;
-    private static final int MIN_DISTANCE = 150;
+    // Tap view attributes
+    private Map<View.OnClickListener, Integer> oclToIndex;
+    private int actualIndex;
 
-
+    /**
+     * Override the onCreated method, where when the activity is called, set up GoogleMaps,
+     * swipe bar and instantiate variables
+     *
+     * @param savedInstanceState the Bundle object containing the activity's previously saved state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_description);
-        super.initializeToolbarActivity(ToolbarActivity.EVENT_DESCRIPTION);
 
         swipeBarTouched = false;
 
-        x1 = -1;
+        /**
+         * This Map will map all onClickListeners of the tap view to an index.
+         * It will then allow us to know how to flip the view.
+         * The map has index 0.
+         * The details of the event has index 1.
+         * The media sharing of the index has index 2.
+         */
+        oclToIndex = new HashMap<>();
+        actualIndex = 1;
+        switchToSelected((TextView)findViewById(R.id.tap_view_details));
 
         new EventDescription(this);
         fileManager = new FileManager(this);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         User.observer = this;
         mPoiMarkers = new HashMap<>();
 
-        // View Switcher
-        findViewById(R.id.swipe_bar)
-                .setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        swipeBarTouched = true;
+        initializeTapView();
+    }
 
-                        switch(event.getAction())
-                        {
-                            case MotionEvent.ACTION_DOWN:
-                                if(x1 == -1)
-                                    x1 = event.getX();
-                                break;
+    /**
+     * Show a text view as a selected one.
+     * @param button the text view which design should be switch.
+     */
+    private void switchToSelected(TextView button){
+        button.setBackground(getResources().getDrawable(R.drawable.borders_selected));
+        button.setTextColor(getResources().getColor(R.color.accentTextColor));
+    }
 
-                            case MotionEvent.ACTION_UP:
-                                if(x1 != -1) {
-                                    x2 = event.getX();
-                                    if (Math.abs(x2 - x1) > MIN_DISTANCE) {
-                                        if(x2 > x1) {
-                                            ((ViewFlipper) findViewById(R.id.view_flipper))
-                                                    .showNext();
-                                        }else{
-                                            ((ViewFlipper) findViewById(R.id.view_flipper))
-                                                    .showPrevious();
-                                        }
-                                    }else{
-                                        //Handle click for further uses.
-                                        findViewById(R.id.swipe_bar)
-                                                .performClick();
-                                    }
-                                    x1 = -1;
-                                }
-                                break;
-                        }
-                        return true;
-                    }
-                });
+    /**
+     * Show a text view as an unselected one
+     * @param button the text view which design should be switch.
+     */
+    private void switchToUnselected(TextView button){
+        button.setBackground(getResources().getDrawable(R.drawable.borders_unselected));
+        button.setTextColor(getResources().getColor(R.color.primaryTextColor));
+    }
+
+    @Override
+    public void initializeToolbar(){
+        ImageView rightImage = findViewById(R.id.toolbar_image_right);
+        ImageView secondRightImage = findViewById(R.id.toolbar_image_second_from_right);
+
+        rightImage.setImageResource(R.drawable.ic_check);
+        secondRightImage.setImageResource(R.drawable.ic_user);
+        findViewById(R.id.toolbar_image_second_from_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(UserInformationActivity.class);
+            }
+        });
+
+        // home button
+        findViewById(R.id.toolbar_image_left).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(EventListingActivity.class);
+            }
+        });
     }
 
     /**
      * Override onPause method, remove the activity from the watchers of the event to avoid
      * exceptions.
-     **/
+     */
     @Override
     protected void onPause() {
         super.onPause();
         fileManager.close();
     }
 
-    /**
-     * Remove the user from the Event
-     * TODO change the place of this method, it doesn't make much sense to have it here
-     */
-    public static void removeEvent(Event eventToRemove) {
-        List<Member> futureMembers = new ArrayList<>(eventToRemove.getEventMembers());
-        futureMembers.remove(Account.shared.toMember());
-        eventToRemove = eventToRemove.withEventMembers(futureMembers);
-        Account.shared.addOrUpdateEvent(eventToRemove);
-        Database.update();
-        List<Event> futureEventList = new ArrayList<>(Account.shared.getEvents());
-        Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>
-                ());
-        Log.d("FUTUREEVENTBEFORE", futureEventList.toString());
-        futureEventList.remove(eventToRemove);
-        Log.d("FUTUREEVENTAFETERREMOVE", futureEventList.toString());
-        for (Event fe : futureEventList) {
-            Account.shared.addOrUpdateEvent(fe);
-        }
-        Database.update();
-    }
 
+    /**
+     * Override onStop method, remove the activity from the watchers of the event to avoid
+     * exceptions.
+     */
     public void onStop() {
         super.onStop();
         fileManager.close();
     }
 
-    /*
+    /**
      * Override onDestroy method, remove the activity from the watchers of the event to avoid
      * exceptions.
-     **/
+     */
     public void onDestroy() {
         super.onDestroy();
         fileManager.close();
+    }
+
+    /**
+     * Tap view initialization.
+     */
+    private void initializeTapView() {
+
+        findViewById(R.id.tap_view_map).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!oclToIndex.keySet().contains(this)) {
+                    oclToIndex.put(this, 0);
+                }
+                if (actualIndex == 1) {
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showNext();
+                    switchToUnselected((TextView) findViewById(R.id.tap_view_details));
+                } else if (actualIndex == 2) {
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showPrevious();
+                    switchToUnselected((TextView) findViewById(R.id.tap_view_media));
+                }
+
+                switchToSelected((TextView) findViewById(R.id.tap_view_map));
+                actualIndex = 0;
+            }
+        });
+
+        findViewById(R.id.tap_view_details).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!oclToIndex.keySet().contains(this)) {
+                    oclToIndex.put(this, 1);
+                }
+                if (actualIndex == 2) {
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showNext();
+                    switchToUnselected((TextView) findViewById(R.id.tap_view_media));
+                } else if (actualIndex == 0) {
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showPrevious();
+                    switchToUnselected((TextView) findViewById(R.id.tap_view_map));
+                }
+                switchToSelected((TextView) findViewById(R.id.tap_view_details));
+                actualIndex = 1;
+            }
+        });
+
+        findViewById(R.id.tap_view_media).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!oclToIndex.keySet().contains(this)) {
+                    oclToIndex.put(this, 2);
+                }
+                if (actualIndex == 0) {
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showNext();
+                    switchToUnselected((TextView) findViewById(R.id.tap_view_map));
+                } else if (actualIndex == 1) {
+                    ((ViewFlipper) findViewById(R.id.view_flipper))
+                            .showPrevious();
+                    switchToUnselected((TextView) findViewById(R.id.tap_view_details));
+                }
+                switchToSelected((TextView) findViewById(R.id.tap_view_media));
+                actualIndex = 2;
+            }
+        });
     }
 
     /**
@@ -196,16 +264,21 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        fileManager.onActivityResult(requestCode, resultCode, data);
+        fileManager.onActivityResult(resultCode, data);
     }
 
     /**
      * Defines the behavior of the activity when the Google map is ready.
+     *
      * @param googleMap the Google map.
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        if (isMapMockWanted()) {
+            mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
+        }
+
         mMap.setOnMapLoadedCallback(getOnMapLoadedCallback(this));
         mMap.setOnMapLongClickListener(getMapLongClickListener());
         mMap.setOnMarkerDragListener(getMarkerDragListener());
@@ -234,6 +307,12 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         super.provideGeoLocation();
     }
 
+    /**
+     * @param event to be updated.
+     *
+     * Updates the member markers and points of interests of an event by removing the old state
+     * and checking that the google map is initialized and given event corresponds with current
+     */
     public void updateEventIfNeeded(Event event) {
         if (mMap != null && event.getUUID().equals(currentEvent.getUUID())) {
             currentEvent = event;
@@ -244,6 +323,9 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         }
     }
 
+    /**
+     * Updates the member markers on the map with the position of each member in the event.
+     */
     private void updateMemberMarkers() {
         for (Member memberToDisplay : currentEvent.getEventMembers()) {
             Optional<Location> location = memberToDisplay.getLocation();
@@ -263,7 +345,10 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         }
     }
 
-
+    /**
+     * Updates the points of interests on the map with the position of
+     * each point of interests in the event.
+     */
     private void updatePoiMarkers() {
         for (PointOfInterest poi : currentEvent.getPointsOfInterest()) {
             LatLng latLng = new LatLng(poi.getLocation().getLatitude(), poi.getLocation().getLongitude());
@@ -273,12 +358,19 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                     .draggable(true)
                     .icon(BitmapDescriptorFactory.defaultMarker(
                             BitmapDescriptorFactory.HUE_GREEN)));
+            marker.setVisible(true);
 
             mPoiMarkers.put(marker, poi.getUuid());
         }
     }
 
-
+    /**
+     * When the map has has finished rendering, show a toast with instructions for the user
+     * when the swipe bar is touched.
+     *
+     * @param context the application context.
+     * @return callback interface for when the map has finished rendering.
+     */
     private GoogleMap.OnMapLoadedCallback getOnMapLoadedCallback(final Context context) {
         return new OnMapLoadedCallback() {
             @Override
@@ -291,19 +383,22 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         };
     }
 
-
+    /**
+     * Creates the dialog for the user that shows when the user longclicks on the map,
+     * i.e. the fields to fill in and then accept/decline to add a new point of interest
+     *
+     * @return callback for when the user long presses on the map
+     */
     private GoogleMap.OnMapLongClickListener getMapLongClickListener() {
         return new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(final LatLng latLng) {
                 Context context = EventDescriptionActivity.this;
 
-                // Dialog Builder
                 final AlertDialog.Builder builder =
                         new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AboutDialog));
                 builder.setTitle(R.string.poi_dialog_title);
 
-                // Container + Child Views to enable input from the user.
                 LinearLayout container = new LinearLayout(context);
                 container.setOrientation(LinearLayout.VERTICAL);
 
@@ -328,7 +423,14 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         };
     }
 
-
+    /**
+     * A method to create the new point of interest when the add button is pushed by the user.
+     *
+     * @param latLng the LatLng coordinates of the new point of interest.
+     * @param titleEditText the title of the new point of interest.
+     * @param descriptionEditText the description of the new point of interest.
+     * @return the method to be invoked when the add button is pushed
+     */
     private DialogInterface.OnClickListener getCreatePositiveListener(final LatLng latLng,
                                                                       final EditText titleEditText,
                                                                       final EditText descriptionEditText) {
@@ -342,25 +444,20 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 location.setLatitude(latLng.latitude);
                 location.setLongitude(latLng.longitude);
 
-                MarkerOptions markerOptions = new MarkerOptions().position(latLng)
-                        .title(title)
-                        .snippet(description)
-                        .icon(BitmapDescriptorFactory.defaultMarker(
-                                BitmapDescriptorFactory.HUE_GREEN));
-                mMap.addMarker(markerOptions);
-
-                PointOfInterest poi = new PointOfInterest(title, description, location);
-
-                Event newEvent = currentEvent.withPointOfInterest(poi);
-
-                Account.shared.addOrUpdateEvent(newEvent);
-                currentEvent = newEvent;
+                Account.shared.addOrUpdateEvent(currentEvent.withPointOfInterest(new PointOfInterest(title, description, location)));
                 Database.update();
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         };
     }
 
-
+    /**
+     * A method that closes the dialog with the user when the cancel button
+     * is pushed by the user.
+     *
+     * @return the method to be invoked when the cancel button is pushed.
+     */
     private DialogInterface.OnClickListener getNegativeListener() {
         return new DialogInterface.OnClickListener() {
             @Override
@@ -370,7 +467,12 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         };
     }
 
-
+    /**
+     * Creates a dialog for the user to decide to remove a
+     * point of interest or not.
+     *
+     * @return the method to be invoked when a marker is dragged.
+     */
     private GoogleMap.OnMarkerDragListener getMarkerDragListener() {
         return new GoogleMap.OnMarkerDragListener() {
             @Override
@@ -388,19 +490,20 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 builder.create().show();
             }
 
-
             @Override
             public void onMarkerDrag(Marker marker) {
                 // Ignore
             }
 
 
+            /**
+             * This needs to be done because of a "bug" of the Google Maps, when you start dragging a marker it gets
+             * automatically deviated a little bit.
+             *
+             * @param marker being dragged.
+             */
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                /*
-                This needs to be done because of a "bug" of the Google Maps, when you start dragging a marker it gets
-                 automatically deviated a little bit.
-                 */
                 marker.remove();
                 updatePoiMarkers();
             }
@@ -408,11 +511,17 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     }
 
 
+    /**
+     * Removes a point of interest chosen by a user to be deleted by pushing on the delete
+     * button when a point of interest is dragged.
+     *
+     * @param marker to be removed from the map.
+     * @return the method to be invoked when the user decides to remove a point of interest
+     */
     private DialogInterface.OnClickListener getRemovePositiveListener(final Marker marker) {
         return new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
                 String uuidToDelete = mPoiMarkers.get(marker);
                 if (uuidToDelete == null) {
                     return;
@@ -425,10 +534,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                     }
                 }
 
-                Event newEvent = currentEvent.withPointsOfInterest(newPointsOfInterest);
-
-                Account.shared.addOrUpdateEvent(newEvent);
-                currentEvent = newEvent;
+                Account.shared.addOrUpdateEvent(currentEvent.withPointsOfInterest(newPointsOfInterest));
                 marker.remove();
 
                 Database.update();

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,7 +18,8 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import ch.epfl.sweng.groupup.R;
-import ch.epfl.sweng.groupup.activity.login.LoginActivity;
+import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
+import ch.epfl.sweng.groupup.activity.main.MainActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.login.FirebaseAuthentication;
@@ -51,7 +53,6 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_list);
-        super.initializeToolbarActivity(ToolbarActivity.USER_PROFILE);
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             authService = new FirebaseAuthentication(
@@ -77,6 +78,29 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
 
     }
 
+    @Override
+    public void initializeToolbar(){
+        TextView title = findViewById(R.id.toolbar_title);
+        title.setText(R.string.toolbar_title_user_profile);
+
+        // home button
+        findViewById(R.id.toolbar_image_left).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpListener(EventListingActivity.class);
+            }
+        });
+    }
+
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), EventListingActivity.class);
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
     private void displayQR() {
         if (!shared.getUUID().isEmpty()) {
             String text = shared.getUUID().get() + ","+ shared.getDisplayName().getOrElse("Unknown User");
@@ -98,7 +122,7 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
                                      y,
                                      bitMatrix.get(x, y) ?
                                      Color.BLACK :
-                                     getResources().getColor(R.color.background));
+                                     ContextCompat.getColor(this,R.color.background));
                     }
                 }
 
@@ -161,7 +185,7 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
     public void onSuccess() {
         updateUI(Status.DISCONNECTED);
 
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                         Intent.FLAG_ACTIVITY_CLEAR_TASK |
                         Intent.FLAG_ACTIVITY_NEW_TASK);

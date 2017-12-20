@@ -7,7 +7,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
-import com.google.firebase.database.ThrowOnExtraProperties;
 
 import org.hamcrest.Matchers;
 import org.joda.time.LocalDateTime;
@@ -267,6 +266,7 @@ public class EventCreationActivityTest {
     public void onlyAllowEmailsAsInput() throws InterruptedException {
         addEventName(EVENT_NAME);
         onView(withId(R.id.button_add_members)).perform(click());
+        Thread.sleep(1000);
         onView(withId(R.id.edit_text_add_member)).perform(typeText("Not valid email address"));
         onView(withId(R.id.image_view_add_member)).perform(click());
 
@@ -343,6 +343,12 @@ public class EventCreationActivityTest {
 
     private void addMember(String input){
         onView(withId(R.id.button_add_members)).perform(click());
+        // Let time to the view to get loaded
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         onView(withId(R.id.edit_text_add_member)).perform(typeText(input));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.image_view_add_member)).perform(click());
