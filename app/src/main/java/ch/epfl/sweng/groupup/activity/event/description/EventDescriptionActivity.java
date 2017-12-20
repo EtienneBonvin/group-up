@@ -304,8 +304,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 if (!Account.shared.getUUID().isEmpty() && !uuid.equals(Account.shared.getUUID().get())) {
                     mMap.addMarker(new MarkerOptions().position(pos)
                             .title(displayName)
-                            .icon(BitmapDescriptorFactory.defaultMarker(
-                                    BitmapDescriptorFactory.HUE_ORANGE)));
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_member)));
                 }
             }
         }
@@ -323,8 +322,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                     .title(poi.getName())
                     .snippet(poi.getDescription())
                     .draggable(true)
-                    .icon(BitmapDescriptorFactory.defaultMarker(
-                            resColorToHue(R.color.secondaryColor))));
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_poi)));
             marker.setVisible(true);
 
             mPoiMarkers.put(marker, poi.getUuid());
@@ -543,23 +541,5 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 }
             }
         };
-    }
-
-
-    /**
-     * Helper function that converts the colors in the resources
-     * R.color to it's Hue value that is an integer [0..360[
-     *
-     * @param resColor, i.e. an R.color to be converted
-     * @return the Hue value of the color
-     */
-    private float resColorToHue(int resColor) {
-        int color  = ContextCompat.getColor(this, resColor);
-        int r = (color >> 16) & 0xff;
-        int g = (color >> 8) & 0xff;
-        int b = (color >> 0) & 0xff;
-        float[] hsv = new float[3];
-        Color.RGBToHSV(r,g,b,hsv);
-        return hsv[0];
     }
 }
