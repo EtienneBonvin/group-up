@@ -3,7 +3,7 @@
     <!-- Base application theme -->
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Color Scheme -->
-        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:textColor">@color/secondaryTextColor</item>
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/secondaryColor</item>
@@ -21,16 +21,19 @@
         <item name="android:textColor">@color/white</item>-->
         <item name="android:textColor">@color/white</item>
         <item name="android:background">@color/transparent</item>
+        <item name="colorAccent">@color/background_dark</item>
+        <item name="android:textColorHint">@color/background_dark</item>
     </style>
 
     <!-- Start up screen theme -->
     <style name="StartUpStyle" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:background">@color/primaryColor</item>
+        <item name="android:background">@color/primaryLightColor</item>
     </style>
 
     <!-- Toolbar theme -->
     <style name="ToolbarStyle" parent="Theme.AppCompat.NoActionBar">
         <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
     </style>
 
     <!-- Theme of category and fields used in settings, description and user profile -->

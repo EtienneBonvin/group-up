@@ -108,14 +108,12 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
         askForInvitation();
 
         for (Event e : events) {
-            LocalDateTime start = e.getStartTime();
-            LocalDateTime end = e.getEndTime();
-            Button eventButton = new Button(this);
+           Button eventButton = new Button(this);
             eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
                     MATCH_PARENT, heightInSp));
             eventButton.setText(String.format("%s\n%s - %s", e.getEventName(), e.getStartTimeToString(), e.getEndTimeToString()));
             eventButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
-            eventButton.setTextColor(ContextCompat.getColor(this, R.color.primaryTextColor));
+            eventButton.setTextColor(ContextCompat.getColor(this, R.color.secondaryTextColor));
 
             eventButton.setPadding(getResources().getDimensionPixelSize(R.dimen.default_gap),0,getResources().getDimensionPixelSize(R.dimen.default_gap), 0);
             if (e.getEventStatus().equals(EventStatus.CURRENT)){
