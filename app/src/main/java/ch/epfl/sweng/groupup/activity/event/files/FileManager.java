@@ -397,7 +397,7 @@ public class FileManager implements Watcher {
                 mc.setMediaPlayer(video);
                 video.setVideoURI(uri);
                 video.setMediaController(mc);
-                video.setZOrderOnTop(true);
+                video.start();
 
 
                 video.setOnClickListener(new View.OnClickListener() {
