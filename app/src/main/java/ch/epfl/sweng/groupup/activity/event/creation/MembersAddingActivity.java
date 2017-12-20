@@ -24,22 +24,27 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 import static ch.epfl.sweng.groupup.lib.AndroidHelper.emailCheck;
 import static ch.epfl.sweng.groupup.lib.AndroidHelper.showToast;
 
+/**
+ * An activity dedicated to adding members to an event, during the event creation process
+ * Is linked to members_adding.xml
+ */
 public class MembersAddingActivity extends EventCreationActivity implements ZXingScannerView.ResultHandler {
 
     private transient ZXingScannerView mScannerView;
     private transient MemberLabelFactory factory;
-
     private EventBuilder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.members_adding);
-
         initFields();
         initListeners();
     }
 
+    /**
+     * Initializes the toolbar for this specific activity
+     */
     @Override
     public void initializeToolbar(){
         super.initializeToolbar();
@@ -49,7 +54,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
         title.setText(R.string.toolbar_title_add_members);
         rightImage.setImageResource(R.drawable.ic_check);
 
-        // home button
+        // Home button
         findViewById(R.id.toolbar_image_left).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,8 +89,8 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
      * Initialize the listeners and fields of the layout.
      */
     private void initListeners(){
-        findViewById(R.id.image_view_add_member)
-                .setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.image_view_add_member).
+                setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         EditText memberEmail = findViewById(R.id.edit_text_add_member);
@@ -101,16 +106,16 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                     }
                 });
 
-        findViewById(R.id.buttonScanQR)
-                .setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.buttonScanQR).
+                setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         QrScanner(v);
                     }
                 });
 
-        findViewById(R.id.toolbar_image_right)
-                .setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.toolbar_image_right).
+                setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         returnToEventCreation();
@@ -268,14 +273,14 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
             generateLayout();
 
             baseTextView.setText(memberInfo.toString());
-            ((LinearLayout) findViewById(R.id.members_list))
-                    .addView(baseLayout);
+            ((LinearLayout) findViewById(R.id.members_list)).
+                    addView(baseLayout);
 
             View.OnClickListener ocl = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((LinearLayout) findViewById(R.id.members_list))
-                            .removeView(
+                    ((LinearLayout) findViewById(R.id.members_list)).
+                            removeView(
                                     viewsWithOCL.get(this)
                             );
                     uIdsWithOCL.remove(this);
@@ -294,6 +299,5 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
         private Collection<MemberRepresentation> getMembers(){
             return uIdsWithOCL.values();
         }
-
     }
 }
