@@ -87,8 +87,7 @@
 
     <!-- File Management -->
     <string name="file_management_tv_description">Here you can see the files of the event and add some new ones !</string>
-    <string name="file_management_button_create_slideshow">Start Slideshow</string>
-    <string name="file_management_button_add_file">Add file</string>
+    <string name="file_management_button_add_file" tools:keep="@string/file_management_button_add_file">Add file</string>
     <string name="file_management_toast_error_file_uri">An error occurred when recovering the media</string>
     <string name="file_management_toast_error_file_not_created">"Error While creating the file"</string>
 
@@ -128,8 +127,6 @@
     <string name="invitationMail_senderAddress"><![CDATA[GroupUp! <swenggroupup@gmail.com>]]></string>
     <string name="invitationMail_subject">Hello ✌️</string>
     <string name="event_listing_extraIndex">eventIndex</string>
-    <string name="file_management_take_picture">Take picture</string>
-    <string name="file_management_take_video">Take video</string>
 
     <!-- Full screen file -->
     <string name="full_screen_file_content_description">Image to be displayed in full screen</string>

@@ -94,7 +94,6 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
      * name and start to event dates stated
      */
     private void updateEvents() {
-        boolean showOverlapAlert=false;
         linearLayout.removeAllViews();
         List<Event> events = Account.shared.getEvents();
 

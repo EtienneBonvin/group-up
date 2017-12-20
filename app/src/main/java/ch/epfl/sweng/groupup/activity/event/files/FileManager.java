@@ -10,6 +10,7 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
@@ -224,10 +225,8 @@ public class FileManager implements Watcher {
         addImageToGrid(compressedBitmap, true);
     }
 
-    //TODO TAKE VIDEOS FROM APP
-
     private void initializeTakeVideo() {
-        final Button takeVideo = activity.findViewById(R.id.take_video);
+        final FloatingActionButton takeVideo = activity.findViewById(R.id.take_video);
         final Context thisContext = activity.getApplicationContext();
         takeVideo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -267,7 +266,7 @@ public class FileManager implements Watcher {
      * Initialize the camera button and open the camera
      */
     private void initializeTakePicture() {
-        final Button takePicture = activity.findViewById(R.id.take_picture);
+        final FloatingActionButton takePicture = activity.findViewById(R.id.take_picture);
         final Context thisContext = activity.getApplicationContext();
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
