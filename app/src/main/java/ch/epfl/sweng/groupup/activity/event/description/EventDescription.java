@@ -132,7 +132,8 @@ public class EventDescription {
         Account.shared.addOrUpdateEvent(eventToRemove);
         Database.update();
         List<Event> futureEventList = new ArrayList<>(Account.shared.getEvents());
-        Account.shared.withFutureEvents(new ArrayList<Event>()).withPastEvents(new ArrayList<Event>());
+        Account.shared.withFutureEvents(new ArrayList<Event>()).
+                withPastEvents(new ArrayList<Event>()).withCurrentEvent(new ArrayList<Event>());
         futureEventList.remove(eventToRemove);
         for (Event fe : futureEventList) {
             Account.shared.addOrUpdateEvent(fe);

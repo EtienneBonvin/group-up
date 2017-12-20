@@ -131,7 +131,8 @@
     <string name="event_listing_extraIndex">eventIndex</string>
 
     <!-- Full screen file -->
-    <string name="full_screen_file_content_description">Image to be displayed in full screen</string>
+    <string name="full_screen_image_content_description">Image to be displayed in full screen</string>
+    <string name="full_screen_video_content_description">Video to be displayed in full screen</string>
 
 
 
