@@ -361,12 +361,13 @@ public class FileManager implements Watcher {
 
         Bitmap original = noPlayThumb.asBitmap();
 
-        Bitmap finalThumb = Bitmap.createBitmap(original.getWidth(), original.getHeight(), original.getConfig());
-        //Bitmap overlay = BitmapFactory.decodeResource(activity.getResources(), R.mipmap.ic_video_thumb_overlay);
+        Bitmap overlay = BitmapFactory.decodeResource(activity.getResources(), R.drawable.ic_video_thumb_overlay);
+        Bitmap finalThumb = Bitmap.createBitmap(overlay.getWidth(), overlay.getHeight(), overlay.getConfig());
         Canvas canvas = new Canvas(finalThumb);
         canvas.drawBitmap(original, new Matrix(), null);
-        canvas.drawBitmap(BitmapFactory.decodeResource(activity.getResources(),
-                R.mipmap.ic_video_thumb_overlay), new Matrix(), null);
+        canvas.drawBitmap(overlay, new Matrix(), null);
+
+        Bitmap trimed = trimBitmap(finalThumb);
 
         ImageView image = new ImageView(activity);
 
@@ -375,13 +376,14 @@ public class FileManager implements Watcher {
         layoutParams.height = rowHeight;
         image.setLayoutParams(layoutParams);
 
-        Bitmap trimed = trimBitmap(finalThumb);
-
         image.setImageBitmap(trimed);
 
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                final VideoView video = activity.findViewById(R.id.show_video);
+                video.setVideoURI(uri);
 
                 activity.findViewById(R.id.image_grid)
                         .setVisibility(View.INVISIBLE);
@@ -389,10 +391,7 @@ public class FileManager implements Watcher {
                 activity.findViewById(R.id.video_container)
                         .setVisibility(View.VISIBLE);
 
-                final VideoView video = activity.findViewById(R.id.show_video);
-                video.setVideoURI(uri);
                 video.start();
-
 
                 activity.findViewById(R.id.video_container).setOnClickListener(new View.OnClickListener() {
                     @Override
