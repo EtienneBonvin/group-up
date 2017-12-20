@@ -33,9 +33,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.login.LoginActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.info.UserInformationActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -45,9 +42,6 @@
             android:name=".activity.event.creation.EventCreationActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".activity.toolbar.ToolbarActivity"
-            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.event.description.EventDescriptionActivity"
             android:label="@string/title_activity_map"

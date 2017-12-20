@@ -4,14 +4,12 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Pair;
-
+import ch.epfl.sweng.groupup.lib.database.Database;
+import ch.epfl.sweng.groupup.object.account.Account;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import ch.epfl.sweng.groupup.lib.database.Database;
-import ch.epfl.sweng.groupup.object.account.Account;
 
 
 public final class MockLocation implements GeoLocationInterface {
@@ -23,17 +21,16 @@ public final class MockLocation implements GeoLocationInterface {
     private int coordinateIndex = 0;
 
 
-    @Override
-    public void onLocationChanged(Location location) {
-        if (location != null) {
-            Account.shared.withLocation(location);
-            Database.update();
-        }
+    /**
+     * Cancels the location mocker, it stops the mocking of walking.
+     */
+    public static void cancel() {
+        locationMocker.cancel();
     }
 
 
     @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
+    public void onProviderDisabled(String s) {
         // Ignored
     }
 
@@ -45,8 +42,14 @@ public final class MockLocation implements GeoLocationInterface {
 
 
     @Override
-    public void onProviderDisabled(String s) {
+    public void onStatusChanged(String s, int i, Bundle bundle) {
         // Ignored
+    }
+
+
+    @Override
+    public void pauseLocationUpdates() {
+        locationMocker.cancel();
     }
 
 
@@ -69,8 +72,11 @@ public final class MockLocation implements GeoLocationInterface {
 
 
     @Override
-    public void pauseLocationUpdates() {
-        locationMocker.cancel();
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            Account.shared.withLocation(location);
+            Database.update();
+        }
     }
 
 
@@ -113,8 +119,7 @@ public final class MockLocation implements GeoLocationInterface {
      *
      * @param coordinatesPair - a pair containing the latitude and longitude
      *
-     * @return - a location object representing the coordinates given as
-     * parameter
+     * @return - a location object representing the coordinates given as parameter
      */
     private static Location getLocationFromPair(Pair<Double, Double> coordinatesPair) {
         Location location = new Location(LocationManager.GPS_PROVIDER);
@@ -123,13 +128,5 @@ public final class MockLocation implements GeoLocationInterface {
         location.setLongitude(coordinatesPair.second);
 
         return location;
-    }
-
-
-    /**
-     * Cancels the location mocker, it stops the mocking of walking.
-     */
-    public static void cancel() {
-        locationMocker.cancel();
     }
 }

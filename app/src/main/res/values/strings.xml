@@ -86,13 +86,11 @@
     <string name="alert_dialog_title_delete_event">Deleting Event</string>
     <string name="title_activity_map">Map</string>
 
-
     <!-- File Management -->
     <string name="file_management_tv_description">Here you can see the files of the event and add some new ones !</string>
     <string name="file_management_button_add_file" tools:keep="@string/file_management_button_add_file">Add file</string>
     <string name="file_management_toast_error_file_uri">An error occurred when recovering the media</string>
     <string name="file_management_toast_error_file_not_created">"Error While creating the file"</string>
-
 
     <!--Event Invitation -->
     <string name="event_invitation_title">You are invited to an event !</string>
@@ -134,8 +132,6 @@
     <string name="full_screen_image_content_description">Image to be displayed in full screen</string>
     <string name="full_screen_video_content_description">Video to be displayed in full screen</string>
 
-
-
     <!-- Points of Interest -->
     <string name="poi_title_hint">title</string>
     <string name="poi_description_hint">description</string>
@@ -147,8 +143,6 @@
     <string name="poi_create_add">Add</string>
     <string name="map_activity_poi_instruction">You can add Points Of Interest by long clicking on the map.</string>
     <string name="poi_action_route">Bring me there</string>
-
-
 
 </resources>
 

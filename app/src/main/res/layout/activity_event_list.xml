@@ -1,109 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="ch.epfl.sweng.groupup.activity.info.UserInformationActivity">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="ch.epfl.sweng.groupup.activity.info.UserInformationActivity">
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+        layout="@layout/toolbar"/>
 
     <RelativeLayout
+        android:id="@+id/user_infos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
-        android:id="@+id/user_infos"
-        android:orientation="horizontal"
-        android:layout_margin="@dimen/text_margin">
+        android:layout_margin="@dimen/text_margin"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/text_view_display_name_info"
+            style="@style/EventCategories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/EventCategories"
             android:gravity="start"
             android:text="@string/text_view_display_name_info"
             android:textAlignment="textStart"/>
 
         <TextView
             android:id="@+id/text_view_display_name_text"
+            style="@style/EventFields"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/EventFields"
-            android:text="@string/text_view_display_name_text"
-            android:layout_below="@id/text_view_display_name_info" />
+            android:layout_below="@id/text_view_display_name_info"
+            android:text="@string/text_view_display_name_text"/>
 
         <TextView
             android:id="@+id/text_view_family_name_info"
+            style="@style/EventCategories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/EventCategories"
+            android:layout_below="@id/text_view_display_name_text"
             android:gravity="start"
             android:text="@string/text_view_family_name_info"
-            android:textAlignment="textStart"
-            android:layout_below="@id/text_view_display_name_text"/>
+            android:textAlignment="textStart"/>
 
         <TextView
             android:id="@+id/text_view_family_name_text"
+            style="@style/EventFields"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/EventFields"
-            android:text="@string/text_view_family_name_text"
-            android:layout_below="@id/text_view_family_name_info" />
+            android:layout_below="@id/text_view_family_name_info"
+            android:text="@string/text_view_family_name_text"/>
 
         <TextView
             android:id="@+id/text_view_given_name_info"
+            style="@style/EventCategories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/EventCategories"
+            android:layout_below="@id/text_view_family_name_text"
             android:gravity="start"
             android:text="@string/text_view_given_name_info"
-            android:textAlignment="textStart"
-            android:layout_below="@id/text_view_family_name_text"/>
+            android:textAlignment="textStart"/>
 
         <TextView
             android:id="@+id/text_view_given_name_text"
+            style="@style/EventFields"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/EventFields"
-            android:text="@string/text_view_given_name_text"
-            android:layout_below="@id/text_view_given_name_info" />
+            android:layout_below="@id/text_view_given_name_info"
+            android:text="@string/text_view_given_name_text"/>
 
         <TextView
             android:id="@+id/text_view_email_info"
+            style="@style/EventCategories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/EventCategories"
+            android:layout_below="@id/text_view_given_name_text"
             android:gravity="start"
             android:text="@string/text_view_email_info"
-            android:textAlignment="textStart"
-            android:layout_below="@id/text_view_given_name_text"/>
+            android:textAlignment="textStart"/>
 
         <TextView
             android:id="@+id/text_view_email_text"
+            style="@style/EventFields"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/EventFields"
-            android:text="@string/text_view_email_text"
-            android:layout_below="@id/text_view_email_info" />
-
-
+            android:layout_below="@id/text_view_email_info"
+            android:text="@string/text_view_email_text"/>
 
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/logout_button_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/logout_button_layout"
         android:layout_below="@+id/user_infos">
-        
+
         <Button
             android:id="@+id/button_sign_out"
             style="@style/ButtonStyle"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:text="@string/button_sign_out_text"/>
 
@@ -112,20 +110,19 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/logout_button_layout"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/logout_button_layout">
 
         <ImageView
-            android:contentDescription="@string/QR_code"
             android:id="@+id/qrImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
+            android:contentDescription="@string/QR_code"
             android:padding="@dimen/default_gap"
-            app:srcCompat="@color/transparent" />
+            app:srcCompat="@color/transparent"/>
 
     </RelativeLayout>
-
 
 </RelativeLayout>

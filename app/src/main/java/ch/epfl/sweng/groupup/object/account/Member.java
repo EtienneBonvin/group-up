@@ -1,7 +1,6 @@
 package ch.epfl.sweng.groupup.object.account;
 
 import android.location.Location;
-
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.lib.database.DatabaseUser;
 
@@ -13,6 +12,7 @@ public final class Member extends User {
 
     public static final String UNKNOWN_USER_ = "UNKNOWN_USER_";
 
+
     public Member(String UUID,
                   String displayName,
                   String givenName,
@@ -21,6 +21,7 @@ public final class Member extends User {
                   Location location) {
         super(displayName, givenName, familyName, email, UUID, location);
     }
+
 
     public Member(Optional<String> UUID,
                   Optional<String> displayName,
@@ -31,25 +32,27 @@ public final class Member extends User {
         super(displayName, givenName, familyName, email, UUID, location);
     }
 
+
     /**
-     * Returns a new member with the given UUID
+     * Converts a member to its database representation.
      *
-     * @param UUID the new UUID of the member
-     * @return a new member with the given UUID
+     * @return - the member as a database user
      */
-    public Member withUUID(String UUID) {
-        return new Member(Optional.from(UUID),
-                          displayName,
-                          givenName,
-                          familyName,
-                          email,
-                          location);
+    public DatabaseUser toDatabaseUser() {
+        return new DatabaseUser(getGivenName(),
+                                getFamilyName(),
+                                getDisplayName(),
+                                getEmail(),
+                                getUUID(),
+                                getLocation());
     }
+
 
     /**
      * Returns a new member with the given display name
      *
      * @param newDisplayName the new display name of the member
+     *
      * @return a new member with the given display name
      */
     public Member withDisplayName(String newDisplayName) {
@@ -61,40 +64,12 @@ public final class Member extends User {
                           location);
     }
 
-    /**
-     * Returns a new member with the given first name
-     *
-     * @param newFirstName the new first name of the member
-     * @return a new member with the given first name
-     */
-    public Member withFirstName(String newFirstName) {
-        return new Member(UUID,
-                          displayName,
-                          Optional.from(newFirstName),
-                          familyName,
-                          email,
-                          location);
-    }
-
-    /**
-     * Returns a new member with the given last name
-     *
-     * @param newLastName the new last name of the member
-     * @return a new member with the given last name
-     */
-    public Member withLastName(String newLastName) {
-        return new Member(UUID,
-                          displayName,
-                          givenName,
-                          Optional.from(newLastName),
-                          email,
-                          location);
-    }
 
     /**
      * Returns a new member with the given email
      *
      * @param newEmail the new email of the member
+     *
      * @return a new member with the given email
      */
     public Member withEmail(String newEmail) {
@@ -106,10 +81,46 @@ public final class Member extends User {
                           location);
     }
 
+
+    /**
+     * Returns a new member with the given first name
+     *
+     * @param newFirstName the new first name of the member
+     *
+     * @return a new member with the given first name
+     */
+    public Member withFirstName(String newFirstName) {
+        return new Member(UUID,
+                          displayName,
+                          Optional.from(newFirstName),
+                          familyName,
+                          email,
+                          location);
+    }
+
+
+    /**
+     * Returns a new member with the given last name
+     *
+     * @param newLastName the new last name of the member
+     *
+     * @return a new member with the given last name
+     */
+    public Member withLastName(String newLastName) {
+        return new Member(UUID,
+                          displayName,
+                          givenName,
+                          Optional.from(newLastName),
+                          email,
+                          location);
+    }
+
+
     /**
      * Returns a new member with the given location.
      *
      * @param location - the new location of the member
+     *
      * @return - a new member with the given location
      */
     public Member withLocation(Location location) {
@@ -123,15 +134,18 @@ public final class Member extends User {
 
 
     /**
-     * Converts a member to its database representation.
-     * @return - the member as a database user
+     * Returns a new member with the given UUID
+     *
+     * @param UUID the new UUID of the member
+     *
+     * @return a new member with the given UUID
      */
-    public DatabaseUser toDatabaseUser() {
-        return new DatabaseUser(getGivenName(),
-                                getFamilyName(),
-                                getDisplayName(),
-                                getEmail(),
-                                getUUID(),
-                                getLocation());
+    public Member withUUID(String UUID) {
+        return new Member(Optional.from(UUID),
+                          displayName,
+                          givenName,
+                          familyName,
+                          email,
+                          location);
     }
 }

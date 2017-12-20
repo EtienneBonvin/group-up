@@ -1,33 +1,31 @@
 package ch.epfl.sweng.groupup.lib.database;
 
+import static ch.epfl.sweng.groupup.lib.database.Database.EMPTY_FIELD;
+
 import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
-
-import com.google.firebase.database.Exclude;
-import com.google.firebase.database.IgnoreExtraProperties;
-
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
-
-import static ch.epfl.sweng.groupup.lib.database.Database.EMPTY_FIELD;
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 
 
 @IgnoreExtraProperties
 public final class DatabaseUser {
 
+    public String displayName = EMPTY_FIELD;
+    public String email = EMPTY_FIELD;
+    public String familyName = EMPTY_FIELD;
     /**
      * Class to represent the user object that will be stored in the database.
      */
     public String givenName = EMPTY_FIELD;
-    public String familyName = EMPTY_FIELD;
-    public String displayName = EMPTY_FIELD;
-    public String email = EMPTY_FIELD;
-    public String uuid = EMPTY_FIELD;
     public String latitude = EMPTY_FIELD;
     public String longitude = EMPTY_FIELD;
     public String provider = EMPTY_FIELD;
+    public String uuid = EMPTY_FIELD;
 
 
     public DatabaseUser() {
@@ -47,9 +45,12 @@ public final class DatabaseUser {
         this.uuid = uuid.getOrElse(EMPTY_FIELD);
 
         if (!location.isEmpty()) {
-            latitude = location.get().getLatitude() + "";
-            longitude = location.get().getLongitude() + "";
-            provider = location.get().getProvider();
+            latitude = location.get()
+                               .getLatitude() + "";
+            longitude = location.get()
+                                .getLongitude() + "";
+            provider = location.get()
+                               .getProvider();
         } else {
             latitude = EMPTY_FIELD;
             longitude = EMPTY_FIELD;
@@ -58,13 +59,33 @@ public final class DatabaseUser {
     }
 
 
-    public String getGivenName() {
-        return givenName;
+    @Exclude
+    public void clearLocation() {
+        latitude = EMPTY_FIELD;
+        longitude = EMPTY_FIELD;
+        provider = EMPTY_FIELD;
     }
 
 
-    public String getFamilyName() {
-        return familyName;
+    @Exclude
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        DatabaseUser that = (DatabaseUser) o;
+
+        return givenName.equals(that.givenName) &&
+               familyName.equals(that.familyName) &&
+               displayName.equals(that.displayName) &&
+               email.equals(that.email) &&
+               uuid.equals(that.uuid) &&
+               latitude.equals(that.latitude) &&
+               longitude.equals(that.longitude);
     }
 
 
@@ -73,13 +94,13 @@ public final class DatabaseUser {
     }
 
 
-    public String getEmail() {
-        return email;
+    public String getFamilyName() {
+        return familyName;
     }
 
 
-    public String getUuid() {
-        return uuid;
+    public String getGivenName() {
+        return givenName;
     }
 
 
@@ -99,10 +120,31 @@ public final class DatabaseUser {
 
 
     @Exclude
-    public void clearLocation() {
-        latitude = EMPTY_FIELD;
-        longitude = EMPTY_FIELD;
-        provider = EMPTY_FIELD;
+    public boolean isAccount() {
+        return getUuid().equals(Account.shared.getUUID()
+                                              .get()) || getEmail().equals(Account.shared.getEmail()
+                                                                                         .get());
+    }
+
+
+    public String getEmail() {
+        return email;
+    }
+
+
+    public String getUuid() {
+        return uuid;
+    }
+
+
+    @Exclude
+    public Member toMember() {
+        return new Member(getOptUuid(),
+                          getOptDisplayName(),
+                          getOptGivenName(),
+                          getOptFamilyName(),
+                          getOptEmail(),
+                          getOptLocation());
     }
 
 
@@ -181,44 +223,5 @@ public final class DatabaseUser {
         }
 
         return Optional.from(location);
-    }
-
-
-    @Exclude
-    public Member toMember() {
-        return new Member(getOptUuid(),
-                          getOptDisplayName(),
-                          getOptGivenName(),
-                          getOptFamilyName(),
-                          getOptEmail(),
-                          getOptLocation());
-    }
-
-
-    @Exclude
-    public boolean isAccount() {
-        return getUuid().equals(Account.shared.getUUID().get()) || getEmail().equals(Account.shared.getEmail().get());
-    }
-
-
-    @Exclude
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        DatabaseUser that = (DatabaseUser) o;
-
-        return givenName.equals(that.givenName) &&
-               familyName.equals(that.familyName) &&
-               displayName.equals(that.displayName) &&
-               email.equals(that.email) &&
-               uuid.equals(that.uuid) &&
-               latitude.equals(that.latitude) &&
-               longitude.equals(that.longitude);
     }
 }

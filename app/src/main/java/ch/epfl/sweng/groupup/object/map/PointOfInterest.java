@@ -1,10 +1,9 @@
 package ch.epfl.sweng.groupup.object.map;
 
-import android.location.Location;
-
-import ch.epfl.sweng.groupup.lib.database.DatabasePointOfInterest;
-
 import static java.util.UUID.randomUUID;
+
+import android.location.Location;
+import ch.epfl.sweng.groupup.lib.database.DatabasePointOfInterest;
 
 
 /**
@@ -12,9 +11,9 @@ import static java.util.UUID.randomUUID;
  */
 public final class PointOfInterest {
 
-    private final String name;
     private final String description;
     private final Location location;
+    private final String name;
     private final String uuid;
 
 
@@ -39,104 +38,6 @@ public final class PointOfInterest {
         this.description = description;
         this.location = new Location(location);
         this.uuid = uuid;
-    }
-
-
-    /**
-     * @return The name of the point
-     */
-    public String getName() {
-        return name;
-    }
-
-
-    /**
-     * @return The description of the point
-     */
-    public String getDescription() {
-        return description;
-    }
-
-
-    /**
-     * @return The location of the point
-     */
-    public Location getLocation() {
-        return new Location(location);
-    }
-
-
-    /**
-     * @return The uuid of the point
-     */
-    public String getUuid() {
-        return uuid;
-    }
-
-
-    /**
-     * Creates a new PointOfInterest with the given name
-     *
-     * @param name the new name
-     *
-     * @return a new point with the new name
-     */
-    public PointOfInterest withName(String name) {
-        return new PointOfInterest(uuid, name, description, location);
-    }
-
-
-    /**
-     * Creates a new PointOfInterest with the given description
-     *
-     * @param description the new description
-     *
-     * @return a new point with the new description
-     */
-    public PointOfInterest withDescription(String description) {
-        return new PointOfInterest(uuid, name, description, location);
-    }
-
-
-    /**
-     * Creates a new PointOfInterest with the given location
-     *
-     * @param location the new location
-     *
-     * @return a new point with the new location
-     */
-    public PointOfInterest withLocation(Location location) {
-        return new PointOfInterest(uuid, name, description, location);
-    }
-
-
-    /**
-     * Creates a new PointOfInterest with the given uuid
-     *
-     * @param uuid the new uuid
-     *
-     * @return a new point with the new location
-     */
-    public PointOfInterest withUuid(String uuid) {
-        return new PointOfInterest(uuid, name, description, location);
-    }
-
-
-    @Override
-    public String toString() {
-        return "PointOfInterest{" +
-               "name='" +
-               name +
-               '\'' +
-               ", description='" +
-               description +
-               '\'' +
-               ", location=" +
-               location +
-               ", uuid='" +
-               uuid +
-               '\'' +
-               '}';
     }
 
 
@@ -174,5 +75,103 @@ public final class PointOfInterest {
      */
     public DatabasePointOfInterest toDatabasePointOfInterest() {
         return new DatabasePointOfInterest(getUuid(), getName(), getDescription(), getLocation());
+    }
+
+
+    /**
+     * @return The name of the point
+     */
+    public String getName() {
+        return name;
+    }
+
+
+    /**
+     * @return The description of the point
+     */
+    public String getDescription() {
+        return description;
+    }
+
+
+    /**
+     * @return The location of the point
+     */
+    public Location getLocation() {
+        return new Location(location);
+    }
+
+
+    /**
+     * @return The uuid of the point
+     */
+    public String getUuid() {
+        return uuid;
+    }
+
+
+    @Override
+    public String toString() {
+        return "PointOfInterest{" +
+               "name='" +
+               name +
+               '\'' +
+               ", description='" +
+               description +
+               '\'' +
+               ", location=" +
+               location +
+               ", uuid='" +
+               uuid +
+               '\'' +
+               '}';
+    }
+
+
+    /**
+     * Creates a new PointOfInterest with the given description
+     *
+     * @param description the new description
+     *
+     * @return a new point with the new description
+     */
+    public PointOfInterest withDescription(String description) {
+        return new PointOfInterest(uuid, name, description, location);
+    }
+
+
+    /**
+     * Creates a new PointOfInterest with the given location
+     *
+     * @param location the new location
+     *
+     * @return a new point with the new location
+     */
+    public PointOfInterest withLocation(Location location) {
+        return new PointOfInterest(uuid, name, description, location);
+    }
+
+
+    /**
+     * Creates a new PointOfInterest with the given name
+     *
+     * @param name the new name
+     *
+     * @return a new point with the new name
+     */
+    public PointOfInterest withName(String name) {
+        return new PointOfInterest(uuid, name, description, location);
+    }
+
+
+    /**
+     * Creates a new PointOfInterest with the given uuid
+     *
+     * @param uuid the new uuid
+     *
+     * @return a new point with the new location
+     */
+    public PointOfInterest withUuid(String uuid) {
+        return new PointOfInterest(uuid, name, description, location);
     }
 }

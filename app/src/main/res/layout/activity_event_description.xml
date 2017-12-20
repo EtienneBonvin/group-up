@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    tools:context="ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity">
 
     <include
         android:id="@+id/toolbar"
@@ -13,60 +12,59 @@
 
     <LinearLayout
         android:id="@+id/tapView"
+        style="@style/ToolbarStyle"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/toolbar"
-        style="@style/ToolbarStyle">
+        android:layout_below="@id/toolbar">
 
         <TextView
             android:id="@+id/tap_view_map"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.33"
-            android:text="@string/event_description_tap_view_map"
-            android:textSize="@dimen/normal_text_size"
-            android:gravity="center"
             android:background="@drawable/borders_unselected"
+            android:gravity="center"
+            android:text="@string/event_description_tap_view_map"
             android:textColor="@color/primaryTextColor"
-            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+            android:textSize="@dimen/normal_text_size"/>
 
         <TextView
             android:id="@+id/tap_view_details"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.33"
-            android:text="@string/event_description_tap_view_details"
-            android:textSize="@dimen/normal_text_size"
-            android:gravity="center"
             android:background="@drawable/borders_unselected"
+            android:gravity="center"
+            android:text="@string/event_description_tap_view_details"
             android:textColor="@color/primaryTextColor"
-            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+            android:textSize="@dimen/normal_text_size"/>
 
         <TextView
             android:id="@+id/tap_view_media"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.33"
-            android:text="@string/event_description_tap_view_media"
-            android:textSize="@dimen/normal_text_size"
-            android:gravity="center"
             android:background="@drawable/borders_unselected"
+            android:gravity="center"
+            android:text="@string/event_description_tap_view_media"
             android:textColor="@color/primaryTextColor"
-            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+            android:textSize="@dimen/normal_text_size"/>
 
     </LinearLayout>
 
     <ViewFlipper
-        android:layout_height="match_parent"
+        android:id="@+id/view_flipper"
         android:layout_width="match_parent"
-        android:layout_below="@id/tapView"
-        android:id="@+id/view_flipper">
+        android:layout_height="match_parent"
+        android:layout_below="@id/tapView">
 
-        <android.support.design.widget.CoordinatorLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                         xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                         android:layout_width="match_parent"
+                                                         android:layout_height="match_parent">
 
             <android.support.design.widget.AppBarLayout
                 android:id="@+id/app_bar"
@@ -86,18 +84,18 @@
 
                     <EditText
                         android:id="@+id/event_description_name"
-                        android:labelFor="@+id/event_description_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:layout_marginBottom="@dimen/text_margin"
                         android:background="@android:color/transparent"
+                        android:gravity="center"
+                        android:inputType="text"
+                        android:labelFor="@+id/event_description_name"
                         android:selectAllOnFocus="false"
                         android:text="@string/no_event_name"
-                        android:gravity="center"
                         android:textColor="@color/primaryTextColor"
-                        android:textSize="@dimen/large_header_size"
-                        android:inputType="text" />
+                        android:textSize="@dimen/large_header_size"/>
 
                 </android.support.design.widget.CollapsingToolbarLayout>
             </android.support.design.widget.AppBarLayout>
@@ -112,26 +110,24 @@
                 app:fabSize="mini"
                 app:layout_anchor="@+id/app_bar"
                 app:layout_anchorGravity="bottom|right"
-                app:srcCompat="@drawable/ic_delete" />
+                app:srcCompat="@drawable/ic_delete"/>
 
         </android.support.design.widget.CoordinatorLayout>
 
-        <android.support.design.widget.CoordinatorLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                         xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                         android:layout_width="match_parent"
+                                                         android:layout_height="match_parent">
 
             <fragment
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment" />
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
         </android.support.design.widget.CoordinatorLayout>
 
-        <include
-            layout="@layout/activity_file_management"/>
+        <include layout="@layout/activity_file_management"/>
 
     </ViewFlipper>
 

@@ -1,8 +1,8 @@
 package ch.epfl.sweng.groupup.lib.login;
 
 import android.content.Intent;
-
 import ch.epfl.sweng.groupup.object.account.Account;
+
 
 public final class MockAuth implements GoogleAuthenticationService {
 
@@ -10,12 +10,20 @@ public final class MockAuth implements GoogleAuthenticationService {
     private final boolean signInSuccess;
     private final boolean signOutSuccess;
 
+
     public MockAuth(LoginActivityInterface activityInterface, boolean signInSuccess, boolean
             signOutSuccess) {
         this.activityInterface = activityInterface;
         this.signInSuccess = signInSuccess;
         this.signOutSuccess = signOutSuccess;
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, Intent data) {
+        // UNUSED
+    }
+
 
     @Override
     public void signIn() {
@@ -33,6 +41,7 @@ public final class MockAuth implements GoogleAuthenticationService {
         }
     }
 
+
     @Override
     public void signOut() {
         if (signOutSuccess) {
@@ -41,10 +50,5 @@ public final class MockAuth implements GoogleAuthenticationService {
         } else {
             activityInterface.onFail();
         }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, Intent data) {
-        // UNUSED
     }
 }

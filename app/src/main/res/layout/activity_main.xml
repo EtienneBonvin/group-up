@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    style="@style/StartUpStyle">
-
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                style="@style/StartUpStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/appName"
@@ -17,28 +16,30 @@
         android:gravity="center"
         android:text="@string/app_name"
         android:textColor="@color/secondaryTextColor"
-        android:textSize="50sp" />
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/appName"
-    android:gravity="center"
-    android:layout_above="@+id/imageView"
-    android:background="@color/primaryColor"
-    >
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button_google"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:textSize="50sp"/>
 
-    <ProgressBar
-        android:id="@+id/progress_bar_sign_in_login"
-        style="?android:attr/progressBarStyle"
-        android:background="@color/transparent"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:indeterminateDrawable="@drawable/progress_bar_animation"/>
-</LinearLayout>
+        android:layout_above="@+id/imageView"
+        android:layout_below="@+id/appName"
+        android:background="@color/primaryColor"
+        android:gravity="center">
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button_google"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ProgressBar
+            android:id="@+id/progress_bar_sign_in_login"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:indeterminateDrawable="@drawable/progress_bar_animation"/>
+    </LinearLayout>
+
     <TextView
         android:id="@+id/credits"
         android:layout_width="match_parent"
@@ -48,7 +49,7 @@
         android:background="@android:color/transparent"
         android:gravity="center"
         android:text="@string/welcome_view_powered_by"
-        android:textSize="15sp" />
+        android:textSize="15sp"/>
 
     <TextView
         android:id="@+id/creditsMonkey"
@@ -60,8 +61,7 @@
         android:background="@android:color/transparent"
         android:gravity="center"
         android:text="@string/credits_monkey"
-        android:textSize="12sp" />
-
+        android:textSize="12sp"/>
 
     <ImageView
         android:id="@+id/imageView"
@@ -70,8 +70,7 @@
         android:layout_above="@+id/credits"
         android:layout_centerHorizontal="true"
         android:background="@android:color/transparent"
-        app:srcCompat="@mipmap/ic_launcher_foreground"
         android:contentDescription="@string/flying_monkey_logo_description"
-         />
+        app:srcCompat="@mipmap/ic_launcher_foreground"/>
 
 </RelativeLayout>

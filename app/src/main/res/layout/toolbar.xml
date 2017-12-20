@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
-    style="@style/ToolbarStyle">
+              style="@style/ToolbarStyle"
+              android:layout_width="match_parent"
+              android:layout_height="?attr/actionBarSize">
 
     <ImageView
         android:id="@+id/toolbar_image_left"
         android:layout_width="0dp"
         android:layout_height="62dp"
-        android:layout_weight="0.065"
         android:layout_marginStart="@dimen/default_gap"
+        android:layout_weight="0.065"
         android:background="@android:color/transparent"
         android:contentDescription="@string/toolbar_image_left"
-        android:src="@drawable/ic_home" />
+        android:src="@drawable/ic_home"/>
 
     <TextView
+        android:id="@+id/toolbar_title"
+        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
         android:layout_width="3dp"
         android:layout_height="62dp"
         android:layout_weight="0.6"
-        android:id="@+id/toolbar_title"
         android:background="@android:color/transparent"
         android:gravity="center"
         android:text="@string/app_name"
-        android:textColor="@color/primaryTextColor"
-        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+        android:textColor="@color/primaryTextColor"/>
 
     <ImageView
         android:id="@+id/toolbar_image_second_from_right"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.065"
         android:layout_marginEnd="@dimen/default_gap"
+        android:layout_weight="0.065"
         android:background="@android:color/transparent"
         android:contentDescription="@string/toolbar_image_second_right"
         android:src="@color/transparent"/>
@@ -40,12 +40,11 @@
         android:id="@+id/toolbar_image_right"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/default_gap"
         android:layout_weight="0.065"
         android:background="@android:color/transparent"
         android:contentDescription="@string/toolbar_image_right"
-        android:src="@color/transparent"
-        android:layout_marginEnd="@dimen/default_gap"
-        />
+        android:src="@color/transparent"/>
 
 </LinearLayout>
 

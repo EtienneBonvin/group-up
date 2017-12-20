@@ -6,16 +6,11 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
-import android.view.Gravity;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.view.ContextThemeWrapper;
 import android.widget.Toast;
-
+import ch.epfl.sweng.groupup.R;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import ch.epfl.sweng.groupup.R;
 
 
 /**
@@ -37,6 +32,25 @@ public final class AndroidHelper {
         Pattern p = Pattern.compile("\\b[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,13}\\b", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(email);
         return m.matches();
+    }
+
+
+    /**
+     * Returns whether we are running on an emulator or not.
+     * Source: https://stackoverflow.com/questions/2799097/how-can-i-detect
+     * -when-an-android-application-is-running-in-the-emulator
+     *
+     * @return - true if we are on an emulator
+     */
+    public static boolean isEmulator() {
+        return Build.FINGERPRINT.startsWith("generic") ||
+               Build.FINGERPRINT.startsWith("unknown") ||
+               Build.MODEL.contains("google_sdk") ||
+               Build.MODEL.contains("Emulator") ||
+               Build.MODEL.contains("Android SDK built for x86") ||
+               Build.MANUFACTURER.contains("Genymotion") ||
+               (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic")) ||
+               "google_sdk".equals(Build.PRODUCT);
     }
 
 
@@ -64,7 +78,8 @@ public final class AndroidHelper {
                 dialog.dismiss();
             }
         });
-        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.getWindow()
+                   .setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         alertDialog.show();
 
@@ -83,31 +98,12 @@ public final class AndroidHelper {
      * @return - the toast that is shown
      */
     public static Toast showToast(Context context, String text, int duration) {
-        Toast toast = Toast.makeText(context,text,duration);
+        Toast toast = Toast.makeText(context, text, duration);
         if (lastShowedToast != null) {
             lastShowedToast.cancel();
         }
         lastShowedToast = toast;
         toast.show();
         return toast;
-    }
-
-
-    /**
-     * Returns whether we are running on an emulator or not.
-     * Source: https://stackoverflow.com/questions/2799097/how-can-i-detect
-     * -when-an-android-application-is-running-in-the-emulator
-     *
-     * @return - true if we are on an emulator
-     */
-    public static boolean isEmulator() {
-        return Build.FINGERPRINT.startsWith("generic") ||
-               Build.FINGERPRINT.startsWith("unknown") ||
-               Build.MODEL.contains("google_sdk") ||
-               Build.MODEL.contains("Emulator") ||
-               Build.MODEL.contains("Android SDK built for x86") ||
-               Build.MANUFACTURER.contains("Genymotion") ||
-               (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic")) ||
-               "google_sdk".equals(Build.PRODUCT);
     }
 }

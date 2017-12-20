@@ -17,7 +17,6 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.view.ContextThemeWrapper;
 import android.widget.Toast;
-
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.database.Database;
@@ -61,55 +60,10 @@ public final class GeoLocation implements GeoLocationInterface {
     }
 
 
-    @Override
-    public void onLocationChanged(Location location) {
-        if (location != null) {
-            Account.shared.withLocation(location);
-            Database.update();
-        }
-    }
-
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-        switch (i) {
-            case LocationProvider.OUT_OF_SERVICE:
-                pauseLocationUpdates();
-                AndroidHelper.showToast(context, "Provider \"" + s + "\" out of service.", Toast.LENGTH_SHORT);
-                break;
-            case LocationProvider.TEMPORARILY_UNAVAILABLE:
-                pauseLocationUpdates();
-                AndroidHelper.showToast(context, "Provider \"" + s + "\" unavailable.", Toast.LENGTH_SHORT);
-                break;
-            case LocationProvider.AVAILABLE:
-                requestLocationUpdates();
-                AndroidHelper.showToast(context, "Provider \"" + s + "\" available.", Toast.LENGTH_SHORT);
-                break;
-            default:
-                break;
-        }
-    }
-
-
-    @Override
-    public void onProviderEnabled(String s) {
-        requestLocationUpdates();
-        AndroidHelper.showToast(context, "Provider \"" + s + "\" enabled.", Toast.LENGTH_SHORT);
-    }
-
-
-    @Override
-    public void onProviderDisabled(String s) {
-        pauseLocationUpdates();
-        AndroidHelper.showToast(context, "Provider \"" + s + "\" disabled.", Toast.LENGTH_SHORT);
-    }
-
-
     /**
      * Eases the creation of the criteria we want for the localisation.
      *
-     * @return - the criteria to use for choosing the right localisation
-     * provider
+     * @return - the criteria to use for choosing the right localisation provider
      */
     private Criteria getCriteria() {
         Criteria criteria = new Criteria();
@@ -127,31 +81,6 @@ public final class GeoLocation implements GeoLocationInterface {
         criteria.setCostAllowed(false);
 
         return criteria;
-    }
-
-
-    /**
-     * Method to be called in the onCreate()/onResume() method of the activity
-     * to start listening for location updates.
-     */
-    public void requestLocationUpdates() {
-        if ((ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) !=
-             PackageManager.PERMISSION_GRANTED) || (ActivityCompat.checkSelfPermission(context,
-                                                                                       Manifest.permission
-                                                                                               .ACCESS_COARSE_LOCATION) !=
-                                                    PackageManager.PERMISSION_GRANTED)) {
-            return;
-        }
-        locationManager.requestLocationUpdates(provider, MIN_UPDATE_TIME_INTERVAL, MIN_UPDATE_DISTANCE_INTERVAL, this);
-    }
-
-
-    /**
-     * Method to be called in onPause() method in the activity to stop
-     * receiving location updates.
-     */
-    public void pauseLocationUpdates() {
-        locationManager.removeUpdates(this);
     }
 
 
@@ -235,5 +164,74 @@ public final class GeoLocation implements GeoLocationInterface {
                 dialogInterface.dismiss();
             }
         };
+    }
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            Account.shared.withLocation(location);
+            Database.update();
+        }
+    }
+
+
+    @Override
+    public void onProviderDisabled(String s) {
+        pauseLocationUpdates();
+        AndroidHelper.showToast(context, "Provider \"" + s + "\" disabled.", Toast.LENGTH_SHORT);
+    }
+
+
+    /**
+     * Method to be called in onPause() method in the activity to stop
+     * receiving location updates.
+     */
+    public void pauseLocationUpdates() {
+        locationManager.removeUpdates(this);
+    }
+
+
+    @Override
+    public void onProviderEnabled(String s) {
+        requestLocationUpdates();
+        AndroidHelper.showToast(context, "Provider \"" + s + "\" enabled.", Toast.LENGTH_SHORT);
+    }
+
+
+    /**
+     * Method to be called in the onCreate()/onResume() method of the activity
+     * to start listening for location updates.
+     */
+    public void requestLocationUpdates() {
+        if ((ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) !=
+             PackageManager.PERMISSION_GRANTED) || (ActivityCompat.checkSelfPermission(context,
+                                                                                       Manifest.permission
+                                                                                               .ACCESS_COARSE_LOCATION) !=
+                                                    PackageManager.PERMISSION_GRANTED)) {
+            return;
+        }
+        locationManager.requestLocationUpdates(provider, MIN_UPDATE_TIME_INTERVAL, MIN_UPDATE_DISTANCE_INTERVAL, this);
+    }
+
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+        switch (i) {
+            case LocationProvider.OUT_OF_SERVICE:
+                pauseLocationUpdates();
+                AndroidHelper.showToast(context, "Provider \"" + s + "\" out of service.", Toast.LENGTH_SHORT);
+                break;
+            case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                pauseLocationUpdates();
+                AndroidHelper.showToast(context, "Provider \"" + s + "\" unavailable.", Toast.LENGTH_SHORT);
+                break;
+            case LocationProvider.AVAILABLE:
+                requestLocationUpdates();
+                AndroidHelper.showToast(context, "Provider \"" + s + "\" available.", Toast.LENGTH_SHORT);
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -1,40 +1,47 @@
 package ch.epfl.sweng.groupup.lib.database;
 
+import static org.junit.Assert.*;
+
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import java.util.ArrayList;
-
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
-import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.object.map.PointOfInterest;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import java.util.ArrayList;
+import org.junit.*;
+import org.junit.runner.*;
 
 
 @RunWith(AndroidJUnit4.class)
 public class DatabasePointOfInterestShould {
 
     @Rule
-    public final ActivityTestRule<EventListingActivity> mActivityRule = new ActivityTestRule<>(EventListingActivity.class);
+    public final ActivityTestRule<EventListingActivity> mActivityRule = new ActivityTestRule<>(
+            EventListingActivity.class);
 
 
     @Test
-    public void overrideDefaultConstructorAndHaveDefaultValuesAssigned() throws Exception {
-        DatabasePointOfInterest databasePointOfInterest = new DatabasePointOfInterest();
+    public void correctlyConvertToPointOfInterest() {
+        Location location = new Location(LocationManager.GPS_PROVIDER);
+        double latitude = 32.7;
+        double longitude = 17.87;
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
 
-        assertEquals(Database.EMPTY_FIELD, databasePointOfInterest.name);
-        assertEquals(Database.EMPTY_FIELD, databasePointOfInterest.description);
-        assertEquals(Database.EMPTY_FIELD, databasePointOfInterest.latitude);
-        assertEquals(Database.EMPTY_FIELD, databasePointOfInterest.longitude);
-        assertEquals(Database.EMPTY_FIELD, databasePointOfInterest.provider);
+        DatabasePointOfInterest databasePointOfInterest = new DatabasePointOfInterest("STUFF01",
+                                                                                      "STUFF02",
+                                                                                      "STUFF03",
+                                                                                      location);
+        PointOfInterest pointOfInterest = databasePointOfInterest.toPointOfInterest();
+
+        assertEquals(databasePointOfInterest.getUuid(), pointOfInterest.getUuid());
+        assertEquals(databasePointOfInterest.getName(), pointOfInterest.getName());
+        assertEquals(databasePointOfInterest.getDescription(), pointOfInterest.getDescription());
+        assertEquals(location.getLatitude(), pointOfInterest.getLocation()
+                                                            .getLatitude(), 0.1);
+        assertEquals(location.getLongitude(), pointOfInterest.getLocation()
+                                                             .getLongitude(), 0.1);
     }
 
 
@@ -60,8 +67,10 @@ public class DatabasePointOfInterestShould {
         assertEquals("" + latitude, databasePointOfInterest.getLatitude());
         assertEquals("" + longitude, databasePointOfInterest.getLongitude());
         assertEquals(LocationManager.GPS_PROVIDER, databasePointOfInterest.getProvider());
-        assertEquals(location.getLatitude(), databasePointOfInterest.getLocation().getLatitude(), 0.1);
-        assertEquals(location.getLongitude(), databasePointOfInterest.getLocation().getLongitude(), 0.1);
+        assertEquals(location.getLatitude(), databasePointOfInterest.getLocation()
+                                                                    .getLatitude(), 0.1);
+        assertEquals(location.getLongitude(), databasePointOfInterest.getLocation()
+                                                                     .getLongitude(), 0.1);
     }
 
 
@@ -103,23 +112,13 @@ public class DatabasePointOfInterestShould {
 
 
     @Test
-    public void correctlyConvertToPointOfInterest() {
-        Location location = new Location(LocationManager.GPS_PROVIDER);
-        double latitude = 32.7;
-        double longitude = 17.87;
-        location.setLatitude(latitude);
-        location.setLongitude(longitude);
+    public void overrideDefaultConstructorAndHaveDefaultValuesAssigned() throws Exception {
+        DatabasePointOfInterest databasePointOfInterest = new DatabasePointOfInterest();
 
-        DatabasePointOfInterest databasePointOfInterest = new DatabasePointOfInterest("STUFF01",
-                                                                                      "STUFF02",
-                                                                                      "STUFF03",
-                                                                                      location);
-        PointOfInterest pointOfInterest = databasePointOfInterest.toPointOfInterest();
-
-        assertEquals(databasePointOfInterest.getUuid(), pointOfInterest.getUuid());
-        assertEquals(databasePointOfInterest.getName(), pointOfInterest.getName());
-        assertEquals(databasePointOfInterest.getDescription(), pointOfInterest.getDescription());
-        assertEquals(location.getLatitude(), pointOfInterest.getLocation().getLatitude(), 0.1);
-        assertEquals(location.getLongitude(), pointOfInterest.getLocation().getLongitude(), 0.1);
+        assertEquals(Database.EMPTY_FIELD, databasePointOfInterest.name);
+        assertEquals(Database.EMPTY_FIELD, databasePointOfInterest.description);
+        assertEquals(Database.EMPTY_FIELD, databasePointOfInterest.latitude);
+        assertEquals(Database.EMPTY_FIELD, databasePointOfInterest.longitude);
+        assertEquals(Database.EMPTY_FIELD, databasePointOfInterest.provider);
     }
 }

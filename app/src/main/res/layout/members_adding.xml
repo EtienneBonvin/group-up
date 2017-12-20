@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="ch.epfl.sweng.groupup.activity.event.creation.MembersAddingActivity">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="ch.epfl.sweng.groupup.activity.event.creation.MembersAddingActivity">
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+        layout="@layout/toolbar"/>
 
     <TextView
         android:id="@+id/greetings"
@@ -17,65 +17,63 @@
         android:layout_marginEnd="@dimen/default_gap"
         android:layout_marginStart="@dimen/default_gap"
         android:layout_marginTop="@dimen/default_gap"
-        android:text="@string/members_adding_tv_greet_user"
         android:gravity="center"
+        android:text="@string/members_adding_tv_greet_user"
         android:textSize="20sp"/>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/members"
-        android:layout_marginEnd="@dimen/default_gap"
-        android:layout_marginStart="@dimen/default_gap"
-        android:text="@string/members_adding_tv_members"
-        android:layout_below="@id/greetings"
-        android:textSize="20sp"
-        android:paddingTop="20sp"/>
-
-
-    <!-- User input for the email address of the invited users -->
-    <LinearLayout
-        android:id="@+id/layout_add_member"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/greetings"
         android:layout_marginEnd="@dimen/default_gap"
         android:layout_marginStart="@dimen/default_gap"
-        android:layout_marginBottom="@dimen/default_gap">
+        android:paddingTop="20sp"
+        android:text="@string/members_adding_tv_members"
+        android:textSize="20sp"/>
 
-        <ImageView
-            android:id="@+id/buttonScanQR"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.09"
-            android:adjustViewBounds="false"
-            android:contentDescription="@string/Logo_QR"
-            android:cropToPadding="false"
-            android:background="@android:color/transparent"
-            android:src="@drawable/qr_code" />
+    <!-- User input for the email address of the invited users --><LinearLayout
+    android:id="@+id/layout_add_member"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_marginBottom="@dimen/default_gap"
+    android:layout_marginEnd="@dimen/default_gap"
+    android:layout_marginStart="@dimen/default_gap">
 
-        <EditText
-            android:id="@+id/edit_text_add_member"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:hint="@string/members_adding_hint_invite_new_members"
-            android:layout_marginEnd="@dimen/default_gap"
-            android:layout_marginStart="@dimen/default_gap"
-            android:textColor="@color/primaryTextColor"
-            android:inputType="textEmailAddress"
-            android:textSize="20sp" />
+    <ImageView
+        android:id="@+id/buttonScanQR"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.09"
+        android:adjustViewBounds="false"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/Logo_QR"
+        android:cropToPadding="false"
+        android:src="@drawable/qr_code"/>
 
-        <ImageView
-            android:id="@+id/image_view_add_member"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.15"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/plus_sign"
-            android:src="@drawable/ic_plus_box" />
+    <EditText
+        android:id="@+id/edit_text_add_member"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/default_gap"
+        android:layout_marginStart="@dimen/default_gap"
+        android:layout_weight="0.8"
+        android:hint="@string/members_adding_hint_invite_new_members"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="20sp"/>
 
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/image_view_add_member"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.15"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/plus_sign"
+        android:src="@drawable/ic_plus_box"/>
+
+</LinearLayout>
 
     <TextView
         android:id="@+id/text_view_add_members"
@@ -86,25 +84,24 @@
         android:layout_marginStart="@dimen/default_gap"
         android:gravity="center"
         android:text="@string/members_adding_tv_invite_new_members"
-        android:textSize="20sp" />
+        android:textSize="20sp"/>
 
     <!-- Scroll view showing all the already added members
         with the possibility to delete them -->
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/members"
         android:layout_above="@id/text_view_add_members"
+        android:layout_below="@id/members"
         android:layout_marginEnd="@dimen/default_gap"
-        android:layout_marginStart="@dimen/default_gap"
-        android:id="@+id/scrollView">
+        android:layout_marginStart="@dimen/default_gap">
 
         <LinearLayout
+            android:id="@+id/members_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/members_list"
-            android:orientation="vertical">
-        </LinearLayout>
+            android:orientation="vertical"></LinearLayout>
 
     </ScrollView>
 
