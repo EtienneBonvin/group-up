@@ -45,9 +45,7 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
 
     public static final int INPUT_MAX_LENGTH = 30;
     private transient DecoratedDateTimePicker startDateTime, endDateTime;
-
     public static final String EXTRA_MESSAGE = "Builder";
-
     private EventBuilder builder;
 
     /**
@@ -62,6 +60,9 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
         initListeners();
     }
 
+    /**
+     * Initializes the behaviour of the toolbar for this specific activity
+     */
     @Override
     public void initializeToolbar(){
         TextView title = findViewById(R.id.toolbar_title);
@@ -69,6 +70,8 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
         ImageView secondRightImage = findViewById(R.id.toolbar_image_second_from_right);
 
         title.setText(R.string.toolbar_title_create_event);
+
+        // User icon
         rightImage.setImageResource(R.drawable.ic_check);
         secondRightImage.setImageResource(R.drawable.ic_user);
         findViewById(R.id.toolbar_image_second_from_right).setOnClickListener(new View.OnClickListener() {
@@ -78,7 +81,7 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
             }
         });
 
-        // home button
+        // Home button
         findViewById(R.id.toolbar_image_left).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,7 +91,7 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
     }
 
     /**
-     * Initialize all fields that will be used in the UI to default values.
+     * Initializes all fields that will be used in the UI to default values.
      */
     private void initFields(){
 
@@ -121,17 +124,17 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
                 (Button)findViewById(R.id.button_end_time),
                 regEnd);
 
-        ((TextView)findViewById(R.id.number_of_members))
-                .setText(String.format(Locale.getDefault(),
+        ((TextView)findViewById(R.id.number_of_members)).
+                setText(String.format(Locale.getDefault(),
                         "%s %d",
                         getString(R.string.event_creation_tv_number_of_members),
                         builder.getMembers().size()));
 
-        ((EditText)findViewById(R.id.ui_edit_event_name))
-                .setText(builder.getEventName());
+        ((EditText)findViewById(R.id.ui_edit_event_name)).
+                setText(builder.getEventName());
 
-        ((EditText)findViewById(R.id.edit_text_description))
-                .setText(builder.getDescription());
+        ((EditText)findViewById(R.id.edit_text_description)).
+                setText(builder.getDescription());
     }
 
     /**
@@ -139,16 +142,16 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
      */
     private void initListeners(){
 
-        findViewById(R.id.toolbar_image_right)
-                .setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.toolbar_image_right).
+                setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         saveEvent();
                     }
                 });
 
-        findViewById(R.id.button_add_members)
-                .setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button_add_members).
+                setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         builder.setEventName(
@@ -221,6 +224,9 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
         startActivity(intent);
     }
 
+    /**
+     * Represents a user during the event creation process
+     */
     protected class MemberRepresentation implements Serializable{
 
         private String UUID;
@@ -293,10 +299,12 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
 
         private String eventName = "";
         private String description = "";
-        private LocalDateTime startDate = LocalDateTime.now().plusMinutes(5)
-                .withMillisOfSecond(0).withSecondOfMinute(0);
-        private LocalDateTime endDate = LocalDateTime.now().plusMinutes(6)
-                .withMillisOfSecond(0).withSecondOfMinute(0);
+        private LocalDateTime startDate = LocalDateTime.now().plusMinutes(5).
+                withMillisOfSecond(0).
+                withSecondOfMinute(0);
+        private LocalDateTime endDate = LocalDateTime.now().plusMinutes(6).
+                withMillisOfSecond(0).
+                withSecondOfMinute(0);
         private HashSet<MemberRepresentation> members = new HashSet<>();
 
         private EventBuilder(){}
@@ -338,11 +346,11 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
          * @param dateTime the new start date time to set.
          */
         private void setStartDateTime(LocalDateTime dateTime){
-            startDate = startDate.withYear(dateTime.getYear())
-                    .withMonthOfYear(dateTime.getMonthOfYear())
-                    .withDayOfMonth(dateTime.getDayOfMonth())
-                    .withHourOfDay(dateTime.getHourOfDay())
-                    .withMinuteOfHour(dateTime.getMinuteOfHour());
+            startDate = startDate.withYear(dateTime.getYear()).
+                    withMonthOfYear(dateTime.getMonthOfYear()).
+                    withDayOfMonth(dateTime.getDayOfMonth()).
+                    withHourOfDay(dateTime.getHourOfDay()).
+                    withMinuteOfHour(dateTime.getMinuteOfHour());
         }
 
         /**
@@ -350,11 +358,11 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
          * @param dateTime the new end date time to set.
          */
         private void setEndDateTime(LocalDateTime dateTime){
-            endDate = endDate.withYear(dateTime.getYear())
-                    .withMonthOfYear(dateTime.getMonthOfYear())
-                    .withDayOfMonth(dateTime.getDayOfMonth())
-                    .withHourOfDay(dateTime.getHourOfDay())
-                    .withMinuteOfHour(dateTime.getMinuteOfHour());
+            endDate = endDate.withYear(dateTime.getYear()).
+                    withMonthOfYear(dateTime.getMonthOfYear()).
+                    withDayOfMonth(dateTime.getDayOfMonth()).
+                    withHourOfDay(dateTime.getHourOfDay()).
+                    withMinuteOfHour(dateTime.getMinuteOfHour());
         }
 
         /**
@@ -439,20 +447,19 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
 
             for(MemberRepresentation s : members){
                 if(emailCheck(s.toString()) && s.getEmail().length() != 0){
-                    finalMembers.add(emptyMember
-                            .withUUID(Member.UNKNOWN_USER_ + (++nb_unknown))
-                            .withEmail(s.toString()));
+                    finalMembers.add(emptyMember.
+                            withUUID(Member.UNKNOWN_USER_ + (++nb_unknown)).
+                            withEmail(s.toString()));
                     mailsToSend.add(s.getEmail());
                 }else{
-                    finalMembers.add(emptyMember
-                            .withUUID(s.getUUID()));
+                    finalMembers.add(emptyMember.
+                            withUUID(s.getUUID()));
                 }
             }
 
             gms.sendInvitationEmail(mailsToSend);
 
             return new Event(eventName, startDate, endDate, description, finalMembers,false);
-            }
         }
-
     }
+}
