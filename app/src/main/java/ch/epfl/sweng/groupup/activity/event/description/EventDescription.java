@@ -114,8 +114,7 @@ public class EventDescription {
                                     activity.getString(R.string.event_creation_toast_non_empty_event_name));
                         } else {
                             Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name)
-                                                                          .
-                                                                                  withDescription(description));
+                                                                          .withDescription(description));
                             Database.update();
 
                             Intent i = new Intent(activity.getApplicationContext(),
@@ -171,7 +170,6 @@ public class EventDescription {
         displayEventName.setText(eventToDisplay.getEventName());
         displayEventStartDate.setText(eventToDisplay.getStartTimeToString());
         displayEventEndDate.setText(eventToDisplay.getEndTimeToString());
-
         displayEventDescription.setText(eventToDisplay.getDescription());
 
         for (Member member : eventToDisplay.getEventMembers()) {

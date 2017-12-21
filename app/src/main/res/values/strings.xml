@@ -11,7 +11,9 @@
 
     <!-- Welcome page -->
     <string name="welcome_view_powered_by">Powered by Flying Monkeys Team </string>
-    <string name="credits_monkey">"Monkey Face" by Oksana Latysheva from thenounproject.com </string>
+    <string name="credits_monkey">"Monkey Face" by Oksana Latysheva from thenounproject.com\n
+        "Favorite Location" by Creative Stall from thenounproject.com\n
+        "User Location Vector Icon" by ProSymbols from thenounproject.com</string>
 
     <string name="flying_monkey_logo_description">Flying Monkeys logo</string>
 

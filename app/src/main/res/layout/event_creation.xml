@@ -34,7 +34,7 @@
                 android:layout_weight="0.6"
                 android:hint="@string/event_creation_hint_event_name"
                 android:inputType="text"
-                android:textColor="@color/primaryTextColor"/>
+                android:textColor="@color/secondaryTextColor"/>
 
         </LinearLayout>
 
@@ -145,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/event_creation_hint_event_description"
                 android:inputType="textMultiLine|textNoSuggestions"
-                android:textColor="@color/primaryTextColor"/>
+                android:textColor="@color/secondaryTextColor"/>
 
         </ScrollView>
 
