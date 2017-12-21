@@ -28,8 +28,7 @@ import org.junit.runner.*;
 public class DatabaseShould {
 
     @Rule
-    public final ActivityTestRule<EventListingActivity> mActivityRule = new ActivityTestRule<>(
-            EventListingActivity.class);
+    public final ActivityTestRule<EventListingActivity> mActivityRule = new ActivityTestRule<>(EventListingActivity.class);
 
 
     @Test
@@ -219,7 +218,7 @@ public class DatabaseShould {
 
                     if (event != null && !event.uuid.equals(Database.EMPTY_FIELD)) {
                         if (event.uuid.equals(uuidCurrent) || event.uuid.equals(uuidPast) || event.uuid.equals(
-                                uuidFuture)) {
+                            uuidFuture)) {
 
                             List<Member> members = new ArrayList<>();
                             for (DatabaseUser user : event.members.values()) {

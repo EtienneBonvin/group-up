@@ -51,19 +51,19 @@ public class PointsOfInterestShould {
 
     @Test
     public void correctlyPrintToString() {
-        String expectedString = "PointOfInterest{" +
-                                "name='" +
-                                defaultPoint.getName() +
-                                '\'' +
-                                ", description='" +
-                                defaultPoint.getDescription() +
-                                '\'' +
-                                ", location=" +
-                                defaultPoint.getLocation() +
-                                ", uuid='" +
-                                defaultPoint.getUuid() +
-                                '\'' +
-                                '}';
+        String expectedString = "PointOfInterest{"
+                                + "name='"
+                                + defaultPoint.getName()
+                                + '\''
+                                + ", description='"
+                                + defaultPoint.getDescription()
+                                + '\''
+                                + ", location="
+                                + defaultPoint.getLocation()
+                                + ", uuid='"
+                                + defaultPoint.getUuid()
+                                + '\''
+                                + '}';
 
         String realString = defaultPoint.toString();
 

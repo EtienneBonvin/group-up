@@ -24,8 +24,8 @@ public class DecoratedDateTimePicker {
      * @param timeTrigger the button which is the trigger for the time set.
      * @param time        the initial DateTime of the pickers.
      */
-    public DecoratedDateTimePicker(EventCreationActivity activity, Button dateTrigger,
-                                   Button timeTrigger, LocalDateTime time) {
+    public DecoratedDateTimePicker(EventCreationActivity activity, Button dateTrigger, Button timeTrigger,
+                                   LocalDateTime time) {
         datePicker = new DecoratedDatePicker(activity, dateTrigger, time);
         timePicker = new DecoratedTimePicker(activity, timeTrigger, time);
     }
@@ -39,7 +39,10 @@ public class DecoratedDateTimePicker {
     public LocalDateTime getDateTime() {
         LocalDateTime date = datePicker.getDate();
         LocalDateTime time = timePicker.getTime();
-        return new LocalDateTime(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth(),
-                                 time.getHourOfDay(), time.getMinuteOfHour());
+        return new LocalDateTime(date.getYear(),
+                                 date.getMonthOfYear(),
+                                 date.getDayOfMonth(),
+                                 time.getHourOfDay(),
+                                 time.getMinuteOfHour());
     }
 }

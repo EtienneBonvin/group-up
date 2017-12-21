@@ -14,9 +14,9 @@ import java.util.Set;
 
 public abstract class ToolbarActivity extends AppCompatActivity {
 
-    private static GeoLocationInterface geoLocation;
     //Event with invitation need to be stored outside the listing activity
     protected static Set<Event> eventsToDisplay = new HashSet<>();
+    private static GeoLocationInterface geoLocation;
     private static boolean mockMap = false;
 
 
@@ -87,9 +87,9 @@ public abstract class ToolbarActivity extends AppCompatActivity {
     protected void setUpListener(Class intentClass) {
         Intent intent = new Intent(getApplicationContext(), intentClass);
 
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                        Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }

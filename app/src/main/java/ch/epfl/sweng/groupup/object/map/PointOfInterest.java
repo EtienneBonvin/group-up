@@ -79,6 +79,14 @@ public final class PointOfInterest {
 
 
     /**
+     * @return The uuid of the point
+     */
+    public String getUuid() {
+        return uuid;
+    }
+
+
+    /**
      * @return The name of the point
      */
     public String getName() {
@@ -102,29 +110,21 @@ public final class PointOfInterest {
     }
 
 
-    /**
-     * @return The uuid of the point
-     */
-    public String getUuid() {
-        return uuid;
-    }
-
-
     @Override
     public String toString() {
-        return "PointOfInterest{" +
-               "name='" +
-               name +
-               '\'' +
-               ", description='" +
-               description +
-               '\'' +
-               ", location=" +
-               location +
-               ", uuid='" +
-               uuid +
-               '\'' +
-               '}';
+        return "PointOfInterest{"
+               + "name='"
+               + name
+               + '\''
+               + ", description='"
+               + description
+               + '\''
+               + ", location="
+               + location
+               + ", uuid='"
+               + uuid
+               + '\''
+               + '}';
     }
 
 

@@ -44,8 +44,8 @@ public final class Event implements Serializable, Watcher, Watchee {
     private Set<Watcher> watchers;
 
 
-    public Event(String eventName, LocalDateTime startTime, LocalDateTime endTime, String
-            description, List<Member> eventMembers, boolean invitation) {
+    public Event(String eventName, LocalDateTime startTime, LocalDateTime endTime, String description,
+                 List<Member> eventMembers, boolean invitation) {
         this.UUID = java.util.UUID.randomUUID()
                                   .toString();
         this.eventName = eventName;
@@ -61,9 +61,8 @@ public final class Event implements Serializable, Watcher, Watchee {
     }
 
 
-    public Event(String uuid, String eventName, LocalDateTime startTime, LocalDateTime endTime, String
-            description, List<Member> eventMembers, Set<PointOfInterest> pointsOfInterest,
-                 boolean invitation) {
+    public Event(String uuid, String eventName, LocalDateTime startTime, LocalDateTime endTime, String description,
+                 List<Member> eventMembers, Set<PointOfInterest> pointsOfInterest, boolean invitation) {
         this.UUID = uuid;
         this.eventName = eventName;
         this.startTime = startTime;
@@ -74,8 +73,7 @@ public final class Event implements Serializable, Watcher, Watchee {
         eventImages = new ArrayList<>();
         eventVideos = new ArrayList<>();
         watchers = new HashSet<>();
-        this.pointsOfInterest = Collections.unmodifiableSet(
-                new HashSet<>(pointsOfInterest));
+        this.pointsOfInterest = Collections.unmodifiableSet(new HashSet<>(pointsOfInterest));
     }
 
 
@@ -104,28 +102,6 @@ public final class Event implements Serializable, Watcher, Watchee {
 
 
     /**
-     * Getter for the list of members
-     *
-     * @return List<Account> event member
-     */
-    public List<Member> getEventMembers() {
-        return Collections.unmodifiableList(new ArrayList<>(eventMembers));
-    }
-
-
-    /**
-     * Change the list of members of an event
-     *
-     * @param eventMembers list of members
-     *
-     * @return the modified event
-     */
-    public Event withEventMembers(List<Member> eventMembers) {
-        return new Event(UUID, eventName, startTime, endTime, description, eventMembers, pointsOfInterest, invitation);
-    }
-
-
-    /**
      * Computes current status of the event using start and end time
      *
      * @return EventStatus current status
@@ -146,6 +122,16 @@ public final class Event implements Serializable, Watcher, Watchee {
 
 
     /**
+     * Getter for the starting date and time
+     *
+     * @return LocalDateTime starting time
+     */
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+
+    /**
      * Getter for the end date and time
      *
      * @return LocalDateTime ending time
@@ -156,12 +142,24 @@ public final class Event implements Serializable, Watcher, Watchee {
 
 
     /**
-     * Getter for the starting date and time
+     * Getter for the list of members
      *
-     * @return LocalDateTime starting time
+     * @return List<Account> event member
      */
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public List<Member> getEventMembers() {
+        return Collections.unmodifiableList(new ArrayList<>(eventMembers));
+    }
+
+
+    /**
+     * Change the list of members of an event
+     *
+     * @param eventMembers list of members
+     *
+     * @return the modified event
+     */
+    public Event withEventMembers(List<Member> eventMembers) {
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers, pointsOfInterest, invitation);
     }
 
 
@@ -235,19 +233,27 @@ public final class Event implements Serializable, Watcher, Watchee {
 
         Event event = (Event) o;
 
-        return eventName.equals(event.eventName) && this.getEventStatus()
-                                                        .equals(event.getEventStatus())
-               && startTime.equals(event.startTime) && endTime.equals(event.endTime) &&
-               (UUID.equals(event.UUID)) && eventMembers.containsAll(event.getEventMembers()) && event
-                       .getEventMembers()
+        return eventName.equals(event.eventName)
+               && this.getEventStatus()
+                      .equals(event.getEventStatus())
+               && startTime.equals(event.startTime)
+               && endTime.equals(event.endTime)
+               && (UUID.equals(event.UUID))
+               && eventMembers.containsAll(event.getEventMembers())
+               && event.getEventMembers()
                        .containsAll(eventMembers);
     }
 
 
     public String getEndTimeToString() {
         LocalDateTime date = getEndTime();
-        return String.format(Locale.getDefault(), "%02d/%02d/%d %d:%02d", date.getDayOfMonth(),
-                             date.getMonthOfYear(), date.getYear(), date.getHourOfDay(), date.getMinuteOfHour());
+        return String.format(Locale.getDefault(),
+                             "%02d/%02d/%d %d:%02d",
+                             date.getDayOfMonth(),
+                             date.getMonthOfYear(),
+                             date.getYear(),
+                             date.getHourOfDay(),
+                             date.getMinuteOfHour());
     }
 
 
@@ -282,8 +288,13 @@ public final class Event implements Serializable, Watcher, Watchee {
 
     public String getStartTimeToString() {
         LocalDateTime date = getStartTime();
-        return String.format(Locale.getDefault(), "%02d/%02d/%d %d:%02d", date.getDayOfMonth(),
-                             date.getMonthOfYear(), date.getYear(), date.getHourOfDay(), date.getMinuteOfHour());
+        return String.format(Locale.getDefault(),
+                             "%02d/%02d/%d %d:%02d",
+                             date.getDayOfMonth(),
+                             date.getMonthOfYear(),
+                             date.getYear(),
+                             date.getHourOfDay(),
+                             date.getMinuteOfHour());
     }
 
 
@@ -404,12 +415,12 @@ public final class Event implements Serializable, Watcher, Watchee {
 
 
     /**
-     * Getter for the event name
+     * Returns true if and only if the status of the event is current.
      *
-     * @return String event name
+     * @return -  true if the status of the event is current
      */
-    public String getEventName() {
-        return eventName;
+    public boolean isCurrent() {
+        return getEventStatus() == EventStatus.CURRENT;
     }
 
 
@@ -424,6 +435,26 @@ public final class Event implements Serializable, Watcher, Watchee {
 
 
     /**
+     * Getter for the event name
+     *
+     * @return String event name
+     */
+    public String getEventName() {
+        return eventName;
+    }
+
+
+    /**
+     * Getter for the event description
+     *
+     * @return String description of event
+     */
+    public String getDescription() {
+        return description;
+    }
+
+
+    /**
      * Getter for the event ID
      *
      * @return String unique ID of event
@@ -434,39 +465,33 @@ public final class Event implements Serializable, Watcher, Watchee {
 
 
     /**
-     * Getter for the event description
-     *
-     * @return String description of event
-     */
-    public String getDescription() { return description; }
-
-
-    /**
-     * Returns true if and only if the status of the event is current.
-     *
-     * @return -  true if the status of the event is current
-     */
-    public boolean isCurrent() {
-        return getEventStatus() == EventStatus.CURRENT;
-    }
-
-
-    /**
      * Override the toString method.
      *
      * @return a String representing the object.
      */
     @Override
     public String toString() {
-        return "Event{" +
-               "eventName='" + eventName + '\'' +
-               ", eventMember='" + eventMembers + '\'' +
-               ", startDate='" + startTime + '\'' +
-               ", endDate=" + endTime + '\'' +
-               ", eventStatus=" + getEventStatus() + '\'' +
-               ", eventID= " + UUID +
-               ", invitation= " + invitation +
-               '}';
+        return "Event{"
+               + "eventName='"
+               + eventName
+               + '\''
+               + ", eventMember='"
+               + eventMembers
+               + '\''
+               + ", startDate='"
+               + startTime
+               + '\''
+               + ", endDate="
+               + endTime
+               + '\''
+               + ", eventStatus="
+               + getEventStatus()
+               + '\''
+               + ", eventID= "
+               + UUID
+               + ", invitation= "
+               + invitation
+               + '}';
     }
 
 
@@ -476,11 +501,15 @@ public final class Event implements Serializable, Watcher, Watchee {
      * @return string containing only event name and status
      */
     public String toStringShort() {
-        return "Event{" +
-               "eventName='" + eventName + '\'' +
-               ", eventStatus='" + getEventStatus() +
-               ", eventID= " + UUID +
-               '}';
+        return "Event{"
+               + "eventName='"
+               + eventName
+               + '\''
+               + ", eventStatus='"
+               + getEventStatus()
+               + ", eventID= "
+               + UUID
+               + '}';
     }
 
 
@@ -516,8 +545,7 @@ public final class Event implements Serializable, Watcher, Watchee {
      * @return the modified event
      */
     public Event withEventName(String eventName) {
-        return new Event(UUID, eventName, startTime, endTime, description,
-                         eventMembers, pointsOfInterest, invitation);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers, pointsOfInterest, invitation);
     }
 
 
@@ -528,8 +556,7 @@ public final class Event implements Serializable, Watcher, Watchee {
      * @return
      */
     public Event withInvitation(boolean invitation) {
-        return new Event(UUID, eventName, startTime, endTime, description,
-                         eventMembers, pointsOfInterest, invitation);
+        return new Event(UUID, eventName, startTime, endTime, description, eventMembers, pointsOfInterest, invitation);
     }
 
 

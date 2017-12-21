@@ -36,7 +36,6 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 public class UserInformationActivity extends ToolbarActivity implements LoginActivityInterface {
 
-    public static final String EXTRA_MESSAGE = "picture";
     private GoogleAuthenticationService authService;
     // Fields to represent the different objects on the GUI of the activity.
     private TextView displayNameTextView;
@@ -52,11 +51,7 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
 
         if (FirebaseAuth.getInstance()
                         .getCurrentUser() != null) {
-            authService = new FirebaseAuthentication(
-                    getString(R.string.web_client_id),
-                    this,
-                    this,
-                    this);
+            authService = new FirebaseAuthentication(getString(R.string.web_client_id), this, this, this);
         } else {
             authService = new MockAuth(this, true, true);
         }
@@ -65,55 +60,12 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
         updateUI(Status.CONNECTED);
         displayQR();
 
-        findViewById(R.id.button_sign_out)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        authService.signOut();
-                    }
-                });
-    }
-
-
-    private void displayQR() {
-        if (!shared.getUUID()
-                   .isEmpty()) {
-            String text = shared.getUUID()
-                                .get() + "," + shared.getDisplayName()
-                                                     .getOrElse("Unknown User");
-            QRCodeWriter writer = new QRCodeWriter();
-            try {
-                BitMatrix
-                        bitMatrix =
-                        writer.encode(text, BarcodeFormat.QR_CODE, 512, 512);
-                int width = bitMatrix.getWidth();
-                int height = bitMatrix.getHeight();
-                Bitmap
-                        bitmap =
-                        Bitmap.createBitmap(width,
-                                            height,
-                                            Bitmap.Config.RGB_565);
-                for (int x = 0; x < width; x++) {
-                    for (int y = 0; y < height; y++) {
-                        bitmap.setPixel(x,
-                                        y,
-                                        bitMatrix.get(x, y) ?
-                                        Color.BLACK :
-                                        ContextCompat.getColor(this, R.color.background));
-                    }
-                }
-
-                // display QR code
-                ImageView image = findViewById(R.id.qrImageView);
-                image.setImageBitmap(bitmap);
-            } catch (WriterException e) {
-                e.printStackTrace();
+        findViewById(R.id.button_sign_out).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                authService.signOut();
             }
-        } else {
-            AndroidHelper.showToast(getApplicationContext(),
-                                    getString(R.string.toast_unable_to_generate_qr),
-                                    Toast.LENGTH_SHORT);
-        }
+        });
     }
 
 
@@ -153,6 +105,41 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
     }
 
 
+    private void displayQR() {
+        if (!shared.getUUID()
+                   .isEmpty()) {
+            String text = shared.getUUID()
+                                .get() + "," + shared.getDisplayName()
+                                                     .getOrElse("Unknown User");
+            QRCodeWriter writer = new QRCodeWriter();
+            try {
+                BitMatrix bitMatrix = writer.encode(text, BarcodeFormat.QR_CODE, 512, 512);
+                int width = bitMatrix.getWidth();
+                int height = bitMatrix.getHeight();
+                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                for (int x = 0; x < width; x++) {
+                    for (int y = 0; y < height; y++) {
+                        bitmap.setPixel(x,
+                                        y,
+                                        bitMatrix.get(x, y) ? Color.BLACK
+                                                            : ContextCompat.getColor(this, R.color.background));
+                    }
+                }
+
+                // display QR code
+                ImageView image = findViewById(R.id.qrImageView);
+                image.setImageBitmap(bitmap);
+            } catch (WriterException e) {
+                e.printStackTrace();
+            }
+        } else {
+            AndroidHelper.showToast(getApplicationContext(),
+                                    getString(R.string.toast_unable_to_generate_qr),
+                                    Toast.LENGTH_SHORT);
+        }
+    }
+
+
     @Override
     public Activity getActivity() {
         return this;
@@ -177,9 +164,9 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
     public void onBackPressed() {
         Intent intent = new Intent(getApplicationContext(), EventListingActivity.class);
 
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                        Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
@@ -197,9 +184,9 @@ public class UserInformationActivity extends ToolbarActivity implements LoginAct
         updateUI(Status.DISCONNECTED);
 
         Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                        Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }

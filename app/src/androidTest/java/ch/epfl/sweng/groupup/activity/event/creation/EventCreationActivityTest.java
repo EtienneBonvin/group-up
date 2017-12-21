@@ -43,8 +43,9 @@ public class EventCreationActivityTest {
     public ExpectedException exception = ExpectedException.none();
     @Rule
     // third parameter is set to true which means the activity is started automatically
-    public ActivityTestRule<EventCreationActivity> mActivityRule =
-            new ActivityTestRule<>(EventCreationActivity.class, true, true);
+    public ActivityTestRule<EventCreationActivity> mActivityRule = new ActivityTestRule<>(EventCreationActivity.class,
+                                                                                          true,
+                                                                                          true);
     private final String EVENT_DESCRIPTION = "My description";
     private final String EVENT_MEMBER = "swenggroupup@gmail.com";
     private final String EVENT_NAME = "My event";
@@ -56,16 +57,22 @@ public class EventCreationActivityTest {
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.toolbar_image_right)).perform(click());
-        onView(withText(R.string.event_creation_toast_event_last_1_minute))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
-                                                          .getWindow()
-                                                          .getDecorView()))))
-                .check(matches(isDisplayed()));
+        onView(withText(R.string.event_creation_toast_event_last_1_minute)).inRoot(withDecorView(not(is(mActivityRule.getActivity()
+                                                                                                                     .getWindow()
+                                                                                                                     .getDecorView()))))
+                                                                           .check(matches(isDisplayed()));
         try {
             Thread.sleep(2000);
         } catch (InterruptedException ie) {
             //The tests are stopped, nothing to do.
         }
+    }
+
+
+    private void addEventName(String name) {
+        onView(withId(R.id.ui_edit_event_name)).perform(clearText());
+        onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
+        Espresso.closeSoftKeyboard();
     }
 
 
@@ -75,34 +82,29 @@ public class EventCreationActivityTest {
 
     private void setStartDate(int year, int month, int day, int hour, int minute) {
         onView(withId(R.id.button_start_date)).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
-                .perform(PickerActions.setDate(year, month, day));
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(year,
+                                                                                                          month,
+                                                                                                          day));
         onView(withId(android.R.id.button1)).perform(click());
 
         onView(withId(R.id.button_start_time)).perform(click());
-        onView(withClassName(Matchers.equalTo(TimePicker.class.getName())))
-                .perform(PickerActions.setTime(hour, minute));
+        onView(withClassName(Matchers.equalTo(TimePicker.class.getName()))).perform(PickerActions.setTime(hour,
+                                                                                                          minute));
         onView(withId(android.R.id.button1)).perform(click());
     }
 
 
     private void setEndDate(int year, int month, int day, int hour, int minute) {
         onView(withId(R.id.button_end_date)).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
-                .perform(PickerActions.setDate(year, month, day));
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(year,
+                                                                                                          month,
+                                                                                                          day));
         onView(withId(android.R.id.button1)).perform(click());
 
         onView(withId(R.id.button_end_time)).perform(click());
-        onView(withClassName(Matchers.equalTo(TimePicker.class.getName())))
-                .perform(PickerActions.setTime(hour, minute));
+        onView(withClassName(Matchers.equalTo(TimePicker.class.getName()))).perform(PickerActions.setTime(hour,
+                                                                                                          minute));
         onView(withId(android.R.id.button1)).perform(click());
-    }
-
-
-    private void addEventName(String name) {
-        onView(withId(R.id.ui_edit_event_name)).perform(clearText());
-        onView(withId(R.id.ui_edit_event_name)).perform(typeText(name));
-        Espresso.closeSoftKeyboard();
     }
 
 
@@ -141,11 +143,10 @@ public class EventCreationActivityTest {
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2099, 5, 5, 5, 5);
         onView(withId(R.id.toolbar_image_right)).perform(click());
-        onView(withText(R.string.event_creation_toast_event_end_before_begin))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
-                                                          .getWindow()
-                                                          .getDecorView()))))
-                .check(matches(isDisplayed()));
+        onView(withText(R.string.event_creation_toast_event_end_before_begin)).inRoot(withDecorView(not(is(mActivityRule.getActivity()
+                                                                                                                        .getWindow()
+                                                                                                                        .getDecorView()))))
+                                                                              .check(matches(isDisplayed()));
         try {
             Thread.sleep(2000);
         } catch (InterruptedException ie) {
@@ -160,11 +161,10 @@ public class EventCreationActivityTest {
         setStartDate(2100, 5, 5, 5, 5);
         setEndDate(2100, 4, 5, 5, 5);
         onView(withId(R.id.toolbar_image_right)).perform(click());
-        onView(withText(R.string.event_creation_toast_event_end_before_begin))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
-                                                          .getWindow()
-                                                          .getDecorView()))))
-                .check(matches(isDisplayed()));
+        onView(withText(R.string.event_creation_toast_event_end_before_begin)).inRoot(withDecorView(not(is(mActivityRule.getActivity()
+                                                                                                                        .getWindow()
+                                                                                                                        .getDecorView()))))
+                                                                              .check(matches(isDisplayed()));
         try {
             Thread.sleep(2000);
         } catch (InterruptedException ie) {
@@ -178,9 +178,7 @@ public class EventCreationActivityTest {
 
         addEventName("");
         onView(withId(R.id.toolbar_image_right)).perform(click());
-        onView(withId(R.id.ui_edit_event_name))
-                .check(matches(hasErrorText(
-                        getTargetContext().getString(R.string.event_creation_toast_non_empty_event_name))));
+        onView(withId(R.id.ui_edit_event_name)).check(matches(hasErrorText(getTargetContext().getString(R.string.event_creation_toast_non_empty_event_name))));
 
         //Remove the error text for further tests
         addEventName(EVENT_NAME);
@@ -191,14 +189,12 @@ public class EventCreationActivityTest {
 
     @Test
     public void noEventCreatedOnTooLongName() {
-        addEventName("This event name should be way too long for the event creator to accept it" +
-                     "I should not be able to tell my life in the event name");
+        addEventName("This event name should be way too long for the event creator to accept it"
+                     + "I should not be able to tell my life in the event name");
         setStartDate(2100, 5, 5, 4, 5);
         setEndDate(2100, 5, 5, 5, 5);
         onView(withId(R.id.toolbar_image_right)).perform(click());
-        onView(withId(R.id.ui_edit_event_name))
-                .check(matches(hasErrorText(
-                        getTargetContext().getString(R.string.event_creation_toast_event_name_too_long))));
+        onView(withId(R.id.ui_edit_event_name)).check(matches(hasErrorText(getTargetContext().getString(R.string.event_creation_toast_event_name_too_long))));
 
         //Remove the error text for further tests
         addEventName(EVENT_NAME);
@@ -216,15 +212,15 @@ public class EventCreationActivityTest {
 
         addEventName(EVENT_NAME);
         onView(withId(R.id.button_start_date)).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
-                .perform(PickerActions.setDate(year, month, day));
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(year,
+                                                                                                          month,
+                                                                                                          day));
         onView(withId(android.R.id.button1)).perform(click());
         onView(withId(R.id.toolbar_image_right)).perform(click());
-        onView(withText(R.string.event_creation_toast_event_start_before_now))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
-                                                          .getWindow()
-                                                          .getDecorView()))))
-                .check(matches(isDisplayed()));
+        onView(withText(R.string.event_creation_toast_event_start_before_now)).inRoot(withDecorView(not(is(mActivityRule.getActivity()
+                                                                                                                        .getWindow()
+                                                                                                                        .getDecorView()))))
+                                                                              .check(matches(isDisplayed()));
         try {
             Thread.sleep(2000);
         } catch (InterruptedException ie) {
@@ -246,9 +242,7 @@ public class EventCreationActivityTest {
         onView(withId(R.id.edit_text_add_member)).perform(typeText("Not valid email address"));
         onView(withId(R.id.image_view_add_member)).perform(click());
 
-        onView(withId(R.id.edit_text_add_member))
-                .check(matches(hasErrorText(
-                        getTargetContext().getString(R.string.members_adding_error_toast_invalid_email))));
+        onView(withId(R.id.edit_text_add_member)).check(matches(hasErrorText(getTargetContext().getString(R.string.members_adding_error_toast_invalid_email))));
     }
 
 
@@ -289,8 +283,12 @@ public class EventCreationActivityTest {
     @Test
     public void testEventWellGenerated() {
 
-        Member emptyMember = new Member(Optional.<String>empty(), Optional.<String>empty(), Optional.<String>empty(),
-                                        Optional.<String>empty(), Optional.<String>empty(), Optional.<Location>empty());
+        Member emptyMember = new Member(Optional.<String>empty(),
+                                        Optional.<String>empty(),
+                                        Optional.<String>empty(),
+                                        Optional.<String>empty(),
+                                        Optional.<String>empty(),
+                                        Optional.<Location>empty());
         List<Member> expectedMembers = new ArrayList<>();
         expectedMembers.add(emptyMember.withUUID(Member.UNKNOWN_USER_ + "1")
                                        .withEmail("swenggroupup@gmail.com"));
@@ -301,30 +299,29 @@ public class EventCreationActivityTest {
         addEventName(EVENT_NAME);
         addDescription(EVENT_DESCRIPTION);
 
-        LocalDateTime start = new LocalDateTime(2099, 1, 6, 9,
-                                                0, 0, 0);
+        LocalDateTime start = new LocalDateTime(2099, 1, 6, 9, 0, 0, 0);
         LocalDateTime end = start.plusDays(4);
 
         onView(withId(R.id.button_start_date)).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
-                .perform(PickerActions.setDate(start.getYear(), start
-                        .getMonthOfYear(), start.getDayOfMonth()));
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(start.getYear(),
+                                                                                                          start.getMonthOfYear(),
+                                                                                                          start.getDayOfMonth()));
         onView(withId(android.R.id.button1)).perform(click());
 
         onView(withId(R.id.button_end_date)).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
-                .perform(PickerActions.setDate(end.getYear(), end
-                        .getMonthOfYear(), end.getDayOfMonth()));
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(end.getYear(),
+                                                                                                          end.getMonthOfYear(),
+                                                                                                          end.getDayOfMonth()));
         onView(withId(android.R.id.button1)).perform(click());
 
         onView(withId(R.id.button_start_time)).perform(click());
-        onView(withClassName(Matchers.equalTo(TimePicker.class.getName())))
-                .perform(PickerActions.setTime(start.getHourOfDay(), start.getMinuteOfHour()));
+        onView(withClassName(Matchers.equalTo(TimePicker.class.getName()))).perform(PickerActions.setTime(start.getHourOfDay(),
+                                                                                                          start.getMinuteOfHour()));
         onView(withId(android.R.id.button1)).perform(click());
 
         onView(withId(R.id.button_end_time)).perform(click());
-        onView(withClassName(Matchers.equalTo(TimePicker.class.getName())))
-                .perform(PickerActions.setTime(end.getHourOfDay(), end.getMinuteOfHour()));
+        onView(withClassName(Matchers.equalTo(TimePicker.class.getName()))).perform(PickerActions.setTime(end.getHourOfDay(),
+                                                                                                          end.getMinuteOfHour()));
         onView(withId(android.R.id.button1)).perform(click());
 
         addMember(EVENT_MEMBER);
@@ -338,14 +335,26 @@ public class EventCreationActivityTest {
         onView(withId(R.id.toolbar_image_right)).perform(click());
 
         Event found = findEvent(EVENT_NAME);
-        Event expected = new Event(found.getUUID(), EVENT_NAME, start, end,
-                                   EVENT_DESCRIPTION, expectedMembers, new HashSet<PointOfInterest>(),
+        Event expected = new Event(found.getUUID(),
+                                   EVENT_NAME,
+                                   start,
+                                   end,
+                                   EVENT_DESCRIPTION,
+                                   expectedMembers,
+                                   new HashSet<PointOfInterest>(),
                                    false);
 
         if (!(found.equals(expected))) {
             throw new AssertionError("Expected : " + expected + ".\nFound : " + found);
         }
         Account.shared.clear();
+    }
+
+
+    private void addDescription(String description) {
+        onView(withId(R.id.edit_text_description)).perform(clearText());
+        onView(withId(R.id.edit_text_description)).perform(typeText(description));
+        Espresso.closeSoftKeyboard();
     }
 
 
@@ -360,13 +369,6 @@ public class EventCreationActivityTest {
             }
         }
         return found;
-    }
-
-
-    private void addDescription(String description) {
-        onView(withId(R.id.edit_text_description)).perform(clearText());
-        onView(withId(R.id.edit_text_description)).perform(typeText(description));
-        Espresso.closeSoftKeyboard();
     }
 }
 

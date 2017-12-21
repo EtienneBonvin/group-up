@@ -15,8 +15,10 @@ public class CompressedBitmap {
 
     private final byte[] compressed;
 
+
     /**
      * Constructor for the compressed bitmap taking a bitmap as an argument.
+     *
      * @param bitmap the bitmap the object should represent.
      */
     public CompressedBitmap(Bitmap bitmap) {
@@ -28,6 +30,7 @@ public class CompressedBitmap {
 
     /**
      * Constructor for the compressed bitmap taking a byte array as an argument.
+     *
      * @param compressed the compressed byte array representing a bitmap.
      */
     public CompressedBitmap(byte[] compressed) {
@@ -37,6 +40,7 @@ public class CompressedBitmap {
 
     /**
      * Returns the object as a Bitmap object.
+     *
      * @return a Bitmap of the object.
      */
     public Bitmap asBitmap() {
@@ -46,6 +50,7 @@ public class CompressedBitmap {
 
     /**
      * Returns the object as a compressed byte array.
+     *
      * @return the Bitmap as a byte array.
      */
     public byte[] asByteArray() {
@@ -55,7 +60,9 @@ public class CompressedBitmap {
 
     /**
      * Overrides equals method.
+     *
      * @param o the object to be compared to.
+     *
      * @return true if this and the object o are equals, false otherwise.
      */
     @Override

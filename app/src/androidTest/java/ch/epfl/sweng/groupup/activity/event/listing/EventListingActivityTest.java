@@ -29,16 +29,14 @@ import org.junit.runner.*;
 public class EventListingActivityTest {
 
     @Rule
-    public ActivityTestRule<EventListingActivity> mEventListingActivityActivityTestRule =
-            new ActivityTestRule<>(EventListingActivity.class);
+    public ActivityTestRule<EventListingActivity> mEventListingActivityActivityTestRule = new ActivityTestRule<>(EventListingActivity.class);
 
 
     @Test
     public void ensureCreateNewEventWork() {
 
         // Click on the create_new_event button, when ID is implemented, use it.
-        onView(ViewMatchers.withId(R.id.createEventButton))
-                .perform(click());
+        onView(ViewMatchers.withId(R.id.createEventButton)).perform(click());
 
         // Checks that the EventCreationActivity view is displayed by looking for ui_edit_event_name,
         // change to same as Etienne when Solal comes back with an answer.
@@ -59,11 +57,14 @@ public class EventListingActivityTest {
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.toolbar_image_right)).perform(click());
         //Generate directly a new event with an invitation, can't be done in the activity
-        Event eventInvitation = new Event("event invitation", LocalDateTime.now()
-                                                                           .plusHours(1),
+        Event eventInvitation = new Event("event invitation",
                                           LocalDateTime.now()
-                                                       .plusDays(1), "This is the event to test the invitation process",
-                                          new ArrayList<>(Collections.singletonList(Account.shared.toMember())), true);
+                                                       .plusHours(1),
+                                          LocalDateTime.now()
+                                                       .plusDays(1),
+                                          "This is the event to test the invitation process",
+                                          new ArrayList<>(Collections.singletonList(Account.shared.toMember())),
+                                          true);
         Account.shared.addOrUpdateEvent(eventInvitation);
 
         onView(withId(R.id.toolbar_image_left)).perform(click());
@@ -85,11 +86,14 @@ public class EventListingActivityTest {
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.toolbar_image_right)).perform(click());
 
-        Event eventInvitation = new Event("event invitation", LocalDateTime.now()
-                                                                           .plusHours(1),
+        Event eventInvitation = new Event("event invitation",
                                           LocalDateTime.now()
-                                                       .plusDays(1), "This is the event to test the invitation process",
-                                          new ArrayList<>(Collections.singletonList(Account.shared.toMember())), true);
+                                                       .plusHours(1),
+                                          LocalDateTime.now()
+                                                       .plusDays(1),
+                                          "This is the event to test the invitation process",
+                                          new ArrayList<>(Collections.singletonList(Account.shared.toMember())),
+                                          true);
         Account.shared.addOrUpdateEvent(eventInvitation);
 
         onView(withId(R.id.toolbar_image_left)).perform(click());

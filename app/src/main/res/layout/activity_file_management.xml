@@ -23,12 +23,12 @@
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/add_files"
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginStart="@dimen/default_gap"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_gap"
+            android:layout_marginStart="@dimen/default_gap"
             android:layout_marginTop="@dimen/default_gap"
+            android:layout_weight="1"
             app:backgroundTint="@color/secondaryColor"
             app:fabSize="normal"
             app:srcCompat="@drawable/ic_add_file"/>
@@ -36,10 +36,10 @@
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/create_aftermovie"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_gap"
             android:layout_marginTop="@dimen/default_gap"
+            android:layout_weight="1"
             app:backgroundTint="@color/secondaryColor"
             app:fabSize="normal"
             app:srcCompat="@drawable/ic_movie"/>
@@ -47,10 +47,10 @@
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/take_picture"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_gap"
             android:layout_marginTop="@dimen/default_gap"
+            android:layout_weight="1"
             app:backgroundTint="@color/secondaryColor"
             app:fabSize="normal"
             app:srcCompat="@drawable/ic_take_picture"/>
@@ -58,14 +58,14 @@
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/take_video"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_gap"
             android:layout_marginEnd="@dimen/default_gap"
             android:layout_marginTop="@dimen/default_gap"
+            android:layout_weight="1"
             app:backgroundTint="@color/secondaryColor"
             app:fabSize="normal"
-            app:srcCompat="@drawable/ic_take_video" />
+            app:srcCompat="@drawable/ic_take_video"/>
 
     </LinearLayout>
 
@@ -90,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:columnCount="3"
-                android:rowCount="3"></GridLayout>
+                android:rowCount="3"/>
 
         </ScrollView>
 

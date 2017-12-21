@@ -32,12 +32,8 @@ public final class DatabaseUser {
     }
 
 
-    public DatabaseUser(Optional<String> givenName,
-                        Optional<String> familyName,
-                        Optional<String> displayName,
-                        Optional<String> email,
-                        Optional<String> uuid,
-                        Optional<Location> location) {
+    public DatabaseUser(Optional<String> givenName, Optional<String> familyName, Optional<String> displayName,
+                        Optional<String> email, Optional<String> uuid, Optional<Location> location) {
         this.givenName = givenName.getOrElse(EMPTY_FIELD);
         this.familyName = familyName.getOrElse(EMPTY_FIELD);
         this.displayName = displayName.getOrElse(EMPTY_FIELD);
@@ -79,13 +75,13 @@ public final class DatabaseUser {
 
         DatabaseUser that = (DatabaseUser) o;
 
-        return givenName.equals(that.givenName) &&
-               familyName.equals(that.familyName) &&
-               displayName.equals(that.displayName) &&
-               email.equals(that.email) &&
-               uuid.equals(that.uuid) &&
-               latitude.equals(that.latitude) &&
-               longitude.equals(that.longitude);
+        return givenName.equals(that.givenName)
+               && familyName.equals(that.familyName)
+               && displayName.equals(that.displayName)
+               && email.equals(that.email)
+               && uuid.equals(that.uuid)
+               && latitude.equals(that.latitude)
+               && longitude.equals(that.longitude);
     }
 
 
@@ -127,13 +123,13 @@ public final class DatabaseUser {
     }
 
 
-    public String getEmail() {
-        return email;
+    public String getUuid() {
+        return uuid;
     }
 
 
-    public String getUuid() {
-        return uuid;
+    public String getEmail() {
+        return email;
     }
 
 
@@ -145,6 +141,26 @@ public final class DatabaseUser {
                           getOptFamilyName(),
                           getOptEmail(),
                           getOptLocation());
+    }
+
+
+    @Exclude
+    Optional<String> getOptUuid() {
+        if (uuid.equals(EMPTY_FIELD)) {
+            return Optional.empty();
+        } else {
+            return Optional.from(uuid);
+        }
+    }
+
+
+    @Exclude
+    Optional<String> getOptDisplayName() {
+        if (displayName.equals(EMPTY_FIELD)) {
+            return Optional.empty();
+        } else {
+            return Optional.from(displayName);
+        }
     }
 
 
@@ -169,16 +185,6 @@ public final class DatabaseUser {
 
 
     @Exclude
-    Optional<String> getOptDisplayName() {
-        if (displayName.equals(EMPTY_FIELD)) {
-            return Optional.empty();
-        } else {
-            return Optional.from(displayName);
-        }
-    }
-
-
-    @Exclude
     Optional<String> getOptEmail() {
         if (email.equals(EMPTY_FIELD)) {
             return Optional.empty();
@@ -189,20 +195,10 @@ public final class DatabaseUser {
 
 
     @Exclude
-    Optional<String> getOptUuid() {
-        if (uuid.equals(EMPTY_FIELD)) {
-            return Optional.empty();
-        } else {
-            return Optional.from(uuid);
-        }
-    }
-
-
-    @Exclude
     Optional<Location> getOptLocation() {
-        if (provider.equals(LocationManager.GPS_PROVIDER) ||
-            provider.equals(LocationManager.NETWORK_PROVIDER) ||
-            provider.equals(LocationManager.PASSIVE_PROVIDER)) {
+        if (provider.equals(LocationManager.GPS_PROVIDER)
+            || provider.equals(LocationManager.NETWORK_PROVIDER)
+            || provider.equals(LocationManager.PASSIVE_PROVIDER)) {
             return createOptLocation();
         } else {
             return Optional.empty();

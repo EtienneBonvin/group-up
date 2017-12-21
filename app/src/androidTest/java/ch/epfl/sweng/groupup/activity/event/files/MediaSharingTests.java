@@ -46,43 +46,42 @@ import org.junit.runner.*;
 public class MediaSharingTests {
 
     @Rule
-    public final ActivityTestRule<EventCreationActivity> mActivityRule =
-            new ActivityTestRule<>(EventCreationActivity.class);
+    public final ActivityTestRule<EventCreationActivity> mActivityRule = new ActivityTestRule<>(EventCreationActivity.class);
     String imageType = "image/jpeg";
     Resources resources = InstrumentationRegistry.getTargetContext()
                                                  .getResources();
-    Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
-                             resources.getResourcePackageName(R.mipmap.ic_launcher) + '/' +
-                             resources.getResourceTypeName(R.mipmap.ic_launcher) + '/' +
-                             resources.getResourceEntryName(R.mipmap.ic_launcher));
+    Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
+                             + "://"
+                             + resources.getResourcePackageName(R.mipmap.ic_launcher)
+                             + '/'
+                             + resources.getResourceTypeName(R.mipmap.ic_launcher)
+                             + '/'
+                             + resources.getResourceEntryName(R.mipmap.ic_launcher));
     String videoType = "video/mp4";
-    Uri videoUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
-                             resources.getResourcePackageName(R.raw.testvideo) + '/' +
-                             resources.getResourceTypeName(R.raw.testvideo) + '/' +
-                             resources.getResourceEntryName(R.raw.testvideo));
+    Uri videoUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
+                             + "://"
+                             + resources.getResourcePackageName(R.raw.testvideo)
+                             + '/'
+                             + resources.getResourceTypeName(R.raw.testvideo)
+                             + '/'
+                             + resources.getResourceEntryName(R.raw.testvideo));
 
 
     @Test
     public void addVideo() {
         mockMediaSelection(videoUri, videoType);
 
-        onView(withParent(withId(R.id.image_grid)))
-                .check(matches(isDisplayed()));
+        onView(withParent(withId(R.id.image_grid))).check(matches(isDisplayed()));
 
-        onView(withParent(withId(R.id.image_grid)))
-                .perform(click());
+        onView(withParent(withId(R.id.image_grid))).perform(click());
 
-        onView(withId(R.id.video_container))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.video_container)).check(matches(isDisplayed()));
 
-        onView(withId(R.id.video_container))
-                .perform(click());
+        onView(withId(R.id.video_container)).perform(click());
 
-        onView(withParent(withId(R.id.image_grid)))
-                .check(matches(isDisplayed()));
+        onView(withParent(withId(R.id.image_grid))).check(matches(isDisplayed()));
 
-        onView(withId(R.id.tap_view_details))
-                .perform(click());
+        onView(withId(R.id.tap_view_details)).perform(click());
 
         onView(withId(R.id.remove_event_button)).perform(click());
     }
@@ -103,12 +102,11 @@ public class MediaSharingTests {
         intended(expectedIntent);
         Intents.release();
     }
-*/
+    */
     private void mockMediaSelection(Uri imageUri, String type) {
         Intent resultData = new Intent();
         resultData.setDataAndType(imageUri, type);
-        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(
-                Activity.RESULT_OK, resultData);
+        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
 
         Matcher<Intent> expectedIntent = allOf(hasAction(Intent.ACTION_PICK));
 
@@ -125,20 +123,15 @@ public class MediaSharingTests {
     public void addingPictureWithoutExceptionAndDisplayFullScreen() {
         mockMediaSelection(imageUri, imageType);
 
-        onView(withParent(withId(R.id.image_grid)))
-                .check(matches(isDisplayed()));
+        onView(withParent(withId(R.id.image_grid))).check(matches(isDisplayed()));
 
-        onView(withParent(withId(R.id.image_grid)))
-                .perform(click());
+        onView(withParent(withId(R.id.image_grid))).perform(click());
 
-        onView(withId(R.id.show_image))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.show_image)).check(matches(isDisplayed()));
 
-        onView(withId(R.id.show_image))
-                .perform(click());
+        onView(withId(R.id.show_image)).perform(click());
 
-        onView(withParent(withId(R.id.image_grid)))
-                .check(matches(isDisplayed()));
+        onView(withParent(withId(R.id.image_grid))).check(matches(isDisplayed()));
 
         mockMediaSelection(imageUri, imageType);
     }
@@ -224,19 +217,16 @@ public class MediaSharingTests {
         });
         createEvent();
         onView(withParent(withId(R.id.linear_layout_event_list))).perform(click());
-        onView(withId(R.id.tap_view_media))
-                .perform(click());
+        onView(withId(R.id.tap_view_media)).perform(click());
     }
 
 
     private void createEvent() {
         final String EVENT_NAME = "My event";
-        onView(withId(R.id.ui_edit_event_name))
-                .perform(typeText(EVENT_NAME));
+        onView(withId(R.id.ui_edit_event_name)).perform(typeText(EVENT_NAME));
         Espresso.closeSoftKeyboard();
 
-        onView(withId(R.id.toolbar_image_right))
-                .perform(click());
+        onView(withId(R.id.toolbar_image_right)).perform(click());
     }
 
 
@@ -244,8 +234,7 @@ public class MediaSharingTests {
     public void openSlideShowView() {
         mockMediaSelection(imageUri, imageType);
 
-        onView(withParent(withId(R.id.image_grid)))
-                .check(matches(isDisplayed()));
+        onView(withParent(withId(R.id.image_grid))).check(matches(isDisplayed()));
 
         onView(withId(R.id.create_aftermovie)).perform(click());
 

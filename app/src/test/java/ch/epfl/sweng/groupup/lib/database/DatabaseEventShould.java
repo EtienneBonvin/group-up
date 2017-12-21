@@ -73,8 +73,9 @@ public class DatabaseEventShould {
         members.put("userUuid02", new DatabaseUser());
         members.put("userUuid03", new DatabaseUser());
         members.put(Account.shared.getUUID()
-                                  .get(), Account.shared.toMember()
-                                                        .toDatabaseUser());
+                                  .get(),
+                    Account.shared.toMember()
+                                  .toDatabaseUser());
         members.put("INVITED_UUID", invitedUser);
 
         HashMap<String, DatabasePointOfInterest> pointsOfInterest = new HashMap<>();
@@ -96,10 +97,12 @@ public class DatabaseEventShould {
         assertEquals(uuid, event.getUUID());
         assertEquals(uuid, event.getUUID());
         assertEquals(uuid, event.getUUID());
-        assertEquals(members.size(), event.getEventMembers()
-                                          .size());
-        assertEquals(pointsOfInterest.size(), event.getPointsOfInterest()
-                                                   .size());
+        assertEquals(members.size(),
+                     event.getEventMembers()
+                          .size());
+        assertEquals(pointsOfInterest.size(),
+                     event.getPointsOfInterest()
+                          .size());
 
         Account.shared.clear();
     }
@@ -140,8 +143,9 @@ public class DatabaseEventShould {
         assertFalse(databaseEvent.containedAsMember());
 
         members.put(Account.shared.getUUID()
-                                  .get(), Account.shared.toMember()
-                                                        .toDatabaseUser());
+                                  .get(),
+                    Account.shared.toMember()
+                                  .toDatabaseUser());
         databaseEvent.members = members;
         assertTrue(databaseEvent.containedAsMember());
         databaseEvent.members = new HashMap<>();

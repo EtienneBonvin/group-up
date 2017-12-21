@@ -11,8 +11,7 @@ public final class MockAuth implements GoogleAuthenticationService {
     private final boolean signOutSuccess;
 
 
-    public MockAuth(LoginActivityInterface activityInterface, boolean signInSuccess, boolean
-            signOutSuccess) {
+    public MockAuth(LoginActivityInterface activityInterface, boolean signInSuccess, boolean signOutSuccess) {
         this.activityInterface = activityInterface;
         this.signInSuccess = signInSuccess;
         this.signOutSuccess = signOutSuccess;
@@ -28,12 +27,11 @@ public final class MockAuth implements GoogleAuthenticationService {
     @Override
     public void signIn() {
         if (signInSuccess) {
-            Account.shared
-                    .withEmail("xavier@maire.com")
-                    .withDisplayName("Cedric")
-                    .withFamilyName("Jeannerot")
-                    .withGivenName("Selma")
-                    .withUUID("EtienneID");
+            Account.shared.withEmail("xavier@maire.com")
+                          .withDisplayName("Cedric")
+                          .withFamilyName("Jeannerot")
+                          .withGivenName("Selma")
+                          .withUUID("EtienneID");
 
             activityInterface.onSuccess();
         } else {

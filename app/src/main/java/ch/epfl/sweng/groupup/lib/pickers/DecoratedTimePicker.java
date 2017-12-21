@@ -38,13 +38,12 @@ public class DecoratedTimePicker implements TimePickerDialog.OnTimeSetListener {
         accept(visitor);
         trigger.setText(visitor.getFormatted());
 
-        timePickerDialog = new TimePickerDialog(
-                activity,
-                R.style.Picker,
-                DecoratedTimePicker.this,
-                time.getHourOfDay(),
-                time.getMinuteOfHour(),
-                true);
+        timePickerDialog = new TimePickerDialog(activity,
+                                                R.style.Picker,
+                                                DecoratedTimePicker.this,
+                                                time.getHourOfDay(),
+                                                time.getMinuteOfHour(),
+                                                true);
         timePickerDialog.getWindow()
                         .setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -86,9 +85,8 @@ public class DecoratedTimePicker implements TimePickerDialog.OnTimeSetListener {
      */
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        setTime = setTime
-                .withHourOfDay(hourOfDay)
-                .withMinuteOfHour(minute);
+        setTime = setTime.withHourOfDay(hourOfDay)
+                         .withMinuteOfHour(minute);
 
         accept(visitor);
         trigger.setText(visitor.getFormatted());

@@ -71,10 +71,10 @@ public final class Database {
                     for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
                         DatabaseEvent databaseEvent = eventSnapshot.getValue(DatabaseEvent.class);
 
-                        if (databaseEvent != null &&
-                            !databaseEvent.getUuid()
-                                          .equals(Database.EMPTY_FIELD) &&
-                            databaseEvent.containedAsMember()) {
+                        if (databaseEvent != null
+                            && !databaseEvent.getUuid()
+                                             .equals(Database.EMPTY_FIELD)
+                            && databaseEvent.containedAsMember()) {
                             Account.shared.addOrUpdateEvent(databaseEvent.toEvent());
                         }
                     }

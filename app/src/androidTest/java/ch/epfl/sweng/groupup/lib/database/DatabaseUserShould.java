@@ -20,8 +20,7 @@ import org.junit.runner.*;
 public class DatabaseUserShould {
 
     @Rule
-    public final ActivityTestRule<EventListingActivity> mActivityRule = new ActivityTestRule<>(
-            EventListingActivity.class);
+    public final ActivityTestRule<EventListingActivity> mActivityRule = new ActivityTestRule<>(EventListingActivity.class);
 
 
     @Test
@@ -59,16 +58,21 @@ public class DatabaseUserShould {
                                                      Optional.<Location>empty());
         Member member = databaseUser.toMember();
 
-        assertEquals(databaseUser.getGivenName(), member.getGivenName()
-                                                        .get());
-        assertEquals(databaseUser.getFamilyName(), member.getFamilyName()
-                                                         .get());
-        assertEquals(databaseUser.getDisplayName(), member.getDisplayName()
-                                                          .get());
-        assertEquals(databaseUser.getEmail(), member.getEmail()
-                                                    .get());
-        assertEquals(databaseUser.getUuid(), member.getUUID()
-                                                   .get());
+        assertEquals(databaseUser.getGivenName(),
+                     member.getGivenName()
+                           .get());
+        assertEquals(databaseUser.getFamilyName(),
+                     member.getFamilyName()
+                           .get());
+        assertEquals(databaseUser.getDisplayName(),
+                     member.getDisplayName()
+                           .get());
+        assertEquals(databaseUser.getEmail(),
+                     member.getEmail()
+                           .get());
+        assertEquals(databaseUser.getUuid(),
+                     member.getUUID()
+                           .get());
         assertTrue(databaseUser.getOptLocation()
                                .isEmpty());
     }

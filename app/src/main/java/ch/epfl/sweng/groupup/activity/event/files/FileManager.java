@@ -103,9 +103,9 @@ public class FileManager implements Watcher {
                     @Override
                     public void onClick(View arg0) {
                         Intent i = new Intent(activity, SlideshowActivity.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                                   Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                                   Intent.FLAG_ACTIVITY_NEW_TASK);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                   | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                   | Intent.FLAG_ACTIVITY_NEW_TASK);
                         i.putExtra(activity.getString(R.string.event_listing_extraIndex), eventIndex);
                         activity.startActivity(i);
                     }
@@ -146,47 +146,6 @@ public class FileManager implements Watcher {
     }
 
 
-    private void initializeTakeVideo() {
-        final FloatingActionButton takeVideo = activity.findViewById(R.id.take_video);
-        final Context thisContext = activity.getApplicationContext();
-        takeVideo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                if (takeVideoIntent.resolveActivity(activity.getPackageManager()) != null) {
-                    File video = null;
-                    try {
-                        video = createFile(false);
-                    } catch (IOException e) {
-                        AndroidHelper.showToast(activity.getApplicationContext(),
-                                                activity.getString(
-                                                        R.string.file_management_toast_error_file_not_created),
-                                                Toast.LENGTH_SHORT);
-                    }
-                    if (video != null) {
-                        Uri videoUri = FileProvider.getUriForFile(thisContext,
-                                                                  "com.example.android.fileprovider", video);
-                        takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
-                        //Need to set permission for phone running with android<5.0, inspired from :
-                        // https://stackoverflow.com/questions/33650632/fileprovider-not-working-with-camera#33652695
-                        List<ResolveInfo> resInfoList = thisContext.getPackageManager()
-                                                                   .
-                                                                           queryIntentActivities(takeVideoIntent,
-                                                                                                 PackageManager.MATCH_DEFAULT_ONLY);
-                        for (ResolveInfo resolveInfo : resInfoList) {
-                            String packageName = resolveInfo.activityInfo.packageName;
-                            thisContext.grantUriPermission(packageName, videoUri,
-                                                           Intent.FLAG_GRANT_WRITE_URI_PERMISSION |
-                                                           Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        }
-                        activity.startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
-                    }
-                }
-            }
-        });
-    }
-
-
     /**
      * Initialize the camera button and open the camera
      */
@@ -203,26 +162,26 @@ public class FileManager implements Watcher {
                         photo = createFile(true);
                     } catch (IOException e) {
                         AndroidHelper.showToast(activity.getApplicationContext(),
-                                                activity.getString(
-                                                        R.string.file_management_toast_error_file_not_created),
+                                                activity.getString(R.string.file_management_toast_error_file_not_created),
                                                 Toast.LENGTH_SHORT);
                     }
                     if (photo != null) {
                         Uri photoUri = FileProvider.getUriForFile(thisContext,
-                                                                  "com.example.android.fileprovider", photo);
+                                                                  "com.example.android.fileprovider",
+                                                                  photo);
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
 
                         //Need to set permission for phone running with android<5.0, inspired from :
                         // https://stackoverflow.com/questions/33650632/fileprovider-not-working-with-camera#33652695
                         List<ResolveInfo> resInfoList = thisContext.getPackageManager()
-                                                                   .
-                                                                           queryIntentActivities(takePictureIntent,
-                                                                                                 PackageManager.MATCH_DEFAULT_ONLY);
+                                                                   .queryIntentActivities(takePictureIntent,
+                                                                                          PackageManager.MATCH_DEFAULT_ONLY);
                         for (ResolveInfo resolveInfo : resInfoList) {
                             String packageName = resolveInfo.activityInfo.packageName;
-                            thisContext.grantUriPermission(packageName, photoUri,
-                                                           Intent.FLAG_GRANT_WRITE_URI_PERMISSION |
-                                                           Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            thisContext.grantUriPermission(packageName,
+                                                           photoUri,
+                                                           Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                                                           | Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         }
                         activity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                     }
@@ -245,15 +204,54 @@ public class FileManager implements Watcher {
             storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_MOVIES);
             extension = ".mp4";
         }
-        File file = File.createTempFile(
-                FileName,  /* prefix */
-                extension,         /* suffix */
-                storageDir      /* directory */
-        );
+        File file = File.createTempFile(FileName,  /* prefix */
+                                        extension,         /* suffix */
+                                        storageDir      /* directory */);
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentFilePath = file.getAbsolutePath();
         return file;
+    }
+
+
+    private void initializeTakeVideo() {
+        final FloatingActionButton takeVideo = activity.findViewById(R.id.take_video);
+        final Context thisContext = activity.getApplicationContext();
+        takeVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                if (takeVideoIntent.resolveActivity(activity.getPackageManager()) != null) {
+                    File video = null;
+                    try {
+                        video = createFile(false);
+                    } catch (IOException e) {
+                        AndroidHelper.showToast(activity.getApplicationContext(),
+                                                activity.getString(R.string.file_management_toast_error_file_not_created),
+                                                Toast.LENGTH_SHORT);
+                    }
+                    if (video != null) {
+                        Uri videoUri = FileProvider.getUriForFile(thisContext,
+                                                                  "com.example.android.fileprovider",
+                                                                  video);
+                        takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
+                        //Need to set permission for phone running with android<5.0, inspired from :
+                        // https://stackoverflow.com/questions/33650632/fileprovider-not-working-with-camera#33652695
+                        List<ResolveInfo> resInfoList = thisContext.getPackageManager()
+                                                                   .queryIntentActivities(takeVideoIntent,
+                                                                                          PackageManager.MATCH_DEFAULT_ONLY);
+                        for (ResolveInfo resolveInfo : resInfoList) {
+                            String packageName = resolveInfo.activityInfo.packageName;
+                            thisContext.grantUriPermission(packageName,
+                                                           videoUri,
+                                                           Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                                                           | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        }
+                        activity.startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
+                    }
+                }
+            }
+        });
     }
 
 
@@ -278,8 +276,7 @@ public class FileManager implements Watcher {
             @Override
             public void onClick(View v) {
 
-                ((ImageView) activity.findViewById(R.id.show_image))
-                        .setImageBitmap(bitmap.asBitmap());
+                ((ImageView) activity.findViewById(R.id.show_image)).setImageBitmap(bitmap.asBitmap());
 
                 activity.findViewById(R.id.image_grid)
                         .setVisibility(View.INVISIBLE);
@@ -301,13 +298,11 @@ public class FileManager implements Watcher {
             }
         });
 
-        ((GridLayout) activity.findViewById(R.id.image_grid))
-                .addView(image, imagesAdded++);
+        ((GridLayout) activity.findViewById(R.id.image_grid)).addView(image, imagesAdded++);
 
         if (addToDatabase) {
             event.addPicture(Account.shared.getUUID()
-                                           .getOrElse("Default ID"),
-                             new CompressedBitmap(trimed));
+                                           .getOrElse("Default ID"), new CompressedBitmap(trimed));
         }
     }
 
@@ -337,8 +332,7 @@ public class FileManager implements Watcher {
         int cutOnTop = (scaled.getHeight() - rowHeight) / 2;
 
         if (cutOnSide > 0 || cutOnTop > 0) {
-            scaled = Bitmap.createBitmap(scaled, cutOnSide, cutOnTop,
-                                         columnWidth, rowHeight);
+            scaled = Bitmap.createBitmap(scaled, cutOnSide, cutOnTop, columnWidth, rowHeight);
         }
 
         return scaled;
@@ -375,8 +369,7 @@ public class FileManager implements Watcher {
      * Helper method to clear all the images of the grid.
      */
     private void clearImages() {
-        ((GridLayout) activity.findViewById(R.id.image_grid))
-                .removeAllViews();
+        ((GridLayout) activity.findViewById(R.id.image_grid)).removeAllViews();
         imagesAdded = 0;
     }
 
@@ -384,8 +377,8 @@ public class FileManager implements Watcher {
     private void addVideoToGrid(final Uri uri) {
         MediaMetadataRetriever mMMR = new MediaMetadataRetriever();
         mMMR.setDataSource(activity, uri);
-        CompressedBitmap noPlayThumb = new CompressedBitmap(
-                mMMR.getFrameAtTime(1000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC));
+        CompressedBitmap noPlayThumb = new CompressedBitmap(mMMR.getFrameAtTime(1000,
+                                                                                MediaMetadataRetriever.OPTION_CLOSEST_SYNC));
 
         Bitmap original = noPlayThumb.asBitmap();
 
@@ -438,8 +431,7 @@ public class FileManager implements Watcher {
             }
         });
 
-        ((GridLayout) activity.findViewById(R.id.image_grid))
-                .addView(image, imagesAdded++);
+        ((GridLayout) activity.findViewById(R.id.image_grid)).addView(image, imagesAdded++);
     }
 
 
@@ -488,14 +480,14 @@ public class FileManager implements Watcher {
 
 
     /**
-     * Recover a video from the user's phone from its uri and upload it on the database.
-     *
-     * @param targetUri the uri of the video.
+     * Add the photos to the gallery on the phone
      */
-    private void recoverAndUploadVideo(Uri targetUri) {
-        addVideoToGrid(targetUri);
-        event.addVideo(Account.shared.getUUID()
-                                     .getOrElse("Default ID"), targetUri);
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentFilePath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        activity.sendBroadcast(mediaScanIntent);
     }
 
 
@@ -523,13 +515,13 @@ public class FileManager implements Watcher {
 
 
     /**
-     * Add the photos to the gallery on the phone
+     * Recover a video from the user's phone from its uri and upload it on the database.
+     *
+     * @param targetUri the uri of the video.
      */
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentFilePath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        activity.sendBroadcast(mediaScanIntent);
+    private void recoverAndUploadVideo(Uri targetUri) {
+        addVideoToGrid(targetUri);
+        event.addVideo(Account.shared.getUUID()
+                                     .getOrElse("Default ID"), targetUri);
     }
 }

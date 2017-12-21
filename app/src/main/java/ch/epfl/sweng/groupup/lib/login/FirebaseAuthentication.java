@@ -25,7 +25,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 
 public final class FirebaseAuthentication
-        implements GoogleAuthenticationService, GoogleApiClient.OnConnectionFailedListener {
+    implements GoogleAuthenticationService, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int REQUEST_CODE = 666;
     private final LoginActivityInterface activity;
@@ -36,9 +36,7 @@ public final class FirebaseAuthentication
     private final String webClientID;
 
 
-    public FirebaseAuthentication(String webClientID,
-                                  Context activityContext,
-                                  LoginActivityInterface activity,
+    public FirebaseAuthentication(String webClientID, Context activityContext, LoginActivityInterface activity,
                                   FragmentActivity fragmentActivity) {
         this.webClientID = webClientID;
         this.activityContext = activityContext;
@@ -50,29 +48,24 @@ public final class FirebaseAuthentication
 
 
     private GoogleSignInOptions getSignInOptions() {
-        return new GoogleSignInOptions
-                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(webClientID)
-                .requestId()
-                .requestEmail()
-                .requestProfile()
-                .build();
+        return new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(webClientID)
+                                                                                   .requestId()
+                                                                                   .requestEmail()
+                                                                                   .requestProfile()
+                                                                                   .build();
     }
 
 
     private GoogleApiClient getApiClient() {
-        return new GoogleApiClient.Builder(activityContext)
-                .enableAutoManage(fragmentActivity, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
-                .build();
+        return new GoogleApiClient.Builder(activityContext).enableAutoManage(fragmentActivity, this)
+                                                           .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
+                                                           .build();
     }
 
 
     public void onActivityResult(int requestCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
-            GoogleSignInResult
-                    googleSignInResult =
-                    Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(googleSignInResult);
         }
     }
@@ -88,8 +81,7 @@ public final class FirebaseAuthentication
 
 
     private void firebaseAuthWithGoogle(final GoogleSignInAccount googleCurrentUser) {
-        AuthCredential credential = GoogleAuthProvider
-                .getCredential(googleCurrentUser.getIdToken(), null);
+        AuthCredential credential = GoogleAuthProvider.getCredential(googleCurrentUser.getIdToken(), null);
         FirebaseAuth.getInstance()
                     .signInWithCredential(credential)
                     .addOnCompleteListener(activity.getActivity(), getOnCompleteListener(googleCurrentUser));
@@ -104,12 +96,11 @@ public final class FirebaseAuthentication
                                                                .getCurrentUser();
                 if (task.isSuccessful() && firebaseCurrentUser != null) {
 
-                    Account.shared
-                            .withEmail(googleCurrentUser.getEmail())
-                            .withDisplayName(firebaseCurrentUser.getDisplayName())
-                            .withFamilyName(googleCurrentUser.getFamilyName())
-                            .withGivenName(googleCurrentUser.getGivenName())
-                            .withUUID(firebaseCurrentUser.getUid());
+                    Account.shared.withEmail(googleCurrentUser.getEmail())
+                                  .withDisplayName(firebaseCurrentUser.getDisplayName())
+                                  .withFamilyName(googleCurrentUser.getFamilyName())
+                                  .withGivenName(googleCurrentUser.getGivenName())
+                                  .withUUID(firebaseCurrentUser.getUid());
                     //.withPoneNumber(firebaseCurrentUser.getPhoneNumber();
 
                     Database.update();

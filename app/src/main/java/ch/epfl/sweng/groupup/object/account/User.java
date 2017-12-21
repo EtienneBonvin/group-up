@@ -20,11 +20,7 @@ public abstract class User {
     final Optional<Location> location;
 
 
-    protected User(String displayName,
-                   String firstName,
-                   String familyName,
-                   String email,
-                   String UUID,
+    protected User(String displayName, String firstName, String familyName, String email, String UUID,
                    Location location) {
         this.displayName = Optional.from(displayName);
         this.givenName = Optional.from(firstName);
@@ -40,12 +36,8 @@ public abstract class User {
     }
 
 
-    protected User(Optional<String> displayName,
-                   Optional<String> firstName,
-                   Optional<String> familyName,
-                   Optional<String> email,
-                   Optional<String> UUID,
-                   Optional<Location> location) {
+    protected User(Optional<String> displayName, Optional<String> firstName, Optional<String> familyName,
+                   Optional<String> email, Optional<String> UUID, Optional<Location> location) {
         this.displayName = displayName;
         this.givenName = firstName;
         this.familyName = familyName;
@@ -71,9 +63,11 @@ public abstract class User {
         }
 
         User user = (User) o;
-        return UUID.equals(user.UUID) && displayName.equals(user.displayName) &&
-               givenName.equals(user.givenName) && familyName.equals(user.familyName) &&
-               email.equals(user.email);
+        return UUID.equals(user.UUID)
+               && displayName.equals(user.displayName)
+               && givenName.equals(user.givenName)
+               && familyName.equals(user.familyName)
+               && email.equals(user.email);
     }
 
 
@@ -145,12 +139,17 @@ public abstract class User {
 
     @Override
     public String toString() {
-        return "User{" +
-               "displayName=" + displayName +
-               ",  givenName=" + givenName +
-               ", familyName=" + familyName +
-               ", email=" + email +
-               ", location=" + location.toString() +
-               '}';
+        return "User{"
+               + "displayName="
+               + displayName
+               + ",  givenName="
+               + givenName
+               + ", familyName="
+               + familyName
+               + ", email="
+               + email
+               + ", location="
+               + location.toString()
+               + '}';
     }
 }

@@ -49,7 +49,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,7 +73,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     private Map<Marker, String> mPoiMarkers;
     // Tap view attributes
     private Map<View.OnClickListener, Integer> oclToIndex;
-    private List<PolylineOptions> polyLines = new ArrayList<PolylineOptions>();
+    private List<PolylineOptions> polyLines = new ArrayList<>();
 
 
     /**
@@ -138,12 +137,10 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                     oclToIndex.put(this, 0);
                 }
                 if (actualIndex == 1) {
-                    ((ViewFlipper) findViewById(R.id.view_flipper))
-                            .showNext();
+                    ((ViewFlipper) findViewById(R.id.view_flipper)).showNext();
                     switchToUnselected((TextView) findViewById(R.id.tap_view_details));
                 } else if (actualIndex == 2) {
-                    ((ViewFlipper) findViewById(R.id.view_flipper))
-                            .showPrevious();
+                    ((ViewFlipper) findViewById(R.id.view_flipper)).showPrevious();
                     switchToUnselected((TextView) findViewById(R.id.tap_view_media));
                 }
 
@@ -160,12 +157,10 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                     oclToIndex.put(this, 1);
                 }
                 if (actualIndex == 2) {
-                    ((ViewFlipper) findViewById(R.id.view_flipper))
-                            .showNext();
+                    ((ViewFlipper) findViewById(R.id.view_flipper)).showNext();
                     switchToUnselected((TextView) findViewById(R.id.tap_view_media));
                 } else if (actualIndex == 0) {
-                    ((ViewFlipper) findViewById(R.id.view_flipper))
-                            .showPrevious();
+                    ((ViewFlipper) findViewById(R.id.view_flipper)).showPrevious();
                     switchToUnselected((TextView) findViewById(R.id.tap_view_map));
                 }
                 switchToSelected((TextView) findViewById(R.id.tap_view_details));
@@ -181,12 +176,10 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                     oclToIndex.put(this, 2);
                 }
                 if (actualIndex == 0) {
-                    ((ViewFlipper) findViewById(R.id.view_flipper))
-                            .showNext();
+                    ((ViewFlipper) findViewById(R.id.view_flipper)).showNext();
                     switchToUnselected((TextView) findViewById(R.id.tap_view_map));
                 } else if (actualIndex == 1) {
-                    ((ViewFlipper) findViewById(R.id.view_flipper))
-                            .showPrevious();
+                    ((ViewFlipper) findViewById(R.id.view_flipper)).showPrevious();
                     switchToUnselected((TextView) findViewById(R.id.tap_view_details));
                 }
                 switchToSelected((TextView) findViewById(R.id.tap_view_media));
@@ -295,11 +288,10 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         mMap.setOnMapLongClickListener(getMapLongClickListener());
         mMap.setOnMarkerDragListener(getMarkerDragListener());
 
-        if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-              PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                                                                                      Manifest.permission
-                                                                                              .ACCESS_COARSE_LOCATION) !=
-                                                   PackageManager.PERMISSION_GRANTED)) {
+        if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+              != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                                                                                         Manifest.permission.ACCESS_COARSE_LOCATION)
+                                                      != PackageManager.PERMISSION_GRANTED)) {
             mMap.setMyLocationEnabled(true);
         }
 
@@ -318,54 +310,6 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
 
 
     /**
-     * @param event to be updated.
-     *              <p>
-     *              Updates the member markers and points of interests of an event by removing the old state and
-     *              checking that the google map is initialized and given event corresponds with current
-     */
-    public void updateEventIfNeeded(Event event) {
-        if (mMap != null && event.getUUID()
-                                 .equals(currentEvent.getUUID())) {
-            currentEvent = event;
-
-            mMap.clear();
-            updateMemberMarkers();
-            updatePoiMarkers();
-            updatePolylines();
-        }
-    }
-
-
-    /**
-     * Updates the member markers on the map with the position of each member in the event.
-     */
-    private void updateMemberMarkers() {
-        for (Member memberToDisplay : currentEvent.getEventMembers()) {
-            Optional<Location> location = memberToDisplay.getLocation();
-
-            if (!location.isEmpty() && !memberToDisplay.getUUID()
-                                                       .isEmpty()) {
-                LatLng pos = new LatLng(location.get()
-                                                .getLatitude(), location.get()
-                                                                        .getLongitude());
-                String uuid = memberToDisplay.getUUID()
-                                             .get();
-                String displayName = memberToDisplay.getDisplayName()
-                                                    .getOrElse("NO_NAME");
-
-                if (!Account.shared.getUUID()
-                                   .isEmpty() && !uuid.equals(Account.shared.getUUID()
-                                                                            .get())) {
-                    mMap.addMarker(new MarkerOptions().position(pos)
-                                                      .title(displayName)
-                                                      .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_member)));
-                }
-            }
-        }
-    }
-
-
-    /**
      * When the map has has finished rendering, show a toast with instructions for the user
      * when the swipe bar is touched.
      *
@@ -378,7 +322,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
             @Override
             public void onMapLoaded() {
                 if (swipeBarTouched) {
-                    AndroidHelper.showToast(context, getString(R.string.map_activity_poi_instruction),
+                    AndroidHelper.showToast(context,
+                                            getString(R.string.map_activity_poi_instruction),
                                             Toast.LENGTH_LONG);
                     mMap.setOnMapLoadedCallback(null);
                 }
@@ -399,8 +344,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
             public void onMapLongClick(final LatLng latLng) {
                 Context context = EventDescriptionActivity.this;
 
-                final AlertDialog.Builder builder =
-                        new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AboutDialog));
+                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context,
+                                                                                                    R.style.AboutDialog));
                 builder.setTitle(R.string.poi_dialog_title);
 
                 LinearLayout container = new LinearLayout(context);
@@ -438,8 +383,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
      *
      * @return the method to be invoked when the add button is pushed
      */
-    private DialogInterface.OnClickListener getCreatePositiveListener(final LatLng latLng,
-                                                                      final EditText titleEditText,
+    private DialogInterface.OnClickListener getCreatePositiveListener(final LatLng latLng, final EditText titleEditText,
                                                                       final EditText descriptionEditText) {
         return new DialogInterface.OnClickListener() {
             @Override
@@ -453,8 +397,9 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 location.setLatitude(latLng.latitude);
                 location.setLongitude(latLng.longitude);
 
-                Account.shared.addOrUpdateEvent(
-                        currentEvent.withPointOfInterest(new PointOfInterest(title, description, location)));
+                Account.shared.addOrUpdateEvent(currentEvent.withPointOfInterest(new PointOfInterest(title,
+                                                                                                     description,
+                                                                                                     location)));
                 Database.update();
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -511,8 +456,8 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 Context context = EventDescriptionActivity.this;
 
                 // Dialog Builder
-                final AlertDialog.Builder builder =
-                        new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AboutDialog));
+                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context,
+                                                                                                    R.style.AboutDialog));
                 builder.setTitle(R.string.poi_action_title);
                 builder.setNeutralButton(R.string.poi_action_route, getNeutralListener(marker));
                 builder.setPositiveButton(R.string.poi_action_remove, getRemovePositiveListener(marker));
@@ -525,35 +470,59 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     }
 
 
-    /**
-     * Updates the points of interests on the map with the position of
-     * each point of interests in the event.
-     */
-    private void updatePoiMarkers() {
+    private DialogInterface.OnClickListener getNeutralListener(final Marker marker) {
+        return new DialogInterface.OnClickListener() {
 
-        for (PointOfInterest poi : currentEvent.getPointsOfInterest()) {
-            LatLng latLng = new LatLng(poi.getLocation()
-                                          .getLatitude(), poi.getLocation()
-                                                             .getLongitude());
-            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng)
-                                                              .title(poi.getName())
-                                                              .snippet(poi.getDescription())
-                                                              .draggable(true)
-                                                              .icon(BitmapDescriptorFactory.fromResource(
-                                                                      R.mipmap.ic_poi)));
-            marker.setVisible(true);
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (!Account.shared.getLocation()
+                                   .isEmpty()) {
 
-            mPoiMarkers.put(marker, poi.getUuid());
-        }
-    }
+                    // Due to Google Maps strange behaviour, location needs to be corrected
+                    LatLng correctedDestination = new LatLng(marker.getPosition().latitude - 0.0015,
+                                                             marker.getPosition().longitude);
+                    GoogleDirection.withServerKey("AIzaSyDtv0o9SNKJWLWt51YyYhZK0nxsR5FWMdY")
+                                   .from(new LatLng(Account.shared.getLocation()
+                                                                  .get()
+                                                                  .getLatitude(),
+                                                    Account.shared.getLocation()
+                                                                  .get()
+                                                                  .getLongitude()))
+                                   .to(correctedDestination)
+                                   .transportMode(TransportMode.WALKING)
+                                   .execute(new DirectionCallback() {
+                                       @Override
+                                       public void onDirectionFailure(Throwable t) {
+                                           AndroidHelper.showToast(getBaseContext(),
+                                                                   "Unable to compute route to desired point of interest. Try again later...",
+                                                                   Toast.LENGTH_SHORT);
+                                       }
 
-    /**
-     * Updates the polylines on the map
-     */
-    private void updatePolylines() {
-        for (PolylineOptions polylineOption : polyLines) {
-            mMap.addPolyline(polylineOption);
-        }
+
+                                       @Override
+                                       public void onDirectionSuccess(Direction direction, String rawBody) {
+                                           String status = direction.getStatus();
+                                           if (status.equals(RequestResult.OK)) {
+                                               List<Step> stepList = direction.getRouteList()
+                                                                              .get(0)
+                                                                              .getLegList()
+                                                                              .get(0)
+                                                                              .getStepList();
+                                               ArrayList<PolylineOptions> polylineOptionList = DirectionConverter.createTransitPolyline(
+                                                   getBaseContext(),
+                                                   stepList,
+                                                   5,
+                                                   Color.RED,
+                                                   3,
+                                                   Color.BLUE);
+
+                                               polyLines = Collections.unmodifiableList(new ArrayList<>(polylineOptionList));
+                                           }
+                                       }
+                                   });
+                }
+            }
+        };
     }
 
 
@@ -591,56 +560,85 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     }
 
 
-    private DialogInterface.OnClickListener getNeutralListener(final Marker marker) {
-        return new DialogInterface.OnClickListener() {
+    /**
+     * Updates the points of interests on the map with the position of
+     * each point of interests in the event.
+     */
+    private void updatePoiMarkers() {
 
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if (!Account.shared.getLocation()
-                        .isEmpty()) {
+        for (PointOfInterest poi : currentEvent.getPointsOfInterest()) {
+            LatLng latLng = new LatLng(poi.getLocation()
+                                          .getLatitude(),
+                                       poi.getLocation()
+                                          .getLongitude());
+            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng)
+                                                              .title(poi.getName())
+                                                              .snippet(poi.getDescription())
+                                                              .draggable(true)
+                                                              .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_poi)));
+            marker.setVisible(true);
 
-                    // Due to Google Maps strange behaviour, location needs to be corrected
-                    LatLng correctedDestination = new LatLng(marker.getPosition().latitude - 0.0015,
-                            marker.getPosition().longitude);
-                    GoogleDirection.withServerKey("AIzaSyDtv0o9SNKJWLWt51YyYhZK0nxsR5FWMdY")
-                            .from(new LatLng(Account.shared.getLocation()
-                                    .get()
-                                    .getLatitude(), Account.shared.getLocation()
-                                    .get()
-                                    .getLongitude()))
-                            .to(correctedDestination)
-                            .transportMode(TransportMode.WALKING)
-                            .execute(new DirectionCallback() {
-                                @Override
-                                public void onDirectionFailure(Throwable t) {
-                                    AndroidHelper.showToast(getBaseContext(),
-                                            "Unable to compute route to desired point of interest. Try again later...",
-                                            Toast.LENGTH_SHORT);
-                                }
+            mPoiMarkers.put(marker, poi.getUuid());
+        }
+    }
 
 
-                                @Override
-                                public void onDirectionSuccess(Direction direction, String rawBody) {
-                                    String status = direction.getStatus();
-                                    if (status.equals(RequestResult.OK)) {
-                                        List<Step> stepList = direction.getRouteList()
-                                                .get(0)
-                                                .getLegList()
-                                                .get(0)
-                                                .getStepList();
-                                        ArrayList<PolylineOptions> polylineOptionList
-                                                = DirectionConverter.createTransitPolyline(getBaseContext(),
-                                                stepList, 5,
-                                                Color.RED, 3,
-                                                Color.BLUE);
+    /**
+     * @param event to be updated.
+     *              <p>
+     *              Updates the member markers and points of interests of an event by removing the old state and
+     *              checking that the google map is initialized and given event corresponds with current
+     */
+    public void updateEventIfNeeded(Event event) {
+        if (mMap != null && event.getUUID()
+                                 .equals(currentEvent.getUUID())) {
+            currentEvent = event;
 
-                                        polyLines = Collections.unmodifiableList(new ArrayList<>(polylineOptionList));
-                                    }
-                                }
-                            });
+            mMap.clear();
+            updateMemberMarkers();
+            updatePoiMarkers();
+            updatePolylines();
+        }
+    }
+
+
+    /**
+     * Updates the member markers on the map with the position of each member in the event.
+     */
+    private void updateMemberMarkers() {
+        for (Member memberToDisplay : currentEvent.getEventMembers()) {
+            Optional<Location> location = memberToDisplay.getLocation();
+
+            if (!location.isEmpty() && !memberToDisplay.getUUID()
+                                                       .isEmpty()) {
+                LatLng pos = new LatLng(location.get()
+                                                .getLatitude(),
+                                        location.get()
+                                                .getLongitude());
+                String uuid = memberToDisplay.getUUID()
+                                             .get();
+                String displayName = memberToDisplay.getDisplayName()
+                                                    .getOrElse("NO_NAME");
+
+                if (!Account.shared.getUUID()
+                                   .isEmpty() && !uuid.equals(Account.shared.getUUID()
+                                                                            .get())) {
+                    mMap.addMarker(new MarkerOptions().position(pos)
+                                                      .title(displayName)
+                                                      .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_member)));
                 }
             }
-        };
+        }
+    }
+
+
+    /**
+     * Updates the polylines on the map
+     */
+    private void updatePolylines() {
+        for (PolylineOptions polylineOption : polyLines) {
+            mMap.addPolyline(polylineOption);
+        }
     }
 
 

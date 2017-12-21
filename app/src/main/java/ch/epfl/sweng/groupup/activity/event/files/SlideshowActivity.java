@@ -48,29 +48,6 @@ public class SlideshowActivity extends ToolbarActivity implements Watcher {
     }
 
 
-    private void loadImages() {
-
-        imageSwitcher.postDelayed(new Runnable() {
-            int i = 0;
-
-
-            public void run() {
-                if (loadedImages.size() > 0) {
-                    imageSwitcher.setImageDrawable(
-                            new BitmapDrawable(getResources(), loadedImages.get(i)
-                                                                           .asBitmap())
-                    );
-                    i++;
-                    if (loadedImages.size() < i + 1) {
-                        i = 0;
-                    }
-                }
-                imageSwitcher.postDelayed(this, 3000);
-            }
-        }, 3000);
-    }
-
-
     private void initImageSwitcher() {
         imageSwitcher = findViewById(R.id.imageSwitcher);
 
@@ -80,8 +57,8 @@ public class SlideshowActivity extends ToolbarActivity implements Watcher {
             public View makeView() {
                 ImageView myView = new ImageView(getApplicationContext());
 
-                ViewGroup.LayoutParams params = new ImageSwitcher.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                ViewGroup.LayoutParams params = new ImageSwitcher.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                                                               ViewGroup.LayoutParams.MATCH_PARENT);
                 myView.setLayoutParams(params);
 
                 myView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -93,6 +70,28 @@ public class SlideshowActivity extends ToolbarActivity implements Watcher {
         Animation out = AnimationUtils.makeOutAnimation(this, false);
         imageSwitcher.setInAnimation(in);
         imageSwitcher.setOutAnimation(out);
+    }
+
+
+    private void loadImages() {
+
+        imageSwitcher.postDelayed(new Runnable() {
+            int i = 0;
+
+
+            public void run() {
+                if (loadedImages.size() > 0) {
+                    imageSwitcher.setImageDrawable(new BitmapDrawable(getResources(),
+                                                                      loadedImages.get(i)
+                                                                                  .asBitmap()));
+                    i++;
+                    if (loadedImages.size() < i + 1) {
+                        i = 0;
+                    }
+                }
+                imageSwitcher.postDelayed(this, 3000);
+            }
+        }, 3000);
     }
 
 
@@ -144,9 +143,7 @@ public class SlideshowActivity extends ToolbarActivity implements Watcher {
     @Override
     public void onBackPressed() {
         Intent i = new Intent(this, EventDescriptionActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                   Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                   Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         i.putExtra(getString(R.string.event_listing_extraIndex), eventIndex);
         startActivity(i);
     }

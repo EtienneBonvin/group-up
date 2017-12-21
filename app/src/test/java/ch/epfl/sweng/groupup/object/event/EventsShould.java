@@ -63,8 +63,7 @@ public class EventsShould {
         Account.shared.withUUID("UUID")
                       .withGivenName("Tester")
                       .withFamilyName("Test")
-                      .
-                              withDisplayName("Even monkeys can fly")
+                      .withDisplayName("Even monkeys can fly")
                       .withEmail("test@test.test");
         List<Member> eventMembers = new ArrayList<>(Arrays.asList(member, member2));
         Event e = new Event("Name", null, null, null, eventMembers, false);
@@ -266,28 +265,28 @@ public class EventsShould {
         String ID = current.getUUID();
         String eventMembers = current.getEventMembers()
                                      .toString();
-        String expectedOutput = "Event{" +
-                                "eventName='" +
-                                eventName +
-                                '\'' +
-                                ", eventMember='" +
-                                eventMembers +
-                                '\'' +
-                                ", startDate='" +
-                                start +
-                                '\'' +
-                                ", endDate=" +
-                                end +
-                                '\'' +
-                                ", eventStatus=" +
-                                eventStatus +
-                                '\'' +
-                                ", eventID= " +
-                                ID +
-                                ", invitation= " +
-                                "" +
-                                current.getInvitation() +
-                                '}';
+        String expectedOutput = "Event{"
+                                + "eventName='"
+                                + eventName
+                                + '\''
+                                + ", eventMember='"
+                                + eventMembers
+                                + '\''
+                                + ", startDate='"
+                                + start
+                                + '\''
+                                + ", endDate="
+                                + end
+                                + '\''
+                                + ", eventStatus="
+                                + eventStatus
+                                + '\''
+                                + ", eventID= "
+                                + ID
+                                + ", invitation= "
+                                + ""
+                                + current.getInvitation()
+                                + '}';
         current = current.withStartTime(start);
         current = current.withEndTime(end);
         current = current.withInvitation(false);
@@ -304,15 +303,15 @@ public class EventsShould {
         String eventName = current.getEventName();
         EventStatus eventStatus = CURRENT;
         String ID = current.getUUID();
-        String expectedOutput = "Event{" +
-                                "eventName='" +
-                                eventName +
-                                '\'' +
-                                ", eventStatus='" +
-                                eventStatus +
-                                ", eventID= " +
-                                ID +
-                                '}';
+        String expectedOutput = "Event{"
+                                + "eventName='"
+                                + eventName
+                                + '\''
+                                + ", eventStatus='"
+                                + eventStatus
+                                + ", eventID= "
+                                + ID
+                                + '}';
 
         current = current.withStartTime(start);
         current = current.withEndTime(end);

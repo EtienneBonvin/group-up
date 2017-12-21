@@ -26,8 +26,7 @@ import org.junit.runner.*;
 public class EventDescriptionActivityTest {
 
     @Rule
-    public final ActivityTestRule<EventCreationActivity> mActivityRule =
-            new ActivityTestRule<>(EventCreationActivity.class);
+    public final ActivityTestRule<EventCreationActivity> mActivityRule = new ActivityTestRule<>(EventCreationActivity.class);
 
 
     @Test
@@ -61,11 +60,9 @@ public class EventDescriptionActivityTest {
         onView(withId(R.id.toolbar_image_right)).perform(click());
 
         onView(withId(R.id.linear_layout_event_list)).perform(click());
-        onView(withId(R.id.event_description_tv_description))
-                .check(matches(withText(R.string.event_description_tv_description)));
+        onView(withId(R.id.event_description_tv_description)).check(matches(withText(R.string.event_description_tv_description)));
 
-        onView(withId(R.id.event_description_name))
-                .check(matches(withText(name)));
+        onView(withId(R.id.event_description_name)).check(matches(withText(name)));
 
         onView(withId(R.id.event_description_name)).perform(replaceText(name + endName));
         Espresso.closeSoftKeyboard();
@@ -90,15 +87,12 @@ public class EventDescriptionActivityTest {
         onView(withId(R.id.toolbar_image_right)).perform(click());
 
         onView(withId(R.id.linear_layout_event_list)).perform(click());
-        onView(withId(R.id.event_description_name))
-                .check(matches(withText(name)));
+        onView(withId(R.id.event_description_name)).check(matches(withText(name)));
 
         onView(withId(R.id.event_description_name)).perform(typeText(impossibleName));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.toolbar_image_right)).perform(click());
-        onView(withId(R.id.event_description_name))
-                .check(matches(hasErrorText(
-                        getTargetContext().getString(R.string.event_creation_toast_event_name_too_long))));
+        onView(withId(R.id.event_description_name)).check(matches(hasErrorText(getTargetContext().getString(R.string.event_creation_toast_event_name_too_long))));
         Account.shared.clear();
     }
 
@@ -114,15 +108,12 @@ public class EventDescriptionActivityTest {
         onView(withId(R.id.toolbar_image_right)).perform(click());
 
         onView(withId(R.id.linear_layout_event_list)).perform(click());
-        onView(withId(R.id.event_description_name))
-                .check(matches(withText(name)));
+        onView(withId(R.id.event_description_name)).check(matches(withText(name)));
 
         onView(withId(R.id.event_description_name)).perform(replaceText(impossibleName));
         Espresso.closeSoftKeyboard();
         onView(withId(R.id.toolbar_image_right)).perform(click());
-        onView(withId(R.id.event_description_name))
-                .check(matches(hasErrorText(
-                        getTargetContext().getString(R.string.event_creation_toast_non_empty_event_name))));
+        onView(withId(R.id.event_description_name)).check(matches(hasErrorText(getTargetContext().getString(R.string.event_creation_toast_non_empty_event_name))));
         Account.shared.clear();
     }
 }

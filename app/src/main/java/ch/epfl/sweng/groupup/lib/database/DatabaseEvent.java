@@ -36,11 +36,7 @@ public final class DatabaseEvent {
     }
 
 
-    public DatabaseEvent(String name,
-                         String description,
-                         String datetimeStart,
-                         String datetimeEnd,
-                         String uuid,
+    public DatabaseEvent(String name, String description, String datetimeStart, String datetimeEnd, String uuid,
                          HashMap<String, DatabaseUser> members,
                          HashMap<String, DatabasePointOfInterest> pointsOfInterest) {
         this.name = name;
@@ -66,6 +62,11 @@ public final class DatabaseEvent {
     }
 
 
+    public Map<String, DatabaseUser> getMembers() {
+        return new HashMap<>(members);
+    }
+
+
     /**
      * Checks if we are contained as an unknown user (only added by email since we didn't had a
      * UUID yet).
@@ -83,11 +84,6 @@ public final class DatabaseEvent {
 
         return unknownUsers.contains(Account.shared.getEmail()
                                                    .get());
-    }
-
-
-    public Map<String, DatabaseUser> getMembers() {
-        return new HashMap<>(members);
     }
 
 
@@ -136,13 +132,18 @@ public final class DatabaseEvent {
     }
 
 
-    public String getName() {
-        return name;
+    public Map<String, DatabasePointOfInterest> getPointsOfInterest() {
+        return new HashMap<>(pointsOfInterest);
     }
 
 
-    public String getDescription() {
-        return description;
+    public String getUuid() {
+        return uuid;
+    }
+
+
+    public String getName() {
+        return name;
     }
 
 
@@ -156,12 +157,7 @@ public final class DatabaseEvent {
     }
 
 
-    public String getUuid() {
-        return uuid;
-    }
-
-
-    public Map<String, DatabasePointOfInterest> getPointsOfInterest() {
-        return new HashMap<>(pointsOfInterest);
+    public String getDescription() {
+        return description;
     }
 }

@@ -17,8 +17,7 @@ import org.junit.runner.*;
 public class DatabasePointOfInterestShould {
 
     @Rule
-    public final ActivityTestRule<EventListingActivity> mActivityRule = new ActivityTestRule<>(
-            EventListingActivity.class);
+    public final ActivityTestRule<EventListingActivity> mActivityRule = new ActivityTestRule<>(EventListingActivity.class);
 
 
     @Test
@@ -38,10 +37,14 @@ public class DatabasePointOfInterestShould {
         assertEquals(databasePointOfInterest.getUuid(), pointOfInterest.getUuid());
         assertEquals(databasePointOfInterest.getName(), pointOfInterest.getName());
         assertEquals(databasePointOfInterest.getDescription(), pointOfInterest.getDescription());
-        assertEquals(location.getLatitude(), pointOfInterest.getLocation()
-                                                            .getLatitude(), 0.1);
-        assertEquals(location.getLongitude(), pointOfInterest.getLocation()
-                                                             .getLongitude(), 0.1);
+        assertEquals(location.getLatitude(),
+                     pointOfInterest.getLocation()
+                                    .getLatitude(),
+                     0.1);
+        assertEquals(location.getLongitude(),
+                     pointOfInterest.getLocation()
+                                    .getLongitude(),
+                     0.1);
     }
 
 
@@ -67,10 +70,14 @@ public class DatabasePointOfInterestShould {
         assertEquals("" + latitude, databasePointOfInterest.getLatitude());
         assertEquals("" + longitude, databasePointOfInterest.getLongitude());
         assertEquals(LocationManager.GPS_PROVIDER, databasePointOfInterest.getProvider());
-        assertEquals(location.getLatitude(), databasePointOfInterest.getLocation()
-                                                                    .getLatitude(), 0.1);
-        assertEquals(location.getLongitude(), databasePointOfInterest.getLocation()
-                                                                     .getLongitude(), 0.1);
+        assertEquals(location.getLatitude(),
+                     databasePointOfInterest.getLocation()
+                                            .getLatitude(),
+                     0.1);
+        assertEquals(location.getLongitude(),
+                     databasePointOfInterest.getLocation()
+                                            .getLongitude(),
+                     0.1);
     }
 
 

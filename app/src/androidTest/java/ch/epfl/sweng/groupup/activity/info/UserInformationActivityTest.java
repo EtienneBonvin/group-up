@@ -21,18 +21,16 @@ import org.junit.runner.*;
 public class UserInformationActivityTest {
 
     @Rule
-    public final ActivityTestRule<UserInformationActivity> mActivityRule =
-            new ActivityTestRule<>(UserInformationActivity.class);
+    public final ActivityTestRule<UserInformationActivity> mActivityRule = new ActivityTestRule<>(UserInformationActivity.class);
 
 
     @Test
     public void displayErrorToast() throws Exception {
         Account.shared.clear();
-        onView(withText(R.string.toast_unable_to_generate_qr))
-                .inRoot(withDecorView(not(is(mActivityRule.getActivity()
-                                                          .getWindow()
-                                                          .getDecorView()))))
-                .check(matches(isDisplayed()));
+        onView(withText(R.string.toast_unable_to_generate_qr)).inRoot(withDecorView(not(is(mActivityRule.getActivity()
+                                                                                                        .getWindow()
+                                                                                                        .getDecorView()))))
+                                                              .check(matches(isDisplayed()));
     }
 
 
@@ -41,41 +39,29 @@ public class UserInformationActivityTest {
         Account a = Account.shared;
 
         // compare titles
-        onView(withId(R.id.text_view_display_name_info))
-                .check(matches(withText(R.string.text_view_display_name_info)));
+        onView(withId(R.id.text_view_display_name_info)).check(matches(withText(R.string.text_view_display_name_info)));
 
-        onView(withId(R.id.text_view_family_name_info))
-                .check(matches(withText(R.string.text_view_family_name_info)));
+        onView(withId(R.id.text_view_family_name_info)).check(matches(withText(R.string.text_view_family_name_info)));
 
-        onView(withId(R.id.text_view_given_name_info))
-                .check(matches(withText(R.string.text_view_given_name_info)));
+        onView(withId(R.id.text_view_given_name_info)).check(matches(withText(R.string.text_view_given_name_info)));
 
-        onView(withId(R.id.text_view_email_info))
-                .check(matches(withText(R.string.text_view_email_info)));
+        onView(withId(R.id.text_view_email_info)).check(matches(withText(R.string.text_view_email_info)));
 
-        onView(withId(R.id.text_view_display_name_text))
-                .check(matches(withText(a.getDisplayName()
-                                         .getOrElse(mActivityRule
-                                                            .getActivity()
-                                                            .getString(R.string.text_view_display_name_text)))));
+        onView(withId(R.id.text_view_display_name_text)).check(matches(withText(a.getDisplayName()
+                                                                                 .getOrElse(mActivityRule.getActivity()
+                                                                                                         .getString(R.string.text_view_display_name_text)))));
 
-        onView(withId(R.id.text_view_family_name_text))
-                .check(matches(withText(a.getFamilyName()
-                                         .getOrElse(mActivityRule
-                                                            .getActivity()
-                                                            .getString(R.string.text_view_family_name_text)))));
+        onView(withId(R.id.text_view_family_name_text)).check(matches(withText(a.getFamilyName()
+                                                                                .getOrElse(mActivityRule.getActivity()
+                                                                                                        .getString(R.string.text_view_family_name_text)))));
 
-        onView(withId(R.id.text_view_given_name_text))
-                .check(matches(withText(a.getGivenName()
-                                         .getOrElse(mActivityRule
-                                                            .getActivity()
-                                                            .getString(R.string.text_view_given_name_text)))));
+        onView(withId(R.id.text_view_given_name_text)).check(matches(withText(a.getGivenName()
+                                                                               .getOrElse(mActivityRule.getActivity()
+                                                                                                       .getString(R.string.text_view_given_name_text)))));
 
-        onView(withId(R.id.text_view_email_text))
-                .check(matches(withText(a.getEmail()
-                                         .getOrElse(mActivityRule
-                                                            .getActivity()
-                                                            .getString(R.string.text_view_email_text)))));
+        onView(withId(R.id.text_view_email_text)).check(matches(withText(a.getEmail()
+                                                                          .getOrElse(mActivityRule.getActivity()
+                                                                                                  .getString(R.string.text_view_email_text)))));
     }
 
 

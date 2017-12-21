@@ -25,9 +25,7 @@ import org.junit.runner.*;
 public class GeoLocationTestSuite {
 
     @Rule
-    public final ActivityTestRule<EventListingActivity>
-            mActivityRule
-            = new ActivityTestRule<>(EventListingActivity.class);
+    public final ActivityTestRule<EventListingActivity> mActivityRule = new ActivityTestRule<>(EventListingActivity.class);
 
 
     @Test
@@ -239,20 +237,28 @@ public class GeoLocationTestSuite {
                 location.setLongitude(4.1415);
 
                 myTestLocation.onLocationChanged(location);
-                assertEquals(location.getLatitude(), Account.shared.getLocation()
-                                                                   .get()
-                                                                   .getLatitude(), 0.01);
-                assertEquals(location.getLongitude(), Account.shared.getLocation()
-                                                                    .get()
-                                                                    .getLongitude(), 0.01);
+                assertEquals(location.getLatitude(),
+                             Account.shared.getLocation()
+                                           .get()
+                                           .getLatitude(),
+                             0.01);
+                assertEquals(location.getLongitude(),
+                             Account.shared.getLocation()
+                                           .get()
+                                           .getLongitude(),
+                             0.01);
 
                 myTestLocation.onLocationChanged(null);
-                assertEquals(location.getLatitude(), Account.shared.getLocation()
-                                                                   .get()
-                                                                   .getLatitude(), 0.01);
-                assertEquals(location.getLongitude(), Account.shared.getLocation()
-                                                                    .get()
-                                                                    .getLongitude(), 0.01);
+                assertEquals(location.getLatitude(),
+                             Account.shared.getLocation()
+                                           .get()
+                                           .getLatitude(),
+                             0.01);
+                assertEquals(location.getLongitude(),
+                             Account.shared.getLocation()
+                                           .get()
+                                           .getLongitude(),
+                             0.01);
 
                 Account.shared.clear();
             }

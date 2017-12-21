@@ -25,14 +25,14 @@ import ch.epfl.sweng.groupup.object.account.Account;
 
 public final class GeoLocation implements GeoLocationInterface {
 
-    private static final long MIN_UPDATE_TIME_INTERVAL = 5000;
-    private static final float MIN_UPDATE_DISTANCE_INTERVAL = 5;
     static final String ASK_PERMISSION = "ASK_PERMISSION";
     static final String ASK_ENABLE_GPS = "ASK_ENABLE_GPS";
+    private static final long MIN_UPDATE_TIME_INTERVAL = 5000;
+    private static final float MIN_UPDATE_DISTANCE_INTERVAL = 5;
+    private static final String INTENT_SCHEME = "package";
     private static boolean alreadyAskedPermission = false;
     private static boolean alreadyAskedEnableGps = false;
     private static boolean dialogIsShown = false;
-    private static final String INTENT_SCHEME = "package";
     private final Activity activity;
     private final Context context;
     private final LocationManager locationManager;
@@ -204,11 +204,10 @@ public final class GeoLocation implements GeoLocationInterface {
      * to start listening for location updates.
      */
     public void requestLocationUpdates() {
-        if ((ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) !=
-             PackageManager.PERMISSION_GRANTED) || (ActivityCompat.checkSelfPermission(context,
-                                                                                       Manifest.permission
-                                                                                               .ACCESS_COARSE_LOCATION) !=
-                                                    PackageManager.PERMISSION_GRANTED)) {
+        if ((ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+             != PackageManager.PERMISSION_GRANTED) || (ActivityCompat.checkSelfPermission(context,
+                                                                                          Manifest.permission.ACCESS_COARSE_LOCATION)
+                                                       != PackageManager.PERMISSION_GRANTED)) {
             return;
         }
         locationManager.requestLocationUpdates(provider, MIN_UPDATE_TIME_INTERVAL, MIN_UPDATE_DISTANCE_INTERVAL, this);

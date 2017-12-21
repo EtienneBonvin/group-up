@@ -51,11 +51,11 @@ public final class DatabasePointOfInterest {
 
         DatabasePointOfInterest that = (DatabasePointOfInterest) o;
 
-        return uuid.equals(that.uuid) &&
-               name.equals(that.name) &&
-               description.equals(that.description) &&
-               latitude.equals(that.latitude) &&
-               longitude.equals(that.longitude);
+        return uuid.equals(that.uuid)
+               && name.equals(that.name)
+               && description.equals(that.description)
+               && latitude.equals(that.latitude)
+               && longitude.equals(that.longitude);
     }
 
 

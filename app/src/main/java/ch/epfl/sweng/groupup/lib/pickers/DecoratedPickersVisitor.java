@@ -40,9 +40,7 @@ public class DecoratedPickersVisitor {
      */
     public void visit(DecoratedTimePicker timePicker) {
         LocalDateTime time = timePicker.getTime();
-        formatted.append(time_format(
-                time.getHourOfDay(),
-                time.getMinuteOfHour()));
+        formatted.append(time_format(time.getHourOfDay(), time.getMinuteOfHour()));
     }
 
 
@@ -55,8 +53,9 @@ public class DecoratedPickersVisitor {
      * @return a HH:MM string
      */
     private String time_format(int hour, int minutes) {
-        return String.format(Locale.getDefault(), "%02d", hour) + ":" +
-               String.format(Locale.getDefault(), "%02d", minutes);
+        return String.format(Locale.getDefault(), "%02d", hour) + ":" + String.format(Locale.getDefault(),
+                                                                                      "%02d",
+                                                                                      minutes);
     }
 
 
@@ -67,10 +66,7 @@ public class DecoratedPickersVisitor {
      */
     public void visit(DecoratedDatePicker datePicker) {
         LocalDateTime time = datePicker.getDate();
-        formatted.append(date_format(
-                time.getDayOfMonth(),
-                time.getMonthOfYear(),
-                time.getYear()));
+        formatted.append(date_format(time.getDayOfMonth(), time.getMonthOfYear(), time.getYear()));
     }
 
 
@@ -84,8 +80,10 @@ public class DecoratedPickersVisitor {
      * @return a DD/MM/YY string
      */
     private String date_format(int day, int month, int year) {
-        return String.format(Locale.getDefault(), "%02d", day) + "/" +
-               String.format(Locale.getDefault(), "%02d", month) + "/" +
-               String.format(Locale.getDefault(), "%02d", (year % 100));
+        return String.format(Locale.getDefault(), "%02d", day)
+               + "/"
+               + String.format(Locale.getDefault(), "%02d", month)
+               + "/"
+               + String.format(Locale.getDefault(), "%02d", (year % 100));
     }
 }

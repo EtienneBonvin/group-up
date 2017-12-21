@@ -33,15 +33,9 @@ public final class Account extends User implements Watchee {
     private final List<Event> pastEvents;
 
 
-    private Account(Optional<String> UUID,
-                    Optional<String> displayName,
-                    Optional<String> givenName,
-                    Optional<String> familyName,
-                    Optional<String> email,
-                    List<Event> current,
-                    List<Event> past,
-                    List<Event> future,
-                    Optional<Location> location) {
+    private Account(Optional<String> UUID, Optional<String> displayName, Optional<String> givenName,
+                    Optional<String> familyName, Optional<String> email, List<Event> current, List<Event> past,
+                    List<Event> future, Optional<Location> location) {
         super(displayName, givenName, familyName, email, UUID, location);
         this.currentEvents = new ArrayList<>(Collections.unmodifiableList(current));
         this.pastEvents = new ArrayList<>(Collections.unmodifiableList(past));
@@ -71,49 +65,6 @@ public final class Account extends User implements Watchee {
             default:
                 addOrUpdateCurrentEvent(event);
         }
-        return shared;
-    }
-
-
-    /**
-     * Add a past event list of the shared account or updates it if it already exists
-     *
-     * @param past event to add
-     *
-     * @return the modified shared account, so that it is easier to call in chain
-     *
-     * @throws IllegalArgumentException
-     */
-    private Account addOrUpdatePastEvent(Event past) {
-        List<Event> newPast = new ArrayList<>(pastEvents);
-        for (Event e : pastEvents) {
-            if (e.getUUID()
-                 .equals(past.getUUID())) {
-                newPast.remove(e);
-            }
-        }
-        newPast.add(past);
-        Collections.sort(newPast, new Comparator<Event>() {
-            @Override
-            public int compare(Event o1, Event o2) {
-                return o1.getStartTime()
-                         .compareTo(o2.getStartTime());
-            }
-        });
-        return Account.shared.withPastEvents(newPast);
-    }
-
-
-    /**
-     * Change the past event list of the shared account
-     *
-     * @param past event list
-     *
-     * @return the modified shared account, so that it is easier to call in chain
-     */
-    public Account withPastEvents(List<Event> past) {
-        shared = new Account(UUID, displayName, givenName, familyName, email,
-                             currentEvents, past, futureEvents, location);
         return shared;
     }
 
@@ -156,8 +107,65 @@ public final class Account extends User implements Watchee {
      * @return the modified shared account, so that it is easier to call in chain
      */
     public Account withFutureEvents(List<Event> future) {
-        shared = new Account(UUID, displayName, givenName, familyName, email,
-                             currentEvents, pastEvents, future, location);
+        shared = new Account(UUID,
+                             displayName,
+                             givenName,
+                             familyName,
+                             email,
+                             currentEvents,
+                             pastEvents,
+                             future,
+                             location);
+        return shared;
+    }
+
+
+    /**
+     * Add a past event list of the shared account or updates it if it already exists
+     *
+     * @param past event to add
+     *
+     * @return the modified shared account, so that it is easier to call in chain
+     *
+     * @throws IllegalArgumentException
+     */
+    private Account addOrUpdatePastEvent(Event past) {
+        List<Event> newPast = new ArrayList<>(pastEvents);
+        for (Event e : pastEvents) {
+            if (e.getUUID()
+                 .equals(past.getUUID())) {
+                newPast.remove(e);
+            }
+        }
+        newPast.add(past);
+        Collections.sort(newPast, new Comparator<Event>() {
+            @Override
+            public int compare(Event o1, Event o2) {
+                return o1.getStartTime()
+                         .compareTo(o2.getStartTime());
+            }
+        });
+        return Account.shared.withPastEvents(newPast);
+    }
+
+
+    /**
+     * Change the past event list of the shared account
+     *
+     * @param past event list
+     *
+     * @return the modified shared account, so that it is easier to call in chain
+     */
+    public Account withPastEvents(List<Event> past) {
+        shared = new Account(UUID,
+                             displayName,
+                             givenName,
+                             familyName,
+                             email,
+                             currentEvents,
+                             past,
+                             futureEvents,
+                             location);
         return shared;
     }
 
@@ -363,23 +371,35 @@ public final class Account extends User implements Watchee {
      * @return a members representing the account
      */
     public Member toMember() {
-        return new Member(UUID, displayName, givenName, familyName, email,
-                          location);
+        return new Member(UUID, displayName, givenName, familyName, email, location);
     }
 
 
     @Override
     public String toString() {
-        return "Account{" +
-               "UUID='" + UUID + '\'' +
-               "displayName='" + displayName + '\'' +
-               "givenName='" + givenName + '\'' +
-               ", familyName='" + familyName + '\'' +
-               ", email='" + email + '\'' +
-               ", currentEvent=" + currentEvents +
-               ", pastEvents=" + pastEvents +
-               ", futureEvents=" + futureEvents +
-               '}';
+        return "Account{"
+               + "UUID='"
+               + UUID
+               + '\''
+               + "displayName='"
+               + displayName
+               + '\''
+               + "givenName='"
+               + givenName
+               + '\''
+               + ", familyName='"
+               + familyName
+               + '\''
+               + ", email='"
+               + email
+               + '\''
+               + ", currentEvent="
+               + currentEvents
+               + ", pastEvents="
+               + pastEvents
+               + ", futureEvents="
+               + futureEvents
+               + '}';
     }
 
 
@@ -389,12 +409,19 @@ public final class Account extends User implements Watchee {
      * @return string containing basic informations about an account
      */
     public String toStringShort() {
-        return "Account{" +
-               "givenName='" + givenName + '\'' +
-               ", familyName='" + familyName + '\'' +
-               ", email='" + email + '\'' +
-               ", currentEvent=" + currentEvents +
-               '}';
+        return "Account{"
+               + "givenName='"
+               + givenName
+               + '\''
+               + ", familyName='"
+               + familyName
+               + '\''
+               + ", email='"
+               + email
+               + '\''
+               + ", currentEvent="
+               + currentEvents
+               + '}';
     }
 
 
@@ -439,8 +466,7 @@ public final class Account extends User implements Watchee {
                                  location);
             return shared;
         } else {
-            throw new IllegalArgumentException(
-                    "The email is not properly formed");
+            throw new IllegalArgumentException("The email is not properly formed");
         }
     }
 
@@ -453,9 +479,7 @@ public final class Account extends User implements Watchee {
      * @return true of email ok else false
      */
     private boolean emailCheck(String email) {
-        Pattern p =
-                Pattern.compile("\\b[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,13}\\b",
-                                Pattern.CASE_INSENSITIVE);
+        Pattern p = Pattern.compile("\\b[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,13}\\b", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(email);
         return m.matches();
     }

@@ -30,102 +30,6 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
  */
 public class MembersAddingActivity extends EventCreationActivity implements ZXingScannerView.ResultHandler {
 
-    /**
-     * MemberLabelFactory class.
-     * Variation of the factory design pattern. This class generates the layout labels to display the
-     * members and allow to add them to the layout.
-     */
-    private class MemberLabelFactory {
-
-        private transient MembersAddingActivity activity;
-        private transient LinearLayout baseLayout;
-        private transient TextView baseTextView;
-        private transient ImageView delImage;
-        private transient HashMap<View.OnClickListener, MemberRepresentation> uIdsWithOCL;
-        private transient HashMap<View.OnClickListener, View> viewsWithOCL;
-
-
-        /**
-         * Create a MemberTagFactory to display member labels on the given MembersAddingActivity.
-         *
-         * @param activity the activity where to display the members tags.
-         */
-        private MemberLabelFactory(MembersAddingActivity activity) {
-            this.activity = activity;
-            viewsWithOCL = new HashMap<>();
-            uIdsWithOCL = new HashMap<>();
-            generateLayout();
-        }
-
-
-        /**
-         * Generate an empty label linked to the activity.
-         */
-        private void generateLayout() {
-            baseLayout = new LinearLayout(activity);
-            baseLayout.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
-
-            baseTextView = new TextView(activity);
-            baseTextView.setTextSize(20);
-            baseTextView.setLayoutParams(new LinearLayout.LayoutParams(0,
-                                                                       LinearLayout.LayoutParams.WRAP_CONTENT,
-                                                                       0.9f));
-
-            baseTextView.setTextColor(getResources().getColor(R.color.middle_grey));
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0,
-                                                                             LinearLayout.LayoutParams.MATCH_PARENT,
-                                                                             0.1f);
-            params.setMargins(2, 2, 2, 2);
-            delImage = new ImageView(activity);
-            delImage.setImageResource(R.drawable.ic_minus_box);
-            delImage.setLayoutParams(params);
-            delImage.setBackgroundColor(getResources().getColor(R.color.transparent));
-
-            baseLayout.addView(baseTextView);
-            baseLayout.addView(delImage);
-        }
-
-
-        /**
-         * Add a new member label to the activity filled with the given member infos.
-         *
-         * @param memberInfo the MemberRepresentation representing the informations of the member.
-         */
-        private void addNewMember(MemberRepresentation memberInfo) {
-
-            generateLayout();
-
-            baseTextView.setText(memberInfo.toString());
-            ((LinearLayout) findViewById(R.id.members_list)).addView(baseLayout);
-
-            View.OnClickListener ocl = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((LinearLayout) findViewById(R.id.members_list)).removeView(viewsWithOCL.get(this));
-                    uIdsWithOCL.remove(this);
-                }
-            };
-
-            delImage.setOnClickListener(ocl);
-            viewsWithOCL.put(ocl, baseLayout);
-            uIdsWithOCL.put(ocl, memberInfo);
-        }
-
-
-        /**
-         * Give a collection of the members that have been added so far.
-         *
-         * @return a collection of MemberRepresentations of the members added so far.
-         */
-        private Collection<MemberRepresentation> getMembers() {
-            return uIdsWithOCL.values();
-        }
-    }
-
-
     private EventBuilder builder;
     private transient MemberLabelFactory factory;
     private transient ZXingScannerView mScannerView;
@@ -147,10 +51,9 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
 
         builder = (EventBuilder) getIntent().getSerializableExtra(EventCreationActivity.EXTRA_MESSAGE);
         if (builder == null) {
-            throw new MissingResourceException(
-                    "The builder has not been given in the Extra.",
-                    EventBuilder.class.toString(),
-                    "Builder");
+            throw new MissingResourceException("The builder has not been given in the Extra.",
+                                               EventBuilder.class.toString(),
+                                               "Builder");
         }
 
         factory = new MemberLabelFactory(this);
@@ -171,8 +74,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                 EditText memberEmail = findViewById(R.id.edit_text_add_member);
                 if (!emailCheck(memberEmail.getText()
                                            .toString())) {
-                    memberEmail.setError(getString(
-                            R.string.members_adding_error_toast_invalid_email));
+                    memberEmail.setError(getString(R.string.members_adding_error_toast_invalid_email));
                 } else if (memberEmail.getText()
                                       .toString()
                                       .equals(Account.shared.getEmail()
@@ -223,8 +125,8 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
 
 
     private boolean checkPermission() {
-        return (ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA) ==
-                PackageManager.PERMISSION_GRANTED);
+        return (ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA)
+                == PackageManager.PERMISSION_GRANTED);
     }
 
 
@@ -324,5 +226,100 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                 setUpListener(EventListingActivity.class);
             }
         });
+    }
+
+
+    /**
+     * MemberLabelFactory class.
+     * Variation of the factory design pattern. This class generates the layout labels to display the
+     * members and allow to add them to the layout.
+     */
+    private class MemberLabelFactory {
+
+        private transient MembersAddingActivity activity;
+        private transient LinearLayout baseLayout;
+        private transient TextView baseTextView;
+        private transient ImageView delImage;
+        private transient HashMap<View.OnClickListener, MemberRepresentation> uIdsWithOCL;
+        private transient HashMap<View.OnClickListener, View> viewsWithOCL;
+
+
+        /**
+         * Create a MemberTagFactory to display member labels on the given MembersAddingActivity.
+         *
+         * @param activity the activity where to display the members tags.
+         */
+        private MemberLabelFactory(MembersAddingActivity activity) {
+            this.activity = activity;
+            viewsWithOCL = new HashMap<>();
+            uIdsWithOCL = new HashMap<>();
+            generateLayout();
+        }
+
+
+        /**
+         * Generate an empty label linked to the activity.
+         */
+        private void generateLayout() {
+            baseLayout = new LinearLayout(activity);
+            baseLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                     LinearLayout.LayoutParams.WRAP_CONTENT));
+
+            baseTextView = new TextView(activity);
+            baseTextView.setTextSize(20);
+            baseTextView.setLayoutParams(new LinearLayout.LayoutParams(0,
+                                                                       LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                                       0.9f));
+
+            baseTextView.setTextColor(getResources().getColor(R.color.middle_grey));
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0,
+                                                                             LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                             0.1f);
+            params.setMargins(2, 2, 2, 2);
+            delImage = new ImageView(activity);
+            delImage.setImageResource(R.drawable.ic_minus_box);
+            delImage.setLayoutParams(params);
+            delImage.setBackgroundColor(getResources().getColor(R.color.transparent));
+
+            baseLayout.addView(baseTextView);
+            baseLayout.addView(delImage);
+        }
+
+
+        /**
+         * Add a new member label to the activity filled with the given member infos.
+         *
+         * @param memberInfo the MemberRepresentation representing the informations of the member.
+         */
+        private void addNewMember(MemberRepresentation memberInfo) {
+
+            generateLayout();
+
+            baseTextView.setText(memberInfo.toString());
+            ((LinearLayout) findViewById(R.id.members_list)).addView(baseLayout);
+
+            View.OnClickListener ocl = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((LinearLayout) findViewById(R.id.members_list)).removeView(viewsWithOCL.get(this));
+                    uIdsWithOCL.remove(this);
+                }
+            };
+
+            delImage.setOnClickListener(ocl);
+            viewsWithOCL.put(ocl, baseLayout);
+            uIdsWithOCL.put(ocl, memberInfo);
+        }
+
+
+        /**
+         * Give a collection of the members that have been added so far.
+         *
+         * @return a collection of MemberRepresentations of the members added so far.
+         */
+        private Collection<MemberRepresentation> getMembers() {
+            return uIdsWithOCL.values();
+        }
     }
 }

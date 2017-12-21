@@ -39,13 +39,12 @@ public class DecoratedDatePicker implements DatePickerDialog.OnDateSetListener {
         accept(visitor);
         trigger.setText(visitor.getFormatted());
 
-        datePickerDialog = new DatePickerDialog(
-                activity,
-                R.style.Picker,
-                DecoratedDatePicker.this,
-                date.getYear(),
-                date.getMonthOfYear() - 1,
-                date.getDayOfMonth());
+        datePickerDialog = new DatePickerDialog(activity,
+                                                R.style.Picker,
+                                                DecoratedDatePicker.this,
+                                                date.getYear(),
+                                                date.getMonthOfYear() - 1,
+                                                date.getDayOfMonth());
         datePickerDialog.getWindow()
                         .setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 

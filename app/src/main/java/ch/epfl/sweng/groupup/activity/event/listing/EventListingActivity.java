@@ -68,6 +68,22 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
 
 
     /**
+     * Initialization of the create event button in the linear layout and
+     * of the OnClickListener
+     */
+    private void initializeCreateEvent() {
+        FloatingActionButton createEventButton = this.findViewById(R.id.createEventButton);
+        createEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(EventListingActivity.this, EventCreationActivity.class);
+                startActivity(i);
+            }
+        });
+    }
+
+
+    /**
      * Initialization of the event buttons in the linear layout with the
      * name and start to event dates stated
      */
@@ -86,15 +102,18 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
 
         for (Event e : events) {
             Button eventButton = new Button(this);
-            eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.
-                                                                              MATCH_PARENT, heightInSp));
-            eventButton.setText(
-                    String.format("%s\n%s - %s", e.getEventName(), e.getStartTimeToString(), e.getEndTimeToString()));
+            eventButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, heightInSp));
+            eventButton.setText(String.format("%s\n%s - %s",
+                                              e.getEventName(),
+                                              e.getStartTimeToString(),
+                                              e.getEndTimeToString()));
             eventButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
             eventButton.setTextColor(ContextCompat.getColor(this, R.color.secondaryTextColor));
 
-            eventButton.setPadding(getResources().getDimensionPixelSize(R.dimen.default_gap), 0,
-                                   getResources().getDimensionPixelSize(R.dimen.default_gap), 0);
+            eventButton.setPadding(getResources().getDimensionPixelSize(R.dimen.default_gap),
+                                   0,
+                                   getResources().getDimensionPixelSize(R.dimen.default_gap),
+                                   0);
             if (e.getEventStatus()
                  .equals(EventStatus.CURRENT)) {
                 eventButton.setBackgroundResource(R.drawable.buttom_gradient_current);
@@ -133,71 +152,54 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
                                      .getOrElse(getString(R.string.event_invitation_dialog_unknown)) + "\n";
                 }
 
-                AlertDialog.Builder alertDialogBuilder =
-                        new AlertDialog.Builder(
-                                new ContextThemeWrapper(EventListingActivity.this, R.style.AboutDialog));
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(EventListingActivity.this,
+                                                                                                         R.style.AboutDialog));
                 alertDialogBuilder.setTitle(R.string.event_invitation_title);
 
-                String message = getString(R.string.event_invitation_dialog_name) + eventToDisplay.getEventName() + "\n"
-                                 + getString(R.string.event_invitation_dialog_start) +
-                                 eventToDisplay.getStartTimeToString() + "\n"
-                                 + getString(R.string.event_invitation_dialog_end) +
-                                 eventToDisplay.getEndTimeToString() + "\n"
-                                 + getString(R.string.event_invitation_dialog_description) +
-                                 eventToDisplay.getDescription() + "\n" + members;
+                String message = getString(R.string.event_invitation_dialog_name)
+                                 + eventToDisplay.getEventName()
+                                 + "\n"
+                                 + getString(R.string.event_invitation_dialog_start)
+                                 + eventToDisplay.getStartTimeToString()
+                                 + "\n"
+                                 + getString(R.string.event_invitation_dialog_end)
+                                 + eventToDisplay.getEndTimeToString()
+                                 + "\n"
+                                 + getString(R.string.event_invitation_dialog_description)
+                                 + eventToDisplay.getDescription()
+                                 + "\n"
+                                 + members;
                 alertDialogBuilder.setMessage(message);
 
-                alertDialogBuilder
-                        .setPositiveButton(R.string.event_invitation_dialog_accept,
-                                           new DialogInterface.OnClickListener() {
-                                               @Override
-                                               public void onClick(
-                                                       DialogInterface dialogInterface,
-                                                       int i) {
-                                                   Account.shared.addOrUpdateEvent(eventToDisplay.withInvitation(
-                                                           !eventToDisplay.getInvitation()));
-                                                   eventsToDisplay.remove(eventToDisplay);
-                                                   dialogShown = false;
-                                                   Database.update();
-                                                   dialogInterface.dismiss();
-                                                   recreate();
-                                               }
-                                           });
+                alertDialogBuilder.setPositiveButton(R.string.event_invitation_dialog_accept,
+                                                     new DialogInterface.OnClickListener() {
+                                                         @Override
+                                                         public void onClick(DialogInterface dialogInterface, int i) {
+                                                             Account.shared.addOrUpdateEvent(eventToDisplay.withInvitation(
+                                                                 !eventToDisplay.getInvitation()));
+                                                             eventsToDisplay.remove(eventToDisplay);
+                                                             dialogShown = false;
+                                                             Database.update();
+                                                             dialogInterface.dismiss();
+                                                             recreate();
+                                                         }
+                                                     });
 
-                alertDialogBuilder
-                        .setNegativeButton(R.string.event_invitation_dialog_decline,
-                                           new DialogInterface.OnClickListener() {
-                                               @Override
-                                               public void onClick(
-                                                       DialogInterface dialogInterface,
-                                                       int i) {
-                                                   EventDescription.removeEvent(eventToDisplay);
-                                                   eventsToDisplay.remove(eventToDisplay);
-                                                   dialogShown = false;
-                                                   dialogInterface.dismiss();
-                                                   recreate();
-                                               }
-                                           });
+                alertDialogBuilder.setNegativeButton(R.string.event_invitation_dialog_decline,
+                                                     new DialogInterface.OnClickListener() {
+                                                         @Override
+                                                         public void onClick(DialogInterface dialogInterface, int i) {
+                                                             EventDescription.removeEvent(eventToDisplay);
+                                                             eventsToDisplay.remove(eventToDisplay);
+                                                             dialogShown = false;
+                                                             dialogInterface.dismiss();
+                                                             recreate();
+                                                         }
+                                                     });
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
             }
         }
-    }
-
-
-    /**
-     * Initialization of the create event button in the linear layout and
-     * of the OnClickListener
-     */
-    private void initializeCreateEvent() {
-        FloatingActionButton createEventButton = this.findViewById(R.id.createEventButton);
-        createEventButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(EventListingActivity.this, EventCreationActivity.class);
-                startActivity(i);
-            }
-        });
     }
 
 
