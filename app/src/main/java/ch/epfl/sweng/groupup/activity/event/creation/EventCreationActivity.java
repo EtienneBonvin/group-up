@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
-import ch.epfl.sweng.groupup.activity.info.UserInformationActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.lib.Optional;
@@ -521,19 +520,11 @@ public class EventCreationActivity extends ToolbarActivity implements Serializab
     public void initializeToolbar() {
         TextView title = findViewById(R.id.toolbar_title);
         ImageView rightImage = findViewById(R.id.toolbar_image_right);
-        ImageView secondRightImage = findViewById(R.id.toolbar_image_second_from_right);
 
         title.setText(R.string.toolbar_title_create_event);
 
         // User icon
         rightImage.setImageResource(R.drawable.ic_check);
-        secondRightImage.setImageResource(R.drawable.ic_user);
-        findViewById(R.id.toolbar_image_second_from_right).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setUpListener(UserInformationActivity.class);
-            }
-        });
 
         // Home button
         findViewById(R.id.toolbar_image_left).setOnClickListener(new View.OnClickListener() {

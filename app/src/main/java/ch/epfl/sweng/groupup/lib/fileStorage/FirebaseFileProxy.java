@@ -35,9 +35,6 @@ import java.util.Set;
  */
 public class FirebaseFileProxy implements FileProxy, Watchee {
 
-    //TODO check if the download and upload is stable on low internet connectivity
-
-
     private static class SuperBoolean {
 
         private boolean value;
@@ -93,7 +90,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
                 try {
                     proxy.getNewFile();
                 } catch (Exception e) {
-                    // TODO check if exceptions needs to e caught
+                    // Unused
                 }
             }
             return null;
@@ -161,7 +158,7 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
                         proxy.effectivelyUploadFile(uuid, uri);
                     }
                 } catch (Exception e) {
-                    //TODO check if exceptions should be caught
+                    // Unused
                 }
             }
             return null;
@@ -367,7 +364,6 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
      * @param uri
      */
     public void uploadFile(String uuid, Uri uri) {
-        //TODO
         queuedUploads.offer(new AsyncUploadFileTask(this, uuid, uri));
     }
 
@@ -487,7 +483,6 @@ public class FirebaseFileProxy implements FileProxy, Watchee {
                                //Videos
                                else if (contentType.contains("video")) {
                                    try {
-                                       //TODO Store locally to avoid data consumption
                                        String extension = "." + contentType.substring(contentType.lastIndexOf('/') + 1);
                                        final File localFile = File.createTempFile("groupUp" + metadata.getName(),
                                                                                   extension);

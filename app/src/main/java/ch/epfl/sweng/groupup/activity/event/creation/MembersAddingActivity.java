@@ -310,7 +310,6 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
      */
     @Override
     public void initializeToolbar() {
-        super.initializeToolbar();
         TextView title = findViewById(R.id.toolbar_title);
         ImageView rightImage = findViewById(R.id.toolbar_image_right);
 
