@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.InputType;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -354,11 +355,13 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
                 final EditText titleEditText = new EditText(context);
                 titleEditText.setInputType(InputType.TYPE_CLASS_TEXT);
                 titleEditText.setHint(R.string.poi_title_hint);
+                titleEditText.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor));
                 container.addView(titleEditText);
 
                 final EditText descriptionEditText = new EditText(context);
                 descriptionEditText.setInputType(InputType.TYPE_CLASS_TEXT);
                 descriptionEditText.setHint(R.string.poi_description_hint);
+                descriptionEditText.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor));
                 container.addView(descriptionEditText);
 
                 builder.setView(container);
