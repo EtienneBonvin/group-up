@@ -73,7 +73,7 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
                                                                        LinearLayout.LayoutParams.WRAP_CONTENT,
                                                                        0.9f));
 
-            baseTextView.setTextColor(getResources().getColor(R.color.primaryTextColor));
+            baseTextView.setTextColor(getResources().getColor(R.color.middle_grey));
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0,
                                                                              LinearLayout.LayoutParams.MATCH_PARENT,

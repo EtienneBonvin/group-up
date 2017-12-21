@@ -61,7 +61,6 @@
         android:layout_weight="0.8"
         android:hint="@string/members_adding_hint_invite_new_members"
         android:inputType="textEmailAddress"
-        android:textColor="@color/primaryTextColor"
         android:textSize="20sp"/>
 
     <ImageView
@@ -101,7 +100,7 @@
             android:id="@+id/members_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"></LinearLayout>
+            android:orientation="vertical" />
 
     </ScrollView>
 
