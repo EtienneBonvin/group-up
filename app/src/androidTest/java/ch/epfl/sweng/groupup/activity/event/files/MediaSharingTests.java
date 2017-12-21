@@ -71,7 +71,7 @@ public class MediaSharingTests {
 
         onView(withParent(withId(R.id.image_grid)))
                 .perform(click());
-        //RUN THE VIDEO VIEW wHEN IMPLEMENTED
+
         onView(withId(R.id.video_container))
                 .check(matches(isDisplayed()));
 
