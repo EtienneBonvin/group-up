@@ -28,7 +28,7 @@
 
     <!-- Start up screen theme -->
     <style name="StartUpStyle" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:background">@color/primaryLightColor</item>
+        <item name="android:background">@color/primaryColor</item>
     </style>
 
     <!-- Toolbar theme -->
