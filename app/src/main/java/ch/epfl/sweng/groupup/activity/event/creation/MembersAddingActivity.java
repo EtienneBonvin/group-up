@@ -1,10 +1,13 @@
 package ch.epfl.sweng.groupup.activity.event.creation;
 
+import static android.Manifest.permission.CAMERA;
 import static ch.epfl.sweng.groupup.lib.AndroidHelper.emailCheck;
 import static ch.epfl.sweng.groupup.lib.AndroidHelper.showToast;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -13,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
+import ch.epfl.sweng.groupup.lib.AndroidHelper;
 import ch.epfl.sweng.groupup.object.account.Account;
 import java.util.Collection;
 import java.util.HashMap;
@@ -65,17 +69,15 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
 
             baseTextView = new TextView(activity);
             baseTextView.setTextSize(20);
-            baseTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                    0,
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    0.9f));
+            baseTextView.setLayoutParams(new LinearLayout.LayoutParams(0,
+                                                                       LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                                       0.9f));
 
             baseTextView.setTextColor(getResources().getColor(R.color.primaryTextColor));
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    0,
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    0.1f);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0,
+                                                                             LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                             0.1f);
             params.setMargins(2, 2, 2, 2);
             delImage = new ImageView(activity);
             delImage.setImageResource(R.drawable.ic_minus_box);
@@ -97,16 +99,12 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
             generateLayout();
 
             baseTextView.setText(memberInfo.toString());
-            ((LinearLayout) findViewById(R.id.members_list)).
-                                                                    addView(baseLayout);
+            ((LinearLayout) findViewById(R.id.members_list)).addView(baseLayout);
 
             View.OnClickListener ocl = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((LinearLayout) findViewById(R.id.members_list)).
-                                                                            removeView(
-                                                                                    viewsWithOCL.get(this)
-                                                                            );
+                    ((LinearLayout) findViewById(R.id.members_list)).removeView(viewsWithOCL.get(this));
                     uIdsWithOCL.remove(this);
                 }
             };
@@ -167,49 +165,41 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
      * Initialize the listeners and fields of the layout.
      */
     private void initListeners() {
-        findViewById(R.id.image_view_add_member).
-                                                        setOnClickListener(new View.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View v) {
-                                                                EditText memberEmail = findViewById(
-                                                                        R.id.edit_text_add_member);
-                                                                if (!emailCheck(memberEmail.getText()
-                                                                                           .toString())) {
-                                                                    memberEmail.setError(getString(
-                                                                            R.string.members_adding_error_toast_invalid_email));
-                                                                } else if (memberEmail.getText()
-                                                                                      .toString()
-                                                                                      .equals(Account.shared.getEmail()
-                                                                                                            .getOrElse(
-                                                                                                                    "Default Email"))) {
-                                                                    memberEmail.setError(getString(
-                                                                            R.string.event_creation_error_cant_add_yourself));
-                                                                } else {
-                                                                    MemberRepresentation newRep
-                                                                            = new MemberRepresentation(
-                                                                            memberEmail.getText()
-                                                                                       .toString());
-                                                                    factory.addNewMember(newRep);
-                                                                    memberEmail.setText("");
-                                                                }
-                                                            }
-                                                        });
+        findViewById(R.id.image_view_add_member).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText memberEmail = findViewById(R.id.edit_text_add_member);
+                if (!emailCheck(memberEmail.getText()
+                                           .toString())) {
+                    memberEmail.setError(getString(
+                            R.string.members_adding_error_toast_invalid_email));
+                } else if (memberEmail.getText()
+                                      .toString()
+                                      .equals(Account.shared.getEmail()
+                                                            .getOrElse("Default Email"))) {
+                    memberEmail.setError(getString(R.string.event_creation_error_cant_add_yourself));
+                } else {
+                    MemberRepresentation newRep = new MemberRepresentation(memberEmail.getText()
+                                                                                      .toString());
+                    factory.addNewMember(newRep);
+                    memberEmail.setText("");
+                }
+            }
+        });
 
-        findViewById(R.id.buttonScanQR).
-                                               setOnClickListener(new View.OnClickListener() {
-                                                   @Override
-                                                   public void onClick(View v) {
-                                                       QrScanner(v);
-                                                   }
-                                               });
+        findViewById(R.id.buttonScanQR).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                QrScanner(v);
+            }
+        });
 
-        findViewById(R.id.toolbar_image_right).
-                                                      setOnClickListener(new View.OnClickListener() {
-                                                          @Override
-                                                          public void onClick(View v) {
-                                                              returnToEventCreation();
-                                                          }
-                                                      });
+        findViewById(R.id.toolbar_image_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnToEventCreation();
+            }
+        });
     }
 
 
@@ -220,12 +210,21 @@ public class MembersAddingActivity extends EventCreationActivity implements ZXin
      * @param view unused
      */
     public void QrScanner(View view) {
-        // TODO: 18.10.2017 Check if user granted camera access to app
-        mScannerView = new ZXingScannerView(this);
-        saveState();
-        setContentView(mScannerView);
-        mScannerView.setResultHandler(this);
-        mScannerView.startCamera();
+        if (checkPermission()) {
+            mScannerView = new ZXingScannerView(this);
+            saveState();
+            setContentView(mScannerView);
+            mScannerView.setResultHandler(this);
+            mScannerView.startCamera();
+        } else {
+            AndroidHelper.showToast(this, "Please grant access to the camera", Toast.LENGTH_SHORT);
+        }
+    }
+
+
+    private boolean checkPermission() {
+        return (ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA) ==
+                PackageManager.PERMISSION_GRANTED);
     }
 
 
