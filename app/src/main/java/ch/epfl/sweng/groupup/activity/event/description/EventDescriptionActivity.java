@@ -49,8 +49,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -72,6 +74,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
     private Map<Marker, String> mPoiMarkers;
     // Tap view attributes
     private Map<View.OnClickListener, Integer> oclToIndex;
+    private List<PolylineOptions> polyLines = new ArrayList<PolylineOptions>();
 
 
     /**
@@ -328,6 +331,7 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
             mMap.clear();
             updateMemberMarkers();
             updatePoiMarkers();
+            updatePolylines();
         }
     }
 
@@ -543,6 +547,15 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
         }
     }
 
+    /**
+     * Updates the polylines on the map
+     */
+    private void updatePolylines() {
+        for (PolylineOptions polylineOption : polyLines) {
+            mMap.addPolyline(polylineOption);
+        }
+    }
+
 
     /**
      * Removes a point of interest chosen by a user to be deleted by pushing on the delete
@@ -584,48 +597,47 @@ public class EventDescriptionActivity extends ToolbarActivity implements OnMapRe
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (!Account.shared.getLocation()
-                                   .isEmpty()) {
+                        .isEmpty()) {
 
                     // Due to Google Maps strange behaviour, location needs to be corrected
                     LatLng correctedDestination = new LatLng(marker.getPosition().latitude - 0.0015,
-                                                             marker.getPosition().longitude);
+                            marker.getPosition().longitude);
                     GoogleDirection.withServerKey("AIzaSyDtv0o9SNKJWLWt51YyYhZK0nxsR5FWMdY")
-                                   .from(new LatLng(Account.shared.getLocation()
-                                                                  .get()
-                                                                  .getLatitude(), Account.shared.getLocation()
-                                                                                                .get()
-                                                                                                .getLongitude()))
-                                   .to(correctedDestination)
-                                   .transportMode(TransportMode.WALKING)
-                                   .execute(new DirectionCallback() {
-                                       @Override
-                                       public void onDirectionFailure(Throwable t) {
-                                           AndroidHelper.showToast(getBaseContext(),
-                                                                   "Unable to compute route to desired point of interest. Try again later...",
-                                                                   Toast.LENGTH_SHORT);
-                                       }
+                            .from(new LatLng(Account.shared.getLocation()
+                                    .get()
+                                    .getLatitude(), Account.shared.getLocation()
+                                    .get()
+                                    .getLongitude()))
+                            .to(correctedDestination)
+                            .transportMode(TransportMode.WALKING)
+                            .execute(new DirectionCallback() {
+                                @Override
+                                public void onDirectionFailure(Throwable t) {
+                                    AndroidHelper.showToast(getBaseContext(),
+                                            "Unable to compute route to desired point of interest. Try again later...",
+                                            Toast.LENGTH_SHORT);
+                                }
 
 
-                                       @Override
-                                       public void onDirectionSuccess(Direction direction, String rawBody) {
-                                           String status = direction.getStatus();
-                                           if (status.equals(RequestResult.OK)) {
-                                               List<Step> stepList = direction.getRouteList()
-                                                                              .get(0)
-                                                                              .getLegList()
-                                                                              .get(0)
-                                                                              .getStepList();
-                                               ArrayList<PolylineOptions> polylineOptionList
-                                                       = DirectionConverter.createTransitPolyline(getBaseContext(),
-                                                                                                  stepList, 5,
-                                                                                                  Color.RED, 3,
-                                                                                                  Color.BLUE);
-                                               for (PolylineOptions polylineOption : polylineOptionList) {
-                                                   mMap.addPolyline(polylineOption);
-                                               }
-                                           }
-                                       }
-                                   });
+                                @Override
+                                public void onDirectionSuccess(Direction direction, String rawBody) {
+                                    String status = direction.getStatus();
+                                    if (status.equals(RequestResult.OK)) {
+                                        List<Step> stepList = direction.getRouteList()
+                                                .get(0)
+                                                .getLegList()
+                                                .get(0)
+                                                .getStepList();
+                                        ArrayList<PolylineOptions> polylineOptionList
+                                                = DirectionConverter.createTransitPolyline(getBaseContext(),
+                                                stepList, 5,
+                                                Color.RED, 3,
+                                                Color.BLUE);
+
+                                        polyLines = Collections.unmodifiableList(new ArrayList<>(polylineOptionList));
+                                    }
+                                }
+                            });
                 }
             }
         };
