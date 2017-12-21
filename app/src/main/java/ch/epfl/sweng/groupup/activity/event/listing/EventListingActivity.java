@@ -52,9 +52,8 @@ public class EventListingActivity extends ToolbarActivity implements Watcher {
         setContentView(R.layout.activity_event_listing);
         Account.shared.addWatcher(this);
         initializeVariables();
-        updateEvents();
         initializeCreateEvent();
-        Account.shared.notifyAllWatchers();
+        updateEvents();
     }
 
 
