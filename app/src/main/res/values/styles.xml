@@ -18,12 +18,12 @@
 
     <!-- Alert dialog theme -->
     <style name="AboutDialog" parent="@android:style/Theme.Holo.Dialog.NoActionBar">
-        <!--<item name="android:background">@color/dark_grey</item>
-        <item name="android:textColor">@color/white</item>-->
-        <item name="android:textColor">@color/white</item>
+        <item name="android:editTextColor">@color/primaryTextColor</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
         <item name="android:background">@color/transparent</item>
-        <item name="colorAccent">@color/background_dark</item>
-        <item name="android:textColorHint">@color/background_dark</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="android:textColorHint">@color/white</item>
+
     </style>
 
     <!-- Start up screen theme -->
