@@ -125,9 +125,9 @@
     <string name="gmail_socketFactory_fallback_value">false</string>
     <string name="gmail_quitwait_key">mail.smtp.quitwait</string>
     <string name="gmail_quitwait_value">false</string>
-    <string name="invitationMail_content">That app rocks!</string>
+    <string name="invitationMail_content">Hi! You have been invited to an event on GroupUp! Check it out! ✌️</string>
     <string name="invitationMail_senderAddress"><![CDATA[GroupUp! <swenggroupup@gmail.com>]]></string>
-    <string name="invitationMail_subject">Hello ✌️</string>
+    <string name="invitationMail_subject">[GroupUp!] New invitation️</string>
     <string name="event_listing_extraIndex">eventIndex</string>
 
     <!-- Full screen file -->
