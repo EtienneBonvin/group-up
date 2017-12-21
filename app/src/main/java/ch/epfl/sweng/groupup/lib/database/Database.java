@@ -78,6 +78,7 @@ public final class Database {
                             Account.shared.addOrUpdateEvent(databaseEvent.toEvent());
                         }
                     }
+                    Account.shared.notifyAllWatchers();
                 }
             }
         };

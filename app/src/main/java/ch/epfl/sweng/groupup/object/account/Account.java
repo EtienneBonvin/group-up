@@ -71,7 +71,6 @@ public final class Account extends User implements Watchee {
             default:
                 addOrUpdateCurrentEvent(event);
         }
-        //notifyAllWatchers();
         return shared;
     }
 
