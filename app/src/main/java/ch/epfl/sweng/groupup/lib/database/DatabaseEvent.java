@@ -1,10 +1,11 @@
 package ch.epfl.sweng.groupup.lib.database;
 
+import ch.epfl.sweng.groupup.object.account.Account;
+import ch.epfl.sweng.groupup.object.account.Member;
+import ch.epfl.sweng.groupup.object.event.Event;
+import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
-
-import org.joda.time.LocalDateTime;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,37 +14,29 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import ch.epfl.sweng.groupup.object.account.Account;
-import ch.epfl.sweng.groupup.object.account.Member;
-import ch.epfl.sweng.groupup.object.event.Event;
-import ch.epfl.sweng.groupup.object.map.PointOfInterest;
+import org.joda.time.LocalDateTime;
 
 
 @IgnoreExtraProperties
 public final class DatabaseEvent {
 
+    public String datetimeEnd = Database.EMPTY_FIELD;
+    public String datetimeStart = Database.EMPTY_FIELD;
+    public String description = Database.EMPTY_FIELD;
+    public Map<String, DatabaseUser> members = new HashMap<>();
     /**
      * Class to represent the event object that will be stored in the database.
      */
     public String name = Database.EMPTY_FIELD;
-    public String description = Database.EMPTY_FIELD;
-    public String datetimeStart = Database.EMPTY_FIELD;
-    public String datetimeEnd = Database.EMPTY_FIELD;
-    public String uuid = Database.EMPTY_FIELD;
-    public Map<String, DatabaseUser> members = new HashMap<>();
     public Map<String, DatabasePointOfInterest> pointsOfInterest = new HashMap<>();
+    public String uuid = Database.EMPTY_FIELD;
 
 
     public DatabaseEvent() {
     }
 
 
-    public DatabaseEvent(String name,
-                         String description,
-                         String datetimeStart,
-                         String datetimeEnd,
-                         String uuid,
+    public DatabaseEvent(String name, String description, String datetimeStart, String datetimeEnd, String uuid,
                          HashMap<String, DatabaseUser> members,
                          HashMap<String, DatabasePointOfInterest> pointsOfInterest) {
         this.name = name;
@@ -56,28 +49,16 @@ public final class DatabaseEvent {
     }
 
 
-    public String getName() {
-        return name;
-    }
-
-
-    public String getDescription() {
-        return description;
-    }
-
-
-    public String getDatetimeStart() {
-        return datetimeStart;
-    }
-
-
-    public String getDatetimeEnd() {
-        return datetimeEnd;
-    }
-
-
-    public String getUuid() {
-        return uuid;
+    /**
+     * Checks if we belong to the event either as member of unknown user.
+     *
+     * @return - true if and only if we belong to the event
+     */
+    @Exclude
+    public boolean containedAsMember() {
+        return getMembers().keySet()
+                           .contains(Account.shared.getUUID()
+                                                   .get()) || containedAsUnknownUser();
     }
 
 
@@ -86,8 +67,23 @@ public final class DatabaseEvent {
     }
 
 
-    public Map<String, DatabasePointOfInterest> getPointsOfInterest() {
-        return new HashMap<>(pointsOfInterest);
+    /**
+     * Checks if we are contained as an unknown user (only added by email since we didn't had a
+     * UUID yet).
+     *
+     * @return - true if we are contained through our email
+     */
+    @Exclude
+    private boolean containedAsUnknownUser() {
+        Collection<DatabaseUser> users = getMembers().values();
+        Set<String> unknownUsers = new HashSet<>();
+
+        for (DatabaseUser user : users) {
+            unknownUsers.add(user.getEmail());
+        }
+
+        return unknownUsers.contains(Account.shared.getEmail()
+                                                   .get());
     }
 
 
@@ -136,32 +132,32 @@ public final class DatabaseEvent {
     }
 
 
-    /**
-     * Checks if we belong to the event either as member of unknown user.
-     *
-     * @return - true if and only if we belong to the event
-     */
-    @Exclude
-    public boolean containedAsMember() {
-        return getMembers().keySet().contains(Account.shared.getUUID().get()) || containedAsUnknownUser();
+    public Map<String, DatabasePointOfInterest> getPointsOfInterest() {
+        return new HashMap<>(pointsOfInterest);
     }
 
 
-    /**
-     * Checks if we are contained as an unknown user (only added by email since we didn't had a
-     * UUID yet).
-     *
-     * @return - true if we are contained through our email
-     */
-    @Exclude
-    private boolean containedAsUnknownUser() {
-        Collection<DatabaseUser> users = getMembers().values();
-        Set<String> unknownUsers = new HashSet<>();
+    public String getUuid() {
+        return uuid;
+    }
 
-        for (DatabaseUser user : users) {
-            unknownUsers.add(user.getEmail());
-        }
 
-        return unknownUsers.contains(Account.shared.getEmail().get());
+    public String getName() {
+        return name;
+    }
+
+
+    public String getDatetimeStart() {
+        return datetimeStart;
+    }
+
+
+    public String getDatetimeEnd() {
+        return datetimeEnd;
+    }
+
+
+    public String getDescription() {
+        return description;
     }
 }

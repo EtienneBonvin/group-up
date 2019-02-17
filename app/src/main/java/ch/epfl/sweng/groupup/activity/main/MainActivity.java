@@ -1,16 +1,13 @@
 package ch.epfl.sweng.groupup.activity.main;
 
+import static ch.epfl.sweng.groupup.lib.AndroidHelper.showAlert;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
-
-import com.google.android.gms.common.SignInButton;
-import com.google.firebase.auth.FirebaseAuth;
-
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
 import ch.epfl.sweng.groupup.lib.database.Database;
@@ -18,15 +15,15 @@ import ch.epfl.sweng.groupup.lib.login.FirebaseAuthentication;
 import ch.epfl.sweng.groupup.lib.login.GoogleAuthenticationService;
 import ch.epfl.sweng.groupup.lib.login.LoginActivityInterface;
 import ch.epfl.sweng.groupup.lib.login.MockAuth;
+import com.google.android.gms.common.SignInButton;
+import com.google.firebase.auth.FirebaseAuth;
 
-import static ch.epfl.sweng.groupup.lib.AndroidHelper.showAlert;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, LoginActivityInterface {
 
-
-    private SignInButton signInButton;
-    private ProgressBar progressBar;
     private GoogleAuthenticationService authService;
+    private ProgressBar progressBar;
+    private SignInButton signInButton;
 
 
     @Override
@@ -35,59 +32,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         Database.setUp();
-    setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
         this.authService = new FirebaseAuthentication(getString(R.string.web_client_id), this, this, this);
 
-    initializeFields();
-    setOnClickListener();
-}
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            toggleLoading(GoogleAuthenticationService.Status.CONNECTING);
-            authService.signIn();
-        }
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        final int id = v.getId();
-
-        if (id == R.id.sign_in_button_google) {
-            toggleLoading(GoogleAuthenticationService.Status.CONNECTING);
-            authService.signIn();
-        }
-    }
-
-
-    @Override
-    public void onFail() {
-        showAlert(this /* context  */,
-                getString(R.string.title_connection_failed),
-                getString(R.string.text_firebase_login_failed),
-                getString(R.string.text_button_connection_failed));
-        toggleLoading(GoogleAuthenticationService.Status.DISCONNECTED);
-    }
-
-
-    @Override
-    public void onSuccess() {
-        Intent intent = new Intent(this, EventListingActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
-
-
-    @Override
-    public Activity getActivity() {
-        return this;
+        initializeFields();
+        setOnClickListener();
     }
 
 
@@ -107,6 +57,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void setOnClickListener() {
         signInButton.setOnClickListener(this /* on click listener  */);
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (FirebaseAuth.getInstance()
+                        .getCurrentUser() != null) {
+            toggleLoading(GoogleAuthenticationService.Status.CONNECTING);
+            authService.signIn();
+        }
     }
 
 
@@ -133,7 +94,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    @Override
+    public Activity getActivity() {
+        return this;
+    }
+
+
     public void mock(boolean loginStatus, boolean logoutStatus) {
         this.authService = new MockAuth(this, loginStatus, logoutStatus);
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        final int id = v.getId();
+
+        if (id == R.id.sign_in_button_google) {
+            toggleLoading(GoogleAuthenticationService.Status.CONNECTING);
+            authService.signIn();
+        }
+    }
+
+
+    @Override
+    public void onFail() {
+        showAlert(this /* context  */,
+                  getString(R.string.title_connection_failed),
+                  getString(R.string.text_firebase_login_failed),
+                  getString(R.string.text_button_connection_failed));
+        toggleLoading(GoogleAuthenticationService.Status.DISCONNECTED);
+    }
+
+
+    @Override
+    public void onSuccess() {
+        Intent intent = new Intent(this, EventListingActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

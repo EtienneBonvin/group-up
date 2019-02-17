@@ -1,74 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity"
-    tools:showIn="@layout/activity_event_description">
+                                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                                            xmlns:tools="http://schemas.android.com/tools"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                                            tools:context="ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity"
+                                            tools:showIn="@layout/activity_event_description">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="@dimen/text_margin">
+        android:layout_margin="@dimen/text_margin"
+        android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/layout_start_date"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/layout_start_date">
+            android:layout_height="wrap_content">
 
             <TextView
                 style="@style/EventCategories"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.3"
                 android:layout_marginTop="@dimen/normal_header_size"
-                android:text="@string/event_description_tv_start_date" />
+                android:layout_weight="0.3"
+                android:text="@string/event_description_tv_start_date"/>
 
             <TextView
+                android:id="@+id/event_description_start_date"
+                style="@style/EventFields"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.7"
-                style="@style/EventFields"
                 android:layout_marginTop="@dimen/normal_header_size"
-                android:text="@string/no_event_start_date"
-                android:id="@+id/event_description_start_date"/>
+                android:layout_weight="0.7"
+                android:text="@string/no_event_start_date"/>
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layout_end_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/layout_start_date"
-            android:id="@+id/layout_end_date">
+            android:layout_below="@id/layout_start_date">
 
             <TextView
                 style="@style/EventCategories"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
-                android:text="@string/event_description_tv_end_date" />
+                android:text="@string/event_description_tv_end_date"/>
 
             <TextView
+                android:id="@+id/event_description_end_date"
+                style="@style/EventFields"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.7"
-                style="@style/EventFields"
-                android:id="@+id/event_description_end_date"
-                android:text="@string/no_event_end_date" />
+                android:text="@string/no_event_end_date"/>
 
         </LinearLayout>
 
         <TextView
             android:id="@+id/event_description_tv_description"
+            style="@style/EventCategories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/EventCategories"
+            android:layout_below="@+id/layout_end_date"
             android:layout_marginTop="@dimen/text_margin"
-            android:text="@string/event_description_tv_description"
-            android:layout_below="@+id/layout_end_date"/>
+            android:text="@string/event_description_tv_description"/>
 
         <EditText
             android:id="@+id/event_description_description"
@@ -79,31 +79,28 @@
             android:background="@android:color/transparent"
             android:hint="@string/change_the_description_of_the_event"
             android:inputType="textMultiLine|textNoSuggestions"
-            android:text="@string/no_event_description" />
-
+            android:text="@string/no_event_description"/>
 
         <TextView
             android:id="@+id/event_description_tv_members"
+            style="@style/EventCategories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/EventCategories"
+            android:layout_below="@id/event_description_description"
             android:layout_marginTop="@dimen/text_margin"
-            android:text="@string/event_description_tv_members"
-            android:layout_below="@id/event_description_description"/>
-
+            android:text="@string/event_description_tv_members"/>
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/event_description_tv_members"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/event_description_tv_members">
 
             <LinearLayout
                 android:id="@+id/event_description_linear_scroll_members"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
+                android:orientation="vertical"/>
 
         </ScrollView>
 

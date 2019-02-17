@@ -1,33 +1,27 @@
 package ch.epfl.sweng.groupup.lib.database;
 
+import static org.junit.Assert.*;
+
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-
-import org.joda.time.LocalDateTime;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
-import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
 import ch.epfl.sweng.groupup.object.map.PointOfInterest;
-
-import static org.junit.Assert.assertEquals;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import org.joda.time.LocalDateTime;
+import org.junit.*;
+import org.junit.runner.*;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -45,29 +39,29 @@ public class DatabaseShould {
 
 
     @Test
+    public void exposeAnUpdateMethod() throws Exception {
+        Database.setUp();
+
+        Database.update();
+    }
+
+
+    @Test
     public void exposeSetUpListenerForDefaultAndOwnListener() throws Exception {
         Database.setUp();
 
         Database.setUpEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onCancelled(DatabaseError databaseError) {
                 // Do nothing
             }
 
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 // Do nothing
             }
         });
-    }
-
-
-    @Test
-    public void exposeAnUpdateMethod() throws Exception {
-        Database.setUp();
-
-        Database.update();
     }
 
 
@@ -91,8 +85,10 @@ public class DatabaseShould {
         // Add of current event.
         String nameCurrent = "Current Event";
         String descriptionCurrent = "DescriptionCurrent";
-        LocalDateTime startCurrent = LocalDateTime.now().minusMinutes(1);
-        LocalDateTime endCurrent = LocalDateTime.now().plusDays(1);
+        LocalDateTime startCurrent = LocalDateTime.now()
+                                                  .minusMinutes(1);
+        LocalDateTime endCurrent = LocalDateTime.now()
+                                                .plusDays(1);
         final String uuidCurrent = "uuidCurrent";
         List<Member> membersCurrent = new ArrayList<>();
         String userName01 = "User";
@@ -124,8 +120,10 @@ public class DatabaseShould {
         // Add of past event.
         String namePast = "Past Event";
         String descriptionPast = "Description Past";
-        LocalDateTime startPast = LocalDateTime.now().minusDays(2);
-        LocalDateTime endPast = LocalDateTime.now().minusDays(1);
+        LocalDateTime startPast = LocalDateTime.now()
+                                               .minusDays(2);
+        LocalDateTime endPast = LocalDateTime.now()
+                                             .minusDays(1);
         final String uuidPast = "uuidPast";
         List<Member> membersPast = new ArrayList<>();
         String userName02 = "User";
@@ -158,8 +156,10 @@ public class DatabaseShould {
         // Add of future event.
         String nameFuture = "Future Event";
         String descriptionFuture = "Description Future";
-        LocalDateTime startFuture = LocalDateTime.now().plusDays(2);
-        LocalDateTime endFuture = LocalDateTime.now().plusDays(3);
+        LocalDateTime startFuture = LocalDateTime.now()
+                                                 .plusDays(2);
+        LocalDateTime endFuture = LocalDateTime.now()
+                                               .plusDays(3);
         final String uuidFuture = "uuidFuture";
         List<Member> membersFuture = new ArrayList<>();
         String userName03 = "User";
@@ -190,8 +190,10 @@ public class DatabaseShould {
         final String uuidEmpty = "EmptyUUID";
         final Event eventEmpty = new Event(uuidEmpty,
                                            "Event",
-                                           LocalDateTime.now().plusDays(7),
-                                           LocalDateTime.now().plusDays(9),
+                                           LocalDateTime.now()
+                                                        .plusDays(7),
+                                           LocalDateTime.now()
+                                                        .plusDays(9),
                                            descriptionFuture,
                                            new ArrayList<Member>(),
                                            new HashSet<PointOfInterest>(),
@@ -204,13 +206,19 @@ public class DatabaseShould {
         // Event listener set up.
         Database.setUpEventListener(new ValueEventListener() {
             @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Nothing
+            }
+
+
+            @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
                     DatabaseEvent event = eventSnapshot.getValue(DatabaseEvent.class);
 
                     if (event != null && !event.uuid.equals(Database.EMPTY_FIELD)) {
                         if (event.uuid.equals(uuidCurrent) || event.uuid.equals(uuidPast) || event.uuid.equals(
-                                uuidFuture)) {
+                            uuidFuture)) {
 
                             List<Member> members = new ArrayList<>();
                             for (DatabaseUser user : event.members.values()) {
@@ -258,12 +266,6 @@ public class DatabaseShould {
                         }
                     }
                 }
-            }
-
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Nothing
             }
         });
 

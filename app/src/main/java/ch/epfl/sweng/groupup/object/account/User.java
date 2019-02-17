@@ -1,9 +1,9 @@
 package ch.epfl.sweng.groupup.object.account;
 
 import android.location.Location;
-
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.lib.Optional;
+
 
 /**
  * The user abstract class is extended by the Account and Member classes
@@ -12,19 +12,15 @@ import ch.epfl.sweng.groupup.lib.Optional;
 public abstract class User {
 
     public static EventDescriptionActivity observer = null;
-
-    final Optional<String> displayName;
-    final Optional<String> givenName;
-    final Optional<String> familyName;
-    protected final Optional<String> email;
     protected final Optional<String> UUID;
+    protected final Optional<String> email;
+    final Optional<String> displayName;
+    final Optional<String> familyName;
+    final Optional<String> givenName;
     final Optional<Location> location;
 
-    protected User(String displayName,
-                   String firstName,
-                   String familyName,
-                   String email,
-                   String UUID,
+
+    protected User(String displayName, String firstName, String familyName, String email, String UUID,
                    Location location) {
         this.displayName = Optional.from(displayName);
         this.givenName = Optional.from(firstName);
@@ -39,12 +35,9 @@ public abstract class User {
         }
     }
 
-    protected User(Optional<String> displayName,
-                   Optional<String> firstName,
-                   Optional<String> familyName,
-                   Optional<String> email,
-                   Optional<String> UUID,
-                   Optional<Location> location) {
+
+    protected User(Optional<String> displayName, Optional<String> firstName, Optional<String> familyName,
+                   Optional<String> email, Optional<String> UUID, Optional<Location> location) {
         this.displayName = displayName;
         this.givenName = firstName;
         this.familyName = familyName;
@@ -58,61 +51,6 @@ public abstract class User {
         }
     }
 
-    /**
-     * Returns user's display name
-     *
-     * @return user's display name
-     */
-    public Optional<String> getDisplayName() {
-        return displayName;
-    }
-
-    /**
-     * Returns user's given name
-     *
-     * @return user's given name
-     */
-    public Optional<String> getGivenName() {
-        return givenName;
-    }
-
-    /**
-     * Returns user's last name
-     *
-     * @return user's last name
-     */
-    public Optional<String> getFamilyName() {
-        return familyName;
-    }
-
-    /**
-     * Returns user's email
-     *
-     * @return user's email
-     */
-    public Optional<String> getEmail() {
-        return email;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-               "displayName=" + displayName +
-               ",  givenName=" + givenName +
-               ", familyName=" + familyName +
-               ", email=" + email +
-               ", location=" + location.toString() +
-               '}';
-    }
-
-    /**
-     * Returns user's UUID
-     *
-     * @return user's UUID
-     */
-    public Optional<String> getUUID() {
-        return UUID;
-    }
 
     @SuppressWarnings("RedundantIfStatement")
     @Override
@@ -125,10 +63,54 @@ public abstract class User {
         }
 
         User user = (User) o;
-        return UUID.equals(user.UUID) && displayName.equals(user.displayName) &&
-                givenName.equals(user.givenName) && familyName.equals(user.familyName) &&
-                email.equals(user.email);
+        return UUID.equals(user.UUID)
+               && displayName.equals(user.displayName)
+               && givenName.equals(user.givenName)
+               && familyName.equals(user.familyName)
+               && email.equals(user.email);
     }
+
+
+    /**
+     * Returns user's display name
+     *
+     * @return user's display name
+     */
+    public Optional<String> getDisplayName() {
+        return displayName;
+    }
+
+
+    /**
+     * Returns user's email
+     *
+     * @return user's email
+     */
+    public Optional<String> getEmail() {
+        return email;
+    }
+
+
+    /**
+     * Returns user's last name
+     *
+     * @return user's last name
+     */
+    public Optional<String> getFamilyName() {
+        return familyName;
+    }
+
+
+    /**
+     * Returns user's given name
+     *
+     * @return user's given name
+     */
+    public Optional<String> getGivenName() {
+        return givenName;
+    }
+
+
     /**
      * Returns the location of the user.
      *
@@ -142,5 +124,32 @@ public abstract class User {
 
             return Optional.from(locationCopy);
         }
+    }
+
+
+    /**
+     * Returns user's UUID
+     *
+     * @return user's UUID
+     */
+    public Optional<String> getUUID() {
+        return UUID;
+    }
+
+
+    @Override
+    public String toString() {
+        return "User{"
+               + "displayName="
+               + displayName
+               + ",  givenName="
+               + givenName
+               + ", familyName="
+               + familyName
+               + ", email="
+               + email
+               + ", location="
+               + location.toString()
+               + '}';
     }
 }

@@ -1,30 +1,28 @@
 package ch.epfl.sweng.groupup.lib.database;
 
+import static ch.epfl.sweng.groupup.lib.database.Database.EMPTY_FIELD;
+
 import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
-
+import ch.epfl.sweng.groupup.object.map.PointOfInterest;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
-
-import ch.epfl.sweng.groupup.object.map.PointOfInterest;
-
-import static ch.epfl.sweng.groupup.lib.database.Database.EMPTY_FIELD;
 
 
 @IgnoreExtraProperties
 public final class DatabasePointOfInterest {
 
+    public String description = EMPTY_FIELD;
+    public String latitude = EMPTY_FIELD;
+    public String longitude = EMPTY_FIELD;
+    public String name = EMPTY_FIELD;
+    public String provider = EMPTY_FIELD;
     /**
      * Class to represent a point of interest that will be stored in the
      * database.
      */
     public String uuid = EMPTY_FIELD;
-    public String name = EMPTY_FIELD;
-    public String description = EMPTY_FIELD;
-    public String latitude = EMPTY_FIELD;
-    public String longitude = EMPTY_FIELD;
-    public String provider = EMPTY_FIELD;
 
 
     public DatabasePointOfInterest() {
@@ -41,18 +39,23 @@ public final class DatabasePointOfInterest {
     }
 
 
-    public String getUuid() {
-        return uuid;
-    }
+    @Exclude
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
+        DatabasePointOfInterest that = (DatabasePointOfInterest) o;
 
-    public String getName() {
-        return name;
-    }
-
-
-    public String getDescription() {
-        return description;
+        return uuid.equals(that.uuid)
+               && name.equals(that.name)
+               && description.equals(that.description)
+               && latitude.equals(that.latitude)
+               && longitude.equals(that.longitude);
     }
 
 
@@ -72,6 +75,27 @@ public final class DatabasePointOfInterest {
 
 
     @Exclude
+    public PointOfInterest toPointOfInterest() {
+        return new PointOfInterest(getUuid(), getName(), getDescription(), getLocation());
+    }
+
+
+    public String getUuid() {
+        return uuid;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+
+    public String getDescription() {
+        return description;
+    }
+
+
+    @Exclude
     Location getLocation() {
         Location location = new Location(provider);
 
@@ -85,31 +109,5 @@ public final class DatabasePointOfInterest {
         }
 
         return location;
-    }
-
-
-    @Exclude
-    public PointOfInterest toPointOfInterest() {
-        return new PointOfInterest(getUuid(), getName(), getDescription(), getLocation());
-    }
-
-
-    @Exclude
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        DatabasePointOfInterest that = (DatabasePointOfInterest) o;
-
-        return uuid.equals(that.uuid) &&
-               name.equals(that.name) &&
-               description.equals(that.description) &&
-               latitude.equals(that.latitude) &&
-               longitude.equals(that.longitude);
     }
 }

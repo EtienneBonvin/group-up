@@ -1,13 +1,12 @@
 package ch.epfl.sweng.groupup.lib.database;
 
+import ch.epfl.sweng.groupup.object.account.Account;
+import ch.epfl.sweng.groupup.object.event.Event;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import ch.epfl.sweng.groupup.object.account.Account;
-import ch.epfl.sweng.groupup.object.event.Event;
 
 
 public final class Database {
@@ -30,7 +29,8 @@ public final class Database {
             database.setPersistenceEnabled(true);
         }
 
-        eventsChild = database.getReference().child(NODE_EVENTS_LIST);
+        eventsChild = database.getReference()
+                              .child(NODE_EVENTS_LIST);
     }
 
 
@@ -46,6 +46,42 @@ public final class Database {
         } else {
             eventsChild.addValueEventListener(listener);
         }
+    }
+
+
+    /**
+     * Function to get the EventsListener that gets called called every time we receive an update
+     * from the database.
+     *
+     * @return the ValueEventListener to listen on database changes
+     */
+    private static ValueEventListener getEventsListener() {
+        return new ValueEventListener() {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // UNUSED
+            }
+
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!Account.shared.getUUID()
+                                   .isEmpty() && !Account.shared.getEmail()
+                                                                .isEmpty()) {
+                    for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+                        DatabaseEvent databaseEvent = eventSnapshot.getValue(DatabaseEvent.class);
+
+                        if (databaseEvent != null
+                            && !databaseEvent.getUuid()
+                                             .equals(Database.EMPTY_FIELD)
+                            && databaseEvent.containedAsMember()) {
+                            Account.shared.addOrUpdateEvent(databaseEvent.toEvent());
+                        }
+                    }
+                    Account.shared.notifyAllWatchers();
+                }
+            }
+        };
     }
 
 
@@ -67,44 +103,13 @@ public final class Database {
     private static void storeEvent(DatabaseEvent databaseEvent) {
         DatabaseReference currentEvent = eventsChild.child(databaseEvent.getUuid());
 
-        if (databaseEvent.getMembers().size() > 0) {
+        if (databaseEvent.getMembers()
+                         .size() > 0) {
             // We update the event.
             currentEvent.setValue(databaseEvent);
         } else {
             // We delete the event from the database if the last member left.
             currentEvent.removeValue();
         }
-    }
-
-
-    /**
-     * Function to get the EventsListener that gets called called every time we receive an update
-     * from the database.
-     *
-     * @return the ValueEventListener to listen on database changes
-     */
-    private static ValueEventListener getEventsListener() {
-        return new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!Account.shared.getUUID().isEmpty() && !Account.shared.getEmail().isEmpty()) {
-                    for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
-                        DatabaseEvent databaseEvent = eventSnapshot.getValue(DatabaseEvent.class);
-
-                        if (databaseEvent != null &&
-                            !databaseEvent.getUuid().equals(Database.EMPTY_FIELD) &&
-                            databaseEvent.containedAsMember()) {
-                            Account.shared.addOrUpdateEvent(databaseEvent.toEvent());
-                        }
-                    }
-                }
-            }
-
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // UNUSED
-            }
-        };
     }
 }

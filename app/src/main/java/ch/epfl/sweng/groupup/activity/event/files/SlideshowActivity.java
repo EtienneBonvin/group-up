@@ -10,9 +10,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
-
-import java.util.List;
-
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.description.EventDescriptionActivity;
 import ch.epfl.sweng.groupup.activity.toolbar.ToolbarActivity;
@@ -20,14 +17,16 @@ import ch.epfl.sweng.groupup.lib.CompressedBitmap;
 import ch.epfl.sweng.groupup.lib.Watcher;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.event.Event;
+import java.util.List;
 
 
-public class SlideshowActivity extends ToolbarActivity implements Watcher{
+public class SlideshowActivity extends ToolbarActivity implements Watcher {
 
     private Event event;
     private int eventIndex;
     private ImageSwitcher imageSwitcher;
     private List<CompressedBitmap> loadedImages;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +35,9 @@ public class SlideshowActivity extends ToolbarActivity implements Watcher{
 
         Intent intent = getIntent();
         eventIndex = intent.getIntExtra(getString(R.string.event_listing_extraIndex), -1);
-        if (eventIndex >-1) {
-            event = Account.shared.getEvents().get(eventIndex);
+        if (eventIndex > -1) {
+            event = Account.shared.getEvents()
+                                  .get(eventIndex);
         }
 
         initImageSwitcher();
@@ -47,37 +47,6 @@ public class SlideshowActivity extends ToolbarActivity implements Watcher{
         loadImages();
     }
 
-    @Override
-    public void initializeToolbar() {
-        // No toolbar
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent i = new Intent(this, EventDescriptionActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.putExtra(getString(R.string.event_listing_extraIndex), eventIndex);
-        startActivity(i);
-    }
-
-    private void loadImages() {
-
-        imageSwitcher.postDelayed(new Runnable() {
-            int i = 0;
-            public void run() {
-                if (loadedImages.size()>0) {
-                    imageSwitcher.setImageDrawable(
-                            new BitmapDrawable(getResources(), loadedImages.get(i).asBitmap())
-                    );
-                    i++;
-                    if (loadedImages.size() < i + 1) i = 0;
-                }
-                imageSwitcher.postDelayed(this, 3000);
-            }
-        }, 3000);
-    }
 
     private void initImageSwitcher() {
         imageSwitcher = findViewById(R.id.imageSwitcher);
@@ -88,8 +57,8 @@ public class SlideshowActivity extends ToolbarActivity implements Watcher{
             public View makeView() {
                 ImageView myView = new ImageView(getApplicationContext());
 
-                ViewGroup.LayoutParams params = new ImageSwitcher.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                ViewGroup.LayoutParams params = new ImageSwitcher.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                                                               ViewGroup.LayoutParams.MATCH_PARENT);
                 myView.setLayoutParams(params);
 
                 myView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -103,10 +72,28 @@ public class SlideshowActivity extends ToolbarActivity implements Watcher{
         imageSwitcher.setOutAnimation(out);
     }
 
-    @Override
-    public void notifyWatcher() {
-        loadedImages = event.getPictures();
+
+    private void loadImages() {
+
+        imageSwitcher.postDelayed(new Runnable() {
+            int i = 0;
+
+
+            public void run() {
+                if (loadedImages.size() > 0) {
+                    imageSwitcher.setImageDrawable(new BitmapDrawable(getResources(),
+                                                                      loadedImages.get(i)
+                                                                                  .asBitmap()));
+                    i++;
+                    if (loadedImages.size() < i + 1) {
+                        i = 0;
+                    }
+                }
+                imageSwitcher.postDelayed(this, 3000);
+            }
+        }, 3000);
     }
+
 
     /**
      * Override onPause method, remove the activity from the watchers of the event to avoid
@@ -118,6 +105,7 @@ public class SlideshowActivity extends ToolbarActivity implements Watcher{
         event.removeWatcher(this);
     }
 
+
     /**
      * Override onStop method, remove the activity from the watchers of the event to avoid
      * exceptions.
@@ -128,6 +116,7 @@ public class SlideshowActivity extends ToolbarActivity implements Watcher{
         event.removeWatcher(this);
     }
 
+
     /**
      * Override onDestroy method, remove the activity from the watchers of the event to avoid
      * exceptions.
@@ -136,5 +125,26 @@ public class SlideshowActivity extends ToolbarActivity implements Watcher{
     public void onDestroy() {
         super.onDestroy();
         event.removeWatcher(this);
+    }
+
+
+    @Override
+    public void initializeToolbar() {
+        // No toolbar
+    }
+
+
+    @Override
+    public void notifyWatcher() {
+        loadedImages = event.getPictures();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(this, EventDescriptionActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.putExtra(getString(R.string.event_listing_extraIndex), eventIndex);
+        startActivity(i);
     }
 }

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+        layout="@layout/toolbar"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 android:layout_weight="0.6"
                 android:hint="@string/event_creation_hint_event_name"
                 android:inputType="text"
-                android:textColor="@color/primaryTextColor"/>
+                android:textColor="@color/secondaryTextColor"/>
 
         </LinearLayout>
 
@@ -58,7 +58,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
-                android:text="" />
+                android:text=""/>
 
             <Button
                 android:id="@+id/button_start_time"
@@ -66,41 +66,40 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
-                android:text="" />
+                android:text=""/>
 
         </LinearLayout>
 
-        <!-- User input for the ending date and time of the event -->
-        <LinearLayout
-            android:id="@+id/ui_end_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ui_start_time">
+        <!-- User input for the ending date and time of the event --><LinearLayout
+        android:id="@+id/ui_end_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ui_start_time">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.4"
-                android:gravity="center_vertical"
-                android:text="@string/event_creation_tv_end_time"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4"
+            android:gravity="center_vertical"
+            android:text="@string/event_creation_tv_end_time"/>
 
-            <Button
-                android:id="@+id/button_end_date"
-                style="@style/DateButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:text="" />
+        <Button
+            android:id="@+id/button_end_date"
+            style="@style/DateButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:text=""/>
 
-            <Button
-                android:id="@+id/button_end_time"
-                style="@style/DateButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:text="" />
+        <Button
+            android:id="@+id/button_end_time"
+            style="@style/DateButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:text=""/>
 
-        </LinearLayout>
+    </LinearLayout>
 
         <TextView
             android:id="@+id/text_view_description"
@@ -110,7 +109,6 @@
             android:labelFor="@+id/edit_text_description"
             android:paddingTop="20sp"
             android:text="@string/event_creation_tv_description"/>
-
 
         <LinearLayout
             android:id="@+id/linear_layout_friends"
@@ -123,16 +121,15 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
-                android:gravity="bottom" />
+                android:gravity="bottom"/>
 
             <Button
                 android:id="@+id/button_add_members"
                 style="@style/ButtonStyle"
-                android:layout_height="wrap_content"
                 android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="0.3"
-                android:text="@string/event_creation_button_add_members" />
-
+                android:text="@string/event_creation_button_add_members"/>
 
         </LinearLayout>
 
@@ -148,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/event_creation_hint_event_description"
                 android:inputType="textMultiLine|textNoSuggestions"
-                android:textColor="@color/primaryTextColor"/>
+                android:textColor="@color/secondaryTextColor"/>
 
         </ScrollView>
 

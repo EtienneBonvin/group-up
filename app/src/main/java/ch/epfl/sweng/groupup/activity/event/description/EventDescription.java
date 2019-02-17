@@ -10,10 +10,6 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import ch.epfl.sweng.groupup.R;
 import ch.epfl.sweng.groupup.activity.event.creation.EventCreationActivity;
 import ch.epfl.sweng.groupup.activity.event.listing.EventListingActivity;
@@ -21,6 +17,9 @@ import ch.epfl.sweng.groupup.lib.database.Database;
 import ch.epfl.sweng.groupup.object.account.Account;
 import ch.epfl.sweng.groupup.object.account.Member;
 import ch.epfl.sweng.groupup.object.event.Event;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * EventDescription class.
@@ -29,33 +28,34 @@ import ch.epfl.sweng.groupup.object.event.Event;
 public class EventDescription {
 
     private final EventDescriptionActivity activity;
-
+    private EditText displayEventDescription;
+    private TextView displayEventEndDate;
     private EditText displayEventName;
     private TextView displayEventStartDate;
-    private TextView displayEventEndDate;
-    private EditText displayEventDescription;
     private Event eventToDisplay;
+
 
     /**
      * Constructs an EventDescription for the EventDescriptionActivity given as parameter.
+     *
      * @param activity the activity this EventDescription is linked to.
      */
     @SuppressWarnings("WeakerAccess")
-    public EventDescription(final EventDescriptionActivity activity){
+    public EventDescription(final EventDescriptionActivity activity) {
 
         this.activity = activity;
 
         Intent i = activity.getIntent();
         final int eventIndex = i.getIntExtra(activity.getString(R.string.event_listing_extraIndex), -1);
         if (eventIndex > -1) {
-            eventToDisplay = Account.shared.getEvents().get(eventIndex);
-        }else{
+            eventToDisplay = Account.shared.getEvents()
+                                           .get(eventIndex);
+        } else {
             eventToDisplay = null;
         }
 
-       activity.getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
-        );
+        activity.getWindow()
+                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         initializeField();
         printEvent();
 
@@ -65,31 +65,33 @@ public class EventDescription {
                     @Override
                     public void onClick(View v) {
 
-                        final AlertDialog alertDialog =
-                                new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AboutDialog)).create();
+                        final AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity,
+                                                                                                        R.style.AboutDialog)).create();
                         alertDialog.setTitle(R.string.alert_dialog_title_delete_event);
-                        alertDialog.setMessage(Html.fromHtml("<font color='#ffffff'>Would you " +
-                                "like to leave and delete this event?</font>"));
-                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Continue",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent i = new Intent(activity.getApplicationContext(),
-                                                EventListingActivity.class);
-                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                                                Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                                                Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        removeEvent(eventToDisplay);
-                                        activity.startActivity(i);
-                                    }
-                                });
+                        alertDialog.setMessage(Html.fromHtml("<font color='#ffffff'>Would you "
+                                                             + "like to leave and delete this event?</font>"));
+                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
+                                              "Continue",
+                                              new DialogInterface.OnClickListener() {
+                                                  public void onClick(DialogInterface dialog, int which) {
+                                                      Intent i = new Intent(activity.getApplicationContext(),
+                                                                            EventListingActivity.class);
+                                                      i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                                                 | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                                                 | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                      removeEvent(eventToDisplay);
+                                                      activity.startActivity(i);
+                                                  }
+                                              });
 
-                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        alertDialog.dismiss();
-                                    }
-                                });
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,
+                                              "Cancel",
+                                              new DialogInterface.OnClickListener() {
+                                                  @Override
+                                                  public void onClick(DialogInterface dialog, int which) {
+                                                      alertDialog.dismiss();
+                                                  }
+                                              });
                         alertDialog.show();
                     }
                 });
@@ -99,48 +101,29 @@ public class EventDescription {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String name= displayEventName.getText().toString();
-                        String description = displayEventDescription.getText().toString();
-                        if (name.length()> EventCreationActivity.INPUT_MAX_LENGTH){
-                            displayEventName.setError(
-                                    activity.getString(R.string.event_creation_toast_event_name_too_long));
-                        } else if (name.length() == 0){
-                            displayEventName.setError(
-                                    activity.getString(R.string.event_creation_toast_non_empty_event_name));
+                        String name = displayEventName.getText()
+                                                      .toString();
+                        String description = displayEventDescription.getText()
+                                                                    .toString();
+                        if (name.length() > EventCreationActivity.INPUT_MAX_LENGTH) {
+                            displayEventName.setError(activity.getString(R.string.event_creation_toast_event_name_too_long));
+                        } else if (name.length() == 0) {
+                            displayEventName.setError(activity.getString(R.string.event_creation_toast_non_empty_event_name));
                         } else {
-                            Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name).
-                                    withDescription(description));
+                            Account.shared.addOrUpdateEvent(eventToDisplay.withEventName(name)
+                                                                          .withDescription(description));
                             Database.update();
 
-                            Intent i = new Intent(activity.getApplicationContext(),
-                                    EventListingActivity.class);
-                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                                    Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                                    Intent.FLAG_ACTIVITY_NEW_TASK);
+                            Intent i = new Intent(activity.getApplicationContext(), EventListingActivity.class);
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                       | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                       | Intent.FLAG_ACTIVITY_NEW_TASK);
                             activity.startActivity(i);
                         }
                     }
                 });
     }
 
-    /**
-     * Remove the user from the Event
-     * @param eventToRemove the event to be removed from.
-     */
-    public static void removeEvent(Event eventToRemove) {
-        eventToRemove = eventToRemove.withoutCurrentUser();
-        Account.shared.addOrUpdateEvent(eventToRemove);
-        Database.update();
-        List<Event> futureEventList = new ArrayList<>(Account.shared.getEvents());
-        Account.shared.withFutureEvents(new ArrayList<Event>()).
-                withPastEvents(new ArrayList<Event>()).withCurrentEvent(new ArrayList<Event>());
-        futureEventList.remove(eventToRemove);
-        for (Event fe : futureEventList) {
-            Account.shared.addOrUpdateEvent(fe);
-        }
-        Database.update();
-        eventToRemove.removeFiles();
-    }
 
     /**
      * Initialize the different TextView and EditText
@@ -152,6 +135,7 @@ public class EventDescription {
         displayEventDescription = activity.findViewById(R.id.event_description_description);
     }
 
+
     /**
      * Print the information about the event, if there is no event prints default string in fields.
      */
@@ -159,15 +143,36 @@ public class EventDescription {
         displayEventName.setText(eventToDisplay.getEventName());
         displayEventStartDate.setText(eventToDisplay.getStartTimeToString());
         displayEventEndDate.setText(eventToDisplay.getEndTimeToString());
-
         displayEventDescription.setText(eventToDisplay.getDescription());
 
         for (Member member : eventToDisplay.getEventMembers()) {
             TextView memberName = new TextView(activity);
-            memberName.setText(member.getDisplayName().getOrElse("NO_NAME"));
+            memberName.setText(member.getDisplayName()
+                                     .getOrElse("NO_NAME"));
             LinearLayout linear = activity.findViewById(R.id.event_description_linear_scroll_members);
             linear.addView(memberName);
         }
     }
 
+
+    /**
+     * Remove the user from the Event
+     *
+     * @param eventToRemove the event to be removed from.
+     */
+    public static void removeEvent(Event eventToRemove) {
+        eventToRemove = eventToRemove.withoutCurrentUser();
+        Account.shared.addOrUpdateEvent(eventToRemove);
+        Database.update();
+        List<Event> futureEventList = new ArrayList<>(Account.shared.getEvents());
+        Account.shared.withFutureEvents(new ArrayList<Event>())
+                      .withPastEvents(new ArrayList<Event>())
+                      .withCurrentEvent(new ArrayList<Event>());
+        futureEventList.remove(eventToRemove);
+        for (Event fe : futureEventList) {
+            Account.shared.addOrUpdateEvent(fe);
+        }
+        Database.update();
+        eventToRemove.removeFiles();
+    }
 }
